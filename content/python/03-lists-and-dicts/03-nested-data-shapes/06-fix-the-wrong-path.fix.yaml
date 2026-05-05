@@ -4,18 +4,18 @@ concept: correct-access-path
 prompt: |
   Claude wrote this to grab the second user's email and got the path
   wrong. The script crashes with a `KeyError`. Fix line 13 so the script
-  prints `marcus@pyloft.dev`.
+  prints `marcus@promptdojo.dev`.
 brokenCode: |
   data = {
       "ok": True,
       "users": [
           {
               "id": 1,
-              "profile": {"name": "maya", "email": "maya@pyloft.dev"},
+              "profile": {"name": "maya", "email": "maya@promptdojo.dev"},
           },
           {
               "id": 2,
-              "profile": {"name": "marcus", "email": "marcus@pyloft.dev"},
+              "profile": {"name": "marcus", "email": "marcus@promptdojo.dev"},
           },
       ],
   }
@@ -25,7 +25,7 @@ bugLines:
   - 15
 grader:
   kind: stdout-equality
-  expected: "marcus@pyloft.dev"
+  expected: "marcus@promptdojo.dev"
   normalize: collapse-trailing-newline
 hint:
   - level: 1

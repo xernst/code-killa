@@ -34,12 +34,12 @@ export default function BrainDump() {
   }
 
   function exportToFile() {
-    const md = `# Brain dump from code-killa\n\n${items.map((i) => `- ${i}`).join("\n")}\n`;
+    const md = `# Brain dump from promptdojo\n\n${items.map((i) => `- ${i}`).join("\n")}\n`;
     const blob = new Blob([md], { type: "text/markdown" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `code-killa-braindump-${new Date().toISOString().slice(0, 10)}.md`;
+    a.download = `promptdojo-braindump-${new Date().toISOString().slice(0, 10)}.md`;
     a.click();
     URL.revokeObjectURL(url);
   }

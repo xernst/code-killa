@@ -8,14 +8,14 @@ prompt: |
 
   Expected output:
   ```
-  maya@pyloft.dev
-  marcus@pyloft.dev
+  maya@promptdojo.dev
+  marcus@promptdojo.dev
   ```
 starter: |
   payload = {
       "users": [
-          {"id": 1, "profile": {"email": "maya@pyloft.dev"}},
-          {"id": 2, "profile": {"email": "marcus@pyloft.dev"}},
+          {"id": 1, "profile": {"email": "maya@promptdojo.dev"}},
+          {"id": 2, "profile": {"email": "marcus@promptdojo.dev"}},
       ],
   }
 
@@ -23,14 +23,14 @@ starter: |
 grader:
   kind: stdout-equality
   expected: |
-    maya@pyloft.dev
-    marcus@pyloft.dev
+    maya@promptdojo.dev
+    marcus@promptdojo.dev
   normalize: collapse-trailing-newline
 solution: |
   payload = {
       "users": [
-          {"id": 1, "profile": {"email": "maya@pyloft.dev"}},
-          {"id": 2, "profile": {"email": "marcus@pyloft.dev"}},
+          {"id": 1, "profile": {"email": "maya@promptdojo.dev"}},
+          {"id": 2, "profile": {"email": "marcus@promptdojo.dev"}},
       ],
   }
 

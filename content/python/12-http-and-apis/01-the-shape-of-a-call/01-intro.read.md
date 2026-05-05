@@ -9,7 +9,7 @@ code: |
   fake_response_json = {
       "id": 7,
       "name": "maya",
-      "email": "maya@pyloft.dev",
+      "email": "maya@promptdojo.dev",
   }
 
   print(fake_response_json["name"])

@@ -158,11 +158,11 @@
           "phase": "build",
           "estSeconds": 80,
           "concept": "with-block-required",
-          "brokenCode": "with open(\"/tmp/name.txt\", \"w\") as f:\n    f.write(\"pyloft\")\n\nf = open(\"/tmp/name.txt\")\ncontents = f.read()\nprint(contents)\n",
-          "prompt": "Claude wrote this without a `with` block, so the file handle leaks if the\nread raises. Rewrite the body using `with open(...) as f:` so the file\ncloses automatically. The script should still print `pyloft`.\n",
+          "brokenCode": "with open(\"/tmp/name.txt\", \"w\") as f:\n    f.write(\"promptdojo\")\n\nf = open(\"/tmp/name.txt\")\ncontents = f.read()\nprint(contents)\n",
+          "prompt": "Claude wrote this without a `with` block, so the file handle leaks if the\nread raises. Rewrite the body using `with open(...) as f:` so the file\ncloses automatically. The script should still print `promptdojo`.\n",
           "grader": {
             "kind": "stdout-equality",
-            "expected": "pyloft",
+            "expected": "promptdojo",
             "normalize": "collapse-trailing-newline"
           },
           "bugLines": [
@@ -243,14 +243,14 @@
           "phase": "check",
           "estSeconds": 140,
           "concept": "files-and-json-checkpoint",
-          "prompt": "Last drill — the JSON pattern AI uses on every config file.\n\n1. Import `json`.\n2. Write a dict `{\"app\": \"pyloft\", \"users\": 1}` to `/tmp/config.json` using\n   `json.dump(data, f)` inside a `with` block.\n3. Read it back with `json.load(f)`.\n4. Print the value of the `\"app\"` key.\n\nExpected output:\n```\npyloft\n```\n",
-          "starter": "import json\n\ndata = {\"app\": \"pyloft\", \"users\": 1}\n# write data to /tmp/config.json with json.dump\n# then read it back with json.load and print data[\"app\"]\n",
+          "prompt": "Last drill — the JSON pattern AI uses on every config file.\n\n1. Import `json`.\n2. Write a dict `{\"app\": \"promptdojo\", \"users\": 1}` to `/tmp/config.json` using\n   `json.dump(data, f)` inside a `with` block.\n3. Read it back with `json.load(f)`.\n4. Print the value of the `\"app\"` key.\n\nExpected output:\n```\npromptdojo\n```\n",
+          "starter": "import json\n\ndata = {\"app\": \"promptdojo\", \"users\": 1}\n# write data to /tmp/config.json with json.dump\n# then read it back with json.load and print data[\"app\"]\n",
           "grader": {
             "kind": "stdout-equality",
-            "expected": "pyloft",
+            "expected": "promptdojo",
             "normalize": "collapse-trailing-newline"
           },
-          "solution": "import json\n\ndata = {\"app\": \"pyloft\", \"users\": 1}\n\nwith open(\"/tmp/config.json\", \"w\") as f:\n    json.dump(data, f)\n\nwith open(\"/tmp/config.json\") as f:\n    loaded = json.load(f)\n\nprint(loaded[\"app\"])\n",
+          "solution": "import json\n\ndata = {\"app\": \"promptdojo\", \"users\": 1}\n\nwith open(\"/tmp/config.json\", \"w\") as f:\n    json.dump(data, f)\n\nwith open(\"/tmp/config.json\") as f:\n    loaded = json.load(f)\n\nprint(loaded[\"app\"])\n",
           "passThreshold": 0.66
         }
       ],

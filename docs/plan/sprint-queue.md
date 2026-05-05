@@ -1,4 +1,4 @@
-# Pyloft — Overnight Sprint Queue
+# promptdojo — Overnight Sprint Queue
 
 > **Audience:** the autonomous build team running while Josh sleeps.
 > **Source of truth:** `docs/plan/MASTER-PLAN.md` (read it before claiming a task).
@@ -76,7 +76,7 @@ Each lesson: 8–12 steps, 5–8 minutes, AI-builder voice (Brand §3 with all r
 
 - **E1.** `aria-live` announcements for grader results + reduced-motion fallbacks per UX §8.
 - **E2.** Sound system (defaulted off; settings toggle in profile). Lazy-loaded webm/mp3 pairs ≤ 2KB each.
-- **E3.** Visual QA pass — screenshots of every step type via `gstack browse`, save to `/tmp/pyloft-v2-*.png`, compare against `MASTER-PLAN.md` voice/visual locks.
+- **E3.** Visual QA pass — screenshots of every step type via `gstack browse`, save to `/tmp/promptdojo-v2-*.png`, compare against `MASTER-PLAN.md` voice/visual locks.
 - **E4.** End-to-end smoke: complete lesson 1 in v2 mode in browser, all 8 steps pass, XP totals correct, streak +1.
 
 ---

@@ -4,10 +4,10 @@ concept: with-block-required
 prompt: |
   Claude wrote this without a `with` block, so the file handle leaks if the
   read raises. Rewrite the body using `with open(...) as f:` so the file
-  closes automatically. The script should still print `pyloft`.
+  closes automatically. The script should still print `promptdojo`.
 brokenCode: |
   with open("/tmp/name.txt", "w") as f:
-      f.write("pyloft")
+      f.write("promptdojo")
 
   f = open("/tmp/name.txt")
   contents = f.read()
@@ -18,7 +18,7 @@ bugLines:
   - 6
 grader:
   kind: stdout-equality
-  expected: "pyloft"
+  expected: "promptdojo"
   normalize: collapse-trailing-newline
 hint:
   - level: 1

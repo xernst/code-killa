@@ -253,7 +253,265 @@
         }
       ],
       "xpTotal": 32
+    },
+    {
+      "slug": "multi-step-tools",
+      "title": "Multi-step tools — when one tool isn't enough",
+      "estMinutes": 11,
+      "prerequisites": [
+        "the-loop"
+      ],
+      "steps": [
+        {
+          "type": "read",
+          "id": "agent-loops/multi-step-tools/s01-01-intro",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "warmup",
+          "estSeconds": 110,
+          "concept": "tool-registry-pattern",
+          "body": "# One loop, many tools\n\nChapter 16 lesson 1 gave you the agent loop with *one* tool. That's\nthe toy version. Real agents — Cursor, Claude Code, your own — have\nten, twenty, fifty tools registered. The model picks one each turn,\nsometimes several in parallel, and your loop dispatches.\n\nGood news: the loop doesn't change. Same `while`, same `stop_reason`\nbranches, same `tool_result` reply. The only difference is *which*\ntool runs.\n\n## What \"multi-step\" actually means\n\nTwo patterns sit underneath the phrase, and people mix them up:\n\n1. **Multi-tool dispatch**. One turn, one tool — but the model\n   chooses from many. `search` this turn, `read_page` next turn,\n   `summarize` after that. The model orchestrates the chain; the\n   loop just runs whichever tool got picked.\n2. **Parallel tool calls**. One turn, *several* tool_use blocks at\n   once. \"Read these three files.\" Your loop runs all three (often\n   concurrently) and replies with three `tool_result` blocks in one\n   user turn.\n\nBoth are everyday production patterns. This lesson teaches dispatch\nfirst, then parallel calls.\n\n## Why a registry, not a chain of `if`\n\nThe naive version of this is `if name == \"search\": ...` repeated\nten times. It works for two tools and rots fast. Every new tool means\nediting the dispatch function, and you'll forget one.\n\nThe registry pattern — a `dict` mapping name → function — is what\nevery framework uses internally. LangChain calls it a `Toolkit`.\nLangGraph calls it `tools`. The Vercel AI SDK calls it `tools`. They\nall flatten to the same shape:\n\n```python\nTOOLS = {\n    \"search\": search_fn,\n    \"read_page\": read_page_fn,\n    \"summarize\": summarize_fn,\n}\n\n# anywhere in the loop:\nresult = TOOLS[name](**input)\n```\n\nOne line of dispatch. Adding a tool is one line in the dict and one\nnew function. The agent loop never changes.\n\n## Where the chain comes from\n\nNotice that *the loop* doesn't define the order `search → read_page\n→ summarize`. The model does. You hand it a registry; the model\ndecides which tool serves the user's question this turn, sees the\nresult, and decides which one comes next.\n\nThis is the part that surprises people first writing agents: there's\nno orchestration code. The orchestration is the model's reasoning,\nexpressed as a sequence of `tool_use` blocks. Your job is to keep\nthe loop honest — dispatch correctly, hand back well-formed\n`tool_result` blocks, and keep the message history intact.\n\n## What you'll see in the editor\n\nThree tools registered as a dict. One `tool_use` block from the\nmodel picking `search`. One line of dispatch — `TOOLS[name](**input)`\n— runs the right function. Print the result. Run it.\n\nThe next steps wire this dispatch into the full loop, then add\nparallel tool calls and the bugs that come with them.",
+          "cta": "Got it",
+          "code": "# the model gets a *list* of tools each turn. it picks one (or several).\n# your job is to dispatch the call to the right Python function.\n\nTOOLS = {\n    \"search\": lambda q: f\"3 results for {q}\",\n    \"read_page\": lambda url: f\"<article from {url}>\",\n    \"summarize\": lambda text: f\"summary: {text[:20]}...\",\n}\n\n# one assistant turn — the model picked `search`.\ntool_use = {\"type\": \"tool_use\", \"id\": \"toolu_a\", \"name\": \"search\", \"input\": {\"q\": \"ramen tokyo\"}}\n\n# dispatch is a one-line lookup, not a giant if/elif.\nfn = TOOLS[tool_use[\"name\"]]\nresult = fn(**tool_use[\"input\"])\nprint(result)\n",
+          "runnable": true
+        },
+        {
+          "type": "mc",
+          "id": "agent-loops/multi-step-tools/s02-02-which-tool-runs",
+          "xp": 2,
+          "hint": [
+            {
+              "level": 1,
+              "body": "Read the Anthropic docs on parallel tool use: one assistant turn → one user turn that bundles a tool_result per tool_use_id.",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "warmup",
+          "estSeconds": 50,
+          "concept": "tool-dispatch-by-name",
+          "prompt": "The assistant turn above contains three `tool_use` blocks in a single\nresponse. Your loop is about to handle this turn. What does it do?\n",
+          "options": [
+            {
+              "id": "a",
+              "label": "Pick the first tool, run it, ignore the rest",
+              "explain": "You'd silently drop two of the model's requests and the next API call would fail — the model expects a `tool_result` for every `tool_use_id` it emitted."
+            },
+            {
+              "id": "b",
+              "label": "Run all three tools and reply with one user turn containing three `tool_result` blocks"
+            },
+            {
+              "id": "c",
+              "label": "Send three separate user turns, one tool_result each",
+              "explain": "The protocol pairs each model turn with one user turn. Multiple results go *inside* one user turn as a list of `tool_result` blocks."
+            },
+            {
+              "id": "d",
+              "label": "Refuse and ask the model to pick just one tool at a time",
+              "explain": "Parallel tool calls are a normal feature, not a misuse. The model emits them when it knows the calls are independent."
+            }
+          ],
+          "answerIds": [
+            "b"
+          ],
+          "shuffle": false,
+          "code": "# the model returned three tool_use blocks in ONE assistant turn.\nTOOLS = {\n    \"search\": lambda q: f\"hits for {q}\",\n    \"read_page\": lambda url: f\"<{url}>\",\n    \"summarize\": lambda text: text[:10],\n}\n\nassistant_turn = {\n    \"stop_reason\": \"tool_use\",\n    \"content\": [\n        {\"type\": \"tool_use\", \"id\": \"toolu_1\", \"name\": \"search\", \"input\": {\"q\": \"ramen\"}},\n        {\"type\": \"tool_use\", \"id\": \"toolu_2\", \"name\": \"read_page\", \"input\": {\"url\": \"https://x.com\"}},\n        {\"type\": \"tool_use\", \"id\": \"toolu_3\", \"name\": \"summarize\", \"input\": {\"text\": \"long story\"}},\n    ],\n}\n\nfor block in assistant_turn[\"content\"]:\n    print(block[\"name\"])\n",
+          "runnable": true
+        },
+        {
+          "type": "read",
+          "id": "agent-loops/multi-step-tools/s03-03-tool-registry",
+          "xp": 2,
+          "hint": [],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 90,
+          "concept": "tool-definitions-vs-tool-functions",
+          "body": "# A tool is two things, not one\n\nThe mental shortcut is \"a tool is a function.\" It's almost right and\nit's the source of the second-most-common bug in beginner agent code.\nThe full picture:\n\n- **Tool definition** — what the *model* sees. A name, a description,\n  and a JSON schema for its input. The model uses the description to\n  decide whether this tool is the right one for the next step.\n- **Tool function** — what *your code* runs. A Python function (or\n  callable) that takes the same arguments the schema describes and\n  returns a string the model can read.\n\nThe model never executes Python. It only sees the schema. Your loop\nnever reads the description. It only calls the function. Both halves\nhave to exist and they have to agree on the name.\n\n## Why descriptions matter more than you'd think\n\nThe model picks tools based on the `description` field. If your\ndescription is `\"Search.\"` the model will guess about when to use it.\nIf your description is `\"Search the web for current information.\nReturns up to 3 result URLs as plain text. Use when the user asks\nabout events after your knowledge cutoff.\"` the model picks correctly\non the first try.\n\nBad descriptions are why your agent calls `search` for \"what's two\nplus two\" — the model has no signal that this isn't what `search`\nis for.\n\n## Why JSON Schema, not Python type hints\n\nThe model produces JSON. Your loop receives JSON. The schema lives in\nthe tool definition because the *model* validates against it before\nemitting a `tool_use` block. Python type hints don't reach the wire.\n\nIn real agents you'll see two patterns:\n\n```python\n# pattern 1 — handwritten schemas (clearest, most explicit)\n{\"name\": \"search\", \"input_schema\": {\"type\": \"object\", \"properties\": {...}}}\n\n# pattern 2 — derive from Pydantic / dataclasses (less typing)\n{\"name\": \"search\", \"input_schema\": SearchArgs.model_json_schema()}\n```\n\nBoth ship in production. Frameworks like LangChain default to pattern\n2; you'll learn pattern 1 here because you'll read it in everyone's\ncode, including the SDK examples.\n\n## What to register: every tool, every turn\n\nA subtle thing: you send the *full* tool list every API call. The\nmodel doesn't remember which tools you registered last turn. Each\nturn includes the messages-so-far AND the full tool list. That's by\ndesign — it lets you add or remove tools mid-conversation if needed,\ne.g. \"now that the user is logged in, also offer `delete_account`.\"\n\nFor most loops you'll just keep the list constant.",
+          "cta": "Got it",
+          "code": "# two halves of \"a tool\". the model needs the SCHEMA to know it exists.\n# your code needs the FUNCTION to actually run it.\n\nTOOL_DEFINITIONS = [\n    {\n        \"name\": \"search\",\n        \"description\": \"Search the web. Returns up to 3 result URLs.\",\n        \"input_schema\": {\n            \"type\": \"object\",\n            \"properties\": {\"q\": {\"type\": \"string\"}},\n            \"required\": [\"q\"],\n        },\n    },\n    {\n        \"name\": \"read_page\",\n        \"description\": \"Fetch a URL and return its plain text.\",\n        \"input_schema\": {\n            \"type\": \"object\",\n            \"properties\": {\"url\": {\"type\": \"string\"}},\n            \"required\": [\"url\"],\n        },\n    },\n]\n\nTOOL_FUNCTIONS = {\n    \"search\":    lambda q:   f\"3 results for {q}\",\n    \"read_page\": lambda url: f\"<text from {url}>\",\n}\n\n# send TOOL_DEFINITIONS to the model. dispatch through TOOL_FUNCTIONS.\nfor d in TOOL_DEFINITIONS:\n    print(f\"{d['name']}: {d['description']}\")\n",
+          "runnable": true
+        },
+        {
+          "type": "predict",
+          "id": "agent-loops/multi-step-tools/s04-04-predict-the-chain",
+          "xp": 3,
+          "hint": [
+            {
+              "level": 1,
+              "body": "The loop only prints inside the `end_turn` branch. The third response is `end_turn` with one text block.",
+              "cost": 0
+            },
+            {
+              "level": 2,
+              "body": "`r[\"content\"][0][\"text\"]` on the third iteration.",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 80,
+          "concept": "tool-chain-by-model",
+          "code": "# a research-style chain. the fake model picks search → read_page → end_turn.\nTOOLS = {\n    \"search\":    lambda q:   \"https://news.example/ramen\",\n    \"read_page\": lambda url: \"Tokyo's best ramen shops, 2026 guide.\",\n}\n\nresponses = iter([\n    {\"stop_reason\": \"tool_use\", \"content\": [\n        {\"type\": \"tool_use\", \"id\": \"t1\", \"name\": \"search\", \"input\": {\"q\": \"ramen tokyo\"}}\n    ]},\n    {\"stop_reason\": \"tool_use\", \"content\": [\n        {\"type\": \"tool_use\", \"id\": \"t2\", \"name\": \"read_page\",\n         \"input\": {\"url\": \"https://news.example/ramen\"}}\n    ]},\n    {\"stop_reason\": \"end_turn\", \"content\": [\n        {\"type\": \"text\", \"text\": \"found a 2026 ramen guide\"}\n    ]},\n])\n\ndef fake_model(messages):\n    return next(responses)\n\nmessages = [{\"role\": \"user\", \"content\": \"find ramen news\"}]\nfor _ in range(5):\n    r = fake_model(messages)\n    if r[\"stop_reason\"] == \"end_turn\":\n        print(r[\"content\"][0][\"text\"])\n        break\n    tu = r[\"content\"][0]\n    out = TOOLS[tu[\"name\"]](**tu[\"input\"])\n    messages.append({\"role\": \"assistant\", \"content\": r[\"content\"]})\n    messages.append({\"role\": \"user\", \"content\": [{\n        \"type\": \"tool_result\", \"tool_use_id\": tu[\"id\"], \"content\": out,\n    }]})\n",
+          "prompt": "Read the editor. The fake model returns three responses in sequence:\n`search` → `read_page` → `end_turn`. The loop dispatches each tool\nthrough the `TOOLS` registry. What single line of text gets printed?\n",
+          "grader": {
+            "kind": "stdout-equality",
+            "expected": "found a 2026 ramen guide",
+            "normalize": "collapse-trailing-newline"
+          }
+        },
+        {
+          "type": "fill",
+          "id": "agent-loops/multi-step-tools/s05-05-fill-the-dispatch",
+          "xp": 3,
+          "hint": [
+            {
+              "level": 1,
+              "body": "Two pieces: look up the function with `TOOLS[name]`, then call it with `**input` to unpack the dict as keyword arguments.",
+              "cost": 0
+            },
+            {
+              "level": 2,
+              "body": "`TOOLS[tool_use[\"name\"]](**tool_use[\"input\"])` — registry lookup, then unpack-call.",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 65,
+          "concept": "tool-dispatch-via-registry",
+          "prompt": "The agent loop knows the model picked a tool, but the dispatch line\nis unfilled. Look up the function in `TOOLS` by the tool's `name`\nand call it with the tool's `input` dict unpacked as kwargs.\n\nFill in the missing expression so the loop prints `3 hits for ramen`.\n\nExpected output:\n```\n3 hits for ramen\n```\n",
+          "code": "TOOLS = {\n    \"search\": lambda q: f\"3 hits for {q}\",\n}\n\ntool_use = {\"type\": \"tool_use\", \"id\": \"t1\", \"name\": \"search\", \"input\": {\"q\": \"ramen\"}}\n\nresult = ___\nprint(result)\n",
+          "blanks": [
+            {
+              "id": "dispatch",
+              "accept": [
+                "TOOLS[tool_use[\"name\"]](**tool_use[\"input\"])",
+                "TOOLS[tool_use['name']](**tool_use['input'])"
+              ],
+              "caseSensitive": true,
+              "normalize": "trim"
+            }
+          ]
+        },
+        {
+          "type": "fix",
+          "id": "agent-loops/multi-step-tools/s06-06-fix-the-missing-tool",
+          "xp": 4,
+          "hint": [
+            {
+              "level": 1,
+              "body": "Use `TOOLS.get(name)` instead of `TOOLS[name]`. If it returns `None`, build the error string yourself instead of calling.",
+              "cost": 0
+            },
+            {
+              "level": 2,
+              "body": "Replace the dispatch line with:\n\n```python\nfn = TOOLS.get(tool_use[\"name\"])\nresult = fn(**tool_use[\"input\"]) if fn else f\"unknown tool: {tool_use['name']}\"\n```\n",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 90,
+          "concept": "unknown-tool-fail-loud",
+          "brokenCode": "TOOLS = {\n    \"search\": lambda q: f\"hits for {q}\",\n}\n\ntool_use = {\n    \"type\": \"tool_use\",\n    \"id\": \"t1\",\n    \"name\": \"web_search\",  # not in TOOLS!\n    \"input\": {\"q\": \"ramen\"},\n}\n\n# this line crashes with KeyError on unknown names.\nresult = TOOLS[tool_use[\"name\"]](**tool_use[\"input\"])\nprint(result)\n",
+          "prompt": "The model hallucinated a tool name — `web_search` — that isn't in\nthe registry. The current dispatch raises `KeyError` deep inside\nthe loop, which crashes the agent and loses the whole conversation.\n\nFix the dispatch so an unknown tool returns the string\n`\"unknown tool: <name>\"` as the tool result instead. The model can\nthen read that and recover (it usually retries with a real tool\nname).\n\nExpected output:\n```\nunknown tool: web_search\n```\n",
+          "grader": {
+            "kind": "stdout-equality",
+            "expected": "unknown tool: web_search",
+            "normalize": "collapse-trailing-newline"
+          },
+          "bugLines": [
+            12
+          ],
+          "revealAfter": 4
+        },
+        {
+          "type": "fix",
+          "id": "agent-loops/multi-step-tools/s07-07-fix-the-parallel-ids",
+          "xp": 4,
+          "hint": [
+            {
+              "level": 1,
+              "body": "The id of *this* tool_use block is `tu[\"id\"]`, not the literal `\"t1\"`. Read it from the loop variable.",
+              "cost": 0
+            },
+            {
+              "level": 2,
+              "body": "Change line 14 to `\"tool_use_id\": tu[\"id\"],` — every tool_result carries the id of the tool_use it answers.",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 110,
+          "concept": "parallel-tool-result-ids",
+          "brokenCode": "TOOLS = {\n    \"read_page\": lambda url: f\"<{url}>\",\n}\n\nassistant_content = [\n    {\"type\": \"tool_use\", \"id\": \"t1\", \"name\": \"read_page\", \"input\": {\"url\": \"a.com\"}},\n    {\"type\": \"tool_use\", \"id\": \"t2\", \"name\": \"read_page\", \"input\": {\"url\": \"b.com\"}},\n]\n\nresults = []\nfor tu in assistant_content:\n    out = TOOLS[tu[\"name\"]](**tu[\"input\"])\n    results.append({\n        \"type\": \"tool_result\",\n        \"tool_use_id\": \"t1\",  # bug: hardcoded\n        \"content\": out,\n    })\n\nprint([r[\"tool_use_id\"] for r in results])\n",
+          "prompt": "The model returned two `tool_use` blocks in one assistant turn —\nclassic parallel tool calls. The reply builder runs both tools but\nhardcodes both `tool_use_id` values to `\"t1\"`. The next API call\nwill 400 because tool ids must match the originals (`t1` and `t2`).\n\nFix the loop so each tool result carries its own original id.\n\nExpected output:\n```\n['t1', 't2']\n```\n",
+          "grader": {
+            "kind": "stdout-equality",
+            "expected": "['t1', 't2']",
+            "normalize": "collapse-trailing-newline"
+          },
+          "bugLines": [
+            14
+          ],
+          "revealAfter": 4
+        },
+        {
+          "type": "write",
+          "id": "agent-loops/multi-step-tools/s08-08-write-multi-tool-agent",
+          "xp": 5,
+          "hint": [
+            {
+              "level": 1,
+              "body": "Same loop shape as `01-the-loop`. The new part: iterate over every `tool_use` block in `response[\"content\"]`, dispatch through `TOOLS`, and collect a list of `tool_result` blocks for one user turn.",
+              "cost": 0
+            },
+            {
+              "level": 2,
+              "body": "Filter `response[\"content\"]` to just `tool_use` blocks, build a parallel list of `tool_result` blocks (one per id), and put that whole list in `{\"role\": \"user\", \"content\": tool_results}`.",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 180,
+          "concept": "multi-tool-agent-loop",
+          "prompt": "Build the multi-tool agent. Write `run_agent(question)` that:\n\n- Starts with a `messages` list containing one user turn with `question`.\n- Loops up to 5 times, calling `fake_model(messages)` each iteration.\n- On `stop_reason == \"end_turn\"`: return `response[\"content\"][0][\"text\"]`.\n- On `stop_reason == \"tool_use\"`: there may be ONE OR MORE `tool_use`\n  blocks in `response[\"content\"]`. For each one, look up the tool in\n  the `TOOLS` registry and call it with `**block[\"input\"]`. Build a\n  list of `tool_result` blocks (each with the matching `tool_use_id`)\n  and append both turns:\n\n  1. The full assistant turn (`{\"role\": \"assistant\", \"content\": response[\"content\"]}`)\n  2. One user turn whose `content` is the list of tool_result blocks.\n\n- If the cap is hit without `end_turn`, return `\"capped\"`.\n\nThen call it once and print the result.\n\nExpected output:\n```\nfound: Tokyo's best ramen shops, 2026 guide.\n```\n",
+          "starter": "TOOLS = {\n    \"search\":    lambda q:   \"https://news.example/ramen\",\n    \"read_page\": lambda url: \"Tokyo's best ramen shops, 2026 guide.\",\n}\n\nresponses = iter([\n    {\"stop_reason\": \"tool_use\", \"content\": [\n        {\"type\": \"tool_use\", \"id\": \"t1\", \"name\": \"search\", \"input\": {\"q\": \"ramen tokyo\"}}\n    ]},\n    {\"stop_reason\": \"tool_use\", \"content\": [\n        {\"type\": \"tool_use\", \"id\": \"t2\", \"name\": \"read_page\",\n         \"input\": {\"url\": \"https://news.example/ramen\"}}\n    ]},\n    {\"stop_reason\": \"end_turn\", \"content\": [\n        {\"type\": \"text\", \"text\": \"found: Tokyo's best ramen shops, 2026 guide.\"}\n    ]},\n])\n\ndef fake_model(messages):\n    return next(responses)\n\n# define run_agent(question) below\n\nprint(run_agent(\"find the latest ramen news\"))\n",
+          "grader": {
+            "kind": "stdout-equality",
+            "expected": "found: Tokyo's best ramen shops, 2026 guide.",
+            "normalize": "collapse-trailing-newline"
+          },
+          "solution": "TOOLS = {\n    \"search\":    lambda q:   \"https://news.example/ramen\",\n    \"read_page\": lambda url: \"Tokyo's best ramen shops, 2026 guide.\",\n}\n\nresponses = iter([\n    {\"stop_reason\": \"tool_use\", \"content\": [\n        {\"type\": \"tool_use\", \"id\": \"t1\", \"name\": \"search\", \"input\": {\"q\": \"ramen tokyo\"}}\n    ]},\n    {\"stop_reason\": \"tool_use\", \"content\": [\n        {\"type\": \"tool_use\", \"id\": \"t2\", \"name\": \"read_page\",\n         \"input\": {\"url\": \"https://news.example/ramen\"}}\n    ]},\n    {\"stop_reason\": \"end_turn\", \"content\": [\n        {\"type\": \"text\", \"text\": \"found: Tokyo's best ramen shops, 2026 guide.\"}\n    ]},\n])\n\ndef fake_model(messages):\n    return next(responses)\n\ndef run_agent(question):\n    messages = [{\"role\": \"user\", \"content\": question}]\n    for _ in range(5):\n        response = fake_model(messages)\n        if response[\"stop_reason\"] == \"end_turn\":\n            return response[\"content\"][0][\"text\"]\n\n        tool_uses = [b for b in response[\"content\"] if b[\"type\"] == \"tool_use\"]\n        tool_results = []\n        for tu in tool_uses:\n            fn = TOOLS.get(tu[\"name\"])\n            out = fn(**tu[\"input\"]) if fn else f\"unknown tool: {tu['name']}\"\n            tool_results.append({\n                \"type\": \"tool_result\",\n                \"tool_use_id\": tu[\"id\"],\n                \"content\": out,\n            })\n\n        messages.append({\"role\": \"assistant\", \"content\": response[\"content\"]})\n        messages.append({\"role\": \"user\", \"content\": tool_results})\n    return \"capped\"\n\nprint(run_agent(\"find the latest ramen news\"))\n",
+          "hiddenTests": []
+        },
+        {
+          "type": "checkpoint",
+          "id": "agent-loops/multi-step-tools/s09-09-checkpoint",
+          "xp": 8,
+          "hint": [],
+          "personalize": false,
+          "phase": "check",
+          "estSeconds": 200,
+          "concept": "multi-tool-agent-checkpoint",
+          "prompt": "Final drill. Build a research agent with three tools and parallel\ntool calls. Write `run_research_agent(question, max_iterations)`\nthat:\n\n- Maintains a `messages` list, starting with one user turn.\n- Loops up to `max_iterations` times, calling `fake_model(messages)`.\n- On `end_turn`: return\n  `{\"ok\": True, \"answer\": <text>, \"rounds\": <iterations used>, \"tools_called\": <total tool runs across all turns>}`.\n- On `tool_use`: handle ONE OR MORE tool_use blocks per turn. For\n  each, dispatch through `TOOLS`. If the tool name isn't in the\n  registry, the tool result content should be `\"unknown tool: <name>\"`\n  (don't crash). Each tool you successfully run counts toward\n  `tools_called`. Append the assistant turn + one user turn with all\n  tool_result blocks.\n- If `max_iterations` is exhausted without `end_turn`: return\n  `{\"ok\": False, \"answer\": \"capped\", \"rounds\": max_iterations, \"tools_called\": <count so far>}`.\n\nTwo cases run for you. Expected output:\n```\nok=True rounds=3 tools=3 answer=found 2 sources on ramen\nok=False rounds=2 tools=2 answer=capped\n```\n",
+          "starter": "TOOLS = {\n    \"search\":    lambda q:   f\"results for {q}\",\n    \"read_page\": lambda url: f\"<text from {url}>\",\n    \"summarize\": lambda text: text[:30],\n}\n\ngood = iter([\n    # turn 1: parallel — search AND read_page in one assistant turn.\n    {\"stop_reason\": \"tool_use\", \"content\": [\n        {\"type\": \"tool_use\", \"id\": \"t1\", \"name\": \"search\", \"input\": {\"q\": \"ramen\"}},\n        {\"type\": \"tool_use\", \"id\": \"t2\", \"name\": \"read_page\", \"input\": {\"url\": \"a.com\"}},\n    ]},\n    # turn 2: one summarize call.\n    {\"stop_reason\": \"tool_use\", \"content\": [\n        {\"type\": \"tool_use\", \"id\": \"t3\", \"name\": \"summarize\", \"input\": {\"text\": \"long article\"}},\n    ]},\n    # turn 3: done.\n    {\"stop_reason\": \"end_turn\", \"content\": [\n        {\"type\": \"text\", \"text\": \"found 2 sources on ramen\"},\n    ]},\n])\n\ncap = iter([\n    {\"stop_reason\": \"tool_use\", \"content\": [\n        {\"type\": \"tool_use\", \"id\": \"c1\", \"name\": \"search\", \"input\": {\"q\": \"x\"}}\n    ]},\n    {\"stop_reason\": \"tool_use\", \"content\": [\n        {\"type\": \"tool_use\", \"id\": \"c2\", \"name\": \"search\", \"input\": {\"q\": \"y\"}}\n    ]},\n    {\"stop_reason\": \"tool_use\", \"content\": [\n        {\"type\": \"tool_use\", \"id\": \"c3\", \"name\": \"search\", \"input\": {\"q\": \"z\"}}\n    ]},\n])\n\ncurrent = {\"iter\": good}\n\ndef fake_model(messages):\n    return next(current[\"iter\"])\n\n# define run_research_agent(question, max_iterations) below\n\ncurrent[\"iter\"] = good\nr = run_research_agent(\"research ramen\", 5)\nprint(f\"ok={r['ok']} rounds={r['rounds']} tools={r['tools_called']} answer={r['answer']}\")\n\ncurrent[\"iter\"] = cap\nr = run_research_agent(\"loop forever\", 2)\nprint(f\"ok={r['ok']} rounds={r['rounds']} tools={r['tools_called']} answer={r['answer']}\")\n",
+          "grader": {
+            "kind": "stdout-equality",
+            "expected": "ok=True rounds=3 tools=3 answer=found 2 sources on ramen\nok=False rounds=2 tools=2 answer=capped\n",
+            "normalize": "collapse-trailing-newline"
+          },
+          "solution": "TOOLS = {\n    \"search\":    lambda q:   f\"results for {q}\",\n    \"read_page\": lambda url: f\"<text from {url}>\",\n    \"summarize\": lambda text: text[:30],\n}\n\ngood = iter([\n    {\"stop_reason\": \"tool_use\", \"content\": [\n        {\"type\": \"tool_use\", \"id\": \"t1\", \"name\": \"search\", \"input\": {\"q\": \"ramen\"}},\n        {\"type\": \"tool_use\", \"id\": \"t2\", \"name\": \"read_page\", \"input\": {\"url\": \"a.com\"}},\n    ]},\n    {\"stop_reason\": \"tool_use\", \"content\": [\n        {\"type\": \"tool_use\", \"id\": \"t3\", \"name\": \"summarize\", \"input\": {\"text\": \"long article\"}},\n    ]},\n    {\"stop_reason\": \"end_turn\", \"content\": [\n        {\"type\": \"text\", \"text\": \"found 2 sources on ramen\"},\n    ]},\n])\n\ncap = iter([\n    {\"stop_reason\": \"tool_use\", \"content\": [\n        {\"type\": \"tool_use\", \"id\": \"c1\", \"name\": \"search\", \"input\": {\"q\": \"x\"}}\n    ]},\n    {\"stop_reason\": \"tool_use\", \"content\": [\n        {\"type\": \"tool_use\", \"id\": \"c2\", \"name\": \"search\", \"input\": {\"q\": \"y\"}}\n    ]},\n    {\"stop_reason\": \"tool_use\", \"content\": [\n        {\"type\": \"tool_use\", \"id\": \"c3\", \"name\": \"search\", \"input\": {\"q\": \"z\"}}\n    ]},\n])\n\ncurrent = {\"iter\": good}\n\ndef fake_model(messages):\n    return next(current[\"iter\"])\n\ndef run_research_agent(question, max_iterations):\n    messages = [{\"role\": \"user\", \"content\": question}]\n    tools_called = 0\n    for rounds in range(1, max_iterations + 1):\n        response = fake_model(messages)\n        if response[\"stop_reason\"] == \"end_turn\":\n            return {\n                \"ok\": True,\n                \"answer\": response[\"content\"][0][\"text\"],\n                \"rounds\": rounds,\n                \"tools_called\": tools_called,\n            }\n\n        tool_uses = [b for b in response[\"content\"] if b[\"type\"] == \"tool_use\"]\n        tool_results = []\n        for tu in tool_uses:\n            fn = TOOLS.get(tu[\"name\"])\n            if fn:\n                out = fn(**tu[\"input\"])\n                tools_called += 1\n            else:\n                out = f\"unknown tool: {tu['name']}\"\n            tool_results.append({\n                \"type\": \"tool_result\",\n                \"tool_use_id\": tu[\"id\"],\n                \"content\": out,\n            })\n\n        messages.append({\"role\": \"assistant\", \"content\": response[\"content\"]})\n        messages.append({\"role\": \"user\", \"content\": tool_results})\n\n    return {\n        \"ok\": False,\n        \"answer\": \"capped\",\n        \"rounds\": max_iterations,\n        \"tools_called\": tools_called,\n    }\n\ncurrent[\"iter\"] = good\nr = run_research_agent(\"research ramen\", 5)\nprint(f\"ok={r['ok']} rounds={r['rounds']} tools={r['tools_called']} answer={r['answer']}\")\n\ncurrent[\"iter\"] = cap\nr = run_research_agent(\"loop forever\", 2)\nprint(f\"ok={r['ok']} rounds={r['rounds']} tools={r['tools_called']} answer={r['answer']}\")\n",
+          "passThreshold": 0.66
+        }
+      ],
+      "xpTotal": 32
     }
   ],
-  "xpTotal": 32
+  "xpTotal": 64
 }

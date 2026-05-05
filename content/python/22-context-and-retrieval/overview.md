@@ -29,7 +29,7 @@ Cursor will write you a working-looking RAG script in about 90 seconds. Most of 
 - Stuffing every chunk it retrieves, blowing the context window and the bill
 - No deduplication, so when the same paragraph appears in two documents it dominates retrieval
 
-Each of these has a screenshot in the lessons. You see the bug, you predict what the model will do, you fix it. Same pattern as the rest of Pyloft.
+Each of these has a screenshot in the lessons. You see the bug, you predict what the model will do, you fix it. Same pattern as the rest of promptdojo.
 
 ## The thing the tutorials never tell you
 

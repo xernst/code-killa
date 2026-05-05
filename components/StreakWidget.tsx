@@ -12,10 +12,10 @@ export default function StreakWidget() {
     const refresh = () => setS(viewStreak(loadProgress()));
     refresh();
     const onUpdate = () => refresh();
-    window.addEventListener("code-killa:progress", onUpdate);
+    window.addEventListener("promptdojo:progress", onUpdate);
     window.addEventListener("storage", onUpdate);
     return () => {
-      window.removeEventListener("code-killa:progress", onUpdate);
+      window.removeEventListener("promptdojo:progress", onUpdate);
       window.removeEventListener("storage", onUpdate);
     };
   }, []);

@@ -3,7 +3,7 @@ estSeconds: 60
 concept: choosing-access-path
 code: |
   data = {
-      "team": "pyloft",
+      "team": "promptdojo",
       "members": [
           {"name": "maya", "role": "founder"},
           {"name": "marcus", "role": "eng"},
@@ -23,7 +23,7 @@ options:
     label: "`data[\"members\"][1][\"name\"]`"
   - id: c
     label: "`data[\"team\"][\"members\"][1]`"
-    explain: "`data[\"team\"]` is the string `\"pyloft\"`. There's no further structure to walk."
+    explain: "`data[\"team\"]` is the string `\"promptdojo\"`. There's no further structure to walk."
   - id: d
     label: "`data[1][\"members\"][\"name\"]`"
     explain: "`data` is a dict, not a list. Indexing it with `1` raises a `KeyError`."

@@ -1,8 +1,8 @@
-# Pyloft
+# promptdojo
 
 > Codecademy teaches Python like it's 1995. Boot.dev gamifies the same curriculum. Both assume you want to be a software engineer.
 >
-> Pyloft is the school for people who use Cursor every day and need to know what it got wrong.
+> promptdojo is the school for people who use Cursor every day and need to know what it got wrong.
 
 **Status**: building in public. Follow [@joshernst](https://twitter.com/joshernst) for daily progress.
 

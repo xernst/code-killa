@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>promptdojo — brand kit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;0,9..144,900;1,9..144,800&family=JetBrains+Mono:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink-950:#0E0F12; --ink-900:#18181b; --ink-800:#27272a; --ink-700:#3f3f46;
+    --ink-500:#71717a; --ink-400:#a1a1aa; --ink-300:#d4d4d8; --ink-100:#f4f4f5;
+    --ember:#F2683C; --ember-dim:#e34c1c;
+    --ok:#86efac; --err:#ef4444;
+    --display: 'Fraunces', ui-serif, Georgia, serif;
+    --mono: 'JetBrains Mono', ui-monospace, monospace;
+  }
+  *{box-sizing:border-box}
+  html, body { margin:0; background: var(--ink-950); color: var(--ink-100);
+    font-family: var(--display); font-weight: 400; -webkit-font-smoothing: antialiased; }
+  body { max-width: 1280px; margin: 0 auto; padding: 56px 64px 96px; }
+
+  header { display: flex; align-items: center; gap: 24px;
+    border-bottom: 1px solid var(--ink-800); padding-bottom: 28px; margin-bottom: 56px; }
+  header img { width: 56px; height: 56px; }
+  .eyebrow { font-family: var(--mono); color: var(--ember);
+    font-size: 12px; letter-spacing: 0.4em; text-transform: uppercase; font-weight: 800; }
+  header h1 {
+    margin: 0; font-family: var(--display); font-weight: 900;
+    font-variation-settings: 'opsz' 144;
+    font-size: 56px; letter-spacing: -0.04em; line-height: 1;
+  }
+  header .meta { margin-left: auto; font-family: var(--mono); color: var(--ink-500); font-size: 13px; }
+
+  h2 { font-family: var(--mono); color: var(--ink-400);
+    font-size: 13px; letter-spacing: 0.4em; text-transform: uppercase; font-weight: 800;
+    margin: 64px 0 24px; }
+
+  .lede { color: var(--ink-300); font-size: 22px; line-height: 1.5; max-width: 64ch;
+    font-variation-settings: 'opsz' 14; margin: 0 0 16px; }
+  .lede em { color: var(--ink-100); font-style: italic;
+    font-variation-settings: 'opsz' 144, 'wght' 600; }
+
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+  .card {
+    background: var(--ink-900); border: 1px solid var(--ink-800); border-radius: 14px;
+    overflow: hidden;
+  }
+  .card .hd {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 14px 18px; border-bottom: 1px solid var(--ink-800);
+    font-family: var(--mono); font-size: 12px; letter-spacing: 0.05em;
+  }
+  .card .hd .name { color: var(--ink-100); font-weight: 800; }
+  .card .hd .file { color: var(--ink-500); }
+  .stage { aspect-ratio: 16/9; display: grid; place-items: center; padding: 32px; }
+  .stage img { max-width: 80%; max-height: 90%; }
+  .bg-dark  { background: var(--ink-950); }
+  .bg-light { background: var(--ink-100); }
+  .bg-ember { background: var(--ember); }
+
+  /* Lockup hero */
+  .hero {
+    border: 1px solid var(--ink-800); border-radius: 20px;
+    padding: 56px; background: var(--ink-900);
+    display: grid; grid-template-columns: 200px 1fr; gap: 40px; align-items: center;
+  }
+  .hero img { width: 200px; }
+  .hero .copy h3 {
+    margin: 0 0 12px; font-family: var(--display); font-weight: 900;
+    font-variation-settings: 'opsz' 144; font-size: 64px; letter-spacing: -0.04em; line-height: 1;
+  }
+  .hero .copy p { margin: 0; color: var(--ink-300); font-size: 22px; line-height: 1.5; }
+  .hero .copy p em { font-style: italic; font-variation-settings: 'opsz' 144, 'wght' 600; color: var(--ink-100); }
+
+  /* Wordmark row */
+  .wordmark-row .stage { aspect-ratio: 5/1; }
+  .wordmark-row .stage img { max-height: 70%; }
+
+  /* Mono demo with currentColor */
+  .mono-demo { padding: 32px; display: flex; gap: 32px; align-items: center; justify-content: center;
+    flex-wrap: wrap; }
+  .mono-demo .swatch { width: 96px; height: 96px; display: grid; place-items: center; }
+  .mono-demo svg { width: 64px; height: 64px; }
+
+  /* Palette */
+  .palette { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
+  .swatch-card {
+    border-radius: 12px; padding: 16px; height: 132px;
+    display: flex; flex-direction: column; justify-content: space-between;
+    font-family: var(--mono); font-size: 11px; border: 1px solid var(--ink-800);
+  }
+  .swatch-card .role { font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; font-size: 10px; }
+  .swatch-card .hex  { opacity: 0.7; }
+
+  /* Type sample */
+  .type-card {
+    background: var(--ink-900); border: 1px solid var(--ink-800); border-radius: 14px;
+    padding: 40px;
+  }
+  .type-card .super {
+    font-family: var(--mono); color: var(--ember); font-weight: 800;
+    font-size: 13px; letter-spacing: 0.4em; text-transform: uppercase; margin-bottom: 16px;
+  }
+  .type-card .display {
+    font-family: var(--display); font-weight: 900;
+    font-variation-settings: 'opsz' 144;
+    font-size: 88px; letter-spacing: -0.045em; line-height: 0.95;
+    margin: 0;
+  }
+  .type-card .display .caret { color: var(--ember); margin-right: 24px; }
+  .type-card .display .punch { color: var(--ember); font-style: italic;
+    font-variation-settings: 'opsz' 144, 'wght' 800; }
+  .type-card .body {
+    font-family: var(--display); color: var(--ink-300);
+    font-size: 22px; line-height: 1.5; max-width: 64ch;
+    font-variation-settings: 'opsz' 14; margin: 28px 0 0;
+  }
+  .type-card .body em { color: var(--ink-100); font-style: italic;
+    font-variation-settings: 'opsz' 144, 'wght' 600; }
+
+  .code-block {
+    background: var(--ink-950); border: 1px solid var(--ink-800); border-radius: 10px;
+    padding: 20px 24px; margin-top: 24px;
+    font-family: var(--mono); font-size: 16px; line-height: 1.55;
+    font-variant-ligatures: none;
+    color: var(--ink-300);
+  }
+  .code-block .kw  { color: var(--ember); }
+  .code-block .str { color: var(--ok); }
+  .code-block .com { color: var(--ink-700); }
+  .code-block .bug { background: rgba(239,68,68,0.14); color: var(--err);
+    margin: 0 -8px; padding: 2px 8px; border-radius: 4px; }
+
+  /* Motion demo */
+  .motion-card {
+    background: var(--ink-900); border: 1px solid var(--ink-800); border-radius: 14px;
+    padding: 40px; display: flex; align-items: center; gap: 28px;
+  }
+  .motion-card .wm {
+    font-family: var(--mono); font-weight: 800; font-size: 56px; letter-spacing: -0.015em;
+    color: var(--ink-100);
+  }
+  .motion-card .wm .caret { color: var(--ember); margin-right: 14px; }
+  .motion-card .wm .pd-cursor {
+    display: inline-block; width: 28px; height: 8px; background: var(--ember);
+    margin-left: 12px; vertical-align: 8px; border-radius: 1px;
+    animation: pdblink 1s steps(1) infinite;
+  }
+  @keyframes pdblink { 0%,49% { opacity: 1; } 50%,100% { opacity: 0; } }
+  .motion-card .label { font-family: var(--mono); color: var(--ink-500); font-size: 13px; }
+
+  /* Voice samples */
+  .voice {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+  }
+  .voice .quote {
+    border: 1px solid var(--ink-800); border-radius: 14px; padding: 28px 32px;
+    font-family: var(--display); font-size: 22px; line-height: 1.4;
+    font-variation-settings: 'opsz' 14, 'wght' 400;
+    color: var(--ink-300);
+  }
+  .voice .quote.right { border-left: 3px solid var(--ember); }
+  .voice .quote.wrong { border-left: 3px solid var(--err); color: var(--ink-500); }
+  .voice .quote .tag { display: block;
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.3em; text-transform: uppercase;
+    margin-bottom: 14px; font-weight: 800; }
+  .voice .quote.right .tag { color: var(--ember); }
+  .voice .quote.wrong .tag { color: var(--err); }
+
+  footer { margin-top: 96px; padding-top: 24px; border-top: 1px solid var(--ink-800);
+    font-family: var(--mono); color: var(--ink-700); font-size: 12px;
+    display: flex; justify-content: space-between; }
+  footer a { color: var(--ink-500); text-decoration: none; }
+</style>
+</head>
+<body>
+
+<header>
+  <img src="logos/mark.svg" alt="promptdojo">
+  <div>
+    <div class="eyebrow">brand kit · v0</div>
+    <h1>promptdojo</h1>
+  </div>
+  <div class="meta">design-kit/preview.html</div>
+</header>
+
+<p class="lede">
+  A school for builders <em>whose code is mostly written by ai now.</em>
+  This page is the visual contract — logos, color, type, voice, motion.
+  Every consumer (live app, launch trailer, OG art, slides) traces back to here.
+</p>
+
+<!-- ============ THE LOGO ============ -->
+<h2>The lockup</h2>
+<div class="hero">
+  <img src="logos/lockup-vertical.svg" alt="promptdojo lockup">
+  <div class="copy">
+    <h3>One mark, one wordmark.</h3>
+    <p>The mark is the favicon, the avatar, the watermark. The wordmark is the headline. <em>The lockup is for moments — keynote openers, posters — never the web.</em></p>
+  </div>
+</div>
+
+<h2>Mark — color · on light · ember</h2>
+<div class="grid-3">
+  <div class="card">
+    <div class="hd"><span class="name">mark</span><span class="file">mark.svg</span></div>
+    <div class="stage bg-dark"><img src="logos/mark.svg" alt=""></div>
+  </div>
+  <div class="card">
+    <div class="hd"><span class="name">mark · light</span><span class="file">mark-on-light.svg</span></div>
+    <div class="stage bg-light"><img src="logos/mark-on-light.svg" alt=""></div>
+  </div>
+  <div class="card">
+    <div class="hd"><span class="name">mark · mono</span><span class="file">mark-mono.svg</span></div>
+    <div class="stage bg-ember">
+      <svg viewBox="0 0 256 256" width="160" height="160" style="color: #0E0F12">
+        <path d="M 200 78 A 90 90 0 1 1 156 56" fill="none" stroke="currentColor" stroke-width="14" stroke-linecap="round"/>
+        <path d="M 102 100 L 138 128 L 102 156" fill="none" stroke="currentColor" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+        <rect x="100" y="170" width="56" height="10" rx="2" fill="currentColor"/>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<h2>Wordmark — color · on light · ember</h2>
+<div class="grid-3 wordmark-row">
+  <div class="card">
+    <div class="hd"><span class="name">wordmark</span><span class="file">wordmark.svg</span></div>
+    <div class="stage bg-dark"><img src="logos/wordmark.svg" alt=""></div>
+  </div>
+  <div class="card">
+    <div class="hd"><span class="name">wordmark · light</span><span class="file">wordmark-on-light.svg</span></div>
+    <div class="stage bg-light"><img src="logos/wordmark-on-light.svg" alt=""></div>
+  </div>
+  <div class="card">
+    <div class="hd"><span class="name">wordmark · mono</span><span class="file">wordmark-mono.svg</span></div>
+    <div class="stage bg-ember"><img src="logos/wordmark-mono.svg" alt="" style="color: #0E0F12; filter: invert(0)"></div>
+  </div>
+</div>
+
+<!-- ============ COLOR ============ -->
+<h2>Color</h2>
+<div class="palette">
+  <div class="swatch-card" style="background:#0E0F12;color:#f4f4f5"><span class="role">ink-950</span><span class="hex">#0E0F12</span></div>
+  <div class="swatch-card" style="background:#18181b;color:#f4f4f5"><span class="role">ink-900</span><span class="hex">#18181b</span></div>
+  <div class="swatch-card" style="background:#27272a;color:#f4f4f5"><span class="role">ink-800</span><span class="hex">#27272a</span></div>
+  <div class="swatch-card" style="background:#a1a1aa;color:#0E0F12"><span class="role">ink-400</span><span class="hex">#a1a1aa</span></div>
+  <div class="swatch-card" style="background:#f4f4f5;color:#0E0F12"><span class="role">ink-100</span><span class="hex">#f4f4f5</span></div>
+  <div class="swatch-card" style="background:#F2683C;color:#0E0F12"><span class="role">ember</span><span class="hex">#F2683C</span></div>
+</div>
+
+<!-- ============ TYPE ============ -->
+<h2>Type — Fraunces + JetBrains Mono</h2>
+<div class="type-card">
+  <div class="super">chapter 07 · mutation and state</div>
+  <h3 class="display"><span class="caret">❯</span>ai writes this. <span class="punch">it's wrong.</span></h3>
+  <p class="body">
+    Promptdojo teaches you to ship working code in the AI era — not to memorize syntax.
+    You'll review what the model writes, find the bug, fix it in-browser, <em>and repeat 624 times.</em>
+  </p>
+  <pre class="code-block"><span class="com"># cursor.py</span>
+<span class="kw">def</span> collect_errors(msg: str, <span class="bug">bag: list = []</span>):
+    bag.append(msg)
+    <span class="kw">return</span> bag</pre>
+</div>
+
+<!-- ============ MOTION ============ -->
+<h2>Motion — the heartbeat</h2>
+<div class="motion-card">
+  <div class="wm"><span class="caret">❯</span>promptdojo<span class="pd-cursor"></span></div>
+  <div class="label">cursor blinks at 1.0 Hz · steps(1) · the brand heartbeat</div>
+</div>
+
+<!-- ============ VOICE ============ -->
+<h2>Voice</h2>
+<div class="voice">
+  <div class="quote right">
+    <span class="tag">do</span>
+    Promptdojo teaches you to ship working code in the AI era — not to memorize syntax. You'll review what the model writes, find the bug, fix it in-browser, and repeat 624 times.
+  </div>
+  <div class="quote wrong">
+    <span class="tag">don't</span>
+    Welcome to Promptdojo, a comprehensive learning platform designed to empower modern developers in mastering Python through AI-assisted educational experiences. Our innovative curriculum combines cutting-edge techniques with hands-on practice.
+  </div>
+</div>
+
+<footer>
+  <span>~/promptdojo/design-kit/preview.html · v0</span>
+  <span><a href="README.md">README</a> · <a href="LOGO.md">LOGO</a> · <a href="COLORS.md">COLORS</a> · <a href="TYPOGRAPHY.md">TYPOGRAPHY</a> · <a href="VOICE.md">VOICE</a> · <a href="MOTION.md">MOTION</a></span>
+</footer>
+
+</body>
+</html>

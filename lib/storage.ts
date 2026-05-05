@@ -2,8 +2,8 @@
 import type { GlobalProgress, LessonProgress, StreakState } from "./types";
 import type { StepAttempt, UserProfile } from "./content/schema";
 
-const KEY = "code-killa:progress:v1";
-const KEY_V2 = "code-killa:progress:v2";
+const KEY = "promptdojo:progress:v1";
+const KEY_V2 = "promptdojo:progress:v2";
 
 const FRESH_STREAK: StreakState = {
   lastActivityDate: "",
@@ -43,7 +43,7 @@ export function saveProgress(p: GlobalProgress) {
   if (typeof window === "undefined") return;
   window.localStorage.setItem(KEY, JSON.stringify(p));
   // Notify other tabs / our own listeners.
-  window.dispatchEvent(new CustomEvent("code-killa:progress"));
+  window.dispatchEvent(new CustomEvent("promptdojo:progress"));
 }
 
 export function updateProgress(
@@ -205,7 +205,7 @@ export function loadProgressV2(): ProgressV2 {
 export function saveProgressV2(p: ProgressV2) {
   if (typeof window === "undefined") return;
   window.localStorage.setItem(KEY_V2, JSON.stringify(p));
-  window.dispatchEvent(new CustomEvent("code-killa:progress-v2"));
+  window.dispatchEvent(new CustomEvent("promptdojo:progress-v2"));
 }
 
 export function updateProgressV2(

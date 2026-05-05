@@ -23,9 +23,9 @@ runnable: true
 # Free-form text is not data
 
 The first time you ask Claude to "extract the user's email from this
-support ticket," it returns *exactly* what you wanted: `maya@pyloft.dev`.
-The second time, it returns `Sure! The email is maya@pyloft.dev.`. The
-third time, `The email address you're looking for is maya@pyloft.dev`.
+support ticket," it returns *exactly* what you wanted: `maya@promptdojo.dev`.
+The second time, it returns `Sure! The email is maya@promptdojo.dev.`. The
+third time, `The email address you're looking for is maya@promptdojo.dev`.
 
 Three different shapes. Your downstream code expected a string. Now it
 either has to regex-extract the email out of natural language every

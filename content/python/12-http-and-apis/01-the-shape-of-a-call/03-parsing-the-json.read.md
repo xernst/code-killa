@@ -8,9 +8,9 @@ code: |
   user = {
       "id": 7,
       "name": "maya",
-      "email": "maya@pyloft.dev",
+      "email": "maya@promptdojo.dev",
       "roles": ["admin", "billing"],
-      "org": {"slug": "pyloft", "tier": "pro"},
+      "org": {"slug": "promptdojo", "tier": "pro"},
   }
 
   print(user["name"])

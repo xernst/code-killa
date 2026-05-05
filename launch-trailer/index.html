@@ -1,0 +1,556 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>promptdojo — launch trailer</title>
+<style>
+  :root {
+    --ink-950:#0E0F12; --ink-900:#18181b; --ink-800:#27272a; --ink-700:#3f3f46;
+    --ink-400:#a1a1aa; --ink-300:#d4d4d8; --ink-100:#f4f4f5;
+    --ember:#F2683C; --ember-dim:#e34c1c;
+    --ok:#86efac; --err:#ef4444;
+  }
+
+  html, body { margin:0; padding:0; background:#0E0F12; }
+  body { font-family: 'Geist Mono', ui-monospace, monospace; color:#f4f4f5; -webkit-font-smoothing:antialiased; }
+
+  #trailer {
+    position: relative;
+    width: 1920px;
+    height: 1080px;
+    overflow: hidden;
+    background: #0E0F12;
+  }
+
+  .display { font-family: 'Fraunces', serif; font-weight: 900;
+    font-variation-settings: 'opsz' 144, 'wght' 900, 'SOFT' 0;
+    letter-spacing: -0.04em; line-height: 0.95; }
+  .display-italic { font-family: 'Fraunces', serif; font-style: italic;
+    font-variation-settings: 'opsz' 144, 'wght' 800; letter-spacing: -0.03em; }
+  .mono { font-family: 'Geist Mono', ui-monospace, monospace; }
+  .num  { font-variant-numeric: tabular-nums; }
+
+  .bg-grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(242,104,60,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(242,104,60,0.04) 1px, transparent 1px);
+    background-size: 80px 80px;
+    pointer-events: none;
+  }
+  .bg-glow {
+    position: absolute;
+    width: 1400px; height: 1400px;
+    left: 50%; top: 50%;
+    margin: -700px 0 0 -700px;
+    background: radial-gradient(circle, rgba(242,104,60,0.18), rgba(242,104,60,0) 60%);
+    pointer-events: none;
+    transform-origin: center;
+  }
+  .bg-noise {
+    position: absolute; inset: 0; opacity: 0.04;
+    background-image: radial-gradient(rgba(255,255,255,0.6) 1px, transparent 1px);
+    background-size: 4px 4px;
+    pointer-events: none;
+  }
+
+  .corner-mark {
+    position: absolute; left: 56px; top: 56px;
+    width: 88px; height: 88px;
+  }
+  .corner-mark svg { width: 100%; height: 100%; display: block; }
+  .footer-wordmark {
+    position: absolute; right: 56px; bottom: 48px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 22px; font-weight: 800; letter-spacing: 0.02em;
+    color: #d4d4d8;
+  }
+  .footer-wordmark .caret { color: var(--ember); margin-right: 10px; }
+  .footer-wordmark .url { color: #a1a1aa; margin-left: 16px; font-weight: 400; }
+
+  .scene {
+    position: absolute; inset: 0;
+    opacity: 0;
+  }
+  .scene-content {
+    position: relative;
+    width: 100%; height: 100%;
+    display: flex; flex-direction: column;
+    box-sizing: border-box;
+  }
+
+  /* ---- Scene 1: HOOK ---- */
+  .s1 .scene-content {
+    padding: 200px 160px;
+    justify-content: center;
+    gap: 36px;
+  }
+  .s1 .eyebrow {
+    color: var(--ember);
+    font-family: 'Geist Mono', monospace;
+    font-size: 24px; font-weight: 800;
+    letter-spacing: 8px; text-transform: uppercase;
+  }
+  .s1 .wordmark {
+    font-family: 'Geist Mono', monospace;
+    font-size: 240px; font-weight: 900;
+    letter-spacing: -0.06em; line-height: 0.95;
+    color: var(--ink-100);
+  }
+  .s1 .wordmark .caret { color: var(--ember); margin-right: 28px; }
+  .s1 .wordmark .cursor {
+    display: inline-block; width: 64px; height: 16px;
+    background: var(--ember); margin-left: 18px; vertical-align: 32px;
+    border-radius: 2px;
+  }
+  .s1 .tagline {
+    font-family: 'Fraunces', serif;
+    font-variation-settings: 'opsz' 144, 'wght' 400;
+    font-size: 56px; line-height: 1.15; letter-spacing: -0.025em;
+    color: var(--ink-300);
+    max-width: 1100px;
+  }
+  .s1 .tagline em {
+    font-style: italic;
+    font-variation-settings: 'opsz' 144, 'wght' 600;
+    color: var(--ink-100);
+  }
+
+  /* ---- Scene 2: WEDGE ---- */
+  .s2 .scene-content {
+    padding: 140px 120px;
+    flex-direction: row;
+    gap: 96px;
+    align-items: center;
+  }
+  .s2 .left { flex: 1; display: flex; flex-direction: column; gap: 24px; }
+  .s2 .eyebrow {
+    color: var(--ember);
+    font-family: 'Geist Mono', monospace;
+    font-size: 20px; font-weight: 800;
+    letter-spacing: 6px; text-transform: uppercase;
+  }
+  .s2 h2 {
+    margin: 0;
+    font-family: 'Fraunces', serif;
+    font-variation-settings: 'opsz' 144, 'wght' 900;
+    font-size: 132px; line-height: 0.92; letter-spacing: -0.045em;
+    color: var(--ink-100);
+  }
+  .s2 h2 .punch { color: var(--ember); display: block; }
+  .s2 .annotation {
+    margin-top: 28px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 26px; color: var(--ink-400); line-height: 1.4;
+    max-width: 600px;
+  }
+  .s2 .annotation .err { color: var(--err); font-weight: 800; }
+  .s2 .right { width: 760px; }
+  .s2 .code-block {
+    background: var(--ink-900);
+    border: 1px solid var(--ink-800);
+    border-radius: 14px;
+    padding: 24px 28px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 28px; line-height: 1.55;
+    font-variant-ligatures: none;
+  }
+  .s2 .code-block .filename {
+    color: var(--ink-400); font-size: 16px;
+    letter-spacing: 3px; text-transform: uppercase;
+    margin-bottom: 14px; font-weight: 800;
+  }
+  .s2 .code-line { color: var(--ink-300); white-space: pre; }
+  .s2 .code-line .kw { color: var(--ember); }
+  .s2 .code-line.bug {
+    color: var(--err);
+    background: rgba(239,68,68,0.14);
+    margin: 0 -8px; padding: 2px 8px; border-radius: 4px;
+  }
+
+  /* ---- Scene 3: IDE ---- */
+  .s3 .scene-content {
+    padding: 120px 200px;
+    justify-content: center;
+    gap: 40px;
+  }
+  .s3 .eyebrow {
+    color: var(--ember);
+    font-family: 'Geist Mono', monospace;
+    font-size: 20px; font-weight: 800;
+    letter-spacing: 6px; text-transform: uppercase;
+  }
+  .s3 h2 {
+    margin: 0 0 8px;
+    font-family: 'Fraunces', serif;
+    font-variation-settings: 'opsz' 144, 'wght' 900;
+    font-size: 84px; line-height: 0.95; letter-spacing: -0.04em;
+    color: var(--ink-100);
+  }
+  .s3 .browser {
+    background: var(--ink-900);
+    border: 1px solid var(--ink-800);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+  .s3 .chrome {
+    display: flex; align-items: center;
+    padding: 14px 20px;
+    background: var(--ink-950);
+    border-bottom: 1px solid var(--ink-800);
+  }
+  .s3 .chrome .dot { width: 12px; height: 12px; border-radius: 6px; margin-right: 8px; }
+  .s3 .chrome .url {
+    margin-left: 22px; flex: 1;
+    font-family: 'Geist Mono', monospace;
+    font-size: 18px; color: var(--ink-400);
+  }
+  .s3 .chrome .run {
+    padding: 8px 22px; border-radius: 8px;
+    background: var(--ember); color: var(--ink-950);
+    font-family: 'Geist Mono', monospace;
+    font-size: 18px; font-weight: 800;
+    letter-spacing: 0.04em; text-transform: uppercase;
+  }
+  .s3 .editor {
+    padding: 28px 32px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 26px; line-height: 1.55;
+    font-variant-ligatures: none;
+  }
+  .s3 .editor .line { display: flex; }
+  .s3 .editor .ln { color: #71717a; width: 36px; }
+  .s3 .editor .kw  { color: var(--ember); }
+  .s3 .editor .str { color: var(--ok); }
+  .s3 .editor .ws  { color: var(--ink-300); }
+  .s3 .output {
+    border-top: 1px solid var(--ink-800);
+    padding: 22px 32px;
+    background: rgba(245,158,11,0.04);
+    font-family: 'Geist Mono', monospace;
+    font-size: 22px;
+  }
+  .s3 .output .label {
+    color: var(--ink-400);
+    font-size: 14px; letter-spacing: 3px; text-transform: uppercase;
+    margin-bottom: 10px; font-weight: 800;
+  }
+  .s3 .output .result { color: var(--ink-100); }
+  .s3 .output .meta { color: var(--ember); font-size: 16px; margin-top: 10px; }
+
+  /* ---- Scene 4: CAPSTONE ---- */
+  .s4 .scene-content {
+    padding: 130px 140px;
+    flex-direction: row;
+    gap: 100px;
+    align-items: center;
+  }
+  .s4 .left { flex: 1; display: flex; flex-direction: column; gap: 28px; }
+  .s4 .eyebrow {
+    color: var(--ember);
+    font-family: 'Geist Mono', monospace;
+    font-size: 20px; font-weight: 800;
+    letter-spacing: 6px; text-transform: uppercase;
+  }
+  .s4 h2 {
+    margin: 0;
+    font-family: 'Fraunces', serif;
+    font-variation-settings: 'opsz' 144, 'wght' 900;
+    font-size: 110px; line-height: 0.95; letter-spacing: -0.04em;
+    color: var(--ink-100);
+  }
+  .s4 h2 em {
+    font-style: italic;
+    font-variation-settings: 'opsz' 144, 'wght' 800;
+    color: var(--ember);
+  }
+  .s4 .footnote {
+    margin-top: 12px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 22px; color: var(--ink-400); letter-spacing: 0.02em;
+  }
+  .s4 .right { width: 720px; }
+  .s4 .trace {
+    background: var(--ink-900);
+    border: 1px solid var(--ink-800);
+    border-radius: 14px;
+    padding: 28px 32px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 22px;
+    font-variant-ligatures: none;
+  }
+  .s4 .trace .row { display: flex; align-items: flex-start; padding: 6px 0; }
+  .s4 .trace .row + .row { margin-top: 6px; }
+  .s4 .trace .lbl {
+    width: 160px; flex-shrink: 0;
+    font-size: 14px; letter-spacing: 1.5px; text-transform: uppercase;
+    font-weight: 800; padding-top: 4px;
+  }
+  .s4 .trace .lbl.user   { color: var(--ink-400); }
+  .s4 .trace .lbl.tool   { color: var(--ember); }
+  .s4 .trace .lbl.result { color: var(--ok); }
+  .s4 .trace .lbl.stop   { color: #a5b4fc; }
+  .s4 .trace .lbl.agent  { color: var(--ink-100); }
+  .s4 .trace .txt { color: var(--ink-300); flex: 1; }
+  .s4 .trace .row.agent .txt { color: var(--ink-100); }
+
+  /* ---- Scene 5: PRICE ---- */
+  .s5 .scene-content {
+    padding: 120px 120px;
+    align-items: center; justify-content: center;
+    gap: 24px;
+  }
+  .s5 .eyebrow {
+    color: var(--ember);
+    font-family: 'Geist Mono', monospace;
+    font-size: 32px; font-weight: 800;
+    letter-spacing: 14px; text-transform: uppercase;
+  }
+  .s5 .zero {
+    font-family: 'Fraunces', serif;
+    font-variation-settings: 'opsz' 144, 'wght' 900;
+    font-size: 480px; line-height: 0.85; letter-spacing: -0.08em;
+    color: var(--ink-100);
+    font-variant-numeric: tabular-nums;
+  }
+  .s5 .terms {
+    margin-top: 32px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 28px; color: var(--ink-400);
+    letter-spacing: 0.02em;
+  }
+  .s5 .terms .pipe { color: #71717a; margin: 0 18px; }
+  .s5 .terms .open { color: var(--ember); }
+  .s5 .endcard {
+    margin-top: 60px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 22px; color: var(--ink-400);
+    letter-spacing: 0.04em;
+  }
+</style>
+</head>
+<body>
+
+<div id="trailer" data-composition-id="trailer" data-start="0" data-width="1920" data-height="1080" data-duration="28">
+
+  <div class="bg-grid" id="bg-grid"></div>
+  <div class="bg-glow" id="bg-glow"></div>
+  <div class="bg-noise"></div>
+
+  <div class="corner-mark" id="corner-mark">
+    <svg viewBox="0 0 88 88" xmlns="http://www.w3.org/2000/svg">
+      <path d="M 72 26 A 32 32 0 1 1 56 14" fill="none" stroke="#F2683C" stroke-width="6" stroke-linecap="round"/>
+      <text x="44" y="56" font-family="Geist Mono, monospace" font-size="26" font-weight="800" fill="#f4f4f5" text-anchor="middle">&gt;_</text>
+    </svg>
+  </div>
+
+  <div class="footer-wordmark" id="footer-wordmark">
+    <span class="caret">&#x276F;</span><span class="word">promptdojo</span><span class="url">/ promptdojo.dev</span>
+  </div>
+
+  <!-- Scene 1: HOOK -->
+  <div class="scene s1" id="s1">
+    <div class="scene-content">
+      <div class="eyebrow" id="s1-eyebrow">shipping summer 2026</div>
+      <div class="wordmark" id="s1-wordmark">
+        <span class="caret">&#x276F;</span><span>promptdojo</span><span class="cursor" id="s1-cursor"></span>
+      </div>
+      <div class="tagline" id="s1-tagline">
+        a school for builders <em>whose code is mostly written by ai now.</em>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 2: WEDGE -->
+  <div class="scene s2" id="s2">
+    <div class="scene-content">
+      <div class="left">
+        <div class="eyebrow" id="s2-eyebrow">chapter 07 · mutation and state</div>
+        <h2>
+          <span id="s2-line1">ai writes this.</span>
+          <span class="punch" id="s2-line2">it&rsquo;s wrong.</span>
+        </h2>
+        <div class="annotation" id="s2-annotation">
+          <span class="err">mutable default argument.</span><br>
+          python evaluates the list once at definition, so every caller mutates the same list.
+        </div>
+      </div>
+      <div class="right">
+        <div class="code-block" id="s2-code">
+          <div class="filename">cursor.py</div>
+          <div class="code-line" id="s2-l1"><span class="kw">def</span> collect_errors(</div>
+          <div class="code-line" id="s2-l2">    msg: str,</div>
+          <div class="code-line bug" id="s2-l3">    bag: list = []</div>
+          <div class="code-line" id="s2-l4">):</div>
+          <div class="code-line" id="s2-l5">    bag.append(msg)</div>
+          <div class="code-line" id="s2-l6">    <span class="kw">return</span> bag</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 3: IDE -->
+  <div class="scene s3" id="s3">
+    <div class="scene-content">
+      <div class="eyebrow" id="s3-eyebrow">chapter 13 · llm apis</div>
+      <h2 id="s3-headline">no installs. no venv. no setup.</h2>
+      <div class="browser" id="s3-browser">
+        <div class="chrome">
+          <div class="dot" style="background:#ef4444"></div>
+          <div class="dot" style="background:#eab308"></div>
+          <div class="dot" style="background:#22c55e"></div>
+          <div class="url">promptdojo.dev/learn/llm-apis</div>
+          <div class="run">run</div>
+        </div>
+        <div class="editor">
+          <div class="line" id="s3-c1"><span class="ln">1</span><span class="kw">import</span><span class="ws">&nbsp;httpx</span></div>
+          <div class="line" id="s3-c2"><span class="ln">2</span></div>
+          <div class="line" id="s3-c3"><span class="ln">3</span><span class="ws">r = httpx.get(</span><span class="str">&quot;https://api.github.com/zen&quot;</span><span class="ws">)</span></div>
+          <div class="line" id="s3-c4"><span class="ln">4</span><span class="ws">print(r.text)</span></div>
+        </div>
+        <div class="output" id="s3-output">
+          <div class="label">output</div>
+          <div class="result">Avoid administrative distraction.</div>
+          <div class="meta">ran in 187ms · pyodide wasm · client side</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 4: CAPSTONE -->
+  <div class="scene s4" id="s4">
+    <div class="scene-content">
+      <div class="left">
+        <div class="eyebrow" id="s4-eyebrow">chapter 25 · capstone</div>
+        <h2>
+          <span id="s4-h1">ship a working</span>
+          <span id="s4-h2"><em>cli agent</em></span>
+          <span id="s4-h3">in 12 steps.</span>
+        </h2>
+        <div class="footnote" id="s4-footnote">~100 lines of python · no framework</div>
+      </div>
+      <div class="right">
+        <div class="trace" id="s4-trace">
+          <div class="row" id="s4-r1"><div class="lbl user">user</div><div class="txt">what&rsquo;s in my downloads folder?</div></div>
+          <div class="row" id="s4-r2"><div class="lbl tool">tool_use</div><div class="txt">list_files(path=&rsquo;~/Downloads&rsquo;)</div></div>
+          <div class="row" id="s4-r3"><div class="lbl result">tool_result</div><div class="txt">[&rsquo;invoice-2026.pdf&rsquo;, &rsquo;screenshot.png&rsquo;, &rsquo;agent-traces.md&rsquo;]</div></div>
+          <div class="row" id="s4-r4"><div class="lbl tool">tool_use</div><div class="txt">summarize(files=[&hellip;3])</div></div>
+          <div class="row" id="s4-r5"><div class="lbl stop">stop_reason</div><div class="txt">end_turn</div></div>
+          <div class="row agent" id="s4-r6"><div class="lbl agent">agent</div><div class="txt">you have an invoice, a screenshot, and a markdown note about agent traces.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 5: PRICE -->
+  <div class="scene s5" id="s5">
+    <div class="scene-content">
+      <div class="eyebrow" id="s5-eyebrow">forever</div>
+      <div class="zero num" id="s5-zero">$0</div>
+      <div class="terms" id="s5-terms">
+        no login<span class="pipe">·</span>no streaks<span class="pipe">·</span>no upsell<span class="pipe">·</span><span class="open">open source</span>
+      </div>
+      <div class="endcard" id="s5-endcard">github.com/xernst/promptdojo</div>
+    </div>
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+<script>
+window.__timelines = window.__timelines || {};
+
+(function () {
+  const tl = gsap.timeline({ paused: true });
+
+  // ---- Persistent layer ambient motion ----
+  // Breathing yoyo ends at t=26 to clear the t=27 fade-out (1s buffer).
+  tl.fromTo("#bg-glow",
+    { scale: 0.92, opacity: 0.7 },
+    { scale: 1.08, opacity: 1.0, duration: 13, ease: "sine.inOut", yoyo: true, repeat: 1 },
+    0);
+
+  tl.from("#corner-mark", { opacity: 0, scale: 0.6, duration: 0.7, ease: "back.out(1.6)" }, 0.4);
+  tl.from("#footer-wordmark", { opacity: 0, y: 10, duration: 0.6, ease: "power2.out" }, 0.6);
+
+  // ---- Scene 1: HOOK [0.0 - 5.0] ----
+  tl.set("#s1", { opacity: 1 }, 0);
+
+  tl.from("#s1-eyebrow",  { y: 28, opacity: 0, duration: 0.6, ease: "power3.out" }, 0.2);
+  tl.from("#s1-wordmark", { y: 80, opacity: 0, scale: 1.04, duration: 0.9, ease: "expo.out" }, 0.45);
+  tl.from("#s1-cursor",   { scaleX: 0, transformOrigin: "left center", duration: 0.4, ease: "power4.out" }, 1.1);
+  tl.fromTo("#s1-cursor", { opacity: 1 }, { opacity: 0.15, duration: 0.5, repeat: 6, yoyo: true, ease: "steps(1)" }, 1.5);
+  tl.from("#s1-tagline",  { y: 36, opacity: 0, duration: 0.7, ease: "power2.out" }, 1.1);
+
+  // Scene 1 → 2 crossfade [4.6 - 5.0]
+  tl.to("#s1", { opacity: 0, duration: 0.4, ease: "power2.inOut" }, 4.6);
+
+  // ---- Scene 2: WEDGE [5.0 - 11.0] ----
+  tl.set("#s2", { opacity: 0 }, 0);
+  tl.to("#s2", { opacity: 1, duration: 0.4, ease: "power2.inOut" }, 4.6);
+
+  tl.from("#s2-eyebrow",   { x: -40, opacity: 0, duration: 0.5, ease: "power3.out" }, 5.1);
+  tl.from("#s2-line1",     { y: 60, opacity: 0, duration: 0.6, ease: "expo.out" }, 5.3);
+  tl.from("#s2-line2",     { y: 60, opacity: 0, duration: 0.6, ease: "expo.out" }, 5.55);
+  tl.from("#s2-code",      { x: 100, opacity: 0, duration: 0.7, ease: "power3.out" }, 5.4);
+  tl.from(["#s2-l1","#s2-l2","#s2-l3","#s2-l4","#s2-l5","#s2-l6"],
+    { x: 24, opacity: 0, duration: 0.35, ease: "power2.out", stagger: 0.08 }, 5.9);
+  tl.fromTo("#s2-l3",
+    { backgroundColor: "rgba(239,68,68,0)" },
+    { backgroundColor: "rgba(239,68,68,0.14)", duration: 0.5, ease: "power2.inOut" }, 7.0);
+  tl.from("#s2-annotation", { y: 24, opacity: 0, duration: 0.6, ease: "back.out(1.2)" }, 7.6);
+
+  // Scene 2 → 3 [10.6 - 11.0]
+  tl.to("#s2", { opacity: 0, duration: 0.4, ease: "power2.inOut" }, 10.6);
+
+  // ---- Scene 3: IDE [11.0 - 16.0] ----
+  tl.set("#s3", { opacity: 0 }, 0);
+  tl.to("#s3", { opacity: 1, duration: 0.4, ease: "power2.inOut" }, 10.6);
+
+  tl.from("#s3-eyebrow",  { y: 24, opacity: 0, duration: 0.5, ease: "power2.out" }, 11.1);
+  tl.from("#s3-headline", { y: 40, opacity: 0, duration: 0.6, ease: "expo.out" }, 11.3);
+  tl.from("#s3-browser",  { y: 80, opacity: 0, scale: 0.97, duration: 0.7, ease: "power3.out" }, 11.6);
+  tl.from(["#s3-c1","#s3-c2","#s3-c3","#s3-c4"],
+    { x: 16, opacity: 0, duration: 0.3, ease: "power2.out", stagger: 0.1 }, 12.3);
+  tl.from("#s3-output",   { y: 12, opacity: 0, duration: 0.5, ease: "back.out(1.4)" }, 13.4);
+
+  // Scene 3 → 4 [15.6 - 16.0]
+  tl.to("#s3", { opacity: 0, duration: 0.4, ease: "power2.inOut" }, 15.6);
+
+  // ---- Scene 4: CAPSTONE [16.0 - 22.0] ----
+  tl.set("#s4", { opacity: 0 }, 0);
+  tl.to("#s4", { opacity: 1, duration: 0.4, ease: "power2.inOut" }, 15.6);
+
+  tl.from("#s4-eyebrow", { y: 24, opacity: 0, duration: 0.5, ease: "power2.out" }, 16.1);
+  tl.from("#s4-h1",      { y: 40, opacity: 0, duration: 0.55, ease: "expo.out" }, 16.3);
+  tl.from("#s4-h2",      { y: 40, opacity: 0, duration: 0.55, ease: "expo.out" }, 16.5);
+  tl.from("#s4-h3",      { y: 40, opacity: 0, duration: 0.55, ease: "expo.out" }, 16.7);
+  tl.from("#s4-footnote",{ y: 18, opacity: 0, duration: 0.45, ease: "power2.out" }, 17.0);
+  tl.from("#s4-trace",   { x: 60, opacity: 0, duration: 0.6, ease: "power3.out" }, 16.6);
+  tl.from(["#s4-r1","#s4-r2","#s4-r3","#s4-r4","#s4-r5","#s4-r6"],
+    { x: 24, opacity: 0, duration: 0.3, ease: "power2.out", stagger: 0.18 }, 17.0);
+
+  // Scene 4 → 5 [21.6 - 22.0]
+  tl.to("#s4", { opacity: 0, duration: 0.4, ease: "power2.inOut" }, 21.6);
+
+  // ---- Scene 5: PRICE [22.0 - 28.0] (final, exits allowed) ----
+  tl.set("#s5", { opacity: 0 }, 0);
+  tl.to("#s5", { opacity: 1, duration: 0.4, ease: "power2.inOut" }, 21.6);
+
+  tl.from("#s5-eyebrow", { y: 30, opacity: 0, duration: 0.6, ease: "power2.out" }, 22.2);
+  tl.from("#s5-zero",    { scale: 0.6, opacity: 0, duration: 0.9, ease: "back.out(1.6)" }, 22.4);
+  tl.from("#s5-terms",   { y: 22, opacity: 0, duration: 0.6, ease: "power2.out" }, 23.1);
+  tl.from("#s5-endcard", { opacity: 0, duration: 0.6, ease: "sine.out" }, 23.7);
+
+  // Final fade to black (only the closing scene may exit)
+  tl.to("#bg-glow",         { opacity: 0, duration: 0.8, ease: "sine.in" }, 27.0);
+  tl.to("#corner-mark",     { opacity: 0, duration: 0.6, ease: "sine.in" }, 27.2);
+  tl.to("#footer-wordmark", { opacity: 0, duration: 0.6, ease: "sine.in" }, 27.2);
+  tl.to("#s5",              { opacity: 0, duration: 0.8, ease: "power2.in" }, 27.2);
+
+  window.__timelines["trailer"] = tl;
+})();
+</script>
+
+</body>
+</html>

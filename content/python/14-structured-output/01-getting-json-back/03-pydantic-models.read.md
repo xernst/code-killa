@@ -22,7 +22,7 @@ code: |
       assert isinstance(data["summary"], str), "summary must be str"
       return data
 
-  good = {"email": "maya@pyloft.dev", "severity": 2, "summary": "slow"}
+  good = {"email": "maya@promptdojo.dev", "severity": 2, "summary": "slow"}
   ticket = validate_ticket(good)
   print(ticket["email"])
   print(ticket["severity"])

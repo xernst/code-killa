@@ -2,7 +2,9 @@ import type { MetadataRoute } from "next";
 import { getV2Toc, getV2Chapter } from "@/lib/content-v2";
 import { getChapters } from "@/lib/content";
 
-const SITE = "https://pyloft.io";
+const SITE = "https://promptdojo.dev";
+
+export const dynamic = "force-static";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const toc = getV2Toc();

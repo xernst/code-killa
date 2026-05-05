@@ -16,16 +16,16 @@ prompt: |
   each. Expected output:
 
   ```
-  ok=True email=maya@pyloft.dev
+  ok=True email=maya@promptdojo.dev
   ok=False error=missing email
   ok=False error=bad severity
   ```
 starter: |
   import json
 
-  good = '{"email": "maya@pyloft.dev", "severity": 3}'
+  good = '{"email": "maya@promptdojo.dev", "severity": 3}'
   no_email = '{"severity": 3}'
-  bad_severity = '{"email": "maya@pyloft.dev", "severity": 9}'
+  bad_severity = '{"email": "maya@promptdojo.dev", "severity": 9}'
 
   # define safe_extract(raw) below
 
@@ -38,16 +38,16 @@ starter: |
 grader:
   kind: stdout-equality
   expected: |
-    ok=True email=maya@pyloft.dev
+    ok=True email=maya@promptdojo.dev
     ok=False error=missing email
     ok=False error=bad severity
   normalize: collapse-trailing-newline
 solution: |
   import json
 
-  good = '{"email": "maya@pyloft.dev", "severity": 3}'
+  good = '{"email": "maya@promptdojo.dev", "severity": 3}'
   no_email = '{"severity": 3}'
-  bad_severity = '{"email": "maya@pyloft.dev", "severity": 9}'
+  bad_severity = '{"email": "maya@promptdojo.dev", "severity": 9}'
 
   def safe_extract(raw):
       try:

@@ -1,0 +1,164 @@
+xp: 8
+estSeconds: 200
+concept: multi-tool-agent-checkpoint
+prompt: |
+  Final drill. Build a research agent with three tools and parallel
+  tool calls. Write `run_research_agent(question, max_iterations)`
+  that:
+
+  - Maintains a `messages` list, starting with one user turn.
+  - Loops up to `max_iterations` times, calling `fake_model(messages)`.
+  - On `end_turn`: return
+    `{"ok": True, "answer": <text>, "rounds": <iterations used>, "tools_called": <total tool runs across all turns>}`.
+  - On `tool_use`: handle ONE OR MORE tool_use blocks per turn. For
+    each, dispatch through `TOOLS`. If the tool name isn't in the
+    registry, the tool result content should be `"unknown tool: <name>"`
+    (don't crash). Each tool you successfully run counts toward
+    `tools_called`. Append the assistant turn + one user turn with all
+    tool_result blocks.
+  - If `max_iterations` is exhausted without `end_turn`: return
+    `{"ok": False, "answer": "capped", "rounds": max_iterations, "tools_called": <count so far>}`.
+
+  Two cases run for you. Expected output:
+  ```
+  ok=True rounds=3 tools=3 answer=found 2 sources on ramen
+  ok=False rounds=2 tools=2 answer=capped
+  ```
+starter: |
+  TOOLS = {
+      "search":    lambda q:   f"results for {q}",
+      "read_page": lambda url: f"<text from {url}>",
+      "summarize": lambda text: text[:30],
+  }
+
+  good = iter([
+      # turn 1: parallel — search AND read_page in one assistant turn.
+      {"stop_reason": "tool_use", "content": [
+          {"type": "tool_use", "id": "t1", "name": "search", "input": {"q": "ramen"}},
+          {"type": "tool_use", "id": "t2", "name": "read_page", "input": {"url": "a.com"}},
+      ]},
+      # turn 2: one summarize call.
+      {"stop_reason": "tool_use", "content": [
+          {"type": "tool_use", "id": "t3", "name": "summarize", "input": {"text": "long article"}},
+      ]},
+      # turn 3: done.
+      {"stop_reason": "end_turn", "content": [
+          {"type": "text", "text": "found 2 sources on ramen"},
+      ]},
+  ])
+
+  cap = iter([
+      {"stop_reason": "tool_use", "content": [
+          {"type": "tool_use", "id": "c1", "name": "search", "input": {"q": "x"}}
+      ]},
+      {"stop_reason": "tool_use", "content": [
+          {"type": "tool_use", "id": "c2", "name": "search", "input": {"q": "y"}}
+      ]},
+      {"stop_reason": "tool_use", "content": [
+          {"type": "tool_use", "id": "c3", "name": "search", "input": {"q": "z"}}
+      ]},
+  ])
+
+  current = {"iter": good}
+
+  def fake_model(messages):
+      return next(current["iter"])
+
+  # define run_research_agent(question, max_iterations) below
+
+  current["iter"] = good
+  r = run_research_agent("research ramen", 5)
+  print(f"ok={r['ok']} rounds={r['rounds']} tools={r['tools_called']} answer={r['answer']}")
+
+  current["iter"] = cap
+  r = run_research_agent("loop forever", 2)
+  print(f"ok={r['ok']} rounds={r['rounds']} tools={r['tools_called']} answer={r['answer']}")
+grader:
+  kind: stdout-equality
+  expected: |
+    ok=True rounds=3 tools=3 answer=found 2 sources on ramen
+    ok=False rounds=2 tools=2 answer=capped
+  normalize: collapse-trailing-newline
+solution: |
+  TOOLS = {
+      "search":    lambda q:   f"results for {q}",
+      "read_page": lambda url: f"<text from {url}>",
+      "summarize": lambda text: text[:30],
+  }
+
+  good = iter([
+      {"stop_reason": "tool_use", "content": [
+          {"type": "tool_use", "id": "t1", "name": "search", "input": {"q": "ramen"}},
+          {"type": "tool_use", "id": "t2", "name": "read_page", "input": {"url": "a.com"}},
+      ]},
+      {"stop_reason": "tool_use", "content": [
+          {"type": "tool_use", "id": "t3", "name": "summarize", "input": {"text": "long article"}},
+      ]},
+      {"stop_reason": "end_turn", "content": [
+          {"type": "text", "text": "found 2 sources on ramen"},
+      ]},
+  ])
+
+  cap = iter([
+      {"stop_reason": "tool_use", "content": [
+          {"type": "tool_use", "id": "c1", "name": "search", "input": {"q": "x"}}
+      ]},
+      {"stop_reason": "tool_use", "content": [
+          {"type": "tool_use", "id": "c2", "name": "search", "input": {"q": "y"}}
+      ]},
+      {"stop_reason": "tool_use", "content": [
+          {"type": "tool_use", "id": "c3", "name": "search", "input": {"q": "z"}}
+      ]},
+  ])
+
+  current = {"iter": good}
+
+  def fake_model(messages):
+      return next(current["iter"])
+
+  def run_research_agent(question, max_iterations):
+      messages = [{"role": "user", "content": question}]
+      tools_called = 0
+      for rounds in range(1, max_iterations + 1):
+          response = fake_model(messages)
+          if response["stop_reason"] == "end_turn":
+              return {
+                  "ok": True,
+                  "answer": response["content"][0]["text"],
+                  "rounds": rounds,
+                  "tools_called": tools_called,
+              }
+
+          tool_uses = [b for b in response["content"] if b["type"] == "tool_use"]
+          tool_results = []
+          for tu in tool_uses:
+              fn = TOOLS.get(tu["name"])
+              if fn:
+                  out = fn(**tu["input"])
+                  tools_called += 1
+              else:
+                  out = f"unknown tool: {tu['name']}"
+              tool_results.append({
+                  "type": "tool_result",
+                  "tool_use_id": tu["id"],
+                  "content": out,
+              })
+
+          messages.append({"role": "assistant", "content": response["content"]})
+          messages.append({"role": "user", "content": tool_results})
+
+      return {
+          "ok": False,
+          "answer": "capped",
+          "rounds": max_iterations,
+          "tools_called": tools_called,
+      }
+
+  current["iter"] = good
+  r = run_research_agent("research ramen", 5)
+  print(f"ok={r['ok']} rounds={r['rounds']} tools={r['tools_called']} answer={r['answer']}")
+
+  current["iter"] = cap
+  r = run_research_agent("loop forever", 2)
+  print(f"ok={r['ok']} rounds={r['rounds']} tools={r['tools_called']} answer={r['answer']}")
+passThreshold: 0.66

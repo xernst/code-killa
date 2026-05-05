@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 144" width="720" height="144" role="img" aria-label="promptdojo wordmark">
+  <title>promptdojo</title>
+  <rect width="720" height="144" fill="#0E0F12"/>
+  <g font-family="JetBrains Mono, Geist Mono, ui-monospace, SF Mono, monospace" font-weight="800" font-size="64" letter-spacing="-1">
+    <text x="36" y="92" fill="#F2683C">&#x276F;</text>
+    <text x="98" y="92" fill="#f4f4f5">promptdojo</text>
+    <rect x="608" y="78" width="34" height="10" rx="2" fill="#F2683C"/>
+  </g>
+</svg>

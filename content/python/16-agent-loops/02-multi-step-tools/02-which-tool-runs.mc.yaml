@@ -1,0 +1,42 @@
+xp: 2
+estSeconds: 50
+concept: tool-dispatch-by-name
+code: |
+  # the model returned three tool_use blocks in ONE assistant turn.
+  TOOLS = {
+      "search": lambda q: f"hits for {q}",
+      "read_page": lambda url: f"<{url}>",
+      "summarize": lambda text: text[:10],
+  }
+
+  assistant_turn = {
+      "stop_reason": "tool_use",
+      "content": [
+          {"type": "tool_use", "id": "toolu_1", "name": "search", "input": {"q": "ramen"}},
+          {"type": "tool_use", "id": "toolu_2", "name": "read_page", "input": {"url": "https://x.com"}},
+          {"type": "tool_use", "id": "toolu_3", "name": "summarize", "input": {"text": "long story"}},
+      ],
+  }
+
+  for block in assistant_turn["content"]:
+      print(block["name"])
+prompt: |
+  The assistant turn above contains three `tool_use` blocks in a single
+  response. Your loop is about to handle this turn. What does it do?
+options:
+  - id: a
+    label: "Pick the first tool, run it, ignore the rest"
+    explain: "You'd silently drop two of the model's requests and the next API call would fail — the model expects a `tool_result` for every `tool_use_id` it emitted."
+  - id: b
+    label: "Run all three tools and reply with one user turn containing three `tool_result` blocks"
+  - id: c
+    label: "Send three separate user turns, one tool_result each"
+    explain: "The protocol pairs each model turn with one user turn. Multiple results go *inside* one user turn as a list of `tool_result` blocks."
+  - id: d
+    label: "Refuse and ask the model to pick just one tool at a time"
+    explain: "Parallel tool calls are a normal feature, not a misuse. The model emits them when it knows the calls are independent."
+answerIds:
+  - b
+hint:
+  - level: 1
+    body: 'Read the Anthropic docs on parallel tool use: one assistant turn → one user turn that bundles a tool_result per tool_use_id.'

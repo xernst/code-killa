@@ -182,7 +182,7 @@
             },
             {
               "level": 2,
-              "body": "`app_name = \"Pyloft\"` on line 1. The f-string puts `{app_name}` inside the message.",
+              "body": "`app_name = \"promptdojo\"` on line 1. The f-string puts `{app_name}` inside the message.",
               "cost": 0
             }
           ],
@@ -190,14 +190,14 @@
           "phase": "build",
           "estSeconds": 90,
           "concept": "write-assign-and-print",
-          "prompt": "Write two lines.\nLine 1: assign the value `\"Pyloft\"` to a variable called `app_name`.\nLine 2: print `welcome to {app_name}` using an f-string.\n\nExpected output:\n```\nwelcome to Pyloft\n```\n",
+          "prompt": "Write two lines.\nLine 1: assign the value `\"promptdojo\"` to a variable called `app_name`.\nLine 2: print `welcome to {app_name}` using an f-string.\n\nExpected output:\n```\nwelcome to promptdojo\n```\n",
           "starter": "# your code:\n",
           "grader": {
             "kind": "stdout-equality",
-            "expected": "welcome to Pyloft",
+            "expected": "welcome to promptdojo",
             "normalize": "collapse-trailing-newline"
           },
-          "solution": "app_name = \"Pyloft\"\nprint(f\"welcome to {app_name}\")\n",
+          "solution": "app_name = \"promptdojo\"\nprint(f\"welcome to {app_name}\")\n",
           "hiddenTests": []
         },
         {

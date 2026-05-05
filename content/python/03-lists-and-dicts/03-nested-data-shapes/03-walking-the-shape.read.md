@@ -4,7 +4,7 @@ estSeconds: 100
 concept: walking-nested-with-loop
 code: |
   org = {
-      "name": "pyloft",
+      "name": "promptdojo",
       "teams": [
           {"name": "eng", "members": ["maya", "marcus"]},
           {"name": "ops", "members": ["riley"]},
@@ -57,7 +57,7 @@ The editor on the right has a small organization with two teams:
 
 ```python
 org = {
-    "name": "pyloft",
+    "name": "promptdojo",
     "teams": [
         {"name": "eng", "members": ["maya", "marcus"]},
         {"name": "ops", "members": ["riley"]},

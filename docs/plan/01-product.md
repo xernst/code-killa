@@ -9,7 +9,7 @@
 
 ## Changelog v1.1 (2026-04-29)
 
-- **Rename pending:** Brand recommends renaming to **Pyloft** (fallback: Reckon). I agree with the rationale (cultural-appropriation risk + persona mismatch + bad SEO). Treating "code killa" as a working title from this point forward. **Lock blocked on Arch's domain + trademark sweep** — see updated decision point #1 below.
+- **Rename pending:** Brand recommends renaming to **promptdojo** (fallback: Reckon). I agree with the rationale (cultural-appropriation risk + persona mismatch + bad SEO). Treating "code killa" as a working title from this point forward. **Lock blocked on Arch's domain + trademark sweep** — see updated decision point #1 below.
 - **Positioning sentence updated** to Brand's wording (concrete, names the three jobs). Old version superseded — see §2.
 - **ICP #1 age range under discussion with Brand.** Brand's voice/visual work is anchored to a 38-year-old career-pivoter. My MVP ICP #1 is 29. These are not the same human and the gap matters for product, copy, and channel. Flagged back to team-lead and Brand. Tentative resolution: keep Maya at 29 as MVP target, broaden written persona band to "late-20s to late-30s knowledge worker pivoting toward AI building" so Brand's voice work still applies. Final call needed from Josh — see updated decision point #6.
 
@@ -52,7 +52,7 @@ Three personas, ranked by priority. ICP #1 is the only one that matters for MVP.
 
 **Canonical positioning sentence (locked with Brand, 2026-04-29):**
 
-> **Pyloft teaches you the Python you need to direct AI agents, read what they wrote, and catch what they got wrong. Unlike Codecademy, we're built around the AI you already use.**
+> **promptdojo teaches you the Python you need to direct AI agents, read what they wrote, and catch what they got wrong. Unlike Codecademy, we're built around the AI you already use.**
 
 This wins because it (1) names the three concrete jobs the user is doing — direct, read, catch — instead of the abstract "literacy" frame, (2) treats AI as a given rather than a future trend, and (3) draws the contrast against Codecademy (the closest mass-market competitor) without picking unwinnable fights with boot.dev or Duolingo.
 
@@ -216,7 +216,7 @@ Reasoning:
 
 ## 10. Decision points for Josh — sprint 1 cannot start without these
 
-1. **Final name + domain.** Brand recommends renaming "code killa" → **Pyloft** (fallback: Reckon). I agree. Lock blocks on Arch's domain + trademark sweep. Question for Josh: do you accept Pyloft conditional on the sweep clearing, or do you want a wider name search? If you say "yes, Pyloft pending sweep," everything downstream proceeds; if you say "let me think about it," brand/UX/arch all stall.
+1. **Final name + domain.** Brand recommends renaming "code killa" → **promptdojo** (fallback: Reckon). I agree. Lock blocks on Arch's domain + trademark sweep. Question for Josh: do you accept promptdojo conditional on the sweep clearing, or do you want a wider name search? If you say "yes, promptdojo pending sweep," everything downstream proceeds; if you say "let me think about it," brand/UX/arch all stall.
 2. **De-Josh-ing strategy for V1.** Confirm the recommendation here: V1 ships with 8 brand-new generic lessons, NOT with de-Joshed versions of the existing 28 chapters. If you disagree, we re-plan scope.
 3. **Friends list for V1.** Who are the 10 humans you actually trust to test V1 and give honest feedback? Name them. We need to know if they fit Maya / Marcus / Priya, or if we're shipping into a void of "supportive friends who'll never finish lesson 2."
 4. **OSS posture.** Public GitHub from day one, or stealth until V2 launch? Recommendation: public from day one — the OSS signal IS the marketing. But this is your call and there's no reversing "we were stealth."
@@ -231,4 +231,4 @@ Reasoning:
 - **The wedge is "Python literacy for AI-builders, not aspiring engineers"** — invert the curriculum around reading/debugging/directing AI-generated code, skip what AI handles fluently, double down on what AI gets wrong.
 - **MVP is 8 lessons in 4 weeks of evening time.** Free, OSS, zero infra cost via Pyodide. Ship to 10 friends, gate V2 on 5 finishing.
 - **Pricing is free + OSS through V2.** Paid tier appears only at V3, only if V2 hits 500 signups. Architecture is post-hosting — Pyodide-in-browser means there's nothing to keep paying for.
-- **The six things blocking sprint 1**: confirm rename to Pyloft pending Arch's sweep, confirm V1 = fresh generic lessons (not de-Joshed), name the 10 friends, decide OSS-day-one yes/no, give us your real weekly hours, and pick the ICP age center (29 vs 38 vs band).
+- **The six things blocking sprint 1**: confirm rename to promptdojo pending Arch's sweep, confirm V1 = fresh generic lessons (not de-Joshed), name the 10 friends, decide OSS-day-one yes/no, give us your real weekly hours, and pick the ICP age center (29 vs 38 vs band).

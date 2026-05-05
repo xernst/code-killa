@@ -1,4 +1,4 @@
-# Pyloft (working name: code killa) — Master Development Plan
+# promptdojo (working name: code killa) — Master Development Plan
 
 **Status:** Synthesis of `01-product.md` (pm) · `02-ux.md` (ux) · `03-architecture.md` (arch) · `04-brand.md` (brand)
 **Synthesized by:** team-lead
@@ -47,12 +47,12 @@ The goal of this plan is to take the working code at `localhost:3000` (3-pane le
 
 ### Open — Josh decides (see §9 for full list with recommendations)
 
-- Final name (Pyloft pending sweep / keep code killa / other)
+- Final name (promptdojo pending sweep / keep code killa / other)
 - Visual rebrand greenlight (Fraunces+Inter+JetBrains, ember-on-ink)
 - Real evening-hour budget per week
 - 10-friend list for V1 testing
 - OSS-from-day-one yes/no
-- Pyloft domain + trademark sweep result
+- promptdojo domain + trademark sweep result
 
 ---
 
@@ -78,7 +78,7 @@ The curriculum inverts around the AI-builder workflow:
 
 ### Positioning sentence (locked)
 
-> **Pyloft teaches you the Python you need to direct AI agents, read what they wrote, and catch what they got wrong. Unlike Codecademy, we're built around the AI you already use.**
+> **promptdojo teaches you the Python you need to direct AI agents, read what they wrote, and catch what they got wrong. Unlike Codecademy, we're built around the AI you already use.**
 
 ---
 
@@ -292,7 +292,7 @@ Two reads + one MC before any production step. `write-code` only appears after t
 
 | Moment | Copy |
 |---|---|
-| First 30s onboarding | *"Welcome to Pyloft. You're here because AI writes most of your code now, and you want to actually understand what it's doing. We'll teach you the Python you need to direct it, read it, and catch when it's wrong. Not a CS degree. Just enough."* |
+| First 30s onboarding | *"Welcome to promptdojo. You're here because AI writes most of your code now, and you want to actually understand what it's doing. We'll teach you the Python you need to direct it, read it, and catch when it's wrong. Not a CS degree. Just enough."* |
 | First wrong answer | *"That ran, but it didn't return what we expected. Look at line 3 — `total` is a string, not a number."* |
 | First lesson done | *"Done. That's variables. Next time Cursor reaches for one, you'll know which is which."* |
 | First chapter done | *"Chapter 1, complete. You can now read the variable, function, and loop work in any AI-generated Python file. Your ember is at 5. It survives one missed day."* |
@@ -348,13 +348,13 @@ Sprints sized for an evening-time founder with ADHD. Each sprint has one **STOP 
 **Goal:** Lock the open decisions in §9 and apply the visual rebrand to the existing UI.
 
 - Josh answers the 8 decision questions in §9
-- Domain + trademark sweep on `pyloft.com` / `pyloft.dev`
+- Domain + trademark sweep on `promptdojo.com` / `promptdojo.dev`
 - Apply ember-on-ink palette to existing globals.css
 - Add Fraunces + Inter + JetBrains Mono via `next/font/google`
-- Rename product strings "code killa" → "Pyloft" (or whatever Josh picks)
+- Rename product strings "code killa" → "promptdojo" (or whatever Josh picks)
 - Rebuild + screenshot diff against current state
 
-**STOP gate:** *Does the rebranded UI feel like Pyloft and not boot.dev?* If no, iterate before sprint 1.
+**STOP gate:** *Does the rebranded UI feel like promptdojo and not boot.dev?* If no, iterate before sprint 1.
 
 ### Sprint 1 — Persistent IDE shell + schema + first 3 step types (week 1–2, ~10 hours)
 
@@ -399,7 +399,7 @@ Sprints sized for an evening-time founder with ADHD. Each sprint has one **STOP 
 - Each lesson: 12–20 steps, 5–8 min, 2–3 `fix` steps, 1–2 `write` steps, ~8 reads/MCs/fills/predicts/reorders
 - AI-assisted authoring: Josh writes lesson outline + first 2 steps; Claude drafts remaining steps in YAML+MD; Josh edits
 
-**STOP gate:** *Does Josh use Pyloft daily for one week to learn the lessons himself?* If no, the curriculum has a problem; fix before sending to friends.
+**STOP gate:** *Does Josh use promptdojo daily for one week to learn the lessons himself?* If no, the curriculum has a problem; fix before sending to friends.
 
 ### Sprint 4 — Polish + ship to 3 (week 4, ~6 hours)
 
@@ -408,7 +408,7 @@ Sprints sized for an evening-time founder with ADHD. Each sprint has one **STOP 
 - Sound + animation (defaulted off; prompt at end of lesson 1)
 - Welcome-back state on home (non-punitive copy)
 - Brain-dump Obsidian-export button (markdown download)
-- Deploy to `pyloft.dev` (or fallback domain)
+- Deploy to `promptdojo.dev` (or fallback domain)
 - Send to **3 friends** Josh trusts most for honest feedback
 - Set up minimal analytics (Vercel Web Analytics + Speed Insights)
 
@@ -444,7 +444,7 @@ V2 sprints (account · sync · Copilot Panel · port chapters 2–7) are scoped 
 
 ---
 
-## 8. Anti-goals — what Pyloft refuses to be
+## 8. Anti-goals — what promptdojo refuses to be
 
 - Not a CS degree. No data structures, algorithms, Big-O, leetcode.
 - Not a job-prep platform. No interview prep, no portfolio coaching, no certificates.
@@ -464,7 +464,7 @@ Each question has a recommendation. If you accept the recommendation, say so; if
 
 | # | Question | Recommendation | Source |
 |---|---|---|---|
-| 1 | **Final name** — Pyloft (pending domain/trademark sweep) / keep "code killa" / pick a different alternative (Reckon, Sidecar, Pyfluent, Pilot.py) | **Accept Pyloft pending sweep.** Brand's argument is strong: friend-test, SEO, cultural-appropriation risk, doesn't say what it does. | Brand §1 + PM v1.1 |
+| 1 | **Final name** — promptdojo (pending domain/trademark sweep) / keep "code killa" / pick a different alternative (Reckon, Sidecar, Pyfluent, Pilot.py) | **Accept promptdojo pending sweep.** Brand's argument is strong: friend-test, SEO, cultural-appropriation risk, doesn't say what it does. | Brand §1 + PM v1.1 |
 | 2 | **Domain + trademark sweep** — who runs it and by when | **You run it this week** (5 min on a registrar + USPTO TESS search). Locks naming for everything downstream. | Synthesis |
 | 3 | **Visual rebrand** — accept ember-on-ink + Fraunces+Inter+JetBrains, or keep emerald-on-zinc | **Accept the rebrand.** Ember IS the streak mechanic — the brand color = the gameplay metaphor is a free coherence win. Differentiates hard from boot.dev. | Brand §5 |
 | 4 | **V1 content scope** — 8 fresh lessons authored from scratch vs. de-Joshing existing chapters 1–7 | **Accept fresh lessons.** Authoring is faster than de-Joshing once you account for how deep specific personal references go in the existing content. | PM §4 |
@@ -477,7 +477,7 @@ Each question has a recommendation. If you accept the recommendation, say so; if
 
 ## 10. The next concrete step
 
-If you accept the recommendations in §9, **Sprint 0 starts now and ships this week**. The first thing I'll touch is the visual rebrand on the existing UI (palette swap + Fraunces/Inter/JetBrains via `next/font/google` + product-string rename), so by next session the working app at `localhost:3000` looks and feels like Pyloft, not code killa.
+If you accept the recommendations in §9, **Sprint 0 starts now and ships this week**. The first thing I'll touch is the visual rebrand on the existing UI (palette swap + Fraunces/Inter/JetBrains via `next/font/google` + product-string rename), so by next session the working app at `localhost:3000` looks and feels like promptdojo, not code killa.
 
 If you push back on any §9 question, say which one and what you'd prefer; the rest of the plan is robust to most single-question changes.
 
@@ -488,4 +488,4 @@ If you push back on any §9 question, say which one and what you'd prefer; the r
 - **PM** (Alex) — `docs/plan/01-product.md` — ICP, positioning, MVP, V1/V2/V3 phases, success metrics, pricing, risks, anti-goals, decision points.
 - **UX** (`ux`) — `docs/plan/02-ux.md` — Step primitive (8 types with JSON schemas + ASCII sketches), lesson shape, onboarding, progression UI, daily goal, sound/animation, IA, A11y, first 90 seconds, redlines.
 - **Architect** (`arch`) — `docs/plan/03-architecture.md` — Content schema (TS types), authoring format (YAML+MD), build pipeline, multi-user data model with v1/v2/v3 migration + Postgres schema, AI integration with cost analysis, performance, deployment, observability, security, migration plan.
-- **Brand** — `docs/plan/04-brand.md` — Name audit + Pyloft verdict, positioning, voice/tone with say-this-not-that examples, redlines, visual direction (palette, typography, logo sketches), mascot question, key brand moments with actual copy, marketing surfaces, AI guardrails + tutor system prompt.
+- **Brand** — `docs/plan/04-brand.md` — Name audit + promptdojo verdict, positioning, voice/tone with say-this-not-that examples, redlines, visual direction (palette, typography, logo sketches), mascot question, key brand moments with actual copy, marketing surfaces, AI guardrails + tutor system prompt.

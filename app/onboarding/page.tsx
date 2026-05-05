@@ -164,7 +164,7 @@ export default function OnboardingPage() {
           href="/"
           className="text-xs uppercase tracking-[0.2em] text-ember-500 hover:text-ember-400"
         >
-          Pyloft
+          promptdojo
         </Link>
         <div className="flex items-center gap-1.5" aria-label={`Step ${step + 1} of 5`}>
           {[0, 1, 2, 3, 4].map((i) => (

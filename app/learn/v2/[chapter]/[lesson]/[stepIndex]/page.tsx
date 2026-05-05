@@ -27,7 +27,7 @@ export async function generateMetadata({
   const stepNum = idx + 1;
   const totalSteps = found.lesson.steps.length;
   const chapterTitleClean = found.chapter.title.replace(/\s*—.*$/, "");
-  const title = `${found.lesson.title} (step ${stepNum}/${totalSteps}) · ${chapterTitleClean} · Pyloft`;
+  const title = `${found.lesson.title} (step ${stepNum}/${totalSteps}) · ${chapterTitleClean} · promptdojo`;
   const description = `Step ${stepNum} of ${totalSteps} in ${found.lesson.title}. Interactive Python lesson, runs in your browser. Free.`;
   const url = `/learn/v2/${chapter}/${lesson}/${idx}`;
 
@@ -40,11 +40,11 @@ export async function generateMetadata({
       title,
       description,
       url,
-      siteName: "Pyloft",
+      siteName: "promptdojo",
     },
     twitter: {
       card: "summary_large_image",
-      title: `${found.lesson.title} · Pyloft`,
+      title: `${found.lesson.title} · promptdojo`,
       description,
       creator: "@TFisPython",
     },

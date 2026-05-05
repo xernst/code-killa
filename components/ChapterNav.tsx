@@ -33,15 +33,15 @@ export default function ChapterNav({ chapters, activeChapter, activeExercise }: 
       setPassed(s);
     };
     refresh();
-    window.addEventListener("code-killa:progress", refresh);
-    return () => window.removeEventListener("code-killa:progress", refresh);
+    window.addEventListener("promptdojo:progress", refresh);
+    return () => window.removeEventListener("promptdojo:progress", refresh);
   }, []);
 
   return (
     <nav className="flex h-full flex-col overflow-y-auto border-r border-ink-800 bg-ink-950">
       <div className="border-b border-ink-800 p-4">
         <Link href="/" className="block">
-          <div className="text-sm font-bold tracking-tight text-ember-400">Pyloft</div>
+          <div className="text-sm font-bold tracking-tight text-ember-400">promptdojo</div>
           <div className="text-[10px] uppercase tracking-widest text-ink-500">python · vibe edition</div>
         </Link>
       </div>

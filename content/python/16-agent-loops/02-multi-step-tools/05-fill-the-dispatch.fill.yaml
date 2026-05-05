@@ -1,0 +1,34 @@
+xp: 3
+estSeconds: 65
+concept: tool-dispatch-via-registry
+prompt: |
+  The agent loop knows the model picked a tool, but the dispatch line
+  is unfilled. Look up the function in `TOOLS` by the tool's `name`
+  and call it with the tool's `input` dict unpacked as kwargs.
+
+  Fill in the missing expression so the loop prints `3 hits for ramen`.
+
+  Expected output:
+  ```
+  3 hits for ramen
+  ```
+code: |
+  TOOLS = {
+      "search": lambda q: f"3 hits for {q}",
+  }
+
+  tool_use = {"type": "tool_use", "id": "t1", "name": "search", "input": {"q": "ramen"}}
+
+  result = ___
+  print(result)
+blanks:
+  - id: dispatch
+    accept:
+      - 'TOOLS[tool_use["name"]](**tool_use["input"])'
+      - "TOOLS[tool_use['name']](**tool_use['input'])"
+    caseSensitive: true
+hint:
+  - level: 1
+    body: 'Two pieces: look up the function with `TOOLS[name]`, then call it with `**input` to unpack the dict as keyword arguments.'
+  - level: 2
+    body: '`TOOLS[tool_use["name"]](**tool_use["input"])` — registry lookup, then unpack-call.'

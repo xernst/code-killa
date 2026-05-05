@@ -1,0 +1,105 @@
+xp: 5
+estSeconds: 180
+concept: multi-tool-agent-loop
+prompt: |
+  Build the multi-tool agent. Write `run_agent(question)` that:
+
+  - Starts with a `messages` list containing one user turn with `question`.
+  - Loops up to 5 times, calling `fake_model(messages)` each iteration.
+  - On `stop_reason == "end_turn"`: return `response["content"][0]["text"]`.
+  - On `stop_reason == "tool_use"`: there may be ONE OR MORE `tool_use`
+    blocks in `response["content"]`. For each one, look up the tool in
+    the `TOOLS` registry and call it with `**block["input"]`. Build a
+    list of `tool_result` blocks (each with the matching `tool_use_id`)
+    and append both turns:
+
+    1. The full assistant turn (`{"role": "assistant", "content": response["content"]}`)
+    2. One user turn whose `content` is the list of tool_result blocks.
+
+  - If the cap is hit without `end_turn`, return `"capped"`.
+
+  Then call it once and print the result.
+
+  Expected output:
+  ```
+  found: Tokyo's best ramen shops, 2026 guide.
+  ```
+starter: |
+  TOOLS = {
+      "search":    lambda q:   "https://news.example/ramen",
+      "read_page": lambda url: "Tokyo's best ramen shops, 2026 guide.",
+  }
+
+  responses = iter([
+      {"stop_reason": "tool_use", "content": [
+          {"type": "tool_use", "id": "t1", "name": "search", "input": {"q": "ramen tokyo"}}
+      ]},
+      {"stop_reason": "tool_use", "content": [
+          {"type": "tool_use", "id": "t2", "name": "read_page",
+           "input": {"url": "https://news.example/ramen"}}
+      ]},
+      {"stop_reason": "end_turn", "content": [
+          {"type": "text", "text": "found: Tokyo's best ramen shops, 2026 guide."}
+      ]},
+  ])
+
+  def fake_model(messages):
+      return next(responses)
+
+  # define run_agent(question) below
+
+  print(run_agent("find the latest ramen news"))
+grader:
+  kind: stdout-equality
+  expected: "found: Tokyo's best ramen shops, 2026 guide."
+  normalize: collapse-trailing-newline
+solution: |
+  TOOLS = {
+      "search":    lambda q:   "https://news.example/ramen",
+      "read_page": lambda url: "Tokyo's best ramen shops, 2026 guide.",
+  }
+
+  responses = iter([
+      {"stop_reason": "tool_use", "content": [
+          {"type": "tool_use", "id": "t1", "name": "search", "input": {"q": "ramen tokyo"}}
+      ]},
+      {"stop_reason": "tool_use", "content": [
+          {"type": "tool_use", "id": "t2", "name": "read_page",
+           "input": {"url": "https://news.example/ramen"}}
+      ]},
+      {"stop_reason": "end_turn", "content": [
+          {"type": "text", "text": "found: Tokyo's best ramen shops, 2026 guide."}
+      ]},
+  ])
+
+  def fake_model(messages):
+      return next(responses)
+
+  def run_agent(question):
+      messages = [{"role": "user", "content": question}]
+      for _ in range(5):
+          response = fake_model(messages)
+          if response["stop_reason"] == "end_turn":
+              return response["content"][0]["text"]
+
+          tool_uses = [b for b in response["content"] if b["type"] == "tool_use"]
+          tool_results = []
+          for tu in tool_uses:
+              fn = TOOLS.get(tu["name"])
+              out = fn(**tu["input"]) if fn else f"unknown tool: {tu['name']}"
+              tool_results.append({
+                  "type": "tool_result",
+                  "tool_use_id": tu["id"],
+                  "content": out,
+              })
+
+          messages.append({"role": "assistant", "content": response["content"]})
+          messages.append({"role": "user", "content": tool_results})
+      return "capped"
+
+  print(run_agent("find the latest ramen news"))
+hint:
+  - level: 1
+    body: 'Same loop shape as `01-the-loop`. The new part: iterate over every `tool_use` block in `response["content"]`, dispatch through `TOOLS`, and collect a list of `tool_result` blocks for one user turn.'
+  - level: 2
+    body: 'Filter `response["content"]` to just `tool_use` blocks, build a parallel list of `tool_result` blocks (one per id), and put that whole list in `{"role": "user", "content": tool_results}`.'

@@ -41,8 +41,8 @@ export default function V2ChapterNav({
       setProgress(loadProgressV2());
     }
     refresh();
-    window.addEventListener("code-killa:progress-v2", refresh);
-    return () => window.removeEventListener("code-killa:progress-v2", refresh);
+    window.addEventListener("promptdojo:progress-v2", refresh);
+    return () => window.removeEventListener("promptdojo:progress-v2", refresh);
   }, []);
 
   useEffect(() => {
@@ -53,7 +53,7 @@ export default function V2ChapterNav({
     <nav className="flex h-full flex-col overflow-y-auto bg-ink-900">
       <div className="border-b border-ink-800 px-4 py-4">
         <Link href="/" className="block">
-          <div className="font-display text-base text-ember-400">Pyloft</div>
+          <div className="font-display text-base text-ember-400">promptdojo</div>
           <div className="text-[10px] uppercase tracking-widest text-ink-500">
             python for builders
           </div>

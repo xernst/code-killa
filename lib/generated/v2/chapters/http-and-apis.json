@@ -22,7 +22,7 @@
           "concept": "http-call-shape",
           "body": "# The shape of an API call\n\nEvery AI-generated script that talks to a service does roughly this:\n\n```python\nimport httpx\n\nresponse = httpx.get(\"https://api.example.com/users/7\")\nresponse.raise_for_status()        # crash on 4xx/5xx\ndata = response.json()              # parse the body as JSON\nprint(data[\"name\"])\n```\n\nFour lines. AI writes them on autopilot. Your job is to read them and\ncatch the two places it breaks: forgetting the status check, and\nindexing into the JSON with the wrong key.\n\n> **A note on this chapter:** the browser can't make real network calls.\n> So instead of hitting a real URL, we'll work with hardcoded JSON shapes\n> that match what an API would actually return. The pattern is the same;\n> we just skip the wire.\n\nRun the editor. We'll start by reading from a fake response.",
           "cta": "Got it",
-          "code": "# this is the shape AI reaches for. we can't run real http calls in\n# the browser, so we'll use a hardcoded response below for the rest\n# of the lesson.\nfake_response_json = {\n    \"id\": 7,\n    \"name\": \"maya\",\n    \"email\": \"maya@pyloft.dev\",\n}\n\nprint(fake_response_json[\"name\"])\n",
+          "code": "# this is the shape AI reaches for. we can't run real http calls in\n# the browser, so we'll use a hardcoded response below for the rest\n# of the lesson.\nfake_response_json = {\n    \"id\": 7,\n    \"name\": \"maya\",\n    \"email\": \"maya@promptdojo.dev\",\n}\n\nprint(fake_response_json[\"name\"])\n",
           "runnable": true
         },
         {
@@ -74,7 +74,7 @@
           "concept": "response-json-as-dict",
           "body": "# `response.json()` is just a Python dict\n\nEvery real API call ends the same way: you parse the body and dig into a\nnested dict.\n\nThe pattern AI uses constantly:\n\n- `data[\"name\"]` — top-level field\n- `data[\"roles\"][0]` — first item of a list field\n- `data[\"org\"][\"slug\"]` — nested dict access\n\nIf the field is missing, you get a `KeyError`. If a list is empty, you\nget an `IndexError`. Both are common in the wild — APIs add and remove\nfields between versions, and AI code rarely accounts for that.\n\nRun the editor. Three different access patterns on the same `user` shape.",
           "cta": "Got it",
-          "code": "# what `response.json()` would return for a typical user endpoint —\n# nested dict + list, exactly like the real API response shape.\nuser = {\n    \"id\": 7,\n    \"name\": \"maya\",\n    \"email\": \"maya@pyloft.dev\",\n    \"roles\": [\"admin\", \"billing\"],\n    \"org\": {\"slug\": \"pyloft\", \"tier\": \"pro\"},\n}\n\nprint(user[\"name\"])\nprint(user[\"roles\"][0])\nprint(user[\"org\"][\"slug\"])\n",
+          "code": "# what `response.json()` would return for a typical user endpoint —\n# nested dict + list, exactly like the real API response shape.\nuser = {\n    \"id\": 7,\n    \"name\": \"maya\",\n    \"email\": \"maya@promptdojo.dev\",\n    \"roles\": [\"admin\", \"billing\"],\n    \"org\": {\"slug\": \"promptdojo\", \"tier\": \"pro\"},\n}\n\nprint(user[\"name\"])\nprint(user[\"roles\"][0])\nprint(user[\"org\"][\"slug\"])\n",
           "runnable": true
         },
         {
@@ -190,7 +190,7 @@
           "phase": "build",
           "estSeconds": 85,
           "concept": "nested-key-access",
-          "brokenCode": "# this is what response.json() returned — note the actual key name\ndata = {\n    \"id\": 7,\n    \"name\": \"maya\",\n    \"email\": \"maya@pyloft.dev\",\n}\n\n# Cursor wrote the wrong key\nprint(data[\"username\"])\n",
+          "brokenCode": "# this is what response.json() returned — note the actual key name\ndata = {\n    \"id\": 7,\n    \"name\": \"maya\",\n    \"email\": \"maya@promptdojo.dev\",\n}\n\n# Cursor wrote the wrong key\nprint(data[\"username\"])\n",
           "prompt": "AI thought the API returned `data[\"username\"]` but the real shape uses\n`data[\"name\"]`. The script crashes with a `KeyError`. Fix the access\non line 9 so the script prints `maya`.\n",
           "grader": {
             "kind": "stdout-equality",

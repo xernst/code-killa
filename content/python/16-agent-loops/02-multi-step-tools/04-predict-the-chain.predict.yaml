@@ -1,0 +1,51 @@
+xp: 3
+estSeconds: 80
+concept: tool-chain-by-model
+code: |
+  # a research-style chain. the fake model picks search → read_page → end_turn.
+  TOOLS = {
+      "search":    lambda q:   "https://news.example/ramen",
+      "read_page": lambda url: "Tokyo's best ramen shops, 2026 guide.",
+  }
+
+  responses = iter([
+      {"stop_reason": "tool_use", "content": [
+          {"type": "tool_use", "id": "t1", "name": "search", "input": {"q": "ramen tokyo"}}
+      ]},
+      {"stop_reason": "tool_use", "content": [
+          {"type": "tool_use", "id": "t2", "name": "read_page",
+           "input": {"url": "https://news.example/ramen"}}
+      ]},
+      {"stop_reason": "end_turn", "content": [
+          {"type": "text", "text": "found a 2026 ramen guide"}
+      ]},
+  ])
+
+  def fake_model(messages):
+      return next(responses)
+
+  messages = [{"role": "user", "content": "find ramen news"}]
+  for _ in range(5):
+      r = fake_model(messages)
+      if r["stop_reason"] == "end_turn":
+          print(r["content"][0]["text"])
+          break
+      tu = r["content"][0]
+      out = TOOLS[tu["name"]](**tu["input"])
+      messages.append({"role": "assistant", "content": r["content"]})
+      messages.append({"role": "user", "content": [{
+          "type": "tool_result", "tool_use_id": tu["id"], "content": out,
+      }]})
+prompt: |
+  Read the editor. The fake model returns three responses in sequence:
+  `search` → `read_page` → `end_turn`. The loop dispatches each tool
+  through the `TOOLS` registry. What single line of text gets printed?
+grader:
+  kind: stdout-equality
+  expected: "found a 2026 ramen guide"
+  normalize: collapse-trailing-newline
+hint:
+  - level: 1
+    body: 'The loop only prints inside the `end_turn` branch. The third response is `end_turn` with one text block.'
+  - level: 2
+    body: '`r["content"][0]["text"]` on the third iteration.'

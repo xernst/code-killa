@@ -1,0 +1,15 @@
+slug: multi-step-tools
+title: "Multi-step tools — when one tool isn't enough"
+estMinutes: 11
+prerequisites:
+  - the-loop
+order:
+  - 01-intro.read.md
+  - 02-which-tool-runs.mc.yaml
+  - 03-tool-registry.read.md
+  - 04-predict-the-chain.predict.yaml
+  - 05-fill-the-dispatch.fill.yaml
+  - 06-fix-the-missing-tool.fix.yaml
+  - 07-fix-the-parallel-ids.fix.yaml
+  - 08-write-multi-tool-agent.write.yaml
+  - 09-checkpoint.checkpoint.yaml

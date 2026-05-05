@@ -108,7 +108,7 @@ function Footer({ rightText }: { rightText: string }) {
           letterSpacing: -0.5,
         }}
       >
-        Pyloft
+        promptdojo
       </div>
       <div style={{ display: "flex", fontSize: 24, color: ink400 }}>
         {rightText}
@@ -133,7 +133,7 @@ function renderHook() {
             lineHeight: 0.95,
           }}
         >
-          Pyloft
+          promptdojo
         </div>
         <div
           style={{
@@ -166,7 +166,7 @@ function renderHook() {
           <span style={{ color: ember }}>free forever</span>
         </div>
 
-        <Footer rightText="pyloft.io" />
+        <Footer rightText="promptdojo.dev" />
       </Frame>
     ),
     { width: W, height: H },
@@ -341,7 +341,7 @@ function renderIde() {
                 fontFamily: "ui-monospace, monospace",
               }}
             >
-              pyloft.io/learn/v2/llm-apis
+              promptdojo.dev/learn/v2/llm-apis
             </div>
             <div style={{ display: "flex", flex: 1 }} />
             <div
@@ -607,7 +607,7 @@ function renderPrice() {
           </div>
         </div>
 
-        <Footer rightText="github.com/xernst/code-killa" />
+        <Footer rightText="github.com/xernst/promptdojo" />
       </Frame>
     ),
     { width: W, height: H },

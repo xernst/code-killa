@@ -1,0 +1,50 @@
+xp: 4
+estSeconds: 90
+concept: unknown-tool-fail-loud
+prompt: |
+  The model hallucinated a tool name — `web_search` — that isn't in
+  the registry. The current dispatch raises `KeyError` deep inside
+  the loop, which crashes the agent and loses the whole conversation.
+
+  Fix the dispatch so an unknown tool returns the string
+  `"unknown tool: <name>"` as the tool result instead. The model can
+  then read that and recover (it usually retries with a real tool
+  name).
+
+  Expected output:
+  ```
+  unknown tool: web_search
+  ```
+brokenCode: |
+  TOOLS = {
+      "search": lambda q: f"hits for {q}",
+  }
+
+  tool_use = {
+      "type": "tool_use",
+      "id": "t1",
+      "name": "web_search",  # not in TOOLS!
+      "input": {"q": "ramen"},
+  }
+
+  # this line crashes with KeyError on unknown names.
+  result = TOOLS[tool_use["name"]](**tool_use["input"])
+  print(result)
+bugLines:
+  - 12
+grader:
+  kind: stdout-equality
+  expected: "unknown tool: web_search"
+  normalize: collapse-trailing-newline
+hint:
+  - level: 1
+    body: 'Use `TOOLS.get(name)` instead of `TOOLS[name]`. If it returns `None`, build the error string yourself instead of calling.'
+  - level: 2
+    body: |
+      Replace the dispatch line with:
+
+      ```python
+      fn = TOOLS.get(tool_use["name"])
+      result = fn(**tool_use["input"]) if fn else f"unknown tool: {tool_use['name']}"
+      ```
+revealAfter: 4

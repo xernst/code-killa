@@ -1,9 +1,14 @@
 import { ImageResponse } from "next/og";
-import { getV2Chapter } from "@/lib/content-v2";
+import { getV2Chapter, listAllV2ChapterRoutes } from "@/lib/content-v2";
 
-export const alt = "Pyloft chapter";
+export const dynamic = "force-static";
+export const alt = "promptdojo chapter";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
+
+export async function generateStaticParams() {
+  return listAllV2ChapterRoutes();
+}
 
 // Sourced from app/globals.css to match the live site palette exactly.
 const ink950 = "#0E0F12";
@@ -21,7 +26,7 @@ export default async function ChapterOgImage({
   const chapter = await getV2Chapter(chapterSlug);
 
   const number = chapter?.number ?? 0;
-  const title = chapter?.title ?? "Pyloft";
+  const title = chapter?.title ?? "promptdojo";
   const blurb = chapter?.blurb ?? "";
   const stepCount = chapter?.lessons.reduce(
     (acc, l) => acc + l.steps.length,
@@ -103,7 +108,7 @@ export default async function ChapterOgImage({
               letterSpacing: -0.5,
             }}
           >
-            Pyloft
+            promptdojo
           </div>
           <div
             style={{

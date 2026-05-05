@@ -27,7 +27,7 @@ export async function generateMetadata({
   const chapter = await getV2Chapter(chapterSlug);
   if (!chapter) return {};
 
-  const title = `${chapter.title} · Pyloft`;
+  const title = `${chapter.title} · promptdojo`;
   const description = chapter.blurb;
   const url = `/learn/v2/${chapter.slug}`;
 
@@ -40,7 +40,7 @@ export async function generateMetadata({
       title,
       description,
       url,
-      siteName: "Pyloft",
+      siteName: "promptdojo",
     },
     twitter: {
       card: "summary_large_image",

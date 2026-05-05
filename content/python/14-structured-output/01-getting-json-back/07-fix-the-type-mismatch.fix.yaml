@@ -11,7 +11,7 @@ prompt: |
   severity: 5
   ```
 brokenCode: |
-  data = {"email": "maya@pyloft.dev", "severity": "5", "summary": "slow"}
+  data = {"email": "maya@promptdojo.dev", "severity": "5", "summary": "slow"}
 
   # the model lied about the type — coerce before validating
   severity = data["severity"]

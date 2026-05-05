@@ -4,7 +4,7 @@ concept: init-stores-on-self
 prompt: |
   AI wrote `__init__` but forgot to actually store the argument on the
   instance — it just made a local variable that gets thrown away. Fix
-  line 4 so `self.title` is set, then the script will print `pyloft v1`.
+  line 4 so `self.title` is set, then the script will print `promptdojo v1`.
 brokenCode: |
   class App:
       def __init__(self, title):
@@ -14,13 +14,13 @@ brokenCode: |
       def label(self):
           return f"{self.title} v1"
 
-  a = App("pyloft")
+  a = App("promptdojo")
   print(a.label())
 bugLines:
   - 4
 grader:
   kind: stdout-equality
-  expected: "pyloft v1"
+  expected: "promptdojo v1"
   normalize: collapse-trailing-newline
 hint:
   - level: 1

@@ -1,6 +1,6 @@
 # 04 — Brand
 
-> **Brand Guardian deliverable for the code-killa planning team.**
+> **Brand Guardian deliverable for the promptdojo planning team.**
 > Audience: Normal people pivoting careers who use AI to do most of their coding but need enough Python literacy to direct, read, and debug AI output. Not aspiring software engineers.
 
 ---
@@ -11,7 +11,7 @@
 >
 > If the team strongly disagrees, fall back to ITERATE (drop "killa," keep something with similar phonetic punch). Do not ship "code killa" to a paid landing page or App Store listing.
 
-PM, UX, Arch — please factor a name change into your slices. My top recommendation is **`Pyloft`**, with `Reckon` and `Sidecar` as runners-up. Full reasoning below.
+PM, UX, Arch — please factor a name change into your slices. My top recommendation is **`promptdojo`**, with `Reckon` and `Sidecar` as runners-up. Full reasoning below.
 
 ---
 
@@ -40,22 +40,22 @@ Each tested by: *"Would a 38-year-old marketing-manager pivoter tell their frien
 
 | # | Name | Why | Friend-test | Boss-test | LinkedIn-test |
 |---|------|-----|-------------|-----------|---------------|
-| 1 | **Pyloft** | "Py" = Python (genre tag, low cost), "loft" = your space to build, slightly aspirational, soft. | Pass | Pass | Pass |
+| 1 | **promptdojo** | "Py" = Python (genre tag, low cost), "loft" = your space to build, slightly aspirational, soft. | Pass | Pass | Pass |
 | 2 | **Reckon** | "I reckon I can build this." Builder energy without bro energy. Says "thinking + doing." | Pass | Pass | Pass |
 | 3 | **Sidecar** | You ride alongside the AI. Captures the actual relationship: AI drives most of the code, you steer. | Pass | Pass | Pass |
 | 4 | **Pyfluent** | Direct, says-what-it-does, mirrors language-learning frame. Slightly utility-grade. | Pass | Pass | Mid |
 | 5 | **Pilot.py** | You're the pilot, AI is the autopilot. Maps cleanly to the AI-direction story. | Pass | Pass | Pass |
 
-**Top pick: `Pyloft`.**
+**Top pick: `promptdojo`.**
 
 - "Py-" front-loads the genre, so SEO and category recognition do work for free.
 - "Loft" is warm, spatial, slightly creative-class — fits the marketing manager / designer / PM pivoter better than a developer-coded name.
 - Phonetically distinct, two syllables, easy to type, easy to say.
-- Domain question flagged: `pyloft.com` and `pyloft.dev` likely worth checking. **Action for ARCH/PM**: do a domain + trademark sweep before locking.
+- Domain question flagged: `promptdojo.com` and `promptdojo.dev` likely worth checking. **Action for ARCH/PM**: do a domain + trademark sweep before locking.
 
-If the team rejects "Pyloft," fall to **Reckon** (broader audience, no Py-prefix, but less SEO leverage).
+If the team rejects "promptdojo," fall to **Reckon** (broader audience, no Py-prefix, but less SEO leverage).
 
-The rest of this document uses **Pyloft** as the working name. Substitute if the team picks otherwise — the positioning, voice, visual, and copy all transfer.
+The rest of this document uses **promptdojo** as the working name. Substitute if the team picks otherwise — the positioning, voice, visual, and copy all transfer.
 
 ---
 
@@ -63,17 +63,17 @@ The rest of this document uses **Pyloft** as the working name. Substitute if the
 
 Three candidates:
 
-> A. *Pyloft is the Python school for people who direct AI. Unlike boot.dev, we teach you just enough to ship — not to pass a CS degree.*
+> A. *promptdojo is the Python school for people who direct AI. Unlike boot.dev, we teach you just enough to ship — not to pass a CS degree.*
 >
-> B. *Pyloft teaches you the Python you need to read what Cursor wrote, catch what Claude got wrong, and ship what you actually meant. Unlike Codecademy, we're built around the AI you already use.*
+> B. *promptdojo teaches you the Python you need to read what Cursor wrote, catch what Claude got wrong, and ship what you actually meant. Unlike Codecademy, we're built around the AI you already use.*
 >
-> C. *Pyloft is the lightweight Python literacy layer for AI-first builders. Unlike Duolingo, you finish a chapter and you've shipped a working script.*
+> C. *promptdojo is the lightweight Python literacy layer for AI-first builders. Unlike Duolingo, you finish a chapter and you've shipped a working script.*
 
 ### Pick: **B**
 
 Final one-liner:
 
-> **Pyloft teaches you the Python you need to direct AI agents, read what they wrote, and catch what they got wrong. Unlike Codecademy, we're built around the AI you already use.**
+> **promptdojo teaches you the Python you need to direct AI agents, read what they wrote, and catch what they got wrong. Unlike Codecademy, we're built around the AI you already use.**
 
 This wins because it (1) explicitly names the three jobs the user is actually doing, (2) frames AI as a given rather than a future, and (3) draws a clear contrast to Codecademy (the closest mass-market competitor) without taking a swing at boot.dev or Duolingo.
 
@@ -157,7 +157,7 @@ Hierarchy: Fraunces for chapter titles and lesson titles. Inter for everything e
 ### Logo direction sketches
 
 **Sketch 1 — "the loft beam"**
-A lowercase wordmark `pyloft` in Fraunces, with the dot of the `i` rendered as a small ember spark (the same ember pixel from the streak UI). Reads: *the place + the spark.* Works at favicon scale by isolating just the ember.
+A lowercase wordmark `promptdojo` in Fraunces, with the dot of the `i` rendered as a small ember spark (the same ember pixel from the streak UI). Reads: *the place + the spark.* Works at favicon scale by isolating just the ember.
 
 **Sketch 2 — "the angle"**
 The letters `py` rendered as a roof / loft beam silhouette — two strokes meeting at an apex, with the rest of the wordmark in lowercase Inter. Geometric, architectural. Reads: *Python + a structure to build inside.* Stronger as a logomark; the angle alone works as an icon.
@@ -168,7 +168,7 @@ The letters `py` rendered as a roof / loft beam silhouette — two strokes meeti
 
 ## 6. Mascot Question
 
-### Should Pyloft have a mascot? **No. But we have a "presence."**
+### Should promptdojo have a mascot? **No. But we have a "presence."**
 
 - Boot.dev has Boots. Duolingo has Duo. Both work *for their audiences* — Duo for kids/casual, Boots for the gamified-for-young-men crowd.
 - Our ICP is a 35-year-old marketing manager. A character mascot will read as childish. The same person who buys Brilliant for $150/yr does not want a cartoon owl yelling at them.
@@ -191,7 +191,7 @@ If the team later wants to name the panel, soft suggestion: **"the copilot"** (l
 
 ### Moment 1: First 30 seconds of onboarding
 
-> **Welcome to Pyloft.**
+> **Welcome to promptdojo.**
 >
 > You're here because AI writes most of your code now, and you want to actually understand what it's doing.
 >
@@ -244,7 +244,7 @@ If the team later wants to name the panel, soft suggestion: **"the copilot"** (l
 |---------|----------|------|---------|
 | **Reddit** (r/learnpython, r/cscareerquestions, r/ChatGPTCoding, r/cursor) | **MUST** | "I built a Python course for people who already use AI to write most of their code. Free. Looking for honest feedback." | Very high — our ICP lurks here, especially r/cursor and r/ChatGPTCoding. |
 | **Twitter / X** | **MUST** | Founder build-in-public thread: "I'm building the Python school for people who direct AI instead of write code. Here's lesson 1." Demo videos of the 3-pane UI. | High — AI-first builder community lives here. Note: Josh has an active growth push. |
-| **HN (Hacker News)** | **NICE** | "Show HN: Pyloft — Python literacy for AI-first builders." Will get challenged by HN purists ("real devs should learn properly"). The contrast itself becomes content. | Medium — HN skews more senior-dev, but the AI-builder cohort is growing there fast. |
+| **HN (Hacker News)** | **NICE** | "Show HN: promptdojo — Python literacy for AI-first builders." Will get challenged by HN purists ("real devs should learn properly"). The contrast itself becomes content. | Medium — HN skews more senior-dev, but the AI-builder cohort is growing there fast. |
 | **YouTube** | **NICE** | Long-tail SEO: "I asked Cursor to build [X]. Here's what its Python actually does." Each video maps to one lesson. | High but slow — YouTube is the highest-trust acquisition channel for adult learners, but takes 6+ months to compound. |
 | **LinkedIn** | **NICE** | Career-pivot content: "I'm a marketing director. I learned enough Python in 6 weeks to ship internal AI tools at work. Here's what I actually needed." | Very high for ICP, low for virality. Worth a steady drumbeat. |
 | **SEO** | **MUST (long-term)** | Target queries: "do I need to learn Python if I use AI", "how to read code Cursor wrote", "Python for product managers", "Python for non-developers 2026". | High — this is exactly what the ICP googles. |
@@ -292,7 +292,7 @@ The product uses Claude/GPT for hints, encouragement, and inline tutoring. The t
 ### System prompt fragment for tutor "voice"
 
 ```
-You are the Pyloft tutor. You speak to an adult who is pivoting careers
+You are the promptdojo tutor. You speak to an adult who is pivoting careers
 into AI-first building. They are not a software engineer and never will be.
 They use Cursor, Claude Code, and ChatGPT every day.
 
@@ -313,8 +313,8 @@ clarity.
 
 ## TL;DR (5 bullets)
 
-- **RENAME from "code killa" to `Pyloft`** (or `Reckon` if Pyloft fails domain/trademark check). The current name fails the 38-year-old-marketing-manager friend-test, has SEO and cultural-appropriation risk, and doesn't say what the product does. **PM/UX/Arch must factor this in.**
-- **Positioning lock:** *"Pyloft teaches you the Python you need to direct AI agents, read what they wrote, and catch what they got wrong. Unlike Codecademy, we're built around the AI you already use."*
+- **RENAME from "code killa" to `promptdojo`** (or `Reckon` if promptdojo fails domain/trademark check). The current name fails the 38-year-old-marketing-manager friend-test, has SEO and cultural-appropriation risk, and doesn't say what the product does. **PM/UX/Arch must factor this in.**
+- **Positioning lock:** *"promptdojo teaches you the Python you need to direct AI agents, read what they wrote, and catch what they got wrong. Unlike Codecademy, we're built around the AI you already use."*
 - **Visual flip from emerald-on-zinc to ember-on-ink** (editorial-dark, Fraunces + Inter + JetBrains Mono). Ember is the lead accent because it's literally the streak mechanic — the brand color *is* the gameplay metaphor.
 - **No mascot. Use the "Copilot Panel"** — a persistent, unnamed, dry AI presence in the right rail. Mascots infantilize the 35+ ICP; an unnamed copilot mirrors the actual user-AI relationship we're teaching.
 - **Voice is "sharp friend who already builds with AI"** — no exclamation marks, no congratulating effort, no apologies, no shame mechanics. Hard guardrails enforced in the tutor system prompt at temperature 0.4.

@@ -54,6 +54,6 @@ Twelve steps. By the end you'll have:
 - Spotted the three top "AI ships agent code wrong" patterns at sight.
 - Built mental scaffolding for every framework you'll touch — LangGraph, the Vercel AI SDK, Claude's Agent SDK, OpenAI's Assistants API, every house-built agent runtime. They're all dressed-up versions of what you wrote here.
 
-Pyloft ends here. You're not an AI engineer after this — that takes more chapters than fit in 22, and more production reps than a course can teach. But you're past the ceiling that was blocking you. You can read agent traces, catch agent bugs, and ship features without flinching. That's what this whole school was for.
+promptdojo ends here. You're not an AI engineer after this — that takes more chapters than fit in 22, and more production reps than a course can teach. But you're past the ceiling that was blocking you. You can read agent traces, catch agent bugs, and ship features without flinching. That's what this whole school was for.
 
 Press *Start chapter* below.

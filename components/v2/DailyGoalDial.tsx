@@ -47,10 +47,10 @@ export default function DailyGoalDial({
     function onChange() {
       read();
     }
-    window.addEventListener("code-killa:progress-v2", onChange);
+    window.addEventListener("promptdojo:progress-v2", onChange);
     window.addEventListener("storage", onChange);
     return () => {
-      window.removeEventListener("code-killa:progress-v2", onChange);
+      window.removeEventListener("promptdojo:progress-v2", onChange);
       window.removeEventListener("storage", onChange);
     };
   }, [todayMinutes, goalMinutes]);

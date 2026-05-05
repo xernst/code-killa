@@ -1,0 +1,73 @@
+/*
+ * Promptdojo design tokens
+ * Source of truth: design-kit/tokens.json
+ *
+ * Import this into app/globals.css or a stylesheet root, OR copy the
+ * :root block into Tailwind's @theme inline {} configuration.
+ */
+
+:root {
+  /* Color — ink scale */
+  --ink-950: #0E0F12;
+  --ink-900: #18181b;
+  --ink-800: #27272a;
+  --ink-700: #3f3f46;
+  --ink-500: #71717a;
+  --ink-400: #a1a1aa;
+  --ink-300: #d4d4d8;
+  --ink-100: #f4f4f5;
+
+  /* Color — accent */
+  --ember:     #F2683C;
+  --ember-dim: #e34c1c;
+
+  /* Color — semantic (used once each in canon) */
+  --ok:  #86efac;
+  --err: #ef4444;
+
+  /* Type — families */
+  --font-display: 'Fraunces', ui-serif, Georgia, serif;
+  --font-mono:    'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  /* Type — variable axes (Fraunces) */
+  --fvar-display:        'opsz' 144, 'wght' 900, 'SOFT' 0;
+  --fvar-display-italic: 'opsz' 144, 'wght' 800, 'SOFT' 0;
+  --fvar-body:           'opsz' 14, 'wght' 400;
+
+  /* Type — letter spacing */
+  --tracking-display:  -0.04em;
+  --tracking-section:  -0.025em;
+  --tracking-body:     -0.005em;
+  --tracking-eyebrow:   0.4em;
+
+  /* Motion */
+  --ease-slam:    cubic-bezier(0.16, 1, 0.3, 1);    /* expo.out */
+  --ease-drift:   cubic-bezier(0.25, 1, 0.5, 1);    /* power3.out */
+  --ease-default: cubic-bezier(0.33, 1, 0.68, 1);   /* power2.out */
+  --ease-pop:     cubic-bezier(0.34, 1.56, 0.64, 1); /* back.out(1.6) */
+  --ease-breathe: cubic-bezier(0.45, 0, 0.55, 1);   /* sine.inOut */
+
+  --dur-instant:  120ms;
+  --dur-snap:     180ms;
+  --dur-default:  300ms;
+  --dur-entrance: 600ms;
+  --dur-hero:     900ms;
+
+  /* Layout */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+
+  /* Shadow (kept minimal — brand uses borders, not shadows) */
+  --border-card: 1px solid var(--ink-800);
+}
+
+/* Cursor blink — the brand heartbeat. 1.0 Hz, hard on/off. */
+@keyframes promptdojo-blink {
+  0%, 49%   { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+.pd-cursor {
+  animation: promptdojo-blink 1s steps(1) infinite;
+}

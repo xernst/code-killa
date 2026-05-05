@@ -1,6 +1,6 @@
 // lib/content/schema.ts
 //
-// Canonical content schema for Pyloft. This is the contract between authors
+// Canonical content schema for promptdojo. This is the contract between authors
 // (YAML+MD files under content/python/) and the runtime (LessonShell + step
 // renderers).
 //

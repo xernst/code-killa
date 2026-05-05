@@ -10,7 +10,7 @@ brokenCode: |
   data = {
       "id": 7,
       "name": "maya",
-      "email": "maya@pyloft.dev",
+      "email": "maya@promptdojo.dev",
   }
 
   # Cursor wrote the wrong key

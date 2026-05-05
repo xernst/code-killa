@@ -4,7 +4,7 @@ concept: structured-output-validation
 code: |
   # the model returned this. it LOOKS fine. it isn't.
   model_output = {
-      "email": "maya@pyloft.dev",
+      "email": "maya@promptdojo.dev",
       "severity": "high",        # we wanted an int 1-5
       "summary": "login broken",
   }

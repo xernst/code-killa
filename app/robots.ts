@@ -1,5 +1,7 @@
 import type { MetadataRoute } from "next";
 
+export const dynamic = "force-static";
+
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: [
@@ -9,7 +11,7 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ["/onboarding"],
       },
     ],
-    sitemap: "https://pyloft.io/sitemap.xml",
-    host: "https://pyloft.io",
+    sitemap: "https://promptdojo.dev/sitemap.xml",
+    host: "https://promptdojo.dev",
   };
 }

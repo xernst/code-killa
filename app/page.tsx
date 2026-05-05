@@ -7,21 +7,21 @@ import StreakWidget from "@/components/StreakWidget";
 import PyodidePreloader from "@/components/PyodidePreloader";
 
 export const metadata: Metadata = {
-  title: "Pyloft — free interactive Python course for AI builders",
+  title: "promptdojo — free interactive Python course for AI builders",
   description:
     "Free, open-source Python course for PMs, marketers, and ops folks who use Cursor and Claude Code daily. 22 chapters, 624 interactive steps, runs in your browser. No signup, no paywall.",
-  alternates: { canonical: "https://pyloft.io/" },
+  alternates: { canonical: "https://promptdojo.dev/" },
   openGraph: {
     type: "website",
-    title: "Pyloft — free interactive Python course for AI builders",
+    title: "promptdojo — free interactive Python course for AI builders",
     description:
       "Read what AI wrote. Catch what it got wrong. Direct it deliberately. 22 chapters, 624 interactive steps, free forever.",
-    url: "https://pyloft.io/",
-    siteName: "Pyloft",
+    url: "https://promptdojo.dev/",
+    siteName: "promptdojo",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Pyloft — free interactive Python for AI builders",
+    title: "promptdojo — free interactive Python for AI builders",
     description:
       "The Python you need to direct AI agents, read what they wrote, and catch what they got wrong.",
     creator: "@TFisPython",
@@ -63,7 +63,7 @@ export default async function Home() {
       <header className="mb-12 flex items-end justify-between">
         <div>
           <div className="text-xs uppercase tracking-[0.2em] text-ember-500">
-            Pyloft
+            promptdojo
           </div>
           <h1 className="mt-2 font-display text-5xl font-semibold leading-[1.05] tracking-tight text-ink-50 sm:text-6xl">
             Python for AI-first builders.

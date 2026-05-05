@@ -190,11 +190,11 @@
           "phase": "build",
           "estSeconds": 80,
           "concept": "init-stores-on-self",
-          "brokenCode": "class App:\n    def __init__(self, title):\n        # local variable, lost when __init__ returns\n        title = title\n\n    def label(self):\n        return f\"{self.title} v1\"\n\na = App(\"pyloft\")\nprint(a.label())\n",
-          "prompt": "AI wrote `__init__` but forgot to actually store the argument on the\ninstance — it just made a local variable that gets thrown away. Fix\nline 4 so `self.title` is set, then the script will print `pyloft v1`.\n",
+          "brokenCode": "class App:\n    def __init__(self, title):\n        # local variable, lost when __init__ returns\n        title = title\n\n    def label(self):\n        return f\"{self.title} v1\"\n\na = App(\"promptdojo\")\nprint(a.label())\n",
+          "prompt": "AI wrote `__init__` but forgot to actually store the argument on the\ninstance — it just made a local variable that gets thrown away. Fix\nline 4 so `self.title` is set, then the script will print `promptdojo v1`.\n",
           "grader": {
             "kind": "stdout-equality",
-            "expected": "pyloft v1",
+            "expected": "promptdojo v1",
             "normalize": "collapse-trailing-newline"
           },
           "bugLines": [

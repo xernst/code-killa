@@ -1,0 +1,47 @@
+xp: 4
+estSeconds: 110
+concept: parallel-tool-result-ids
+prompt: |
+  The model returned two `tool_use` blocks in one assistant turn —
+  classic parallel tool calls. The reply builder runs both tools but
+  hardcodes both `tool_use_id` values to `"t1"`. The next API call
+  will 400 because tool ids must match the originals (`t1` and `t2`).
+
+  Fix the loop so each tool result carries its own original id.
+
+  Expected output:
+  ```
+  ['t1', 't2']
+  ```
+brokenCode: |
+  TOOLS = {
+      "read_page": lambda url: f"<{url}>",
+  }
+
+  assistant_content = [
+      {"type": "tool_use", "id": "t1", "name": "read_page", "input": {"url": "a.com"}},
+      {"type": "tool_use", "id": "t2", "name": "read_page", "input": {"url": "b.com"}},
+  ]
+
+  results = []
+  for tu in assistant_content:
+      out = TOOLS[tu["name"]](**tu["input"])
+      results.append({
+          "type": "tool_result",
+          "tool_use_id": "t1",  # bug: hardcoded
+          "content": out,
+      })
+
+  print([r["tool_use_id"] for r in results])
+bugLines:
+  - 14
+grader:
+  kind: stdout-equality
+  expected: "['t1', 't2']"
+  normalize: collapse-trailing-newline
+hint:
+  - level: 1
+    body: 'The id of *this* tool_use block is `tu["id"]`, not the literal `"t1"`. Read it from the loop variable.'
+  - level: 2
+    body: 'Change line 14 to `"tool_use_id": tu["id"],` — every tool_result carries the id of the tool_use it answers.'
+revealAfter: 4
