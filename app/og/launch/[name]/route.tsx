@@ -121,14 +121,14 @@ function renderHook() {
   return new ImageResponse(
     (
       <Frame>
-        <Eyebrow text="launching now" />
+        <Eyebrow text="shipping june 2026" />
         <div
           style={{
             display: "flex",
-            fontSize: 220,
+            fontSize: 240,
             fontWeight: 800,
-            marginTop: 12,
-            letterSpacing: -8,
+            marginTop: 18,
+            letterSpacing: -10,
             color: ink100,
             lineHeight: 0.95,
           }}
@@ -138,15 +138,14 @@ function renderHook() {
         <div
           style={{
             display: "flex",
-            fontSize: 38,
+            fontSize: 40,
             color: ink300,
-            marginTop: 18,
+            marginTop: 22,
             width: 1456,
             lineHeight: 1.3,
           }}
         >
-          a python course for the people who already use cursor and claude
-          code, but want to read what those tools actually wrote.
+          a python course for people whose code is mostly written by ai now.
         </div>
 
         <div style={{ display: "flex", flex: 1 }} />
@@ -155,65 +154,16 @@ function renderHook() {
           style={{
             display: "flex",
             width: "100%",
-            justifyContent: "space-between",
-            alignItems: "flex-end",
             marginBottom: 24,
+            fontSize: 30,
+            color: ink400,
           }}
         >
-          <div style={{ display: "flex", flexDirection: "column" }}>
-            <div
-              style={{
-                display: "flex",
-                fontSize: 22,
-                color: ink400,
-                letterSpacing: 2,
-                textTransform: "uppercase",
-              }}
-            >
-              the wedge
-            </div>
-            <div
-              style={{
-                display: "flex",
-                fontSize: 36,
-                color: ink100,
-                marginTop: 6,
-                fontWeight: 600,
-              }}
-            >
-              ch13 to 22 · ai builder skills
-            </div>
-          </div>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "flex-end",
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                fontSize: 22,
-                color: ink400,
-                letterSpacing: 2,
-                textTransform: "uppercase",
-              }}
-            >
-              what you get
-            </div>
-            <div
-              style={{
-                display: "flex",
-                fontSize: 36,
-                color: ember,
-                marginTop: 6,
-                fontWeight: 600,
-              }}
-            >
-              22 chapters · 624 steps · $0
-            </div>
-          </div>
+          <span>22 chapters</span>
+          <span style={{ color: ink700, margin: "0 14px" }}>·</span>
+          <span>624 interactive steps</span>
+          <span style={{ color: ink700, margin: "0 14px" }}>·</span>
+          <span style={{ color: ember }}>free forever</span>
         </div>
 
         <Footer rightText="pyloft.io" />
