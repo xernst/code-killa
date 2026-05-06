@@ -4,10 +4,12 @@ import { getChapters } from "@/lib/content";
 import { getV2Toc, getV2Chapter } from "@/lib/content-v2";
 import HomeClient from "@/components/v2/HomeClient";
 import PhaseBandedRail from "@/components/v2/PhaseBandedRail";
+import StatStrip from "@/components/StatStrip";
 import StreakWidget from "@/components/StreakWidget";
 import PyodidePreloader from "@/components/PyodidePreloader";
 import Wordmark from "@/components/Wordmark";
 import HeroBugSnippet from "@/components/HeroBugSnippet";
+import { formatDateShort, githubStats } from "@/lib/github-stats";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://promptdojo.pages.dev"),
@@ -157,7 +159,9 @@ export default async function Home() {
         ))}
       </section>
 
-      <section className="mt-24">
+      <StatStrip className="mt-24 mb-12" />
+
+      <section>
         <h2 className="t-eyebrow mb-12">
           25 chapters · production-ai track included · free forever
         </h2>
@@ -195,7 +199,7 @@ export default async function Home() {
         </div>
       </details>
 
-      <footer className="mt-16 border-t border-ink-800 pt-6 text-xs text-ink-600">
+      <footer className="mt-16 flex flex-wrap items-baseline justify-between gap-3 border-t border-ink-800 pt-6 text-xs text-ink-600">
         <p>
           Press{" "}
           <kbd className="rounded border border-ink-700 bg-ink-900 px-1 py-0.5 font-mono text-[10px] text-ink-300">
@@ -203,6 +207,15 @@ export default async function Home() {
           </kbd>{" "}
           from anywhere to park a thought without losing your place.
         </p>
+        <div className="t-mono-meta">
+          {(() => {
+            const lc = formatDateShort(githubStats.lastCommitISO);
+            return lc ? <>last commit {lc} · </> : null;
+          })()}
+          <Link href="/changelog" className="hover:text-green-400">
+            changelog
+          </Link>
+        </div>
       </footer>
     </main>
   );

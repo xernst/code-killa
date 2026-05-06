@@ -5,8 +5,8 @@
   "scripts": {
     "build:content": "node scripts/build-content.mjs && node scripts/build-content-v2.mjs",
     "copy:pyodide": "node scripts/copy-pyodide.mjs",
-    "predev": "node scripts/copy-pyodide.mjs && node scripts/build-content.mjs && node scripts/build-content-v2.mjs",
-    "prebuild": "node scripts/copy-pyodide.mjs && node scripts/build-content.mjs && node scripts/build-content-v2.mjs",
+    "predev": "node scripts/copy-pyodide.mjs && node scripts/build-content.mjs && node scripts/build-content-v2.mjs && node scripts/fetch-github-stats.mjs",
+    "prebuild": "node scripts/copy-pyodide.mjs && node scripts/build-content.mjs && node scripts/build-content-v2.mjs && node scripts/fetch-github-stats.mjs",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",

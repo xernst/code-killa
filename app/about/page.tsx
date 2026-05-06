@@ -1,7 +1,9 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import Wordmark from "@/components/Wordmark";
+import StatStrip from "@/components/StatStrip";
 import { PHASES } from "@/lib/curriculum/phases";
+import { formatDateShort, githubStats } from "@/lib/github-stats";
 
 export const metadata: Metadata = {
   title: "what is promptdojo? — about the project",
@@ -109,6 +111,7 @@ export default function AboutPage() {
             back to home
           </Link>
         </div>
+        <StatStrip className="mt-10" />
       </section>
 
       {/* ───────── 2. THE WEDGE ─────────────────────────────────── */}
@@ -305,7 +308,16 @@ export default function AboutPage() {
 
         <footer className="mt-16 flex flex-wrap items-baseline justify-between gap-4 border-t border-ink-800 pt-6 font-mono text-[11px] tracking-wider text-ink-500">
           <Wordmark />
-          <span>github.com/xernst/promptdojo · x.com/TFisPython</span>
+          <div className="flex flex-wrap items-baseline gap-3">
+            <span>github.com/xernst/promptdojo · x.com/TFisPython</span>
+            {(() => {
+              const lc = formatDateShort(githubStats.lastCommitISO);
+              return lc ? <span>· last commit {lc}</span> : null;
+            })()}
+            <Link href="/changelog" className="hover:text-green-400">
+              · changelog
+            </Link>
+          </div>
         </footer>
       </section>
     </main>
