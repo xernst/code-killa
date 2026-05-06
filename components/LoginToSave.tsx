@@ -220,7 +220,7 @@ export default function LoginToSave() {
           aria-modal="true"
           aria-labelledby="lts-title"
           aria-describedby="lts-desc"
-          className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-ink-950/80 px-4 pt-24 pb-12 backdrop-blur-sm"
+          className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-ink-950/70 px-4 pt-24 pb-12 backdrop-blur-sm"
           onClick={closeModal}
         >
           <div
