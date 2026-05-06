@@ -2,7 +2,7 @@
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeHighlight from "rehype-highlight";
-import "highlight.js/styles/github-dark.css";
+// Code-block syntax tokens live in app/globals.css (.hljs-* selectors).
 import type { Chapter, Exercise } from "@/lib/types";
 
 type Props = {

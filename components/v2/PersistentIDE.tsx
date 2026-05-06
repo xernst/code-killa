@@ -295,9 +295,9 @@ const PersistentIDE = forwardRef<PersistentIDEHandle, Props>(function Persistent
               aria-busy={running || !ready}
               aria-keyshortcuts="Meta+Enter Control+Enter"
               className={cn(
-                "inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition motion-reduce:transition-none",
-                "bg-ink-800 text-ink-100 hover:bg-ink-700",
-                "disabled:cursor-not-allowed disabled:opacity-40",
+                "inline-flex items-center gap-1.5 px-4 py-1.5 font-mono text-xs font-bold uppercase tracking-wider transition motion-reduce:transition-none",
+                "bg-ember-500 text-ink-950 hover:bg-ember-400",
+                "disabled:cursor-not-allowed disabled:bg-ink-800 disabled:text-ink-500",
               )}
             >
               {running || !ready ? (
@@ -305,7 +305,8 @@ const PersistentIDE = forwardRef<PersistentIDEHandle, Props>(function Persistent
               ) : (
                 <Play size={14} />
               )}
-              Run
+              run
+              <kbd className="ml-1 font-mono text-[10px] opacity-80">⌘↵</kbd>
             </button>
           )}
           {rightActions}

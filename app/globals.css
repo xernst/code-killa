@@ -111,6 +111,25 @@ body {
 .cm-editor { height: 100%; }
 .cm-scroller { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
 
+/* dojo syntax tokens — replaces github-dark.css for highlight.js prose code.
+   Tokens align with lib/codemirror-theme.ts so the IDE and rendered prose
+   speak the same palette. Ember + ink only. */
+.hljs                 { background: var(--color-ink-950); color: var(--color-ink-300); }
+.hljs-keyword,
+.hljs-built_in        { color: var(--color-ember-500); font-weight: 600; }
+.hljs-string          { color: var(--color-ink-100); font-style: italic; }
+.hljs-comment         { color: var(--color-ink-500); font-style: italic; }
+.hljs-number,
+.hljs-literal         { color: var(--color-ink-200); }
+.hljs-title.function_,
+.hljs-title.class_    { color: var(--color-ember-300); }
+.hljs-params,
+.hljs-variable        { color: var(--color-ink-300); }
+.hljs-operator,
+.hljs-punctuation     { color: var(--color-ink-400); }
+.hljs-attr,
+.hljs-attribute       { color: var(--color-ember-300); }
+
 /* Brand heartbeat — 1.0 Hz cursor blink. MOTION.md:6-12.
    steps(1) is intentional — a hard on/off, never a fade. Fades feel like sleep. */
 @keyframes blink-1hz {
