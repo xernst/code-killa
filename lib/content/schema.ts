@@ -301,6 +301,10 @@ export const ChapterTocEntry = z.object({
   blurb: z.string(),
   lessonCount: z.number().int().nonnegative(),
   stepCount: z.number().int().nonnegative(),
+  // Sum of estMinutes across this chapter's lessons. Emitted by
+  // scripts/build-content-v2.mjs. Drives the chapter-tile time budget
+  // and the phase-band aggregate displayed on /.
+  estMinutes: z.number().int().nonnegative(),
   xpTotal: z.number().int().nonnegative(),
 });
 

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import Wordmark from "@/components/Wordmark";
+import { PHASES } from "@/lib/curriculum/phases";
 
 export const metadata: Metadata = {
   title: "what is promptdojo? — about the project",
@@ -20,39 +21,6 @@ const wedgeColumns = [
   {
     k: "the gap",
     v: "you can vibe-code a hundred features without learning python. then one bug ships and you can't read the traceback.",
-  },
-];
-
-const phases = [
-  {
-    p: "phase 01",
-    t: "foundations",
-    c: "variables, functions, lists, dicts, loops, conditionals, tracebacks, mutation",
-    span: "ch 01–07",
-  },
-  {
-    p: "phase 02",
-    t: "real python",
-    c: "modules, error handling, files & i/o, classes, http",
-    span: "ch 08–12",
-  },
-  {
-    p: "phase 03",
-    t: "llm apis",
-    c: "calling models, structured output, mcp, agent loops",
-    span: "ch 13–16",
-  },
-  {
-    p: "phase 04",
-    t: "shipping discipline",
-    c: "git, secrets, prompting, traces, evals, retrieval, tradeoffs",
-    span: "ch 17–24",
-  },
-  {
-    p: "phase 05",
-    t: "capstone",
-    c: "ship a working cli agent in 12 steps. ~100 lines of python.",
-    span: "ch 25",
   },
 ];
 
@@ -174,22 +142,16 @@ export default function AboutPage() {
           25 chapters. 624 interactive steps. zero install.
         </h2>
         <div className="mt-8 grid gap-3 sm:grid-cols-2">
-          {phases.map((c) => (
-            <div key={c.t} className="border border-ink-800 bg-ink-900 p-5">
+          {PHASES.map((p) => (
+            <div key={p.number} className="border border-ink-800 bg-ink-900 p-5">
               <div className="flex items-baseline justify-between gap-3">
-                <div className="font-mono text-[10px] uppercase tracking-[0.35em] text-green-500">
-                  {c.p}
+                <div className="t-eyebrow">
+                  phase {String(p.number).padStart(2, "0")}
                 </div>
-                <div className="font-mono text-[10px] tracking-wider text-ink-500">
-                  {c.span}
-                </div>
+                <div className="t-mono-meta">{p.range}</div>
               </div>
-              <h3 className="mt-1 font-display text-2xl font-black tracking-[-0.02em] text-ink-100">
-                {c.t}
-              </h3>
-              <p className="mt-2 font-display text-sm leading-snug text-ink-300">
-                {c.c}
-              </p>
+              <h3 className="t-h2 mt-1">{p.name}</h3>
+              <p className="t-body-sm mt-2">{p.blurb}</p>
             </div>
           ))}
         </div>

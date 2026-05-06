@@ -390,6 +390,7 @@ async function main() {
       blurb: c.blurb,
       lessonCount: c.lessons.length,
       stepCount: c.lessons.reduce((acc, l) => acc + l.steps.length, 0),
+      estMinutes: c.lessons.reduce((acc, l) => acc + (l.estMinutes ?? 0), 0),
       xpTotal: c.xpTotal,
     })),
   };

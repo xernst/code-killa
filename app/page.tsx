@@ -3,6 +3,7 @@ import Link from "next/link";
 import { getChapters } from "@/lib/content";
 import { getV2Toc, getV2Chapter } from "@/lib/content-v2";
 import HomeClient from "@/components/v2/HomeClient";
+import PhaseBandedRail from "@/components/v2/PhaseBandedRail";
 import StreakWidget from "@/components/StreakWidget";
 import PyodidePreloader from "@/components/PyodidePreloader";
 import Wordmark from "@/components/Wordmark";
@@ -48,6 +49,8 @@ export default async function Home() {
         blurb: entry.blurb,
         lessonCount: entry.lessonCount,
         stepCount: entry.stepCount,
+        // PR 2 — drives chapter-tile time budget and phase-band aggregate.
+        estMinutes: entry.estMinutes,
         firstLessonSlug,
         hasOverview,
       };
@@ -138,56 +141,11 @@ export default async function Home() {
         ))}
       </section>
 
-      <section id="chapters" className="mt-16 scroll-mt-8">
-        <div className="mb-4 flex items-baseline justify-between">
-          <h2 className="t-eyebrow">
-            25 chapters · production-ai track included · free forever
-          </h2>
-        </div>
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {v2Chapters.map((c) => {
-            // Link to the chapter overview if the chapter has a body to show;
-            // otherwise jump straight to lesson 1 (legacy fallback for
-            // chapters authored before overview.md existed).
-            const href = c.firstLessonSlug
-              ? c.hasOverview
-                ? `/learn/v2/${c.slug}`
-                : `/learn/v2/${c.slug}/${c.firstLessonSlug}/0`
-              : null;
-            const titleClean = c.title.replace(/\s*—.*$/, "");
-            const cardBody = (
-              <>
-                <div className="t-eyebrow text-ink-500">
-                  ch {String(c.number).padStart(2, "0")}
-                </div>
-                <div className="t-h3 mt-2 group-hover:text-green-300">
-                  {titleClean.toLowerCase()}
-                </div>
-                <p className="t-body-sm mt-2 line-clamp-3">{c.blurb}</p>
-                <div className="t-mono-meta mt-3">
-                  {c.stepCount} steps · {c.lessonCount}{" "}
-                  {c.lessonCount === 1 ? "lesson" : "lessons"}
-                </div>
-              </>
-            );
-            return href ? (
-              <Link
-                key={c.slug}
-                href={href}
-                className="group dojo-card-interactive flex flex-col"
-              >
-                {cardBody}
-              </Link>
-            ) : (
-              <div
-                key={c.slug}
-                className="dojo-card-interactive flex flex-col opacity-60"
-              >
-                {cardBody}
-              </div>
-            );
-          })}
-        </div>
+      <section className="mt-24">
+        <h2 className="t-eyebrow mb-12">
+          25 chapters · production-ai track included · free forever
+        </h2>
+        <PhaseBandedRail chapters={v2Chapters} />
       </section>
 
       <details className="group mt-12 border border-ink-800 bg-ink-950">

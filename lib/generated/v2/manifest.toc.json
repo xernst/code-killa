@@ -1,6 +1,6 @@
 {
   "version": "0.1.0",
-  "generatedAt": "2026-05-06T05:22:27.337Z",
+  "generatedAt": "2026-05-06T05:26:06.030Z",
   "chapters": [
     {
       "number": 1,
@@ -9,6 +9,7 @@
       "blurb": "When AI writes Python, the first thing it does is name things. Learn to read those names on sight, and to write a few yourself.",
       "lessonCount": 3,
       "stepCount": 26,
+      "estMinutes": 22,
       "xpTotal": 88
     },
     {
@@ -18,6 +19,7 @@
       "blurb": "AI writes functions constantly, and silently forgets the `return` line about a third of the time. Learn to spot the missing return on sight.",
       "lessonCount": 3,
       "stepCount": 27,
+      "estMinutes": 21,
       "xpTotal": 94
     },
     {
@@ -27,6 +29,7 @@
       "blurb": "Every JSON response you've ever copied out of ChatGPT or a REST API is some mix of two things: lists and dicts. Read them on sight.",
       "lessonCount": 3,
       "stepCount": 27,
+      "estMinutes": 21,
       "xpTotal": 94
     },
     {
@@ -36,6 +39,7 @@
       "blurb": "AI writes a loop every time you say *for each*. Half the time it's wrong by one. Read it before you trust it.",
       "lessonCount": 3,
       "stepCount": 28,
+      "estMinutes": 21,
       "xpTotal": 97
     },
     {
@@ -45,6 +49,7 @@
       "blurb": "`if` looks simple. The traps inside it — empty values, `==` vs `is`, the difference between `0` and `None` — are where AI quietly ships wrong code.",
       "lessonCount": 2,
       "stepCount": 17,
+      "estMinutes": 14,
       "xpTotal": 57
     },
     {
@@ -54,6 +59,7 @@
       "blurb": "When Python crashes, it tells you exactly what happened and where. Most non-engineers panic at the wall of text. You're going to learn to read it.",
       "lessonCount": 3,
       "stepCount": 26,
+      "estMinutes": 21,
       "xpTotal": 91
     },
     {
@@ -63,6 +69,7 @@
       "blurb": "When a list inside a function changes the list outside the function, that's mutation. AI does this constantly without flagging it, and it's the bug class that takes the longest to find.",
       "lessonCount": 2,
       "stepCount": 17,
+      "estMinutes": 14,
       "xpTotal": 57
     },
     {
@@ -72,6 +79,7 @@
       "blurb": "Half of `pip install x` failures are environment confusion, not Python bugs. Learn what `import` actually does, what a virtual env is for, and why your script can't find the package you just installed.",
       "lessonCount": 2,
       "stepCount": 17,
+      "estMinutes": 15,
       "xpTotal": 55
     },
     {
@@ -81,6 +89,7 @@
       "blurb": "AI loves a happy path. The moment a file isn't there or an API blinks, the script blows up. `try/except` is how you keep the program alive long enough to log what went wrong.",
       "lessonCount": 3,
       "stepCount": 27,
+      "estMinutes": 23,
       "xpTotal": 96
     },
     {
@@ -90,6 +99,7 @@
       "blurb": "Reading a CSV, writing a log, parsing a JSON dump. The first thing AI does in any real project is touch a file. Learn the few patterns it reaches for and the one it forgets.",
       "lessonCount": 3,
       "stepCount": 27,
+      "estMinutes": 24,
       "xpTotal": 96
     },
     {
@@ -99,6 +109,7 @@
       "blurb": "AI ships classes constantly: SQLAlchemy models, FastAPI schemas, custom exceptions. You don't need to design them. You need to read one without flinching.",
       "lessonCount": 3,
       "stepCount": 27,
+      "estMinutes": 25,
       "xpTotal": 96
     },
     {
@@ -108,6 +119,7 @@
       "blurb": "Every AI script eventually calls an API. Learn the shape of `httpx.get`, what a status code means, and how to pull a value out of the JSON that comes back.",
       "lessonCount": 3,
       "stepCount": 27,
+      "estMinutes": 25,
       "xpTotal": 96
     },
     {
@@ -117,6 +129,7 @@
       "blurb": "Every AI feature you ship eventually calls a model API. Learn the messages pattern, how to read the response, and the four lines AI writes every single time.",
       "lessonCount": 1,
       "stepCount": 9,
+      "estMinutes": 8,
       "xpTotal": 32
     },
     {
@@ -126,6 +139,7 @@
       "blurb": "Free-form text breaks every pipeline. Learn the schema-first pattern AI uses to get reliable JSON back, validate it with Pydantic, and catch the model's lies before they hit prod.",
       "lessonCount": 1,
       "stepCount": 9,
+      "estMinutes": 8,
       "xpTotal": 32
     },
     {
@@ -135,6 +149,7 @@
       "blurb": "MCP is the new standard for plugging tools and data sources into AI agents. Learn what an MCP server actually is, how Claude Code lists tools, and why this is replacing one-off integrations everywhere.",
       "lessonCount": 1,
       "stepCount": 9,
+      "estMinutes": 8,
       "xpTotal": 32
     },
     {
@@ -144,6 +159,7 @@
       "blurb": "An agent isn't a magic. It's a while loop. Learn the actual cycle Claude Code, Cursor, and every other agent uses: model returns tool_use, you run the tool, you send the result back, repeat until end_turn.",
       "lessonCount": 2,
       "stepCount": 18,
+      "estMinutes": 20,
       "xpTotal": 64
     },
     {
@@ -153,6 +169,7 @@
       "blurb": "Cursor and Claude Code commit on your behalf. Reading those commits — and undoing the bad ones — is your job. Learn the four-state model, the commands you'll run every day, and what `gh` does that `git` can't.",
       "lessonCount": 1,
       "stepCount": 9,
+      "estMinutes": 8,
       "xpTotal": 32
     },
     {
@@ -162,6 +179,7 @@
       "blurb": "AI ships keys to GitHub all the time. Learn the .env pattern, why os.getenv is non-negotiable, what to do when a key leaks, and the gitignore lines you need on day one.",
       "lessonCount": 1,
       "stepCount": 9,
+      "estMinutes": 8,
       "xpTotal": 32
     },
     {
@@ -171,6 +189,7 @@
       "blurb": "The difference between a one-shot AI session and a four-hour debugging spiral is almost always the first prompt. Learn the structure that gets you usable code.",
       "lessonCount": 1,
       "stepCount": 9,
+      "estMinutes": 9,
       "xpTotal": 31
     },
     {
@@ -180,6 +199,7 @@
       "blurb": "When an agent fails, the trace tells you exactly where. Learn to read tool calls, tool results, and stop reasons — the JSON breadcrumbs every agent leaves behind.",
       "lessonCount": 1,
       "stepCount": 9,
+      "estMinutes": 9,
       "xpTotal": 31
     },
     {
@@ -189,6 +209,7 @@
       "blurb": "If you can't test it, you can't ship it. Learn the simple-but-strict eval patterns that separate AI features that work from ones that just feel like they do.",
       "lessonCount": 1,
       "stepCount": 9,
+      "estMinutes": 9,
       "xpTotal": 31
     },
     {
@@ -198,6 +219,7 @@
       "blurb": "RAG without the overengineering. Chunking, embeddings, vector search, and the small set of patterns that make a model answer from your data instead of its training set.",
       "lessonCount": 1,
       "stepCount": 1,
+      "estMinutes": 2,
       "xpTotal": 1
     },
     {
@@ -207,6 +229,7 @@
       "blurb": "The three numbers every shipped LLM feature lives or dies by. Token math, caching, streaming, batching, and the small set of decisions that move the product more than a model swap ever will.",
       "lessonCount": 1,
       "stepCount": 1,
+      "estMinutes": 2,
       "xpTotal": 1
     },
     {
@@ -216,6 +239,7 @@
       "blurb": "When the model lies to your customer. The methodology for narrowing down what went wrong, the four most-common breakage classes, and the discipline that separates 'we shipped a fix' from 'we blamed the model and shrugged'.",
       "lessonCount": 1,
       "stepCount": 1,
+      "estMinutes": 2,
       "xpTotal": 1
     },
     {
@@ -225,6 +249,7 @@
       "blurb": "Wire it all together. Context, retrieval, the prompt, the call, the trace, the eval, the cost. Less a tutorial demo, more the smallest end-to-end LLM feature you could ship to a real user.",
       "lessonCount": 1,
       "stepCount": 12,
+      "estMinutes": 14,
       "xpTotal": 45
     }
   ]
