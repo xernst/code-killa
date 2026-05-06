@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { Lightbulb, ArrowRight, SkipForward } from "lucide-react";
 import type { Hint, Step } from "@/lib/content/schema";
 import { cn } from "@/lib/utils";
+import ProgressHairline from "./ProgressHairline";
 
 // C2 — sprint-queue.md: XP bar + Hint (cycles step.hint[]) + Skip + Continue/Next.
 // ⌘↵ / Ctrl+↵ advances. Voice rules from Brand §3/§4: dry, no exclamation marks.
@@ -65,7 +66,6 @@ export default function StepFooter({
     return () => window.removeEventListener("keydown", handler);
   }, [onPrimary, primaryEnabled]);
 
-  const xpPct = totalXp > 0 ? Math.min(100, Math.round((earnedXp / totalXp) * 100)) : 0;
   const remainingHints = hints.length - hintsShown;
 
   return (
@@ -90,19 +90,13 @@ export default function StepFooter({
               {earnedXp} / {totalXp}
             </span>
           </div>
-          <div
-            className="mt-1 h-1.5 w-full overflow-hidden bg-ink-800"
-            role="progressbar"
-            aria-valuemin={0}
-            aria-valuemax={totalXp}
-            aria-valuenow={earnedXp}
-            aria-label="Lesson XP progress"
-          >
-            <div
-              className="h-full bg-green-500 transition-[width] duration-300 ease-out"
-              style={{ width: `${xpPct}%` }}
-            />
-          </div>
+          <ProgressHairline
+            value={earnedXp}
+            max={totalXp}
+            height="md"
+            ariaLabel="Lesson XP progress"
+            className="mt-1"
+          />
         </div>
         <div className="flex items-center gap-2">
           {hints.length > 0 && (

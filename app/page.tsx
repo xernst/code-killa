@@ -37,24 +37,34 @@ export const metadata: Metadata = {
 export default async function Home() {
   const toc = getV2Toc();
 
-  const v2Chapters = await Promise.all(
+  const v2ChaptersWithStepIds = await Promise.all(
     toc.chapters.map(async (entry) => {
       const detail = await getV2Chapter(entry.slug);
       const firstLessonSlug = detail?.lessons[0]?.slug ?? null;
       const hasOverview = !!detail?.overview && detail.overview.trim().length > 0;
+      const stepIds = detail
+        ? detail.lessons.flatMap((l) => l.steps.map((s) => s.id))
+        : [];
       return {
-        slug: entry.slug,
-        title: entry.title,
-        number: entry.number,
-        blurb: entry.blurb,
-        lessonCount: entry.lessonCount,
-        stepCount: entry.stepCount,
-        // PR 2 — drives chapter-tile time budget and phase-band aggregate.
-        estMinutes: entry.estMinutes,
-        firstLessonSlug,
-        hasOverview,
+        meta: {
+          slug: entry.slug,
+          title: entry.title,
+          number: entry.number,
+          blurb: entry.blurb,
+          lessonCount: entry.lessonCount,
+          stepCount: entry.stepCount,
+          // PR 2 — drives chapter-tile time budget and phase-band aggregate.
+          estMinutes: entry.estMinutes,
+          firstLessonSlug,
+          hasOverview,
+        },
+        stepIds,
       };
     }),
+  );
+  const v2Chapters = v2ChaptersWithStepIds.map((c) => c.meta);
+  const stepIdsByChapter: Record<string, string[]> = Object.fromEntries(
+    v2ChaptersWithStepIds.map((c) => [c.meta.slug, c.stepIds]),
   );
 
   const fallback = {
@@ -145,7 +155,10 @@ export default async function Home() {
         <h2 className="t-eyebrow mb-12">
           25 chapters · production-ai track included · free forever
         </h2>
-        <PhaseBandedRail chapters={v2Chapters} />
+        <PhaseBandedRail
+          chapters={v2Chapters}
+          stepIdsByChapter={stepIdsByChapter}
+        />
       </section>
 
       <details className="group mt-12 border border-ink-800 bg-ink-950">

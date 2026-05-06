@@ -4,6 +4,7 @@ import "./globals.css";
 import BrainDump from "@/components/BrainDump";
 import FollowOnXPill from "@/components/FollowOnXPill";
 import LoginToSave from "@/components/LoginToSave";
+import CourseProgress from "@/components/v2/CourseProgress";
 
 const fraunces = Fraunces({ subsets: ["latin"], variable: "--font-fraunces", axes: ["SOFT", "WONK"] });
 const jetbrains = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jetbrains" });
@@ -30,6 +31,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <span>what is this?</span>
           </a>
           <div className="flex flex-wrap items-center gap-2">
+            {/* TODO PR 6: replaced by SiteHeader */}
+            <CourseProgress />
             <LoginToSave />
             <FollowOnXPill />
           </div>
