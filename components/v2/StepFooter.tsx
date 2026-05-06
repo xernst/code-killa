@@ -74,7 +74,7 @@ export default function StepFooter({
         <ul className="flex flex-col gap-1.5 rounded-md border border-ink-800 bg-ink-950 p-3 text-sm text-ink-300">
           {hints.slice(0, hintsShown).map((h, i) => (
             <li key={i} className="flex gap-2">
-              <span className="font-mono text-xs text-ember-400" aria-hidden>
+              <span className="font-mono text-xs text-green-400" aria-hidden>
                 {i + 1}.
               </span>
               <span>{h.body}</span>
@@ -99,7 +99,7 @@ export default function StepFooter({
             aria-label="Lesson XP progress"
           >
             <div
-              className="h-full bg-ember-500 transition-[width] duration-300 ease-out"
+              className="h-full bg-green-500 transition-[width] duration-300 ease-out"
               style={{ width: `${xpPct}%` }}
             />
           </div>
@@ -137,9 +137,9 @@ export default function StepFooter({
             onClick={onPrimary}
             disabled={!primaryEnabled}
             className={cn(
-              "inline-flex items-center gap-1.5 rounded-md px-4 py-2 text-sm font-medium transition focus:outline-none focus:ring-2 focus:ring-ember-300",
+              "inline-flex items-center gap-1.5 rounded-md px-4 py-2 text-sm font-medium transition focus:outline-none focus:ring-2 focus:ring-green-300",
               primaryEnabled
-                ? "bg-ember-500 text-ink-950 hover:bg-ember-400"
+                ? "bg-green-500 text-ink-950 hover:bg-green-400"
                 : "cursor-not-allowed bg-ink-800 text-ink-500",
             )}
             aria-keyshortcuts="Meta+Enter Control+Enter"

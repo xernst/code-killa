@@ -157,7 +157,7 @@ export default function LoginToSave() {
           setStatus("idle");
           setError(null);
         }}
-        className="inline-flex items-center gap-1.5 border border-ember-700/50 bg-ember-950/40 px-3 py-1 font-mono text-[11px] uppercase tracking-wider text-ember-400 transition hover:border-ember-500 hover:text-ember-300"
+        className="inline-flex items-center gap-1.5 border border-green-700/50 bg-green-950/40 px-3 py-1 font-mono text-[11px] uppercase tracking-wider text-green-400 transition hover:border-green-500 hover:text-green-300"
         aria-label={email ? "manage saved email" : "login to save progress"}
       >
         {buttonLabel}
@@ -219,7 +219,7 @@ export default function LoginToSave() {
                   }
                 }}
                 disabled={status === "saving" || status === "loading"}
-                className="w-full border border-ink-800 bg-ink-950 px-3 py-2 font-mono text-sm text-ink-100 placeholder:text-ink-600 focus:border-ember-500 focus:outline-none"
+                className="w-full border border-ink-800 bg-ink-950 px-3 py-2 font-mono text-sm text-ink-100 placeholder:text-ink-600 focus:border-green-500 focus:outline-none"
               />
 
               {error ? (
@@ -234,7 +234,7 @@ export default function LoginToSave() {
                     status === "loading" ||
                     !input.trim()
                   }
-                  className="border border-ember-500 bg-ember-500 px-4 py-2 font-mono text-xs font-bold uppercase tracking-wider text-ink-950 transition hover:bg-ember-400 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="border border-green-500 bg-green-500 px-4 py-2 font-mono text-xs font-bold uppercase tracking-wider text-ink-950 transition hover:bg-green-400 disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   {status === "saving"
                     ? "saving..."

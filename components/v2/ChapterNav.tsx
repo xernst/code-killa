@@ -76,7 +76,7 @@ export default function V2ChapterNav({
                   isActive
                     ? "bg-ink-800 text-ink-100"
                     : chapterDone
-                      ? "text-ember-700 hover:bg-ink-800/50"
+                      ? "text-green-700 hover:bg-ink-800/50"
                       : "text-ink-400 hover:bg-ink-800/50 hover:text-ink-200",
                 )}
               >
@@ -91,7 +91,7 @@ export default function V2ChapterNav({
                   </span>
                   <span className="truncate">{shortChapterTitle(entry.title).toLowerCase()}</span>
                 </span>
-                {chapterDone && <Check size={11} className="shrink-0 text-ember-700" />}
+                {chapterDone && <Check size={11} className="shrink-0 text-green-700" />}
               </button>
               {isOpen && detail && (
                 <ChapterDetail
@@ -143,9 +143,9 @@ function ChapterDetail({
               className={cn(
                 "flex items-center gap-1.5 rounded px-1.5 py-1 text-[11px] uppercase tracking-wide transition",
                 isActiveLesson
-                  ? "text-ember-400"
+                  ? "text-green-400"
                   : lessonDone
-                    ? "text-ember-700 hover:text-ember-500"
+                    ? "text-green-700 hover:text-green-500"
                     : "text-ink-500 hover:text-ink-200",
               )}
             >
@@ -164,7 +164,7 @@ function ChapterDetail({
                         className={cn(
                           "flex items-center gap-2 rounded px-1.5 py-1 text-xs transition",
                           here
-                            ? "bg-ink-800 text-ember-400"
+                            ? "bg-ink-800 text-green-400"
                             : "text-ink-500 hover:text-ink-100",
                         )}
                       >
@@ -194,8 +194,8 @@ function StepStatusIcon({
   active: boolean;
 }) {
   if (status === "passed")
-    return <Check size={11} className="text-ember-700" />;
-  if (active) return <Circle size={9} className="text-ember-500 fill-ember-500" />;
+    return <Check size={11} className="text-green-700" />;
+  if (active) return <Circle size={9} className="text-green-500 fill-green-500" />;
   if (status === "skipped" || status === "failed")
     return <Circle size={9} className="text-ink-500" />;
   return <Lock size={10} className="text-ink-500" />;

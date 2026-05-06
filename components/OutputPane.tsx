@@ -21,7 +21,7 @@ export default function OutputPane({ stdout, stderr, passed, expected, next }: P
           Output
         </div>
         {passed === true && (
-          <span className="inline-flex items-center gap-1 text-xs font-medium text-ember-400">
+          <span className="inline-flex items-center gap-1 text-xs font-medium text-green-400">
             <CheckCircle2 size={14} /> Passed +10 XP
           </span>
         )}
@@ -46,7 +46,7 @@ export default function OutputPane({ stdout, stderr, passed, expected, next }: P
         {passed === false && expected && !stderr && (
           <div className="mt-3 rounded-md border border-ink-800 bg-ink-900 p-3">
             <div className="text-xs uppercase tracking-wide text-ink-500 mb-1">Expected</div>
-            <pre className="whitespace-pre-wrap text-ember-300">{expected}</pre>
+            <pre className="whitespace-pre-wrap text-green-300">{expected}</pre>
           </div>
         )}
       </div>
@@ -55,8 +55,8 @@ export default function OutputPane({ stdout, stderr, passed, expected, next }: P
           <Link
             href={`/learn/${next.chapterSlug}/${next.exerciseSlug}`}
             className={cn(
-              "block w-full rounded-md bg-ember-600 px-3 py-2 text-center text-sm font-medium text-white",
-              "hover:bg-ember-500 transition",
+              "block w-full rounded-md bg-green-600 px-3 py-2 text-center text-sm font-medium text-white",
+              "hover:bg-green-500 transition",
             )}
           >
             Next exercise →

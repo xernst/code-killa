@@ -125,8 +125,8 @@ export default function FillBlankStepView({
                 }}
                 className={cn(
                   "rounded border px-2 py-1 font-mono text-sm",
-                  "border-ink-700 bg-ink-950 text-ember-300",
-                  "focus:border-ember-500 focus:outline-none",
+                  "border-ink-700 bg-ink-950 text-green-300",
+                  "focus:border-green-500 focus:outline-none",
                   isWrong && "border-ink-700",
                 )}
                 placeholder="___"
@@ -144,8 +144,8 @@ export default function FillBlankStepView({
             onClick={handleSubmit}
             disabled={!allFilled}
             className={cn(
-              "rounded-md bg-ember-500 px-4 py-2 text-sm font-medium text-ink-950 transition",
-              "hover:bg-ember-400",
+              "rounded-md bg-green-500 px-4 py-2 text-sm font-medium text-ink-950 transition",
+              "hover:bg-green-400",
               "disabled:cursor-not-allowed disabled:bg-ink-800 disabled:text-ink-500",
             )}
           >
@@ -157,7 +157,7 @@ export default function FillBlankStepView({
             aria-live="polite"
             className={cn(
               "inline-flex items-center gap-1.5 text-sm",
-              allCorrect ? "text-ember-700" : "text-ink-400",
+              allCorrect ? "text-green-700" : "text-ink-400",
             )}
           >
             {allCorrect ? (

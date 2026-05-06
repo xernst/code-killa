@@ -31,7 +31,7 @@ export default async function ChapterPage({ params }: { params: Promise<{ chapte
           <li key={ex.slug}>
             <Link
               href={`/learn/${chapter.slug}/${ex.slug}`}
-              className="flex items-center justify-between rounded-lg border border-ink-800 bg-ink-950 p-4 transition hover:border-ember-700/50 hover:bg-ink-900"
+              className="flex items-center justify-between rounded-lg border border-ink-800 bg-ink-950 p-4 transition hover:border-green-700/50 hover:bg-ink-900"
             >
               <div>
                 <div className="font-mono text-[10px] text-ink-600">

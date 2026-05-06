@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>promptdojo — palette models A / B / C</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;0,9..144,900;1,9..144,800&family=JetBrains+Mono:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+  :root { --display: 'Fraunces', ui-serif, serif; --mono: 'JetBrains Mono', ui-monospace, monospace; }
+  *,*::before,*::after { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; font-family: var(--display); font-weight: 400; -webkit-font-smoothing: antialiased; }
+  body { background: #18181b; color: #f4f4f5; }
+
+  .gutter {
+    padding: 56px 64px;
+    border-bottom: 8px dashed #18181b;
+  }
+  .gutter:last-child { border-bottom: 0; }
+
+  .gutter-label {
+    font-family: var(--mono); font-weight: 800; font-size: 12px;
+    letter-spacing: 0.4em; text-transform: uppercase;
+    margin-bottom: 32px; color: #a1a1aa;
+  }
+  .gutter-label .name { color: #f4f4f5; margin-right: 12px; }
+
+  /* Site-slice mockup — same DOM, different palette via prefix class */
+  .slice { max-width: 1180px; margin: 0 auto; }
+
+  .topbar {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 8px 0 24px;
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em;
+  }
+  .topbar .pills { display: flex; gap: 8px; }
+  .topbar .pill {
+    padding: 4px 12px; text-transform: uppercase;
+    font-weight: 800;
+    border: 1px solid;
+    letter-spacing: 0.08em;
+  }
+  .wordmark {
+    font-family: var(--mono); font-weight: 800; font-size: 14px;
+    letter-spacing: -0.015em;
+  }
+  .wordmark .underscore { display: inline-block; width: 10px; height: 3px; margin-left: 6px; vertical-align: 4px; }
+
+  .hero { display: grid; grid-template-columns: 1.2fr 1fr; gap: 56px; align-items: center; padding: 48px 0; }
+  .eyebrow {
+    font-family: var(--mono); font-weight: 800; font-size: 11px;
+    letter-spacing: 0.4em; text-transform: uppercase;
+    margin-bottom: 18px;
+  }
+  .h1 {
+    font-family: var(--display); font-weight: 900;
+    font-variation-settings: 'opsz' 144, 'SOFT' 0;
+    font-size: 88px; line-height: 0.92; letter-spacing: -0.045em;
+    margin: 0;
+  }
+  .h1 em { font-style: italic; font-variation-settings: 'opsz' 144, 'wght' 800; }
+  .lede {
+    font-family: var(--display); font-size: 19px; line-height: 1.5;
+    margin: 22px 0 28px; max-width: 50ch;
+  }
+
+  .ctas { display: flex; gap: 12px; align-items: center; }
+  .btn {
+    font-family: var(--mono); font-size: 12px; font-weight: 800;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    padding: 12px 22px; border: 1px solid; cursor: pointer;
+  }
+  .btn-primary { /* per-palette */ }
+  .btn-ghost { background: transparent; }
+
+  .codecard { padding: 22px 26px; border: 1px solid; font-family: var(--mono); font-size: 18px; line-height: 1.55; }
+  .codecard .file { font-size: 10px; letter-spacing: 0.35em; text-transform: uppercase; font-weight: 800; margin-bottom: 14px; }
+  .codecard .l { white-space: pre; }
+  .codecard .l .kw { /* per-palette */ }
+  .codecard .l.bug { padding: 2px 8px; margin: 0 -8px; border-radius: 2px; }
+
+  .grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+    margin-top: 56px;
+  }
+  .card { padding: 20px 22px; border: 1px solid; }
+  .card .num { font-family: var(--mono); font-weight: 800; font-size: 11px; letter-spacing: 0.3em; text-transform: uppercase; margin-bottom: 8px; }
+  .card .name { font-family: var(--display); font-weight: 800; font-size: 22px; letter-spacing: -0.02em; line-height: 1.15; margin: 0 0 6px; }
+  .card .meta { font-family: var(--mono); font-size: 11px; letter-spacing: 0.04em; }
+
+  .footer {
+    margin-top: 56px; padding-top: 22px;
+    border-top: 1px solid; font-family: var(--mono); font-size: 11px;
+    display: flex; justify-content: space-between;
+    letter-spacing: 0.04em;
+  }
+
+  /* ─────────────────────────  PALETTE A — STRIPE / EDITORIAL (light)  ───────────────────────── */
+  .pal-a { background: #fafaf9; color: #0a0a0a; }
+  .pal-a .topbar { color: #525252; }
+  .pal-a .topbar .pill { color: #b91c1c; border-color: rgba(185, 28, 28, 0.4); background: rgba(185, 28, 28, 0.05); }
+  .pal-a .wordmark { color: #0a0a0a; }
+  .pal-a .wordmark .caret { color: #b91c1c; }
+  .pal-a .wordmark .underscore { background: #b91c1c; }
+  .pal-a .eyebrow { color: #b91c1c; }
+  .pal-a .h1 { color: #0a0a0a; }
+  .pal-a .h1 em { color: #b91c1c; }
+  .pal-a .lede { color: #404040; }
+  .pal-a .btn-primary { background: #0a0a0a; color: #fafaf9; border-color: #0a0a0a; }
+  .pal-a .btn-ghost { color: #0a0a0a; border-color: #d4d4d4; }
+  .pal-a .codecard { background: #f4f4f5; border-color: #d4d4d4; color: #262626; }
+  .pal-a .codecard .file { color: #737373; }
+  .pal-a .codecard .l .kw { color: #b91c1c; }
+  .pal-a .codecard .l.bug { background: rgba(185, 28, 28, 0.08); color: #991b1b; }
+  .pal-a .card { background: #f4f4f5; border-color: #d4d4d4; }
+  .pal-a .card .num { color: #b91c1c; }
+  .pal-a .card .name { color: #0a0a0a; }
+  .pal-a .card .meta { color: #525252; }
+  .pal-a .footer { border-top-color: #d4d4d4; color: #737373; }
+
+  /* ─────────────────────────  PALETTE B — VERCEL / DEV-TOOL (dark, cobalt)  ─────────────────── */
+  .pal-b { background: #0c111d; color: #f4f4f5; }
+  .pal-b .topbar { color: #94a3b8; }
+  .pal-b .topbar .pill { color: #60a5fa; border-color: rgba(59, 130, 246, 0.4); background: rgba(59, 130, 246, 0.08); }
+  .pal-b .wordmark { color: #f4f4f5; }
+  .pal-b .wordmark .caret { color: #3b82f6; }
+  .pal-b .wordmark .underscore { background: #3b82f6; }
+  .pal-b .eyebrow { color: #60a5fa; }
+  .pal-b .h1 { color: #f4f4f5; }
+  .pal-b .h1 em { color: #3b82f6; }
+  .pal-b .lede { color: #cbd5e1; }
+  .pal-b .btn-primary { background: #3b82f6; color: #0c111d; border-color: #3b82f6; }
+  .pal-b .btn-ghost { color: #cbd5e1; border-color: #1e293b; }
+  .pal-b .codecard { background: #161b27; border-color: #1e293b; color: #cbd5e1; }
+  .pal-b .codecard .file { color: #64748b; }
+  .pal-b .codecard .l .kw { color: #3b82f6; }
+  .pal-b .codecard .l.bug { background: rgba(239, 68, 68, 0.12); color: #fca5a5; }
+  .pal-b .card { background: #161b27; border-color: #1e293b; }
+  .pal-b .card .num { color: #3b82f6; }
+  .pal-b .card .name { color: #f4f4f5; }
+  .pal-b .card .meta { color: #94a3b8; }
+  .pal-b .footer { border-top-color: #1e293b; color: #64748b; }
+
+  /* ─────────────────────────  PALETTE C — TERMINAL / PHREAKER (dark, electric green)  ───────── */
+  .pal-c { background: #0a0a0a; color: #fafaf9; }
+  .pal-c .topbar { color: #a3a3a3; }
+  .pal-c .topbar .pill { color: #4ade80; border-color: rgba(74, 222, 128, 0.4); background: rgba(74, 222, 128, 0.06); }
+  .pal-c .wordmark { color: #fafaf9; }
+  .pal-c .wordmark .caret { color: #4ade80; }
+  .pal-c .wordmark .underscore { background: #4ade80; }
+  .pal-c .eyebrow { color: #4ade80; }
+  .pal-c .h1 { color: #fafaf9; }
+  .pal-c .h1 em { color: #4ade80; }
+  .pal-c .lede { color: #d4d4d4; }
+  .pal-c .btn-primary { background: #4ade80; color: #0a0a0a; border-color: #4ade80; }
+  .pal-c .btn-ghost { color: #fafaf9; border-color: #262626; }
+  .pal-c .codecard { background: #141414; border-color: #262626; color: #d4d4d4; }
+  .pal-c .codecard .file { color: #737373; }
+  .pal-c .codecard .l .kw { color: #4ade80; }
+  .pal-c .codecard .l.bug { background: rgba(239, 68, 68, 0.12); color: #fca5a5; }
+  .pal-c .card { background: #141414; border-color: #262626; }
+  .pal-c .card .num { color: #4ade80; }
+  .pal-c .card .name { color: #fafaf9; }
+  .pal-c .card .meta { color: #a3a3a3; }
+  .pal-c .footer { border-top-color: #262626; color: #737373; }
+</style>
+</head>
+<body>
+
+<!-- ─────────  PALETTE A  ───────── -->
+<section class="gutter pal-a">
+  <div class="slice">
+    <div class="gutter-label"><span class="name">A — stripe / editorial</span> · light · #fafaf9 + #b91c1c</div>
+    <div class="topbar">
+      <div class="wordmark">
+        <span class="caret">❯</span> promptdojo<span class="underscore"></span>
+      </div>
+      <div class="pills">
+        <div class="pill">[ login to save ]</div>
+        <div class="pill">[ follow @TFisPython on x ]</div>
+      </div>
+    </div>
+
+    <div class="hero">
+      <div>
+        <div class="eyebrow">chapter 07 · mutation and state</div>
+        <h1 class="h1">ai writes this.<br><em>it's wrong.</em></h1>
+        <p class="lede">a python school for the version of you that lives in cursor. 25 chapters · 624 interactive steps · runs in your browser. login to save progress.</p>
+        <div class="ctas">
+          <button class="btn btn-primary">start the course →</button>
+          <button class="btn btn-ghost">read the manifesto</button>
+        </div>
+      </div>
+      <div class="codecard">
+        <div class="file">cursor.py</div>
+        <div class="l"><span class="kw">def</span> collect_errors(</div>
+        <div class="l">    msg: str,</div>
+        <div class="l bug">    bag: list = []</div>
+        <div class="l">):</div>
+        <div class="l">    bag.append(msg)</div>
+        <div class="l"><span class="kw">    return</span> bag</div>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="card"><div class="num">ch 07</div><h3 class="name">mutation and state</h3><div class="meta">17 steps · 57 xp</div></div>
+      <div class="card"><div class="num">ch 13</div><h3 class="name">llm apis</h3><div class="meta">9 steps · 32 xp</div></div>
+      <div class="card"><div class="num">ch 25</div><h3 class="name">capstone — cli agent</h3><div class="meta">12 steps · 45 xp</div></div>
+    </div>
+
+    <div class="footer">
+      <span>~/promptdojo/</span>
+      <span>github.com/xernst/promptdojo · x.com/TFisPython</span>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────  PALETTE B  ───────── -->
+<section class="gutter pal-b">
+  <div class="slice">
+    <div class="gutter-label"><span class="name">B — vercel / dev-tool</span> · dark cobalt · #0c111d + #3b82f6</div>
+    <div class="topbar">
+      <div class="wordmark">
+        <span class="caret">❯</span> promptdojo<span class="underscore"></span>
+      </div>
+      <div class="pills">
+        <div class="pill">[ login to save ]</div>
+        <div class="pill">[ follow @TFisPython on x ]</div>
+      </div>
+    </div>
+
+    <div class="hero">
+      <div>
+        <div class="eyebrow">chapter 07 · mutation and state</div>
+        <h1 class="h1">ai writes this.<br><em>it's wrong.</em></h1>
+        <p class="lede">a python school for the version of you that lives in cursor. 25 chapters · 624 interactive steps · runs in your browser. login to save progress.</p>
+        <div class="ctas">
+          <button class="btn btn-primary">start the course →</button>
+          <button class="btn btn-ghost">read the manifesto</button>
+        </div>
+      </div>
+      <div class="codecard">
+        <div class="file">cursor.py</div>
+        <div class="l"><span class="kw">def</span> collect_errors(</div>
+        <div class="l">    msg: str,</div>
+        <div class="l bug">    bag: list = []</div>
+        <div class="l">):</div>
+        <div class="l">    bag.append(msg)</div>
+        <div class="l"><span class="kw">    return</span> bag</div>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="card"><div class="num">ch 07</div><h3 class="name">mutation and state</h3><div class="meta">17 steps · 57 xp</div></div>
+      <div class="card"><div class="num">ch 13</div><h3 class="name">llm apis</h3><div class="meta">9 steps · 32 xp</div></div>
+      <div class="card"><div class="num">ch 25</div><h3 class="name">capstone — cli agent</h3><div class="meta">12 steps · 45 xp</div></div>
+    </div>
+
+    <div class="footer">
+      <span>~/promptdojo/</span>
+      <span>github.com/xernst/promptdojo · x.com/TFisPython</span>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────  PALETTE C  ───────── -->
+<section class="gutter pal-c">
+  <div class="slice">
+    <div class="gutter-label"><span class="name">C — terminal / phreaker</span> · dark green · #0a0a0a + #4ade80</div>
+    <div class="topbar">
+      <div class="wordmark">
+        <span class="caret">❯</span> promptdojo<span class="underscore"></span>
+      </div>
+      <div class="pills">
+        <div class="pill">[ login to save ]</div>
+        <div class="pill">[ follow @TFisPython on x ]</div>
+      </div>
+    </div>
+
+    <div class="hero">
+      <div>
+        <div class="eyebrow">chapter 07 · mutation and state</div>
+        <h1 class="h1">ai writes this.<br><em>it's wrong.</em></h1>
+        <p class="lede">a python school for the version of you that lives in cursor. 25 chapters · 624 interactive steps · runs in your browser. login to save progress.</p>
+        <div class="ctas">
+          <button class="btn btn-primary">start the course →</button>
+          <button class="btn btn-ghost">read the manifesto</button>
+        </div>
+      </div>
+      <div class="codecard">
+        <div class="file">cursor.py</div>
+        <div class="l"><span class="kw">def</span> collect_errors(</div>
+        <div class="l">    msg: str,</div>
+        <div class="l bug">    bag: list = []</div>
+        <div class="l">):</div>
+        <div class="l">    bag.append(msg)</div>
+        <div class="l"><span class="kw">    return</span> bag</div>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="card"><div class="num">ch 07</div><h3 class="name">mutation and state</h3><div class="meta">17 steps · 57 xp</div></div>
+      <div class="card"><div class="num">ch 13</div><h3 class="name">llm apis</h3><div class="meta">9 steps · 32 xp</div></div>
+      <div class="card"><div class="num">ch 25</div><h3 class="name">capstone — cli agent</h3><div class="meta">12 steps · 45 xp</div></div>
+    </div>
+
+    <div class="footer">
+      <span>~/promptdojo/</span>
+      <span>github.com/xernst/promptdojo · x.com/TFisPython</span>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>

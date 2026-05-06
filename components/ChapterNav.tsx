@@ -41,7 +41,7 @@ export default function ChapterNav({ chapters, activeChapter, activeExercise }: 
     <nav className="flex h-full flex-col overflow-y-auto border-r border-ink-800 bg-ink-950">
       <div className="border-b border-ink-800 p-4">
         <Link href="/" className="block">
-          <div className="text-sm font-bold tracking-tight text-ember-400">promptdojo</div>
+          <div className="text-sm font-bold tracking-tight text-green-400">promptdojo</div>
           <div className="text-[10px] uppercase tracking-widest text-ink-500">python · vibe edition</div>
         </Link>
       </div>
@@ -62,12 +62,12 @@ export default function ChapterNav({ chapters, activeChapter, activeExercise }: 
                 )}
               >
                 <span className="truncate">
-                  <span className={cn("mr-2 font-mono text-[10px]", allDone ? "text-ember-500" : "text-ink-600")}>
+                  <span className={cn("mr-2 font-mono text-[10px]", allDone ? "text-green-500" : "text-ink-600")}>
                     {String(c.number).padStart(2, "0")}
                   </span>
                   {c.title.replace(/^Chapter\s+\d+\s*[—\-]\s*/, "")}
                 </span>
-                <span className={cn("text-[10px] tabular-nums", allDone ? "text-ember-500" : "text-ink-600")}>
+                <span className={cn("text-[10px] tabular-nums", allDone ? "text-green-500" : "text-ink-600")}>
                   {chapterPassed}/{c.exerciseCount}
                 </span>
               </Link>
@@ -83,11 +83,11 @@ export default function ChapterNav({ chapters, activeChapter, activeExercise }: 
                         href={`/learn/${c.slug}/${slug}`}
                         className={cn(
                           "flex items-center gap-2 rounded px-2 py-1 text-xs transition",
-                          here ? "bg-ink-900 text-ember-400" : "text-ink-500 hover:text-ink-200",
+                          here ? "bg-ink-900 text-green-400" : "text-ink-500 hover:text-ink-200",
                         )}
                       >
                         {done ? (
-                          <Check size={11} className="text-ember-500" />
+                          <Check size={11} className="text-green-500" />
                         ) : (
                           <Circle size={9} className="text-ink-700" />
                         )}

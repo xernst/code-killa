@@ -13,7 +13,7 @@
 - **The brand kit is loaded but barely used.** Fraunces is wired in `app/layout.tsx:7` but the home hero (`app/page.tsx:68`) and onboarding hero (`app/onboarding/page.tsx:193`) are using `font-display` at *5xl–6xl* (~48–60 px) — half the size the kit calls for, and at weight 600 not 900.
 - **Inter is still loaded as a third font** (`app/layout.tsx:6`) — explicitly forbidden by the brand kit (`TYPOGRAPHY.md:79`). It silently wins because `<body>` defaults to `font-sans` (`app/globals.css:34`).
 - **Zero dojo / terminal / ensō motif on the live site.** No cursor-blink heartbeat. No `❯` prompt glyph in the wordmark. No tatami pattern. No belt-stripe progress. The brand mark exists in `design-kit/logos/` but never renders in the UI.
-- **Coursera-y polish creeps in via gradients and rounded-full pills** — `bg-gradient-to-br from-ember-950 to-ink-950` (`HomeClient.tsx:70,100`) and the `rounded-full bg-ember-600` arrow buttons (`HomeClient.tsx:83,113`). Reads like a SaaS marketing page, not a terminal.
+- **Coursera-y polish creeps in via gradients and rounded-full pills** — `bg-gradient-to-br from-green-950 to-ink-950` (`HomeClient.tsx:70,100`) and the `rounded-full bg-green-600` arrow buttons (`HomeClient.tsx:83,113`). Reads like a SaaS marketing page, not a terminal.
 
 ---
 
@@ -58,7 +58,7 @@
 ### 7. CTA buttons use `rounded-md` and small padding — generic shadcn shape
 - **Where:** `app/page.tsx`, `onboarding/page.tsx:207,346,396`, `StepFooter.tsx:140`, `[chapter]/page.tsx:116`
 - **Brand kit says:** Implicit from terminal/dojo aesthetic — buttons should feel like keys/tickets, not Material chips. `MOTION.md:25` calls for `back.out(1.6)` overshoot on button entrances.
-- **Live site does:** `rounded-md bg-ember-500 px-5 py-2.5` — the same button you'd ship in any Vercel template. No personality.
+- **Live site does:** `rounded-md bg-green-500 px-5 py-2.5` — the same button you'd ship in any Vercel template. No personality.
 - **Severity:** MED
 
 ### 8. Eyebrow labels use `font-sans` not mono
@@ -111,14 +111,14 @@
     {/* faint tatami pattern, 1.5% ember tint */}
     <div className="dojo-mat absolute inset-0 -z-10 opacity-[0.04]" />
 
-    <div className="font-mono text-[11px] uppercase tracking-[0.42em] text-ember-500 font-extrabold">
+    <div className="font-mono text-[11px] uppercase tracking-[0.42em] text-green-500 font-extrabold">
       ❯ promptdojo<span className="cursor-blink">_</span>
     </div>
 
     <h1 className="mt-6 font-display text-[clamp(72px,11vw,128px)] font-black leading-[0.9] tracking-[-0.045em] text-ink-100"
         style={{ fontVariationSettings: "'opsz' 144, 'SOFT' 0" }}>
       python for the<br/>
-      <em className="italic text-ember-500">ai era</em>.
+      <em className="italic text-green-500">ai era</em>.
     </h1>
 
     <p className="mt-8 max-w-2xl font-display text-xl text-ink-300 leading-snug tracking-[-0.005em]">
@@ -137,7 +137,7 @@
 - **Current:** Gradient ember card with rounded-full play-button on the right. Reads as a Spotify CTA.
 - **Issue:** The gradient + filled circle is the most generic "click me" pattern in 2025. There's no terminal energy, no dojo. The `Play` icon-in-a-circle is from every onboarding tutorial ever built.
 - **Proposed:**
-  - Drop the gradient. Use **flat `bg-ink-900` with a 1px `border-l-2 border-ember-500`** (left rail like a code-fold marker).
+  - Drop the gradient. Use **flat `bg-ink-900` with a 1px `border-l-2 border-green-500`** (left rail like a code-fold marker).
   - Replace the rounded play-circle with a **square ember key** that says `↵ continue` in JetBrains Mono — make the keyboard shortcut the visual.
   - Add an `>_` prefix on the eyebrow.
   - Hover: `border-l-4` (4px instead of 2px) + ember-tint on the bg. No transform.
@@ -150,7 +150,7 @@
 - **Proposed:**
   - Each card becomes a **dojo mat tile**: square 1:1 aspect, NOT rounded — sharp 90° corners, 1px `border-ink-800`.
   - **Chapter number is huge** — `font-display text-7xl font-black` in `--ink-700` (decorative ghost). Title overlays at top-left at `text-base font-display`. Blurb only on hover (slide-up reveal).
-  - The active/last-touched chapter gets the **ember tile** treatment: `bg-ember-950`, ember-500 number, ink-100 title. Becomes the one tile that pulls the eye — like the single ember tile in `tatami-grid.svg`.
+  - The active/last-touched chapter gets the **ember tile** treatment: `bg-green-950`, ember-500 number, ink-100 title. Becomes the one tile that pulls the eye — like the single ember tile in `tatami-grid.svg`.
   - Step/lesson counts move to JetBrains Mono 10px, bottom-left, `--ink-500`.
 - **Files to edit:** `app/page.tsx:136-181`
 
@@ -179,7 +179,7 @@
   - operators / punctuation: `--ink-400`
   - line numbers: `--ink-700`
   - active line: `bg-ink-900`
-  - selection: `bg-ember-950`
+  - selection: `bg-green-950`
   - cursor: `--ember-500` with the 1Hz blink (`steps(1)`)
   Everything mono, ember as the only chromatic note. Read the brand goal aloud: "the only chromatic accent" — this is where it has to be true.
   Replace `highlight.js/styles/github-dark.css` with custom CSS that maps `.hljs-keyword`, `.hljs-string`, `.hljs-comment` to the same five tokens.
@@ -190,15 +190,15 @@
 - **Current:** Run button is `bg-ink-800 text-ink-100` (mono gray), only ember when running. Output panel says "press Run or use ⌘↵" with a faint dotted Loader2 spinner.
 - **Issue:** The most important button on the entire page is GRAY. The brand kit literally says (`COLORS.md:42`) "ink-950 on ember for body and small UI" and (`:44`) "white text on ember … the `RUN` button." The run button should BE ember.
 - **Proposed:**
-  - **Run button = `bg-ember-500 text-ink-950 font-mono uppercase font-bold tracking-wider`**, sharp corners (`rounded-none` or `rounded-sm` max), with a `┃ RUN ⌘↵` label that includes a vertical-bar prefix to hint at terminal.
-  - Hover: `bg-ember-400` with a 1px outset shadow in `--ember-700` (looks like a key being depressed).
+  - **Run button = `bg-green-500 text-ink-950 font-mono uppercase font-bold tracking-wider`**, sharp corners (`rounded-none` or `rounded-sm` max), with a `┃ RUN ⌘↵` label that includes a vertical-bar prefix to hint at terminal.
+  - Hover: `bg-green-400` with a 1px outset shadow in `--ember-700` (looks like a key being depressed).
   - On run: button text glitches `RUN → R█N → R▓█ → ...` for 200ms then settles. Tiny touch, real personality.
   - Output panel header: replace `<Terminal /> Output` with `❯ stdout` in JetBrains Mono, ember `❯`. The duration counter stays — but use `--ok` token, not `text-emerald-400`.
 - **Files to edit:** `PersistentIDE.tsx:286-330, 347, 355`
 
 ### Step footer XP bar (`components/v2/StepFooter.tsx:93-105`)
 
-- **Current:** A 1.5px tall bar that fills with `bg-ember-500`.
+- **Current:** A 1.5px tall bar that fills with `bg-green-500`.
 - **Issue:** It's a Mailchimp progress bar. Promptdojo's whole conceit is martial-arts ranks (`belt-stripes.svg` is in the kit).
 - **Proposed:** Replace the linear bar with **3 belt stripes** stacked horizontally — each stripe lights ember as the learner crosses 33%/66%/100%. At 100%, the entire stripe block flashes ember-400 once (back.out(1.6)) and locks in.
 - **Files to edit:** `StepFooter.tsx:85-106`
@@ -208,8 +208,8 @@
 - **Current:** Standard tree-view nav. Uses signal-teal for completed chapters (off-brand, see Drift §5). Lock icons for un-started steps. `bg-ink-900`.
 - **Issue:** Three colors competing (ember/signal/ink). Every tree-view in 2025 looks like this.
 - **Proposed:**
-  - Drop signal-teal entirely. Completed chapters get a **left-edge `border-l-2 border-ember-700`** with `--ink-300` text (no green).
-  - The active chapter gets `border-l-2 border-ember-500` + `bg-ink-800`.
+  - Drop signal-teal entirely. Completed chapters get a **left-edge `border-l-2 border-green-700`** with `--ink-300` text (no green).
+  - The active chapter gets `border-l-2 border-green-500` + `bg-ink-800`.
   - Completed steps: `▰` filled square in `--ember-700` (dim ember). Active: `▰` in `--ember-500`. Untouched: `▱` outlined in `--ink-700`. (No checkmarks. No locks. Pure ASCII glyphs in mono.)
   - Header `promptdojo` becomes the actual SVG wordmark from `design-kit/logos/wordmark.svg`, sized to 18px tall. Use `<Image>` from `next/image`.
 - **Files to edit:** `ChapterNav.tsx:54-60, 73-94, 188-201`
@@ -347,12 +347,12 @@ Replace github-dark + oneDark with promptdojo-mono palette:
 ```css
 /* prose code blocks (rehype-highlight) */
 .hljs                 { background: var(--color-ink-950); color: var(--color-ink-300); }
-.hljs-keyword         { color: var(--color-ember-500); font-weight: 600; }
+.hljs-keyword         { color: var(--color-green-500); font-weight: 600; }
 .hljs-string          { color: var(--color-ink-100); font-style: italic; }
 .hljs-comment         { color: var(--color-ink-500); font-style: italic; }
 .hljs-number          { color: var(--color-ink-200); }
 .hljs-built_in,
-.hljs-title.function_ { color: var(--color-ember-300); }
+.hljs-title.function_ { color: var(--color-green-300); }
 .hljs-params,
 .hljs-variable        { color: var(--color-ink-300); }
 .hljs-operator,
@@ -371,7 +371,7 @@ One accent. Italic for strings/comments (the only personality). Mono everywhere.
 - **`oneDark` CodeMirror theme.** `PersistentIDE.tsx:3` — replace with custom dojoTheme.
 - **`highlight.js/styles/github-dark.css`.** `[chapter]/page.tsx:5`, `ReadStepView.tsx:5` — replace with custom syntax tokens.
 - **All `text-emerald-400` and `text-rose-400`.** `PersistentIDE.tsx:347,355`; `MultipleChoiceStepView.tsx:98,134,143`; etc. Use `--ok` and `--err` tokens.
-- **The `from-ember-950 to-ink-950` gradients.** `HomeClient.tsx:70,100` — flat ember-950 with a left rail does the same job without the SaaS sheen.
+- **The `from-green-950 to-ink-950` gradients.** `HomeClient.tsx:70,100` — flat ember-950 with a left rail does the same job without the SaaS sheen.
 - **Rounded-full play-button circles.** `HomeClient.tsx:83,113` — replace with sharp ember `↵ continue` keys.
 - **The `▸` triangle on the legacy course details summary.** `app/page.tsx:187` — replace with `❯` to keep the prompt motif consistent.
 - **Lock icons on un-started steps.** `ChapterNav.tsx:200` — they imply paywall. Use `▱` outlined square instead.

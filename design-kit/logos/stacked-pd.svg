@@ -1,8 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
-  <rect width="256" height="256" rx="44" fill="#0E0F12"/>
+  <rect width="256" height="256" rx="44" fill="#14140f"/>
   <g font-family="ui-sans-serif, system-ui, sans-serif" font-weight="900" font-size="200" letter-spacing="-12">
     <text x="44" y="180" fill="#f4f4f5">p</text>
-    <text x="138" y="180" fill="#F2683C">d</text>
+    <text x="138" y="180" fill="#2aa06a">d</text>
   </g>
-  <rect x="44" y="196" width="170" height="6" fill="#F2683C"/>
+  <rect x="44" y="196" width="170" height="6" fill="#2aa06a"/>
 </svg>

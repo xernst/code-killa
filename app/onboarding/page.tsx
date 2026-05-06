@@ -170,7 +170,7 @@ export default function OnboardingPage() {
               key={i}
               className={cn(
                 "h-1 w-8 rounded-full transition",
-                i <= step ? "bg-ember-500" : "bg-ink-800",
+                i <= step ? "bg-green-500" : "bg-ink-800",
               )}
             />
           ))}
@@ -202,7 +202,7 @@ function Welcome({ onContinue }: { onContinue: () => void }) {
         <button
           type="button"
           onClick={onContinue}
-          className="rounded-md bg-ember-500 px-5 py-2.5 font-medium text-ink-950 transition hover:bg-ember-400 focus:outline-none focus:ring-2 focus:ring-ember-300"
+          className="rounded-md bg-green-500 px-5 py-2.5 font-medium text-ink-950 transition hover:bg-green-400 focus:outline-none focus:ring-2 focus:ring-green-300"
         >
           start
         </button>
@@ -232,9 +232,9 @@ function GoalScreen({
             type="button"
             onClick={() => onPick(opt.id)}
             className={cn(
-              "rounded-lg border bg-ink-950 p-4 text-left transition focus:outline-none focus:ring-2 focus:ring-ember-300",
+              "rounded-lg border bg-ink-950 p-4 text-left transition focus:outline-none focus:ring-2 focus:ring-green-300",
               value === opt.id
-                ? "border-ember-500 bg-ink-900"
+                ? "border-green-500 bg-ink-900"
                 : "border-ink-800 hover:border-ink-600 hover:bg-ink-900",
             )}
           >
@@ -268,9 +268,9 @@ function LevelScreen({
             type="button"
             onClick={() => onPick(opt.id)}
             className={cn(
-              "rounded-lg border bg-ink-950 p-4 text-left transition focus:outline-none focus:ring-2 focus:ring-ember-300",
+              "rounded-lg border bg-ink-950 p-4 text-left transition focus:outline-none focus:ring-2 focus:ring-green-300",
               value === opt.id
-                ? "border-ember-500 bg-ink-900"
+                ? "border-green-500 bg-ink-900"
                 : "border-ink-800 hover:border-ink-600 hover:bg-ink-900",
             )}
           >
@@ -300,8 +300,8 @@ function PersonalizationScreen({
         make the examples yours.
       </h2>
       <p className="mt-2 text-sm text-ink-500">
-        we sub these into the code. <code className="font-mono text-ember-300">pets = [&quot;luna&quot;]</code>{" "}
-        reads a lot better than <code className="font-mono text-ember-300">pets = [&quot;cat&quot;]</code>.
+        we sub these into the code. <code className="font-mono text-green-300">pets = [&quot;luna&quot;]</code>{" "}
+        reads a lot better than <code className="font-mono text-green-300">pets = [&quot;cat&quot;]</code>.
       </p>
       <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
         <Field
@@ -340,7 +340,7 @@ function PersonalizationScreen({
         <button
           type="button"
           onClick={onContinue}
-          className="rounded-md bg-ember-500 px-5 py-2.5 font-medium text-ink-950 transition hover:bg-ember-400 focus:outline-none focus:ring-2 focus:ring-ember-300"
+          className="rounded-md bg-green-500 px-5 py-2.5 font-medium text-ink-950 transition hover:bg-green-400 focus:outline-none focus:ring-2 focus:ring-green-300"
         >
           continue
         </button>
@@ -376,9 +376,9 @@ function DailyGoalScreen({
             onClick={() => onChange(opt.id)}
             aria-pressed={value === opt.id}
             className={cn(
-              "rounded-lg border bg-ink-950 p-4 text-left transition focus:outline-none focus:ring-2 focus:ring-ember-300",
+              "rounded-lg border bg-ink-950 p-4 text-left transition focus:outline-none focus:ring-2 focus:ring-green-300",
               value === opt.id
-                ? "border-ember-500 bg-ink-900"
+                ? "border-green-500 bg-ink-900"
                 : "border-ink-800 hover:border-ink-600 hover:bg-ink-900",
             )}
           >
@@ -391,7 +391,7 @@ function DailyGoalScreen({
         <button
           type="button"
           onClick={onContinue}
-          className="rounded-md bg-ember-500 px-5 py-2.5 font-medium text-ink-950 transition hover:bg-ember-400 focus:outline-none focus:ring-2 focus:ring-ember-300"
+          className="rounded-md bg-green-500 px-5 py-2.5 font-medium text-ink-950 transition hover:bg-green-400 focus:outline-none focus:ring-2 focus:ring-green-300"
         >
           start lesson 1
         </button>
@@ -419,7 +419,7 @@ function Field({
         value={value}
         placeholder={placeholder}
         onChange={(e) => onChange(e.target.value)}
-        className="rounded-md border border-ink-800 bg-ink-950 px-3 py-2 text-ink-100 placeholder:text-ink-600 focus:border-ember-500 focus:outline-none focus:ring-2 focus:ring-ember-300/40"
+        className="rounded-md border border-ink-800 bg-ink-950 px-3 py-2 text-ink-100 placeholder:text-ink-600 focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-300/40"
       />
     </label>
   );

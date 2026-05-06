@@ -6,7 +6,7 @@ One accent. One canvas. Tinted neutrals. Two semantic colors used once each.
 
 | Token | Hex | RGB | Role |
 | --- | --- | --- | --- |
-| `--ink-950` | `#0E0F12` | `14 15 18` | Page background — never pure black (`#000`) |
+| `--ink-950` | `#14140f` | `14 15 18` | Page background — never pure black (`#000`) |
 | `--ink-900` | `#18181b` | `24 24 27` | Card / panel fill |
 | `--ink-800` | `#27272a` | `39 39 42` | Borders, dividers |
 | `--ink-700` | `#3f3f46` | `63 63 70` | Decorative only — too dim for body text |
@@ -14,8 +14,8 @@ One accent. One canvas. Tinted neutrals. Two semantic colors used once each.
 | `--ink-400` | `#a1a1aa` | `161 161 170` | Secondary text — meets WCAG AA on `--ink-950` |
 | `--ink-300` | `#d4d4d8` | `212 212 216` | Body text on dark |
 | `--ink-100` | `#f4f4f5` | `244 244 245` | Headlines on dark — never pure white (`#fff`) |
-| `--ember` | `#F2683C` | `242 104 60` | **Primary accent** — caret, links, CTA, single-word emphasis |
-| `--ember-dim` | `#e34c1c` | `227 76 28` | Hover / active state for ember |
+| `--ember` | `#2aa06a` | `242 104 60` | **Primary accent** — caret, links, CTA, single-word emphasis |
+| `--ember-dim` | `#1f7a51` | `227 76 28` | Hover / active state for ember |
 | `--ok` | `#86efac` | `134 239 172` | Success / pass — used **once**, in pyodide output |
 | `--err` | `#ef4444` | `239 68 68` | Error / fail — used **once**, in WEDGE bug highlight |
 
@@ -33,11 +33,11 @@ All foreground/background combinations used in the kit clear AA at 14 px and AAA
 
 | Foreground | Background | Ratio | AA / AAA |
 | --- | --- | --- | --- |
-| `--ink-100` (#f4f4f5) | `--ink-950` (#0E0F12) | 16.4:1 | AAA ✓ |
+| `--ink-100` (#f4f4f5) | `--ink-950` (#14140f) | 16.4:1 | AAA ✓ |
 | `--ink-300` (#d4d4d8) | `--ink-950` | 12.4:1 | AAA ✓ |
 | `--ink-400` (#a1a1aa) | `--ink-950` | 7.4:1 | AAA ✓ |
-| `--ember` (#F2683C) | `--ink-950` | 5.8:1 | AA ✓ |
-| `--ember` (#F2683C) | `--ink-900` (#18181b) | 5.4:1 | AA ✓ |
+| `--ember` (#2aa06a) | `--ink-950` | 5.8:1 | AA ✓ |
+| `--ember` (#2aa06a) | `--ink-900` (#18181b) | 5.4:1 | AA ✓ |
 | `--ink-100` | `--ember` | 2.8:1 | ⚠ large text only (≥ 24 px or ≥ 19 px bold) |
 | `--ink-950` | `--ember` | 5.9:1 | AA ✓ — preferred for ember backgrounds |
 

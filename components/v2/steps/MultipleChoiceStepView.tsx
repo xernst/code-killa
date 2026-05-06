@@ -93,8 +93,8 @@ export default function MultipleChoiceStepView({
                   "w-full rounded-md border px-3 py-2.5 text-left text-sm transition",
                   "border-ink-800 bg-ink-900",
                   !submitted && "hover:border-ink-600",
-                  isSelected && !submitted && "border-ember-500 bg-ink-800",
-                  showCorrect && "border-ember-700/60 bg-ember-700/5 text-ember-700",
+                  isSelected && !submitted && "border-green-500 bg-ink-800",
+                  showCorrect && "border-green-700/60 bg-green-700/5 text-green-700",
                   showWrong && "border-ink-700 bg-ink-800/40 text-ink-400",
                 )}
               >
@@ -119,8 +119,8 @@ export default function MultipleChoiceStepView({
             onClick={handleSubmit}
             disabled={!selected}
             className={cn(
-              "rounded-md bg-ember-500 px-4 py-2 text-sm font-medium text-ink-950 transition",
-              "hover:bg-ember-400",
+              "rounded-md bg-green-500 px-4 py-2 text-sm font-medium text-ink-950 transition",
+              "hover:bg-green-400",
               "disabled:cursor-not-allowed disabled:bg-ink-800 disabled:text-ink-500",
             )}
           >
@@ -131,7 +131,7 @@ export default function MultipleChoiceStepView({
             aria-live="polite"
             className={cn(
               "inline-flex items-center gap-1.5 text-sm",
-              correctSet.has(selected ?? "") ? "text-ember-700" : "text-ink-400",
+              correctSet.has(selected ?? "") ? "text-green-700" : "text-ink-400",
             )}
           >
             {correctSet.has(selected ?? "") ? (

@@ -137,7 +137,7 @@ export default function CodeEditor({
             disabled={!ready || running !== null}
             className={cn(
               "inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition",
-              "bg-ember-600 text-white hover:bg-ember-500",
+              "bg-green-600 text-white hover:bg-green-500",
               "disabled:opacity-40 disabled:cursor-not-allowed",
             )}
           >

@@ -67,10 +67,10 @@ export default function HomeClient({ fallback, chapters }: Props) {
     return (
       <Link
         href="/onboarding"
-        className="group flex items-center justify-between rounded-xl border border-ember-700/40 bg-gradient-to-br from-ember-950 to-ink-950 p-6 transition hover:border-ember-600 hover:from-ember-900"
+        className="group flex items-center justify-between rounded-xl border border-green-700/40 bg-gradient-to-br from-green-950 to-ink-950 p-6 transition hover:border-green-600 hover:from-green-900"
       >
         <div className="min-w-0">
-          <div className="text-xs uppercase tracking-widest text-ember-500">
+          <div className="text-xs uppercase tracking-widest text-green-500">
             start here
           </div>
           <div className="mt-1 text-2xl font-semibold text-ink-50">
@@ -80,7 +80,7 @@ export default function HomeClient({ fallback, chapters }: Props) {
             five questions, then your first lesson.
           </div>
         </div>
-        <div className="ml-4 shrink-0 rounded-full bg-ember-600 p-3 transition group-hover:bg-ember-500">
+        <div className="ml-4 shrink-0 rounded-full bg-green-600 p-3 transition group-hover:bg-green-500">
           <ArrowRight size={20} className="text-ink-100" />
         </div>
       </Link>
@@ -97,10 +97,10 @@ export default function HomeClient({ fallback, chapters }: Props) {
   return (
     <Link
       href={link}
-      className="group flex items-center justify-between rounded-xl border border-ember-700/40 bg-gradient-to-br from-ember-950 to-ink-950 p-6 transition hover:border-ember-600 hover:from-ember-900"
+      className="group flex items-center justify-between rounded-xl border border-green-700/40 bg-gradient-to-br from-green-950 to-ink-950 p-6 transition hover:border-green-600 hover:from-green-900"
     >
       <div className="min-w-0">
-        <div className="text-xs uppercase tracking-widest text-ember-500">
+        <div className="text-xs uppercase tracking-widest text-green-500">
           welcome back
         </div>
         <div className="mt-1 truncate text-2xl font-semibold text-ink-50">
@@ -110,7 +110,7 @@ export default function HomeClient({ fallback, chapters }: Props) {
           pick up where you left off
         </div>
       </div>
-      <div className="ml-4 shrink-0 rounded-full bg-ember-600 p-3 transition group-hover:bg-ember-500">
+      <div className="ml-4 shrink-0 rounded-full bg-green-600 p-3 transition group-hover:bg-green-500">
         <Play size={20} className="fill-ink-100 text-ink-100" />
       </div>
     </Link>

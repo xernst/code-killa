@@ -82,7 +82,7 @@ export default async function Home() {
           }}
         >
           ai writes this.<br />
-          <em className="italic text-ember-500">it&apos;s wrong.</em>
+          <em className="italic text-green-500">it&apos;s wrong.</em>
         </h1>
 
         <p className="mt-8 max-w-2xl font-display text-xl leading-snug text-ink-300">
@@ -97,13 +97,13 @@ export default async function Home() {
         <div className="mt-10 flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:gap-6">
           <Link
             href="/learn/v2/variables/naming-things/0"
-            className="inline-flex items-center gap-2 bg-ember-500 px-6 py-3 font-mono text-sm font-bold uppercase tracking-wider text-ink-950 transition hover:bg-ember-400"
+            className="inline-flex items-center gap-2 bg-green-500 px-6 py-3 font-mono text-sm font-bold uppercase tracking-wider text-ink-950 transition hover:bg-green-400"
           >
             start chapter 1 <span aria-hidden>→</span>
           </Link>
           <a
             href="#chapters"
-            className="font-mono text-sm text-ink-400 hover:text-ember-400"
+            className="font-mono text-sm text-ink-400 hover:text-green-400"
           >
             or pick your chapter ↓
           </a>
@@ -171,7 +171,7 @@ export default async function Home() {
                 <div className="font-mono text-[10px] uppercase tracking-widest text-ink-600">
                   ch {String(c.number).padStart(2, "0")}
                 </div>
-                <div className="mt-1 text-sm font-medium text-ink-100 group-hover:text-ember-300">
+                <div className="mt-1 text-sm font-medium text-ink-100 group-hover:text-green-300">
                   {titleClean.toLowerCase()}
                 </div>
                 <p className="mt-2 line-clamp-3 text-xs text-ink-500">
@@ -187,7 +187,7 @@ export default async function Home() {
               <Link
                 key={c.slug}
                 href={href}
-                className="group flex flex-col rounded-lg border border-ink-800 bg-ink-950 p-4 transition hover:border-ember-700/60 hover:bg-ink-900"
+                className="group flex flex-col rounded-lg border border-ink-800 bg-ink-950 p-4 transition hover:border-green-700/60 hover:bg-ink-900"
               >
                 {cardBody}
               </Link>
@@ -221,7 +221,7 @@ export default async function Home() {
                 <div className="font-mono text-[10px] uppercase tracking-widest text-ink-600">
                   ch {String(c.number).padStart(2, "0")}
                 </div>
-                <div className="mt-0.5 text-sm font-medium text-ink-200 group-hover:text-ember-300">
+                <div className="mt-0.5 text-sm font-medium text-ink-200 group-hover:text-green-300">
                   {c.title.replace(/^Chapter\s+\d+\s*[—\-]\s*/, "").toLowerCase()}
                 </div>
               </div>

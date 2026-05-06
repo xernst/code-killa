@@ -94,7 +94,7 @@ export default function ReorderStepView({
               className={cn(
                 "flex items-center gap-2 rounded-md border px-2.5 py-2 transition",
                 "border-ink-800 bg-ink-900",
-                isGrabbed && "border-ember-500",
+                isGrabbed && "border-green-500",
               )}
             >
               <button
@@ -118,7 +118,7 @@ export default function ReorderStepView({
               <span className="font-mono text-[10px] text-ink-500">
                 {String(idx + 1).padStart(2, "0")}
               </span>
-              <code className="flex-1 font-mono text-sm text-ember-300">
+              <code className="flex-1 font-mono text-sm text-green-300">
                 {fragment.code}
               </code>
               <div className="flex flex-col">
@@ -151,8 +151,8 @@ export default function ReorderStepView({
           onClick={handleSubmit}
           disabled={submitted?.passed === true}
           className={cn(
-            "rounded-md bg-ember-500 px-4 py-2 text-sm font-medium text-ink-950 transition",
-            "hover:bg-ember-400",
+            "rounded-md bg-green-500 px-4 py-2 text-sm font-medium text-ink-950 transition",
+            "hover:bg-green-400",
             "disabled:cursor-not-allowed disabled:bg-ink-800 disabled:text-ink-500",
           )}
         >
@@ -165,7 +165,7 @@ export default function ReorderStepView({
           className={cn(
             "flex items-start gap-2 rounded-md border px-3 py-2 text-sm",
             submitted.passed
-              ? "border-ember-700/50 bg-ember-700/5 text-ember-700"
+              ? "border-green-700/50 bg-green-700/5 text-green-700"
               : "border-ink-700 bg-ink-800/40 text-ink-400",
           )}
         >

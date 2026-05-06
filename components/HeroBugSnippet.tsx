@@ -8,23 +8,23 @@
 export default function HeroBugSnippet() {
   return (
     <pre
-      className="overflow-x-auto rounded-none border-l-2 border-ember-500 bg-ink-900 p-5 font-mono text-sm leading-relaxed text-ink-300"
+      className="overflow-x-auto rounded-none border-l-2 border-green-500 bg-ink-900 p-5 font-mono text-sm leading-relaxed text-ink-300"
       aria-label="ai-shipped python bug"
       style={{ fontVariantLigatures: "none" }}
     >
       <code>
-        <span className="text-ember-500">def</span>{" "}
-        <span className="text-ember-300">collect_errors</span>(
+        <span className="text-green-500">def</span>{" "}
+        <span className="text-green-300">collect_errors</span>(
         {"\n  "}
-        msg: <span className="text-ember-500">str</span>,
+        msg: <span className="text-green-500">str</span>,
         {"\n  "}
-        bag: <span className="text-ember-500">list</span> ={" "}
+        bag: <span className="text-green-500">list</span> ={" "}
         <span style={{ color: "var(--err)", background: "rgba(239,68,68,0.14)" }}>
           []
         </span>
         {"\n"}):{"\n  "}
         bag.append(msg){"\n  "}
-        <span className="text-ember-500">return</span> bag
+        <span className="text-green-500">return</span> bag
       </code>
       <div className="mt-3 border-t border-ink-800 pt-3 text-xs text-ink-500">
         mutable default arg. python evaluates the list once at definition.

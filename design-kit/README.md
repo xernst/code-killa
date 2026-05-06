@@ -41,7 +41,7 @@ import Image from "next/image";
 
 **Use the mono variant with any color:**
 ```html
-<span style="color: #F2683C">
+<span style="color: #2aa06a">
   <!-- inline SVG so currentColor works -->
   <svg><use href="/brand/mark-mono.svg#mark"/></svg>
 </span>
@@ -50,7 +50,7 @@ import Image from "next/image";
 **Adopt the design tokens:**
 ```css
 @import url("./design-kit/tokens.css");
-.cta { background: var(--ember); color: var(--ink-950); }
+.cta { background: var(--green); color: var(--ink-950); }
 ```
 
 ---

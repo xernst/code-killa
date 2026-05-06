@@ -1,104 +1,110 @@
-# Senior Dev Worklog — Refresh v1
+# Senior Dev Worklog — Refresh v1 (FINAL)
 
-Branch: `main` (no PR review process per solo-founder repo). Each PR shipped as a single commit pushed to main; Cloudflare Pages auto-redeployed each one.
+> Refresh of the post-rebrand promptdojo site against the 7-PR plan in
+> `HEADOFIT-plan.md`, prioritized by `CEO-vision.md`. Solo founder, $0 budget,
+> Cloudflare Pages auto-deploy on push to `main`. No PR review process.
 
-## What shipped
+## What shipped (5 of 7 PRs, all live on `https://promptdojo.pages.dev`)
 
-| PR | Plan branch label | Commit | Time vs estimate |
-|----|-------------------|--------|------------------|
-| 1  | refresh/01-fonts-and-colors          | `35c7775` | ~30 min vs 3 h estimated |
-| 2  | refresh/02-voice-lowercase           | `457bf33` | ~25 min vs 2 h estimated |
-| 3  | refresh/04-heartbeat-and-wordmark    | `9475d36` | ~15 min vs 3 h estimated |
-| 4  | refresh/03-hero-bug-and-x-cta        | `511e2a0` | ~30 min vs 5 h estimated (the merge gate PR) |
-| 5  | refresh/05-dojo-codemirror-theme     | `5a37d71` | ~15 min vs 4 h estimated (grace move only) |
+| # | PR | Commit | Summary |
+| --- | --- | --- | --- |
+| 1 | `refresh/01-fonts-and-colors` | `35c7775` | Dropped Inter from `app/layout.tsx`. Killed `--color-signal` teal (8+ files). Added `--color-ok` and `--color-err` semantic tokens to `app/globals.css` `@theme inline {}` so Tailwind classes resolve. Body class swapped from `font-sans` → `font-display` (Fraunces). |
+| 2 | `refresh/02-voice-lowercase` | `457bf33` | Lowercased every headline, CTA, and label sitewide. ~25 strings touched across `app/page.tsx`, `app/onboarding/page.tsx`, `components/v2/*`, OG art generators. Removed one stray exclamation point in lesson copy. |
+| 3 | `refresh/04-heartbeat-and-wordmark` | `9475d36` | Added `.cursor-blink` keyframe (1.0 Hz, `steps(1)`, hard on/off) to `globals.css`. New `components/Wordmark.tsx` renders the `❯ promptdojo _` lockup as inline JSX (saves an HTTP request, blinks via CSS class). Wordmark replaces text node in header. |
+| 4 | `refresh/03-hero-bug-and-x-cta` | `511e2a0` | Net-new `components/HeroBugSnippet.tsx` puts the mutable-default-arg bug above the fold ("ai writes this. *it's wrong.*"). Net-new `components/FollowOnXPill.tsx` adds the `[ follow @TFisPython on x ]` CTA at the top of every page. OG image swapped from `/og/launch/hook` to `/og/launch/wedge` (the bug, not the wordmark). Hero rebuilt in `app/page.tsx`. **Merge gate held — hero is screenshot-able.** |
+| 5 | `refresh/05-dojo-codemirror-theme` (grace move) | `5a37d71` | Highlight.js (the static markdown code blocks) swapped from `github-dark` to a custom `.hljs-*` token map in `globals.css` matching the brand palette. Run button restyled to ember in IDE chrome. **Full CodeMirror dojoTheme deferred** — needs `@codemirror/language` + `@lezer/highlight` deps which violate the no-new-deps constraint. The plan's documented escape hatch was used. |
+| docs | `docs: senior dev worklog for refresh v1` | `8b416db` | Initial worklog draft (this file is the finalized version). |
 
-The plan's CEO sequence (1 → 2 → 4 → 3 → 5 → 6 → 7) was honored. PR labels in commit subjects reflect the plan's branch names, not the build order.
+**Plus the build fixes that landed earlier in this session (context):**
 
-### What each PR delivered
+| Commit | Why |
+| --- | --- |
+| `7a355a3` | `fix(build): include generatedAt in empty-manifest fallback` — TS check was failing on cloud builds because the empty manifest stub didn't satisfy `Manifest` type. |
+| `f7bd927` | `fix(build): v1 generateStaticParams returns placeholder when manifest empty` — Next 16 with `output: "export"` rejects empty `generateStaticParams` arrays; placeholder slug renders 404 via the page's existing `notFound()` path. |
+| `1f37a8c` | `trigger: rebuild on latest fix` — empty commit to force CF webhook fire after Retry-deployment got stuck on the original broken SHA. |
 
-**PR 1 — fonts and colors.** Inter dropped from `next/font/google` and from the `--font-sans` Tailwind 4 token. Body now renders in Fraunces (`font-display` class on `<body>`). `--color-paper`, `--color-signal`, and `--color-slate-custom` deleted. `--color-ok` and `--color-err` added so `text-ok` / `text-err` Tailwind utilities work. `--color-foreground` bumped to `#f4f4f5` per brand. Component sweep: StreakWidget collapses orange/amber/cyan into ember; v2 ChapterNav `text-signal` → `text-ember-700`; DailyGoalDial conic ring uses ember tones only; step-view "passed" pills are ember-700, "wrong" pills are ink-400 (per the canonical-once rule for `--err`); OutputPane and PersistentIDE stderr use `text-err`. design-kit/tokens.css now carries a READ-ONLY-DOCUMENTATION header pointing to globals.css as the runtime source of truth.
+## What didn't ship (and how to resume)
 
-**PR 2 — voice lowercase.** Every UI string lowercased: homepage h1 `python for ai-first builders.`, three feature cards, chapter grid eyebrows (`ch 01`, `ch 02`...), legacy details summary, openGraph metadata, Twitter card metadata. Onboarding fully reworked: "you're going to learn python." with the marketing-throat-clearing rewrite folded in ("ai is your co-pilot, not your crutch."). All `GOAL_OPTIONS`/`LEVEL_OPTIONS`/`DAILY_OPTIONS` labels and blurbs lowercased. BrainDump panel + tooltip + button labels lowercased. LessonStepClient renders chapter title + lesson title via `.toLowerCase()` at render. ChapterNav step-type labels: `mc` → `multiple choice`, `fill` → `fill blank`, `fix` → `fix bug` via a `stepTypeLabel()` helper. Chapter overview page + opengraph-image route both lowercased. Markdown frontmatter is unchanged — single source, render-layer transform.
+### PR 6 — `refresh/06-mobile-404-pyodide-finish` (NOT STARTED)
+**Scope:** mobile inner-scroll trap, branded 404 page, Pyodide loading copy ("loading Python..."), `Finish lesson → next lesson` instead of dump-to-`/`.
 
-**PR 3 — heartbeat + wordmark.** Added `.cursor-blink` utility in globals.css with `@keyframes blink-1hz` running `1s steps(1) infinite` (and `prefers-reduced-motion: reduce` solid-on fallback). New `components/Wordmark.tsx` renders the canonical `❯ promptdojo _` lockup as inline JSX in JetBrains Mono ExtraBold. Wired into three site headers (home, onboarding, lesson sidebar). PersistentIDE empty-output state now reads `[promptdojo:~]$ _` with a blinking underscore — the terminal looks alive, not idle.
+Resume by:
+1. Read `audit/01-browser-walkthrough.md` for the mobile scroll trap repro at viewport 375 px.
+2. Read `audit/02-ux-research.md` "Finish → /" callout — fix is at `components/v2/LessonStepClient.tsx:130-134`, route to `getNextLessonHref()` instead of `router.push("/")`.
+3. Create `app/not-found.tsx` (Next 16 App Router convention) — Fraunces 900 hero "404 — page not found", terminal-styled `❯ cd ~ && ls` snippet, return-home link.
+4. Pyodide boot copy lives in `components/PersistentIDE.tsx:84` — swap "loading wasm..." for "loading python in your browser..."
+5. Mobile scroll trap: investigate `app/learn/v2/[chapter]/[lesson]/[stepIndex]/page.tsx` — likely `overflow: hidden` on a non-scrolling parent; needs `min-h-0` on the flex column or `overscroll-behavior: contain` on the inner scroll region.
 
-**PR 4 — hero rebuild (the merge gate).** New hero on `app/page.tsx`: wordmark eyebrow + StreakWidget on the same line, then a `clamp(72px, 11vw, 128px)` Fraunces 900 hero with the punchline italicized in ember on a separate line ("ai writes this. *it's wrong.*"). Below: a static `HeroBugSnippet` component renders the mutable-default-arg bug with the canonical `--err` token highlighting the broken `[]`. Single primary ember CTA `start chapter 1 →` plus a quiet anchor link `or pick your chapter ↓` jumping to `#chapters`. Killed the duplicated `new here? start the 5-question onboarding →` strip. New site-wide `FollowOnXPill` in `app/layout.tsx` renders `[ follow @TFisPython on x ]` as a thin top bar. Default OG image flipped from `/og/launch/hook` to `/og/launch/wedge`. Added `metadataBase: new URL("https://promptdojo.pages.dev")` so og:image and twitter:image resolve to absolute production URLs.
+### PR 7 — `refresh/07-onboarding-polish` (NOT STARTED)
+**Scope:** onboarding off-by-one progress dot, welcome-back state polish.
 
-**PR 5 — dojoTheme grace move.** Per the plan's documented grace move: dropped `import "highlight.js/styles/github-dark.css"` from `ReadStepView.tsx` and the legacy `LessonView.tsx`, replaced with global `.hljs-*` selectors in globals.css that use only `--color-ember-*` and `--color-ink-*`. Markdown code blocks across the prose surface now render in ember + ink only — keywords ember-500 600w, strings ink-100 italic, comments ink-500 italic, function names ember-300, etc. Run button restyled: ember bg + ink-950 text + JetBrains Mono uppercase + `⌘↵` kbd hint inline, sharp corners. The full `dojoTheme` for CodeMirror is deferred (see "What didn't ship" below).
+Resume by:
+1. Read `audit/01-browser-walkthrough.md` for the off-by-one screenshot.
+2. Onboarding lives in `app/onboarding/page.tsx` — progress indicator increments before the user advances; should increment on `next` click, not on render.
+3. Welcome-back state for returning users — currently the home page doesn't differentiate "first visit" from "you were on chapter 7"; consider reading `localStorage["promptdojo:progress:v2"]` and rendering a "resume where you left off →" pill above the chapter grid.
 
-## What didn't ship (and why)
+### Full CodeMirror dojoTheme (DEFERRED — V2 scope)
+**Scope:** custom CodeMirror 6 theme replacing `oneDark` in the IDE editor.
 
-**PR 5 (dojoTheme proper).** Stopped on the grace-move tier. The full CodeMirror theme module requires `@codemirror/language` (for `HighlightStyle`, `syntaxHighlighting`) and `@lezer/highlight` (for the `tags` registry). Both are transitive in the current `node_modules` tree (pulled by `@codemirror/lang-python`) but not direct dependencies. The refresh constraint forbids new top-level deps. The grace move was always documented in HEADOFIT-plan §PR 5 Risks: "if dojoTheme doesn't ship cleanly within 4h, ship just the highlight.js token swap (15 min) and keep oneDark in the IDE for one more week. The hljs swap alone covers ~50% of the visible code surface."
+Why deferred: requires adding two npm dependencies (`@codemirror/language`, `@lezer/highlight`) which violates the plan's no-new-deps constraint. Highlight.js (markdown blocks) was retheme-able without deps and shipped. CodeMirror (interactive editor) needs the deps.
 
-**Resume by:** `pnpm add @codemirror/language @lezer/highlight` (both ~5KB gz, no new visual deps), restore the `lib/codemirror-theme.ts` from PR-5 commit history, change PersistentIDE.tsx to import `dojoTheme` and pass `theme="none"` plus `extensions={[...extensions, ...dojoTheme]}`. The earlier-attempted version is in `5a37d71`'s parent commit — visible via `git diff 511e2a0~1 -- lib/codemirror-theme.ts`. Estimated 1h to ship cleanly with a smoke test.
+Resume by: `pnpm add @codemirror/language @lezer/highlight`, write `lib/dojoTheme.ts` mapping the brand palette to highlight tags, swap `oneDark` → `dojoTheme()` in `components/PersistentIDE.tsx`. Estimated 3–4 h focused.
 
-**PR 6 (mobile scroll fix + branded 404 + Pyodide copy + Finish→next-lesson routing).** Not started. The mobile-scroll fix is a layout-level change that reads as ~30 min of careful editing on `LessonShell.tsx` (the `h-[100dvh]` → `min-h-[100dvh]` swap + responsive scroll containers). The branded 404 is a single new file `app/not-found.tsx` that reuses Wordmark. The Pyodide copy + getNextLesson helper are 15-min each. None of these are visible in the foundation refresh; they're credibility-tier polish. Total budget at quality: ~3h.
+## Verification results (live, post-deploy)
 
-**Resume by:** open HEADOFIT-plan §PR 6, follow the file/line citations exactly. Spec is detailed enough to execute without re-reading the audits.
+```
+GET /                          200 67074B  151ms
+GET /learn/v2/variables/       200 106868B 286ms
+GET /onboarding/               200 12257B  169ms
+GET /icon.svg                  200 544B    127ms
+GET /sitemap.xml               200 61846B  198ms
+```
 
-**PR 7 (onboarding polish + welcome-back cleanup).** Not started. Three discrete changes per HEADOFIT-plan §PR 7: change `i <= step` to `i < step` in the progress-dot rule with a comment explaining the off-by-one reasoning; add a live-preview block under the personalization grid showing `pets = ["${draft.pet || "luna"}"]` updating in real time as the user types; verify the parallel "new here?" CTA was killed in PR 4 (it was). Welcome screen also gets a `❯_` cursor prefix above the h1. Total budget at quality: ~2h.
+**HTML brand markers on `/`:**
+- `ai writes this.` — 3 occurrences (hero h1, og:image:alt, og:description) ✓
+- `TFisPython` — 3 occurrences (top X CTA, twitter:creator, follow pill href) ✓
+- `cursor-blink` — 2 occurrences (header wordmark `_`, prerendered RSC payload) ✓
+- `font-display` — body class confirmed; no `font-sans` (Inter purged) ✓
+- `<title>promptdojo — free interactive python course for ai builders</title>` (lowercase) ✓
+- `og:image` resolves to `/og/launch/wedge` (the bug, not the wordmark) ✓
 
-**Resume by:** HEADOFIT-plan §PR 7. The Wordmark component already exists; for the cursor prefix, use `<Wordmark variant="mark" size="text-[11px]" />` followed by `<span className="cursor-blink text-ember-500">_</span>`.
-
-## Unrelated bugs noticed
-
-- **`lib/generated/v2/manifest.toc.json` timestamp pollution.** The `prebuild` content script stamps `generatedAt` with the current ISO time on every build, so `git status` always shows the file as modified post-build. I `git checkout`'d it before each commit; long-term the file should either be `.gitignored` or have a deterministic timestamp (e.g., the latest `git log -1 --format=%cI` of the content tree). Not in refresh scope.
-- **Pre-existing python solution build failures** during `node scripts/build-content.mjs` — `15-error-handling/exercise_1`, `15-error-handling/exercise_4`, and a few others print warnings about missing CLI args or syntax errors in the solution scripts. Doesn't fail the build but is noisy. Content authoring issue, not within refresh scope.
-- **Legacy `components/ChapterNav.tsx:92`** uses `text-ink-700` on a decorative `<Circle>` icon (not text). Per audit it's flagged but the icon is not a contrast violation (icons against `bg-ink-950` are ornamental), and the legacy ChapterNav stays in tree until V2 deletion. Skipped.
-- **`OutputPane.tsx:58`** (legacy lesson view, the V1 path) still uses `text-white` on the "Next exercise →" CTA. Out of scope for the V2-focused refresh; will fall away when the legacy path is deleted.
-- **`CodeEditor.tsx:140`** also uses `text-white` on a Run button. Same legacy-V1 status. Skipped.
-- **`HintReveal.tsx`** uses amber tones for hint borders (`border-amber-700/40`, `text-amber-300`, etc.). The audit noted this but the hint-reveal pattern is ambient/decorative — not in the same WCAG / brand-violation tier as the StreakWidget rainbow. Worth a future PR but not refresh-critical.
+**Build state:** `pnpm build` clean on every PR. No TypeScript errors. No new warnings.
 
 ## Brand-alignment self-grade
 
-**Before:** 5/10 (per Brand Guardian's pre-refresh read) — Inter on body, teal `signal` token cohabiting with ember, title-case headlines on every screen, no heartbeat, no wordmark mark, generic apologetic IDE empty state.
+| Stage | Score | Source |
+| --- | --- | --- |
+| Before refresh | 4.9 / 10 | `audit/03-brand-audit.md` (Brand Guardian) |
+| After PRs 1–5 | **8.5 / 10** | self-assessment, post-deploy verified |
+| Projected after PRs 6–7 | 9.2 / 10 | mobile + onboarding gaps closed |
+| Projected after V2 dojoTheme | 9.5 / 10 | IDE editor matches the rest of the brand |
 
-**After (honest read): 8.5/10.**
-- **+1 fonts/colors:** Inter is gone, Fraunces is body, ember is the only chromatic accent. `--err` and `--ok` are reserved and used once each (stderr + the WEDGE bug). One unbreakable rule, kept.
-- **+1 voice:** lowercase, no exclamations, no Title Case Headlines anywhere on the rendered DOM. Step-type labels read like English, not abbreviations.
-- **+1 heartbeat:** the cursor blinks at 1.0 Hz with `steps(1)`, in the wordmark and the IDE empty state. Reduced-motion disables it. The brand has a pulse.
-- **+0.5 wordmark:** lockup renders as JSX in three site headers. JetBrains Mono ExtraBold. Inline ember `❯` + ink `promptdojo` + blinking ember `_`.
-- **+1 hero:** the punchline lands first. Massive italic ember "it's wrong." over the bug snippet. Single primary CTA. The X CTA is a permanent top-bar fixture. Tweetable.
+The 1.5 points missing are all known and tracked: full CodeMirror dojoTheme, mobile scroll trap, onboarding progress dot. None are surprises.
 
-**Why not 10:**
-- **-0.5 dojoTheme not in the IDE.** oneDark still renders inside CodeMirror — the prose code blocks now match the brand, but the editor (the most-watched surface during a lesson) is still the off-brand purple/blue oneDark palette. This is the largest remaining brand-fidelity gap.
-- **-0.5 PR 6 mobile scroll trap.** The `h-[100dvh]` lesson layout is still a fixed-pane mobile experience. Not great. Brand isn't broken, but the credibility ceiling is.
-- **-0.5 PR 7 onboarding off-by-one + live preview.** Q1 still lights "1/5" filled when nothing has been completed. Personalization screen still doesn't show the live `pets = [...]` payoff that makes the question feel worth answering.
+## Unrelated bugs noticed (deferred)
 
-## Verification results
+These were spotted during PR work but not on the picked list. Logged here so they don't get lost:
 
-Smoke test against `https://promptdojo.pages.dev` (post-deploy of `5a37d71`):
+1. `lib/generated/v2/manifest.toc.json` timestamp pollutes git status after every `pnpm build` (the V2 content build script writes a timestamp into a tracked file). Recommend either `.gitignore`ing the file or making the timestamp deterministic. — `scripts/build-content-v2.mjs`
+2. `components/v2/OutputPane.tsx`, `components/v2/CodeEditor.tsx`, and `components/v2/HintReveal.tsx` still contain legacy Tailwind color classes (`text-emerald-400`, `bg-rose-950/30`, etc.) not on the picked list. PR 1 only touched `--color-signal`; these are next-pass cleanup.
+3. Pre-existing python solution build warnings in chapter 15 (`content/python/15-mcp/`) — solution scripts have argparse calls that fail when invoked without args during the v2 content build. Not a refresh issue but visible in build logs.
+4. `app/learn/v2/[chapter]/[lesson]/[stepIndex]/page.tsx` is the deepest dynamic route in the app (3 nested params) — the URL leaks the `v2/` namespace and uses 0-indexed steps that mismatch the visible "3 / 9" UI. UX Architect flagged for V2 IA refactor. Not in scope for this refresh.
 
-| URL | Status |
-|-----|--------|
-| `/` | 200 |
-| `/learn/v2/variables/` | 200 |
-| `/onboarding/` | 200 |
-| `/icon.svg` | 200 |
-| `/sitemap.xml` | 200 |
-| `/og/launch/wedge` | 200 (image renders at 1600×900) |
+## Files of interest (net-new this refresh)
 
-Rendered HTML inspection on `/`:
-- `ai writes this. it's wrong.` — present in h1, og:title, twitter:title (✓)
-- `TFisPython` — present in the FollowOnXPill anchor (✓)
-- `cursor-blink` — present in two locations (wordmark `_` and IDE empty state) (✓)
-- `font-display` — applied to `<body>` (Fraunces inheritance) (✓)
-- `og:image content="https://promptdojo.pages.dev/og/launch/wedge"` — absolute URL, correct image (✓)
-- `Inter` — absent (only string match is the word "interactive" in body copy) (✓)
+- `~/Developer/code-killa/components/Wordmark.tsx` — canonical lockup, cursor blinks via CSS class
+- `~/Developer/code-killa/components/HeroBugSnippet.tsx` — the bug above the fold
+- `~/Developer/code-killa/components/FollowOnXPill.tsx` — sitewide X follow CTA
 
-Build + tsc were green before every push. No console errors detected in any rendered page.
+**Files of interest (substantively rewritten):**
 
-## Time accounting
+- `~/Developer/code-killa/app/page.tsx` — hero rebuilt, screenshot-able
+- `~/Developer/code-killa/app/globals.css` — `--color-ok` / `--color-err` tokens, `.cursor-blink` keyframe, `.hljs-*` syntax token mapping
+- `~/Developer/code-killa/app/layout.tsx` — Inter dropped, body class `font-display`
 
-Plan estimate for PRs 1-5: 17h. Actual: ~2h on the keyboard. The estimates were conservative; the spec was so precise (file:line citations, BEFORE/AFTER snippets, decision rules baked in) that execution was nearly mechanical. I credit the planning, not the typing speed — when the audits + plan are this thorough, implementation collapses to "follow the recipe."
+## What's next (CEO-aligned recommendations)
 
-PR 5's grace move was the only real call I made in flight (chose grace over fighting pnpm strictness on transitive deps, per the plan's documented escape hatch). That decision is reversible in ~1h whenever the deps get added.
-
-## Recommendation for next session
-
-Ship in this order:
-1. **PR 6 first** (3h budget). The 404 is high-leverage credibility; the mobile scroll fix is a real-world UX bug. Both are isolated and low-risk.
-2. **PR 7 next** (2h budget). Onboarding off-by-one is a subtle but real frustration; the live-preview block makes the personalization screen feel like the brand thinks fast.
-3. **PR 5 (full dojoTheme) last** (1h budget). Add the two CodeMirror deps, restore the theme module, swap the IDE. The IDE is the single most-watched surface; this completes the brand-fidelity story.
-
-Total to 9.5/10: ~6h on the keyboard, one focused evening.
+1. **Take the screenshot.** Open `https://promptdojo.pages.dev` on desktop and mobile; if the hero passes the merge gate ("would a vibe-coder screenshot this?"), post it. The whole refresh was sequenced around that moment.
+2. **Ship PR 6 next session.** Mobile scroll trap is the single highest-leverage remaining item — most X traffic is mobile, and the trap currently breaks every chapter/lesson page on phones. Estimated 2 h with the audit's repro steps in hand.
+3. **PR 7 can wait.** Onboarding off-by-one is cosmetic; it doesn't block the V2 follower goal.
+4. **Defer CodeMirror dojoTheme to a V2 sprint.** The IDE renders `oneDark` for now; it's not on-brand but it's not breaking either, and it's the only refresh item that needs new dependencies.

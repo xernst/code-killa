@@ -182,7 +182,7 @@ export default function LessonStepClient({
             disabled={!passed && step.type !== "read"}
             className={cn(
               "rounded-md px-4 py-1.5 text-sm font-medium transition",
-              "bg-ember-500 text-ink-950 hover:bg-ember-400",
+              "bg-green-500 text-ink-950 hover:bg-green-400",
               "disabled:cursor-not-allowed disabled:bg-ink-800 disabled:text-ink-500",
             )}
           >
@@ -213,7 +213,7 @@ function ProgressBar({ value }: { value: number }) {
       className="h-1 w-full overflow-hidden rounded-full bg-ink-800"
     >
       <div
-        className="h-full bg-ember-500 transition-all motion-reduce:transition-none"
+        className="h-full bg-green-500 transition-all motion-reduce:transition-none"
         style={{ width: `${pct}%` }}
       />
     </div>

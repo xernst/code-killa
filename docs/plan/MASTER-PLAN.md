@@ -30,7 +30,7 @@ The goal of this plan is to take the working code at `localhost:3000` (3-pane le
 | 7 | **No streaks-as-punishment, ever.** Embers and frozen-flames already implemented; copy follows ("welcome back," never "you broke your streak"). | UX §5 + Brand §4 |
 | 8 | **No mascot.** A "Copilot Panel" — unnamed, dry, persistent right-rail UI element — fills the consistent-presence slot. | Brand §6 |
 | 9 | **Progression UI is the Codecademy sidebar**, not the Duolingo path or a DAG. Visible-everywhere, jumpable, keyboard-navigable. | UX §4 |
-| 10 | **Visual flip: emerald-on-zinc → ember-on-ink.** Ember `#F2683C` is the lead accent because it literally is the streak mechanic. Fonts: Fraunces (display) · Inter (UI) · JetBrains Mono (code). | Brand §5 |
+| 10 | **Visual flip: emerald-on-zinc → ember-on-ink.** Ember `#2aa06a` is the lead accent because it literally is the streak mechanic. Fonts: Fraunces (display) · Inter (UI) · JetBrains Mono (code). | Brand §5 |
 | 11 | **AI is V2, not V1.** Boots-style mascot, inline help, llm-judge graders all wait for accounts + Haiku 4.5. v1 ships zero AI. | Arch §5 |
 | 12 | **Tutor system prompt at temperature 0.4** when AI ships. No exclamation marks, no congratulating effort, no apologies, no pet names. | Brand §10 |
 | 13 | **No paywall in chapters 1–5, no "free limit" gate, no leaderboards by default.** | UX §10 + PM §9 |
@@ -268,9 +268,9 @@ Two reads + one MC before any production step. `write-code` only appears after t
 
 | Role | Hex | Notes |
 |---|---|---|
-| Ink (dark bg) | `#0E0F12` | Near-black, slightly cool |
+| Ink (dark bg) | `#14140f` | Near-black, slightly cool |
 | Paper (light bg) | `#F7F4ED` | Warm off-white |
-| Ember (lead accent) | `#F2683C` | Warm orange — IS the streak mechanic |
+| Ember (lead accent) | `#2aa06a` | Warm orange — IS the streak mechanic |
 | Signal (correct) | `#5BC8AF` | Muted teal-green, used sparingly |
 | Slate (text/muted) | `#9AA0A8` | Body on dark, secondary chrome |
 

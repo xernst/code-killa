@@ -8,15 +8,15 @@ const W = 1600;
 const H = 900;
 
 // Sourced from app/globals.css to match the live site palette exactly.
-const ink950 = "#0E0F12";
+const ink950 = "#14140f";
 const ink900 = "#18181b";
 const ink800 = "#27272a";
 const ink700 = "#3f3f46";
 const ink400 = "#a1a1aa";
 const ink300 = "#d4d4d8";
 const ink100 = "#f4f4f5";
-const ember = "#F2683C";
-const emberDim = "#e34c1c";
+const ember = "#2aa06a";
+const emberDim = "#1f7a51";
 const red = "#ef4444";
 const green = "#86efac";
 

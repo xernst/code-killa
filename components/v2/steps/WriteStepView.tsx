@@ -67,8 +67,8 @@ export default function WriteStepView({
           onClick={handleSubmit}
           disabled={submitting || submitted?.passed === true}
           className={cn(
-            "rounded-md bg-ember-500 px-4 py-2 text-sm font-medium text-ink-950 transition",
-            "hover:bg-ember-400",
+            "rounded-md bg-green-500 px-4 py-2 text-sm font-medium text-ink-950 transition",
+            "hover:bg-green-400",
             "disabled:cursor-not-allowed disabled:bg-ink-800 disabled:text-ink-500",
           )}
         >
@@ -90,7 +90,7 @@ export default function WriteStepView({
           className={cn(
             "flex items-start gap-2 rounded-md border px-3 py-2 text-sm",
             submitted.passed
-              ? "border-ember-700/50 bg-ember-700/5 text-ember-700"
+              ? "border-green-700/50 bg-green-700/5 text-green-700"
               : "border-ink-700 bg-ink-800/40 text-ink-400",
           )}
         >
@@ -103,7 +103,7 @@ export default function WriteStepView({
         </div>
       )}
       {solutionRevealed && step.solution && (
-        <pre className="overflow-auto rounded-md border border-ink-800 bg-ink-950 p-3 font-mono text-xs text-ember-300">
+        <pre className="overflow-auto rounded-md border border-ink-800 bg-ink-950 p-3 font-mono text-xs text-green-300">
           {step.solution}
         </pre>
       )}

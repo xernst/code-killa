@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 @theme {
-  --color-background: #0E0F12;
+  --color-background: #14140f;
   --color-foreground: #f4f4f5;
   --color-ink-50: #fafafa;
   --color-ink-100: #f4f4f5;
@@ -16,18 +16,18 @@
   --color-ink-700: #3f3f46;
   --color-ink-800: #27272a;
   --color-ink-900: #18181b;
-  --color-ink-950: #0E0F12;
-  --color-ember-50: #fff4f1;
-  --color-ember-100: #ffe6de;
-  --color-ember-200: #ffd3c6;
-  --color-ember-300: #fdb49d;
-  --color-ember-400: #f98b69;
-  --color-ember-500: #F2683C;
-  --color-ember-600: #e34c1c;
-  --color-ember-700: #be3912;
-  --color-ember-800: #9c3013;
-  --color-ember-900: #812a14;
-  --color-ember-950: #461306;
+  --color-ink-950: #14140f;
+  --color-green-50: #ecfdf5;
+  --color-green-100: #d1fae5;
+  --color-green-200: #a7f3d0;
+  --color-green-300: #6ee7b7;
+  --color-green-400: #34d399;
+  --color-green-500: #2aa06a;
+  --color-green-600: #1f7a51;
+  --color-green-700: #186b46;
+  --color-green-800: #14583a;
+  --color-green-900: #0f4530;
+  --color-green-950: #0a2820;
   /* Semantic — used once each in canon. --ok in pyodide success, --err in WEDGE bug. */
   --color-ok: #86efac;
   --color-err: #ef4444;
@@ -68,7 +68,7 @@ body {
 .prose em { color: var(--color-ink-50); }
 .prose code {
   background: var(--color-ink-800);
-  color: var(--color-ember-300);
+  color: var(--color-green-300);
   padding: 0.15em 0.4em;
   border-radius: 0.25rem;
   font-size: 0.9em;
@@ -90,7 +90,7 @@ body {
   color: inherit;
   font-size: inherit;
 }
-.prose a { color: var(--color-ember-400); text-decoration: underline; text-underline-offset: 2px; }
+.prose a { color: var(--color-green-400); text-decoration: underline; text-underline-offset: 2px; }
 .prose blockquote {
   border-left: 3px solid var(--color-ink-700);
   padding-left: 1em;
@@ -116,19 +116,19 @@ body {
    speak the same palette. Ember + ink only. */
 .hljs                 { background: var(--color-ink-950); color: var(--color-ink-300); }
 .hljs-keyword,
-.hljs-built_in        { color: var(--color-ember-500); font-weight: 600; }
+.hljs-built_in        { color: var(--color-green-500); font-weight: 600; }
 .hljs-string          { color: var(--color-ink-100); font-style: italic; }
 .hljs-comment         { color: var(--color-ink-500); font-style: italic; }
 .hljs-number,
 .hljs-literal         { color: var(--color-ink-200); }
 .hljs-title.function_,
-.hljs-title.class_    { color: var(--color-ember-300); }
+.hljs-title.class_    { color: var(--color-green-300); }
 .hljs-params,
 .hljs-variable        { color: var(--color-ink-300); }
 .hljs-operator,
 .hljs-punctuation     { color: var(--color-ink-400); }
 .hljs-attr,
-.hljs-attribute       { color: var(--color-ember-300); }
+.hljs-attribute       { color: var(--color-green-300); }
 
 /* Brand heartbeat — 1.0 Hz cursor blink. MOTION.md:6-12.
    steps(1) is intentional — a hard on/off, never a fade. Fades feel like sleep. */
@@ -138,7 +138,7 @@ body {
 }
 .cursor-blink {
   animation: blink-1hz 1s steps(1) infinite;
-  color: var(--color-ember-500);
+  color: var(--color-green-500);
 }
 @media (prefers-reduced-motion: reduce) {
   .cursor-blink { animation: none; opacity: 1; }

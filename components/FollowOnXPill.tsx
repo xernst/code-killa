@@ -13,7 +13,7 @@ export default function FollowOnXPill({ className }: { className?: string }) {
       target="_blank"
       rel="noopener noreferrer"
       className={cn(
-        "inline-flex items-center gap-1.5 border border-ember-700/50 bg-ember-950/40 px-3 py-1 font-mono text-[11px] uppercase tracking-wider text-ember-400 transition hover:border-ember-500 hover:text-ember-300",
+        "inline-flex items-center gap-1.5 border border-green-700/50 bg-green-950/40 px-3 py-1 font-mono text-[11px] uppercase tracking-wider text-green-400 transition hover:border-green-500 hover:text-green-300",
         className,
       )}
     >

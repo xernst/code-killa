@@ -1,0 +1,385 @@
+import Link from "next/link";
+import type { Metadata } from "next";
+import Wordmark from "@/components/Wordmark";
+
+export const metadata: Metadata = {
+  title: "what is promptdojo? — about the project",
+  description:
+    "promptdojo is a free, open-source python school for builders in the ai era. read what it is, why it exists, what's inside, and how it works.",
+};
+
+const wedgeColumns = [
+  {
+    k: "the old job",
+    v: "memorize syntax, write loops by hand, build a calculator from scratch.",
+  },
+  {
+    k: "the new job",
+    v: "read what the model wrote, find where it lied, ship the fix in five lines.",
+  },
+  {
+    k: "the gap",
+    v: "you can vibe-code a hundred features without learning python. then one bug ships and you can't read the traceback.",
+  },
+];
+
+const phases = [
+  {
+    p: "phase 01",
+    t: "foundations",
+    c: "variables, functions, lists, dicts, loops, conditionals, tracebacks, mutation",
+    span: "ch 01–07",
+  },
+  {
+    p: "phase 02",
+    t: "real python",
+    c: "modules, error handling, files & i/o, classes, http",
+    span: "ch 08–12",
+  },
+  {
+    p: "phase 03",
+    t: "llm apis",
+    c: "calling models, structured output, mcp, agent loops",
+    span: "ch 13–16",
+  },
+  {
+    p: "phase 04",
+    t: "shipping discipline",
+    c: "git, secrets, prompting, traces, evals, retrieval, tradeoffs",
+    span: "ch 17–24",
+  },
+  {
+    p: "phase 05",
+    t: "capstone",
+    c: "ship a working cli agent in 12 steps. ~100 lines of python.",
+    span: "ch 25",
+  },
+];
+
+const steps = [
+  {
+    n: "01",
+    t: "read",
+    c: "every step shows you a small piece of code or concept. plain english explanation, no walls of theory.",
+  },
+  {
+    n: "02",
+    t: "run",
+    c: "python runs in your browser via pyodide. no install, no venv. the editor is right there. click run.",
+  },
+  {
+    n: "03",
+    t: "fix",
+    c: "most steps end with a buggy snippet. you fix it. you run it. you move on. you never write a fizzbuzz.",
+  },
+];
+
+const comparison: Array<[string, string]> = [
+  ["watch a video", "read 100 words and run code"],
+  [
+    "write fizzbuzz from scratch",
+    "fix the model's broken fizzbuzz in three lines",
+  ],
+  [
+    "learn syntax for two weeks",
+    "learn the syntax you trip on, ignore the rest",
+  ],
+  ["hello-world your way to a job", "ship a cli agent by chapter 25"],
+  ["sign up, lose streak, pay $19/mo", "no signup, no streak shame, $0 forever"],
+];
+
+const faqs = [
+  {
+    q: "do i need python experience?",
+    a: "no. chapter 01 starts at variables. if you've used cursor or claude to write code, you know enough to begin.",
+  },
+  {
+    q: "is it really free?",
+    a: "yes. no paid tier, no premium content. the only money this site costs me is the domain.",
+  },
+  {
+    q: "do i have to log in?",
+    a: "no. progress saves to your browser. login only syncs progress across devices. no email-list, no upsell, no nag.",
+  },
+  {
+    q: "how long does it take?",
+    a: "624 steps. most steps are 30 seconds. realistically: 8–15 hours total spread over a few weeks.",
+  },
+  {
+    q: "what if i find a bug?",
+    a: "open an issue or a pr at github.com/xernst/promptdojo. or dm me on x.",
+  },
+  {
+    q: "why isn't it on udemy / coursera / boot.dev?",
+    a: "because i wanted it to look how i wanted it to look, ship in browser, and never gate-keep behind a streak.",
+  },
+];
+
+export default function AboutPage() {
+  return (
+    <main className="mx-auto max-w-4xl px-6 py-12 sm:py-16">
+      {/* ───────── 1. HERO ─────────────────────────────────────── */}
+      <section className="border-b border-ink-800 pb-16">
+        <div className="mb-6 inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.4em] text-green-500">
+          <span>❯</span>
+          <span>what is this?</span>
+        </div>
+        <h1 className="font-display text-5xl font-black leading-[1] tracking-[-0.04em] text-ink-100 sm:text-6xl md:text-7xl">
+          a python school built for the version of you that lives in cursor.
+        </h1>
+        <p className="mt-8 max-w-2xl font-display text-xl leading-snug text-ink-300">
+          promptdojo teaches you the python you need to direct ai agents, read
+          what they wrote, and catch what they got wrong.{" "}
+          <em className="italic text-ink-100">it&apos;s not a syntax course.</em>{" "}
+          it&apos;s a school for the new job: editing the model.
+        </p>
+        <div className="mt-10 flex flex-wrap items-center gap-3">
+          <Link
+            href="/learn/v2/variables"
+            className="border border-green-500 bg-green-500 px-4 py-2 font-mono text-xs font-bold uppercase tracking-wider text-ink-950 transition hover:bg-green-400"
+          >
+            start the course →
+          </Link>
+          <Link
+            href="/"
+            className="border border-ink-700 bg-transparent px-4 py-2 font-mono text-xs font-bold uppercase tracking-wider text-ink-300 transition hover:border-green-500 hover:text-green-400"
+          >
+            back to home
+          </Link>
+        </div>
+      </section>
+
+      {/* ───────── 2. THE WEDGE ─────────────────────────────────── */}
+      <section className="border-b border-ink-800 py-16">
+        <div className="mb-3 font-mono text-[11px] uppercase tracking-[0.35em] text-green-500">
+          the wedge
+        </div>
+        <h2 className="font-display text-3xl font-black leading-tight tracking-[-0.03em] text-ink-100 sm:text-4xl">
+          every other course teaches you what python{" "}
+          <em className="italic text-green-400">is</em>.
+          <br />
+          this one teaches you what it{" "}
+          <em className="italic text-green-400">isn&apos;t</em>.
+        </h2>
+        <div className="mt-8 grid gap-6 sm:grid-cols-3">
+          {wedgeColumns.map((c) => (
+            <div key={c.k} className="border border-ink-800 bg-ink-900 p-5">
+              <div className="font-mono text-[10px] uppercase tracking-[0.3em] text-ink-400">
+                {c.k}
+              </div>
+              <p className="mt-2 font-display text-base leading-snug text-ink-200">
+                {c.v}
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ───────── 3. WHAT'S INSIDE ─────────────────────────────── */}
+      <section className="border-b border-ink-800 py-16">
+        <div className="mb-3 font-mono text-[11px] uppercase tracking-[0.35em] text-green-500">
+          what&apos;s inside
+        </div>
+        <h2 className="font-display text-3xl font-black leading-tight tracking-[-0.03em] text-ink-100 sm:text-4xl">
+          25 chapters. 624 interactive steps. zero install.
+        </h2>
+        <div className="mt-8 grid gap-3 sm:grid-cols-2">
+          {phases.map((c) => (
+            <div key={c.t} className="border border-ink-800 bg-ink-900 p-5">
+              <div className="flex items-baseline justify-between gap-3">
+                <div className="font-mono text-[10px] uppercase tracking-[0.35em] text-green-500">
+                  {c.p}
+                </div>
+                <div className="font-mono text-[10px] tracking-wider text-ink-500">
+                  {c.span}
+                </div>
+              </div>
+              <h3 className="mt-1 font-display text-2xl font-black tracking-[-0.02em] text-ink-100">
+                {c.t}
+              </h3>
+              <p className="mt-2 font-display text-sm leading-snug text-ink-300">
+                {c.c}
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ───────── 4. HOW IT WORKS ──────────────────────────────── */}
+      <section className="border-b border-ink-800 py-16">
+        <div className="mb-3 font-mono text-[11px] uppercase tracking-[0.35em] text-green-500">
+          how it works
+        </div>
+        <h2 className="font-display text-3xl font-black leading-tight tracking-[-0.03em] text-ink-100 sm:text-4xl">
+          read. run. fix. repeat 624 times.
+        </h2>
+        <div className="mt-8 grid gap-3 md:grid-cols-3">
+          {steps.map((c) => (
+            <div key={c.n} className="border border-ink-800 bg-ink-900 p-5">
+              <div className="font-mono text-[11px] tracking-wider text-ink-500">
+                {c.n}
+              </div>
+              <h3 className="mt-1 font-display text-2xl font-black tracking-[-0.02em] text-ink-100">
+                {c.t}
+              </h3>
+              <p className="mt-3 font-display text-sm leading-snug text-ink-300">
+                {c.c}
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ───────── 5. NOT CODECADEMY ────────────────────────────── */}
+      <section className="border-b border-ink-800 py-16">
+        <div className="mb-3 font-mono text-[11px] uppercase tracking-[0.35em] text-green-500">
+          why this, not codecademy
+        </div>
+        <h2 className="font-display text-3xl font-black leading-tight tracking-[-0.03em] text-ink-100 sm:text-4xl">
+          the old way assumes you&apos;ll write the code.
+          <br />
+          you won&apos;t.
+        </h2>
+        <div className="mt-8 overflow-hidden border border-ink-800">
+          <table className="w-full border-collapse font-display text-sm">
+            <thead>
+              <tr className="border-b border-ink-800 bg-ink-900 font-mono text-[11px] uppercase tracking-[0.25em] text-ink-400">
+                <th className="p-4 text-left font-bold">old way</th>
+                <th className="p-4 text-left font-bold text-green-400">
+                  promptdojo
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {comparison.map(([a, b], i) => (
+                <tr
+                  key={a}
+                  className={
+                    "border-b border-ink-800 " +
+                    (i % 2 ? "bg-ink-950" : "bg-ink-900")
+                  }
+                >
+                  <td className="p-4 text-ink-500">{a}</td>
+                  <td className="p-4 text-ink-100">{b}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      {/* ───────── 6. WHO BUILT IT ──────────────────────────────── */}
+      <section className="border-b border-ink-800 py-16">
+        <div className="mb-3 font-mono text-[11px] uppercase tracking-[0.35em] text-green-500">
+          who built it
+        </div>
+        <div className="font-display text-lg leading-relaxed text-ink-300">
+          <p>
+            i&apos;m josh. i wrote this because i wanted to learn python the
+            way i actually use python — alongside an llm, fixing what it got
+            wrong, not memorizing what it already knows. every other course
+            felt like a museum tour. this one is the workshop floor.
+          </p>
+          <p className="mt-4">
+            built solo. open source. free forever. follow the build at{" "}
+            <a
+              href="https://x.com/TFisPython"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-green-400 underline underline-offset-2 hover:text-green-300"
+            >
+              @TFisPython
+            </a>
+            .
+          </p>
+        </div>
+      </section>
+
+      {/* ───────── 7. FREE FOREVER ──────────────────────────────── */}
+      <section className="border-b border-ink-800 py-16">
+        <div className="mb-3 font-mono text-[11px] uppercase tracking-[0.35em] text-green-500">
+          free forever
+        </div>
+        <h2 className="font-display text-3xl font-black leading-tight tracking-[-0.03em] text-ink-100 sm:text-4xl">
+          $0. open source. no upsell. ever.
+        </h2>
+        <p className="mt-6 max-w-2xl font-display text-lg leading-snug text-ink-300">
+          there is no paid tier. no premium chapters. no certificate-store.
+          login is optional and only saves your progress across devices —
+          it doesn&apos;t unlock anything. the source is on github. fork it.
+          break it. open a pr.
+        </p>
+        <div className="mt-6 flex flex-wrap gap-3">
+          <a
+            href="https://github.com/xernst/promptdojo"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="border border-ink-700 px-4 py-2 font-mono text-xs font-bold uppercase tracking-wider text-ink-300 transition hover:border-green-500 hover:text-green-400"
+          >
+            github →
+          </a>
+          <a
+            href="https://x.com/TFisPython"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="border border-ink-700 px-4 py-2 font-mono text-xs font-bold uppercase tracking-wider text-ink-300 transition hover:border-green-500 hover:text-green-400"
+          >
+            @TFisPython on x →
+          </a>
+        </div>
+      </section>
+
+      {/* ───────── 8. FAQ ───────────────────────────────────────── */}
+      <section className="border-b border-ink-800 py-16">
+        <div className="mb-3 font-mono text-[11px] uppercase tracking-[0.35em] text-green-500">
+          faq
+        </div>
+        <h2 className="font-display text-3xl font-black leading-tight tracking-[-0.03em] text-ink-100 sm:text-4xl">
+          quick answers.
+        </h2>
+        <dl className="mt-8 space-y-6">
+          {faqs.map((f) => (
+            <div key={f.q} className="border-l-2 border-ink-800 pl-5">
+              <dt className="font-display text-lg font-bold text-ink-100">
+                {f.q}
+              </dt>
+              <dd className="mt-2 font-display leading-snug text-ink-300">
+                {f.a}
+              </dd>
+            </div>
+          ))}
+        </dl>
+      </section>
+
+      {/* ───────── 9. CTA + FOOTER ──────────────────────────────── */}
+      <section className="py-16">
+        <h2 className="font-display text-4xl font-black leading-tight tracking-[-0.04em] text-ink-100 sm:text-5xl">
+          stop reading. start fixing.
+        </h2>
+        <p className="mt-4 max-w-xl font-display text-lg text-ink-400">
+          chapter 01 is variables. chapter 25 is a working cli agent. the only
+          step that matters is the next one.
+        </p>
+        <div className="mt-8 flex flex-wrap items-center gap-3">
+          <Link
+            href="/learn/v2/variables"
+            className="border border-green-500 bg-green-500 px-5 py-3 font-mono text-sm font-bold uppercase tracking-wider text-ink-950 transition hover:bg-green-400"
+          >
+            start the course →
+          </Link>
+          <Link
+            href="/"
+            className="font-mono text-xs uppercase tracking-wider text-ink-500 hover:text-ink-300"
+          >
+            ← home
+          </Link>
+        </div>
+
+        <footer className="mt-16 flex flex-wrap items-baseline justify-between gap-4 border-t border-ink-800 pt-6 font-mono text-[11px] tracking-wider text-ink-500">
+          <Wordmark />
+          <span>github.com/xernst/promptdojo · x.com/TFisPython</span>
+        </footer>
+      </section>
+    </main>
+  );
+}

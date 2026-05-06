@@ -25,7 +25,7 @@ export default function Wordmark({
   if (variant === "mark") {
     return (
       <span
-        className={cn("font-mono font-extrabold text-ember-500", size, className)}
+        className={cn("font-mono font-extrabold text-green-500", size, className)}
         aria-label="promptdojo"
       >
         ❯
@@ -41,9 +41,9 @@ export default function Wordmark({
       )}
       aria-label="promptdojo"
     >
-      <span className="text-ember-500">❯</span>
+      <span className="text-green-500">❯</span>
       <span className="text-ink-100">promptdojo</span>
-      <span className="cursor-blink text-ember-500">_</span>
+      <span className="cursor-blink text-green-500">_</span>
     </span>
   );
 }

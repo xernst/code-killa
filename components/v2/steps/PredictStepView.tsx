@@ -73,7 +73,7 @@ export default function PredictStepView({
           rows={4}
           className={cn(
             "rounded border border-ink-700 bg-ink-950 px-3 py-2 font-mono text-sm",
-            "text-ember-300 focus:border-ember-500 focus:outline-none",
+            "text-green-300 focus:border-green-500 focus:outline-none",
           )}
           placeholder="What stdout will this print?"
           spellCheck={false}
@@ -85,8 +85,8 @@ export default function PredictStepView({
           onClick={handleSubmit}
           disabled={!prediction.trim() || submitted?.passed === true}
           className={cn(
-            "rounded-md bg-ember-500 px-4 py-2 text-sm font-medium text-ink-950 transition",
-            "hover:bg-ember-400",
+            "rounded-md bg-green-500 px-4 py-2 text-sm font-medium text-ink-950 transition",
+            "hover:bg-green-400",
             "disabled:cursor-not-allowed disabled:bg-ink-800 disabled:text-ink-500",
           )}
         >
@@ -106,7 +106,7 @@ export default function PredictStepView({
           className={cn(
             "flex items-start gap-2 rounded-md border px-3 py-2 text-sm",
             submitted.passed
-              ? "border-ember-700/50 bg-ember-700/5 text-ember-700"
+              ? "border-green-700/50 bg-green-700/5 text-green-700"
               : "border-ink-700 bg-ink-800/40 text-ink-400",
           )}
         >

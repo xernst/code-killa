@@ -84,7 +84,7 @@ export default async function V2ChapterOverviewPage({
         <main className="flex min-h-0 w-full flex-1 flex-col">
           <div className="flex-1 min-h-0 overflow-auto">
             <div className="mx-auto max-w-3xl px-5 py-10 sm:px-8 sm:py-14">
-              <div className="text-xs uppercase tracking-[0.2em] text-ember-400">
+              <div className="text-xs uppercase tracking-[0.2em] text-green-400">
                 chapter {String(chapter.number).padStart(2, "0")}
               </div>
               <h1 className="mt-2 font-display text-4xl font-semibold leading-tight tracking-tight text-ink-50 sm:text-5xl">
@@ -113,7 +113,7 @@ export default async function V2ChapterOverviewPage({
                 {firstLesson && (
                   <Link
                     href={`/learn/v2/${chapter.slug}/${firstLesson.slug}/0`}
-                    className="inline-flex items-center gap-2 rounded-md bg-ember-500 px-4 py-2 text-sm font-medium text-ink-950 transition hover:bg-ember-400"
+                    className="inline-flex items-center gap-2 rounded-md bg-green-500 px-4 py-2 text-sm font-medium text-ink-950 transition hover:bg-green-400"
                   >
                     start chapter
                     <ArrowRight size={14} />

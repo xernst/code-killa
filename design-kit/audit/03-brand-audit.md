@@ -39,7 +39,7 @@
      - `text-orange-300`, `fill-orange-400 text-orange-400` on Flame
      - `text-amber-300`, `text-amber-400` on Sparkles
      - `text-cyan-300`, `text-cyan-400` on Snowflake
-   - Three Tailwind palettes are firing on a single component. None are ember (`#F2683C`). COLORS.md:24 violated.
+   - Three Tailwind palettes are firing on a single component. None are ember (`#2aa06a`). COLORS.md:24 violated.
 
 4. **Title Case / sentence-case headlines everywhere.**
    - VOICE.md:11 + TYPOGRAPHY.md:82 — "All headlines are sentence-case or all-lowercase. Title case smells corporate."
@@ -171,7 +171,7 @@
 2. **`--color-paper: #F7F4ED`** — `app/globals.css:31`. Unused on dark surfaces but present in theme; light-mode token, kit says light is V2-only.
 3. **`--color-slate-custom: #9AA0A8`** — `app/globals.css:33`. Not in COLORS.md token table.
 4. **`--color-foreground: #F7F4ED`** — `app/globals.css:5`. Should be `--ink-100` (`#f4f4f5`) per COLORS.md:16.
-5. **`text-orange-300`, `text-orange-400`, `fill-orange-400`** — `components/StreakWidget.tsx:29, 31`. Tailwind's stock orange, not ember (`#F2683C` = `--color-ember-500`). Use `text-ember-300`, `text-ember-500`.
+5. **`text-orange-300`, `text-orange-400`, `fill-orange-400`** — `components/StreakWidget.tsx:29, 31`. Tailwind's stock orange, not ember (`#2aa06a` = `--color-green-500`). Use `text-green-300`, `text-green-500`.
 6. **`text-amber-300/400`, `border-amber-700/40`, `bg-amber-700/5`, `text-amber-100/200`** — `StreakWidget.tsx:34-35`, `_HintReveal.tsx:37-62`. Amber is a third chromatic. Replace with ink + ember tokens.
 7. **`text-cyan-300/400`** — `StreakWidget.tsx:38-39`. Fourth chromatic. No path forward — pick ink or ember.
 8. **`text-rose-300/400/500`, `border-rose-500/40/60`, `bg-rose-500/5`** — 9 step-view components + `OutputPane.tsx:29, 44` + `PersistentIDE.tsx:355`. COLORS.md authorizes `--err: #ef4444` (red, used **once**, in WEDGE bug). Rose is not red. Replace with `--err` for the canonical use, drop everywhere else.
@@ -262,14 +262,14 @@
 
 2. **Lowercase every headline and CTA across `app/page.tsx`, `app/onboarding/page.tsx`, `components/v2/HomeClient.tsx`, `components/v2/StepFooter.tsx`, and `app/learn/v2/[chapter]/page.tsx`.** This is the single highest-leverage voice fix. It changes the personality of the product from Coursera to senior-dev-at-11pm. ~25 string replacements.
 
-3. **Delete `--color-signal`, `--color-paper`, `--color-slate-custom` from `app/globals.css`.** Replace every `text-signal` / `border-signal` / `bg-signal` usage with either `text-ok` (single-use, pyodide success only) or `text-ember-400`. Replace every `rose-*` with `--err` for the canonical error case and `text-ink-400` everywhere else. ~15 component files touched.
+3. **Delete `--color-signal`, `--color-paper`, `--color-slate-custom` from `app/globals.css`.** Replace every `text-signal` / `border-signal` / `bg-signal` usage with either `text-ok` (single-use, pyodide success only) or `text-green-400`. Replace every `rose-*` with `--err` for the canonical error case and `text-ink-400` everywhere else. ~15 component files touched.
 
 4. **Replace `text-orange-300/400`, `text-amber-300/400`, `text-cyan-300/400` in `StreakWidget.tsx` with ember tokens (or remove the chromatic distinction — three different metals don't need three different colors when they already have three different icons).** `components/StreakWidget.tsx:29-39`.
 
 5. **Add the cursor blink heartbeat.** Drop into `app/globals.css`:
    ```css
    @keyframes blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
-   .cursor { animation: blink 1s steps(1) infinite; color: var(--color-ember-500); }
+   .cursor { animation: blink 1s steps(1) infinite; color: var(--color-green-500); }
    ```
    Then put `<span className="cursor">_</span>` in the wordmark, IDE prompt, and any hero `>_` instance.
 
@@ -288,7 +288,7 @@
 ## Out-of-scope but flagged for the UI Designer (designer #1)
 
 - The IDE OG art's Mac-window dots (red/yellow/green) — visual choice, not brand text. Defer.
-- Linear gradients on the new-user CTA (`bg-gradient-to-br from-ember-950 to-ink-950`) — works visually, kit doesn't ban gradients explicitly, but the OG `stop_reason` purple label `#a5b4fc` should be replaced with ember or ink-400.
+- Linear gradients on the new-user CTA (`bg-gradient-to-br from-green-950 to-ink-950`) — works visually, kit doesn't ban gradients explicitly, but the OG `stop_reason` purple label `#a5b4fc` should be replaced with ember or ink-400.
 - Lucide icon weight consistency — some icons render thin against the bold serif type. Not a brand-kit rule yet but worth raising.
 - The "Legacy 28-chapter course (old style)" `<details>` on `app/page.tsx:184-210` — content preserved across the rebrand, but the chevron `▸` next to "Legacy 28-chapter course (old style)" is title-cased. Lowercase or hide entirely.
 

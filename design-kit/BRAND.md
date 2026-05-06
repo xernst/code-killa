@@ -29,15 +29,15 @@ Lifted from the existing OG art so V1 keeps visual continuity. Don't add new col
 
 | Token | Hex | Use |
 | --- | --- | --- |
-| `--ink-950` | `#0E0F12` | Primary background |
+| `--ink-950` | `#14140f` | Primary background |
 | `--ink-900` | `#18181b` | Card / panel background |
 | `--ink-800` | `#27272a` | Borders, dividers |
 | `--ink-700` | `#3f3f46` | Muted UI |
 | `--ink-400` | `#a1a1aa` | Secondary text |
 | `--ink-300` | `#d4d4d8` | Body text on dark |
 | `--ink-100` | `#f4f4f5` | Headlines on dark |
-| `--ember` | `#F2683C` | **Primary accent** — caret, links, CTA |
-| `--ember-dim` | `#e34c1c` | Hover / active state |
+| `--ember` | `#2aa06a` | **Primary accent** — caret, links, CTA |
+| `--ember-dim` | `#1f7a51` | Hover / active state |
 | `--ok` | `#86efac` | Test pass, success |
 | `--err` | `#ef4444` | Test fail, error highlight |
 

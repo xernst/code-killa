@@ -11,11 +11,11 @@ export async function generateStaticParams() {
 }
 
 // Sourced from app/globals.css to match the live site palette exactly.
-const ink950 = "#0E0F12";
+const ink950 = "#14140f";
 const ink800 = "#27272a";
 const ink400 = "#a1a1aa";
 const ink100 = "#f4f4f5";
-const ember = "#F2683C";
+const ember = "#2aa06a";
 
 export default async function ChapterOgImage({
   params,

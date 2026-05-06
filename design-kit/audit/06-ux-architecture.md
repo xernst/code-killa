@@ -81,8 +81,8 @@
 
 | Pattern | Current implementation | Inconsistencies | Proposed canonical |
 |---|---|---|---|
-| **Primary CTA button** | `bg-ember-500 text-ink-950 hover:bg-ember-400 rounded-md px-4 py-2 text-sm font-medium` — copy-pasted in 7 step views (`WriteStepView.tsx:70-71`, `FixBugStepView.tsx:85-86`, `PredictStepView.tsx:88-89`, `FillBlankStepView.tsx:147-148`, `MultipleChoiceStepView.tsx:122-123`, `CheckpointStepView.tsx:80-81`, `ReorderStepView.tsx:154-155`, `LessonStepClient.tsx:184-187`) | Footer button uses `disabled:bg-ink-800` — step views don't | Extract `<Button variant="primary">` in `components/ui/Button.tsx` |
-| **Secondary text-link CTA** | `WriteStepView.tsx:81` ("Show solution →"), `LessonStepClient.tsx:124` ("← Back to all chapters"), home page footnote (`app/page.tsx:131`) | All slightly different — `text-xs text-ink-500 underline-offset-2 hover:underline`, vs `text-xs text-ember-400`, vs `text-xs text-ink-500 hover:text-ink-300` | Single `<Link variant="ghost">` |
+| **Primary CTA button** | `bg-green-500 text-ink-950 hover:bg-green-400 rounded-md px-4 py-2 text-sm font-medium` — copy-pasted in 7 step views (`WriteStepView.tsx:70-71`, `FixBugStepView.tsx:85-86`, `PredictStepView.tsx:88-89`, `FillBlankStepView.tsx:147-148`, `MultipleChoiceStepView.tsx:122-123`, `CheckpointStepView.tsx:80-81`, `ReorderStepView.tsx:154-155`, `LessonStepClient.tsx:184-187`) | Footer button uses `disabled:bg-ink-800` — step views don't | Extract `<Button variant="primary">` in `components/ui/Button.tsx` |
+| **Secondary text-link CTA** | `WriteStepView.tsx:81` ("Show solution →"), `LessonStepClient.tsx:124` ("← Back to all chapters"), home page footnote (`app/page.tsx:131`) | All slightly different — `text-xs text-ink-500 underline-offset-2 hover:underline`, vs `text-xs text-green-400`, vs `text-xs text-ink-500 hover:text-ink-300` | Single `<Link variant="ghost">` |
 | **Code run** | `⌘↵` shortcut + Run button. Bound twice — `PersistentIDE.tsx:178-188` AND `StepFooter.tsx:55-66` (StepFooter is wired but never mounted; see "files to delete") | Two separate listeners on `keydown`. If `StepFooter` ever ships, ⌘↵ does both run AND continue. | Single shortcut handler in IDE; footer "Continue" uses different chord (e.g., `⇧↵`). |
 | **Lesson advance** | "Continue →" button in `LessonStepClient.tsx:179-191` calls `handleContinue` → `router.push` | "Read" steps mark themselves correct on click (`LessonStepClient.tsx:118-129`); other steps require an `onAttempt({correct:true})` from the step view | Document the "read auto-acks on continue" rule; consider lifting it into `StepRouter` so step views never need to emit synthetic attempts |
 | **Chapter pick (home)** | Cards link to `/learn/v2/${slug}` if `hasOverview`, else `/learn/v2/${slug}/${firstLesson}/0` (`app/page.tsx:141-145`) | Two-tier link logic baked into the home page. Means a chapter without an `overview.md` jumps the user past the "intro" beat, but the URL no longer has a stable mental model | Always link to chapter root; have chapter root render a fallback hero if no overview |
@@ -149,13 +149,13 @@ This means:
 | `--ink-200` | (missing) | `#e4e4e7` | only in globals |
 | `--color-paper` | (missing) | `#F7F4ED` | only in globals |
 | `--color-signal` | (missing) | `#5BC8AF` | only in globals (used in `ChapterNav.tsx:78,93,151` via `text-signal`) |
-| `--ember-500` (vs `--ember`) | `--ember: #F2683C` | `--color-ember-500: #F2683C` | naming collision |
+| `--ember-500` (vs `--ember`) | `--green: #2aa06a` | `--color-green-500: #2aa06a` | naming collision |
 | Motion easings | Defined | Missing entirely | not usable as classes |
 | Durations | Defined | Missing entirely | not usable as classes |
 | Radii (`--radius-sm/md/lg/xl`) | Defined | Missing | components use Tailwind `rounded-md` etc., bypassing tokens |
 
 ### Use of CSS vars vs Tailwind vs hardcoded
-- **Components** use Tailwind utility classes throughout (`bg-ink-950`, `text-ember-400`, `border-ink-800`). 230 token usages across `components/v2` and `app/`. Good — consistent with the `@theme` block.
+- **Components** use Tailwind utility classes throughout (`bg-ink-950`, `text-green-400`, `border-ink-800`). 230 token usages across `components/v2` and `app/`. Good — consistent with the `@theme` block.
 - **OG image routes** (`app/og/launch/[name]/route.tsx:11-21`, `app/learn/v2/[chapter]/opengraph-image.tsx:14-18`, `twitter-image.tsx`) hardcode hex values. This is correct for ImageResponse (no Tailwind in @vercel/og), BUT they don't import the canonical color values — they re-typed them. Drift risk.
 - **`design-kit/tokens.css`** has motion + radii tokens that are used nowhere in code. If a designer wants to use `var(--ease-slam)` or `var(--dur-snap)`, they can't — those names don't exist in the running stylesheet.
 
@@ -165,9 +165,9 @@ This means:
 - **`PersistentIDE.tsx:5`**: imports `oneDark` from `@codemirror/theme-one-dark`. CodeMirror has its own color system that doesn't honor `--color-ink-*`. The editor-vs-prompt visual delta you see is partly this.
 
 ### Concrete cleanup plan
-1. **Make `tokens.css` the single source.** Add the missing color tokens (`--ink-50/200/600`, `--color-paper`, `--color-signal`, `--color-ember-50…950`). Add a comment block at top of `globals.css` saying "DO NOT EDIT TOKENS HERE — see tokens.css".
+1. **Make `tokens.css` the single source.** Add the missing color tokens (`--ink-50/200/600`, `--color-paper`, `--color-signal`, `--color-green-50…950`). Add a comment block at top of `globals.css` saying "DO NOT EDIT TOKENS HERE — see tokens.css".
 2. **Either import tokens.css into globals.css** (`@import "../design-kit/tokens.css";` then use the `--ink-*` names directly in `@theme { --color-ink-X: var(--ink-X); }`), OR codegen the `@theme` block from `tokens.json`. Pick one.
-3. **Add a CodeMirror theme** at `lib/codemirror-theme.ts` that maps `--color-ink-*` and `--color-ember-*` so the editor matches the page chrome.
+3. **Add a CodeMirror theme** at `lib/codemirror-theme.ts` that maps `--color-ink-*` and `--color-green-*` so the editor matches the page chrome.
 4. **Centralize the OG colors** in `lib/og-tokens.ts` — exported constants, imported by the three route files.
 5. **Add `var(--ease-*)` and `var(--dur-*)` to the @theme block** (Tailwind 4 supports `--transition-timing-function-*` and `--transition-duration-*`). Then `transition` classes can use brand easings.
 
@@ -299,7 +299,7 @@ Tailwind defaults: `sm: 640`, `md: 768`, `lg: 1024`, `xl: 1280`. Codebase uses p
 1. **Delete `components/v2/StepFooter.tsx`** (157 lines, never imported). Confirmed orphan via grep. Search for ghosts across `app/` + `components/`. Frees a load-bearing-looking file from the canonical components list. Net: -157 lines, zero behavior change.
 2. **Wire `setStepDraft` into `PersistentIDE.handleChange`** (`PersistentIDE.tsx:147-154`). Two lines. Code drafts now survive reload. Massive trust gain for "I typed for 10 minutes and refreshed."
 3. **Make ChapterNav accordion header navigate.** Two-line change in `ChapterNav.tsx:70-94` — make the chapter row a `<Link>` with a chevron toggle to its right. Restores back-to-chapter-overview navigation.
-4. **Sync `tokens.css` with `globals.css` and add a top-of-file warning.** Add `--color-signal`, `--color-ember-50/100/200/300/400/600/700/800/900/950`, `--color-paper`, fix `--ink-500`. ~30 minutes. Eliminates the "tokens.css lies" trap for future designers.
+4. **Sync `tokens.css` with `globals.css` and add a top-of-file warning.** Add `--color-signal`, `--color-green-50/100/200/300/400/600/700/800/900/950`, `--color-paper`, fix `--ink-500`. ~30 minutes. Eliminates the "tokens.css lies" trap for future designers.
 5. **Move PyodidePreloader from home to onboarding only.** One-line change in `app/page.tsx:62` (delete) and `app/onboarding/page.tsx:161` (already there). Save ~12MB of bandwidth per landing-page bounce.
 6. **Add `app/not-found.tsx`** — branded 404 with home link. ~20 lines.
 7. **Custom redirects for `/learn/v2/*` → `/*`** in `public/_redirects`. Cloudflare Pages native, ~10 lines. Decouples the URL clean-up from the route refactor.

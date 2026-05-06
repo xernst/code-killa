@@ -69,17 +69,17 @@ The CEO's sequence is non-negotiable. Note the order: **1 → 2 → 4 → 3 → 
 - `app/globals.css:33` — delete `--color-slate-custom: #9AA0A8;`
 - `app/globals.css:34` — change `--font-sans` value: drop `var(--font-inter),` (leave system stack as fallback for ad-hoc uses, but body now uses `font-display`)
 - `components/StreakWidget.tsx:29-43` — replace `text-orange-300/400`, `text-amber-300/400`, `text-cyan-300/400`, `fill-orange-400` with ember tokens. Strategy below.
-- `components/v2/ChapterNav.tsx:78` — `text-signal` → `text-ember-700` (dim ember = "completed" affordance)
-- `components/v2/ChapterNav.tsx:93` — `text-signal` → `text-ember-700`
-- `components/v2/ChapterNav.tsx:147` — `text-signal hover:text-signal/80` → `text-ember-700 hover:text-ember-500`
+- `components/v2/ChapterNav.tsx:78` — `text-signal` → `text-green-700` (dim ember = "completed" affordance)
+- `components/v2/ChapterNav.tsx:93` — `text-signal` → `text-green-700`
+- `components/v2/ChapterNav.tsx:147` — `text-signal hover:text-signal/80` → `text-green-700 hover:text-green-500`
 - `components/v2/ChapterNav.tsx:151` — drop the `<Check>` (replace with `▰`/`▱` per UI Designer §Sidebar; do that in PR 5 if simpler — for THIS PR just recolor)
-- `components/v2/ChapterNav.tsx:196` — `text-signal` → `text-ember-700`
+- `components/v2/ChapterNav.tsx:196` — `text-signal` → `text-green-700`
 - `components/v2/ChapterNav.tsx:200` — `text-ink-700` → `text-ink-500` (per Brand audit §Critical 12 — `--ink-700` fails contrast)
 - `components/ChapterNav.tsx:92` — same `text-ink-700` → `text-ink-500` fix (legacy file, but stays in tree until V2 deletion)
 - `components/BrainDump.tsx:96` — `text-white` → `text-ink-100`
 - `components/v2/HomeClient.tsx:84` — `text-white` → `text-ink-100`
 - `components/v2/HomeClient.tsx:114` — `fill-white text-white` → `fill-ink-100 text-ink-100`
-- `components/v2/DailyGoalDial.tsx` — grep for `var(--color-signal)` and replace with `var(--color-ember-500)`. Per UX Architect §CSS audit, line ~77.
+- `components/v2/DailyGoalDial.tsx` — grep for `var(--color-signal)` and replace with `var(--color-green-500)`. Per UX Architect §CSS audit, line ~77.
 - All step-view files (`components/v2/steps/*.tsx`) — grep `text-signal`, `border-signal`, `bg-signal`, `text-rose-300/400/500`, `border-rose-500`, `bg-rose-500`. Map: `signal*` → `ember-700` for "passed", `rose*` → `--err`-mapped class for the canonical error case (only `OutputPane.tsx:29,44` stderr and `PersistentIDE.tsx:355` stderr); everything else `rose*` → `text-ink-400`. **Important:** `--err` is a token, not a Tailwind class. Add `--color-err: var(--err);` in `@theme` if you want `text-err`, OR use inline `style={{ color: 'var(--err)' }}`. Pick the @theme route — see Cross-cutting §Tailwind 4 below.
 
 **Files to delete:** none in this PR.
@@ -151,16 +151,16 @@ const jetbrains = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jetbrai
 // AFTER — three different icons doing the work three different colors used to do.
 // All ember; "active" = ember-500, "inactive" = ink-700.
 <div className="flex items-center gap-3 font-mono text-xs tabular-nums">
-  <span title={`${s.current}-day streak (longest ${s.longest})`} className="inline-flex items-center gap-1 text-ember-500">
-    <Flame size={14} className={s.current > 0 ? "fill-ember-500 text-ember-500" : "text-ink-700"} />
+  <span title={`${s.current}-day streak (longest ${s.longest})`} className="inline-flex items-center gap-1 text-green-500">
+    <Flame size={14} className={s.current > 0 ? "fill-ember-500 text-green-500" : "text-ink-700"} />
     {s.current}
   </span>
-  <span title={`${s.embers} ember(s)`} className="inline-flex items-center gap-1 text-ember-500">
-    <Sparkles size={14} className={s.embers > 0 ? "text-ember-500" : "text-ink-700"} />
+  <span title={`${s.embers} ember(s)`} className="inline-flex items-center gap-1 text-green-500">
+    <Sparkles size={14} className={s.embers > 0 ? "text-green-500" : "text-ink-700"} />
     {s.embers}
   </span>
-  <span title={`${s.frozenFlames} frozen flame(s)`} className="inline-flex items-center gap-1 text-ember-500">
-    <Snowflake size={14} className={s.frozenFlames > 0 ? "text-ember-500" : "text-ink-700"} />
+  <span title={`${s.frozenFlames} frozen flame(s)`} className="inline-flex items-center gap-1 text-green-500">
+    <Snowflake size={14} className={s.frozenFlames > 0 ? "text-green-500" : "text-ink-700"} />
     {s.frozenFlames}
   </span>
   <span className="hidden sm:inline text-ink-400">{s.totalXp} XP</span>
@@ -303,7 +303,7 @@ const jetbrains = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jetbrai
   }
   .cursor-blink {
     animation: blink-1hz 1s steps(1) infinite;
-    color: var(--color-ember-500);
+    color: var(--color-green-500);
   }
   @media (prefers-reduced-motion: reduce) {
     .cursor-blink { animation: none; opacity: 1; }
@@ -338,7 +338,7 @@ const jetbrains = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jetbrai
     if (variant === "mark") {
       return (
         <span
-          className={cn("font-mono font-extrabold text-ember-500", size, className)}
+          className={cn("font-mono font-extrabold text-green-500", size, className)}
           aria-label="promptdojo"
         >
           ❯
@@ -354,9 +354,9 @@ const jetbrains = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jetbrai
         )}
         aria-label="promptdojo"
       >
-        <span className="text-ember-500">❯</span>
+        <span className="text-green-500">❯</span>
         <span className="text-ink-100">promptdojo</span>
-        <span className="cursor-blink text-ember-500">_</span>
+        <span className="cursor-blink text-green-500">_</span>
       </span>
     );
   }
@@ -371,7 +371,7 @@ const jetbrains = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jetbrai
 ```tsx
 // BEFORE — app/page.tsx:64-67
 <div>
-  <div className="text-xs uppercase tracking-[0.2em] text-ember-500">
+  <div className="text-xs uppercase tracking-[0.2em] text-green-500">
     promptdojo
   </div>
   <h1 className="mt-2 font-display text-5xl font-semibold leading-[1.05] tracking-tight text-ink-50 sm:text-6xl">
@@ -388,7 +388,7 @@ const jetbrains = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jetbrai
 ```tsx
 // BEFORE — components/v2/ChapterNav.tsx:54-60
 <Link href="/" className="block">
-  <div className="font-display text-base text-ember-400">promptdojo</div>
+  <div className="font-display text-base text-green-400">promptdojo</div>
   <div className="text-[10px] uppercase tracking-widest text-ink-500">
     python for builders
   </div>
@@ -480,7 +480,7 @@ const jetbrains = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jetbrai
       }}
     >
       ai writes this.<br />
-      <em className="italic text-ember-500">it&apos;s wrong.</em>
+      <em className="italic text-green-500">it&apos;s wrong.</em>
     </h1>
 
     <p className="mt-8 max-w-2xl font-display text-xl text-ink-300 leading-snug">
@@ -495,13 +495,13 @@ const jetbrains = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jetbrai
     <div className="mt-10 flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:gap-6">
       <Link
         href="/learn/v2/variables/naming-things/0"
-        className="inline-flex items-center gap-2 bg-ember-500 px-6 py-3 font-mono text-sm font-bold uppercase tracking-wider text-ink-950 transition hover:bg-ember-400"
+        className="inline-flex items-center gap-2 bg-green-500 px-6 py-3 font-mono text-sm font-bold uppercase tracking-wider text-ink-950 transition hover:bg-green-400"
       >
         start chapter 1 <span aria-hidden>→</span>
       </Link>
       <a
         href="#chapters"
-        className="font-mono text-sm text-ink-400 hover:text-ember-400"
+        className="font-mono text-sm text-ink-400 hover:text-green-400"
       >
         or pick your chapter ↓
       </a>
@@ -518,23 +518,23 @@ const jetbrains = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jetbrai
 export default function HeroBugSnippet() {
   return (
     <pre
-      className="overflow-x-auto rounded-none border-l-2 border-ember-500 bg-ink-900 p-5 font-mono text-sm leading-relaxed text-ink-300"
+      className="overflow-x-auto rounded-none border-l-2 border-green-500 bg-ink-900 p-5 font-mono text-sm leading-relaxed text-ink-300"
       aria-label="ai-shipped python bug"
       style={{ fontVariantLigatures: "none" }}
     >
       <code>
-        <span className="text-ember-500">def</span>{" "}
-        <span className="text-ember-300">collect_errors</span>(
+        <span className="text-green-500">def</span>{" "}
+        <span className="text-green-300">collect_errors</span>(
         {"\n  "}
-        msg: <span className="text-ember-500">str</span>,
+        msg: <span className="text-green-500">str</span>,
         {"\n  "}
-        bag: <span className="text-ember-500">list</span> ={" "}
+        bag: <span className="text-green-500">list</span> ={" "}
         <span style={{ color: "var(--err)", background: "rgba(239,68,68,0.14)" }}>
           []
         </span>
         {"\n"}):{"\n  "}
         bag.append(msg){"\n  "}
-        <span className="text-ember-500">return</span> bag
+        <span className="text-green-500">return</span> bag
       </code>
       <div className="mt-3 border-t border-ink-800 pt-3 text-xs text-ink-500">
         mutable default arg. python evaluates the list once at definition.
@@ -556,7 +556,7 @@ export default function FollowOnXPill({ className }: { className?: string }) {
       target="_blank"
       rel="noopener noreferrer"
       className={cn(
-        "inline-flex items-center gap-1.5 border border-ember-700/50 bg-ember-950/40 px-3 py-1 font-mono text-[11px] uppercase tracking-wider text-ember-400 transition hover:border-ember-500 hover:text-ember-300",
+        "inline-flex items-center gap-1.5 border border-green-700/50 bg-green-950/40 px-3 py-1 font-mono text-[11px] uppercase tracking-wider text-green-400 transition hover:border-green-500 hover:text-green-300",
         className,
       )}
     >
@@ -605,7 +605,7 @@ export default function FollowOnXPill({ className }: { className?: string }) {
 ### PR 5: dojoTheme — replace oneDark + github-dark with ember+ink only
 **Implements:** CEO pick #5
 **Branch:** `refresh/05-dojo-codemirror-theme`
-**Outcome:** CodeMirror runs a custom theme using only `--color-ember-*` and `--color-ink-*`. Markdown code blocks (rendered via highlight.js with `github-dark.css`) instead use a `dojo-syntax.css` file that maps `.hljs-*` selectors to the same brand tokens. Run button is ember + sharp + mono. Output `✓` uses `--ok`, stderr uses `--err`. The IDE finally belongs to promptdojo.
+**Outcome:** CodeMirror runs a custom theme using only `--color-green-*` and `--color-ink-*`. Markdown code blocks (rendered via highlight.js with `github-dark.css`) instead use a `dojo-syntax.css` file that maps `.hljs-*` selectors to the same brand tokens. Run button is ember + sharp + mono. Output `✓` uses `--ok`, stderr uses `--err`. The IDE finally belongs to promptdojo.
 **Estimated time:** 4 h (highest-risk PR)
 **Depends on:** PR 1 (token foundation), PR 4 (hero bug snippet uses inline styles; this PR brings them into a real theme)
 **Unblocks:** none (this is the visual polish PR)
@@ -614,7 +614,7 @@ export default function FollowOnXPill({ className }: { className?: string }) {
 
 - `components/v2/PersistentIDE.tsx:3` — drop `import { oneDark } from "@codemirror/theme-one-dark";`
 - `components/v2/PersistentIDE.tsx:255` (the line where `extensions=[oneDark]` is) — replace with `extensions={[dojoTheme]}` from the new theme module
-- `components/v2/PersistentIDE.tsx:286-330` — Run button restyle (`bg-ember-500`, `font-mono uppercase`, sharp corners). Currently `bg-ink-800`.
+- `components/v2/PersistentIDE.tsx:286-330` — Run button restyle (`bg-green-500`, `font-mono uppercase`, sharp corners). Currently `bg-ink-800`.
 - `components/v2/PersistentIDE.tsx:347` — `<span className="text-emerald-400">✓</span>` → `<span style={{ color: 'var(--ok)' }}>✓</span>` OR add `--color-ok` mapping in `globals.css` `@theme` and use `text-ok`. Pick: add the @theme mapping in PR 1 (already in spec), use `text-ok` here.
 - `components/v2/PersistentIDE.tsx:355` — `text-rose-400` for stderr → `text-err` (or inline `style={{ color: 'var(--err)' }}`)
 - `app/learn/v2/[chapter]/page.tsx:5` — delete `import "highlight.js/styles/github-dark.css";`
@@ -627,15 +627,15 @@ export default function FollowOnXPill({ className }: { className?: string }) {
 - `lib/codemirror-theme.ts` — the dojoTheme. CodeMirror 6 theme API:
   ```ts
   // lib/codemirror-theme.ts
-  // Single-accent CodeMirror theme. Maps to --color-ember-* and --color-ink-*
+  // Single-accent CodeMirror theme. Maps to --color-green-* and --color-ink-*
   // via CSS variables — values are pulled at render time, so token edits
   // propagate without rebuilding the theme.
   import { EditorView } from "@codemirror/view";
   import { HighlightStyle, syntaxHighlighting } from "@codemirror/language";
   import { tags as t } from "@lezer/highlight";
 
-  const ember500 = "var(--color-ember-500)";
-  const ember300 = "var(--color-ember-300)";
+  const ember500 = "var(--color-green-500)";
+  const ember300 = "var(--color-green-300)";
   const ink100 = "var(--color-ink-100)";
   const ink200 = "var(--color-ink-200)";
   const ink300 = "var(--color-ink-300)";
@@ -644,7 +644,7 @@ export default function FollowOnXPill({ className }: { className?: string }) {
   const ink700 = "var(--color-ink-700)";
   const ink900 = "var(--color-ink-900)";
   const ink950 = "var(--color-ink-950)";
-  const ember950 = "var(--color-ember-950)";
+  const ember950 = "var(--color-green-950)";
 
   const editor = EditorView.theme(
     {
@@ -684,19 +684,19 @@ export default function FollowOnXPill({ className }: { className?: string }) {
 /* AFTER — app/globals.css (append; UI Designer §Code-block syntax tokens) */
 .hljs                 { background: var(--color-ink-950); color: var(--color-ink-300); }
 .hljs-keyword,
-.hljs-built_in        { color: var(--color-ember-500); font-weight: 600; }
+.hljs-built_in        { color: var(--color-green-500); font-weight: 600; }
 .hljs-string          { color: var(--color-ink-100); font-style: italic; }
 .hljs-comment         { color: var(--color-ink-500); font-style: italic; }
 .hljs-number,
 .hljs-literal         { color: var(--color-ink-200); }
 .hljs-title.function_,
-.hljs-title.class_    { color: var(--color-ember-300); }
+.hljs-title.class_    { color: var(--color-green-300); }
 .hljs-params,
 .hljs-variable        { color: var(--color-ink-300); }
 .hljs-operator,
 .hljs-punctuation     { color: var(--color-ink-400); }
 .hljs-attr,
-.hljs-attribute       { color: var(--color-ember-300); }
+.hljs-attribute       { color: var(--color-green-300); }
 ```
 
 ```tsx
@@ -707,10 +707,10 @@ export default function FollowOnXPill({ className }: { className?: string }) {
 <button
   className={cn(
     "inline-flex items-center gap-2",
-    "bg-ember-500 text-ink-950",
+    "bg-green-500 text-ink-950",
     "font-mono text-xs font-bold uppercase tracking-wider",
     "px-4 py-2",
-    "transition hover:bg-ember-400",
+    "transition hover:bg-green-400",
     "disabled:bg-ink-800 disabled:text-ink-500 disabled:cursor-not-allowed",
   )}
 >
@@ -822,13 +822,13 @@ export default function FollowOnXPill({ className }: { className?: string }) {
         </h1>
         <p className="mt-8 font-mono text-base text-ink-400">
           ❯ try{" "}
-          <Link href="/" className="text-ember-400 hover:text-ember-300 underline-offset-2 hover:underline">
+          <Link href="/" className="text-green-400 hover:text-green-300 underline-offset-2 hover:underline">
             /
           </Link>{" "}
           or{" "}
           <Link
             href="/learn/v2/variables/naming-things/0"
-            className="text-ember-400 hover:text-ember-300 underline-offset-2 hover:underline"
+            className="text-green-400 hover:text-green-300 underline-offset-2 hover:underline"
           >
             /learn/v2/variables
           </Link>
@@ -945,18 +945,18 @@ if (!next) {
   // The fifth dot lights only after they click "start lesson 1" → the lesson page itself.
   // Or simpler: lit count = step. So dots are: i < step.
   ```
-  Final rule: `className={cn("h-1 w-8 rounded-full transition", i < step ? "bg-ember-500" : "bg-ink-800")}`. **Decision: change `i <= step` to `i < step`**.
+  Final rule: `className={cn("h-1 w-8 rounded-full transition", i < step ? "bg-green-500" : "bg-ink-800")}`. **Decision: change `i <= step` to `i < step`**.
 - `app/onboarding/page.tsx:194` — already lowercased in PR 2. Keep.
 - `app/onboarding/page.tsx:197-198` — already rewritten in PR 2 (or do it here if PR 2 missed it). Final string per Brand audit: `"ai is your co-pilot, not your crutch. you'll learn the shapes you need to direct it, read it, and catch when it's wrong."`
 - `app/onboarding/page.tsx` PersonalizationScreen (`:301-360+`) — add the live preview block. New element under the field grid:
   ```tsx
-  <div className="mt-6 rounded-none border-l-2 border-ember-500 bg-ink-900 p-4 font-mono text-sm text-ink-300">
+  <div className="mt-6 rounded-none border-l-2 border-green-500 bg-ink-900 p-4 font-mono text-sm text-ink-300">
     <span className="text-ink-500">{"# preview"}</span>
     <br />
-    <span className="text-ember-500">pets</span> ={" "}
+    <span className="text-green-500">pets</span> ={" "}
     <span className="text-ink-100">[&quot;{draft.pet || "luna"}&quot;]</span>
     <br />
-    <span className="text-ember-500">team</span> ={" "}
+    <span className="text-green-500">team</span> ={" "}
     <span className="text-ink-100">&quot;{draft.team || "marketing"}&quot;</span>
   </div>
   ```
@@ -968,7 +968,7 @@ if (!next) {
   // Above the h1 in Welcome:
   <div className="text-[11px] uppercase tracking-[0.42em] mb-6">
     <Wordmark variant="mark" size="text-[11px]" />{" "}
-    <span className="text-ember-500">_</span>
+    <span className="text-green-500">_</span>
   </div>
   ```
 

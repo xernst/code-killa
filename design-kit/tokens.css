@@ -9,7 +9,7 @@
 
 :root {
   /* Color — ink scale */
-  --ink-950: #0E0F12;
+  --ink-950: #14140f;
   --ink-900: #18181b;
   --ink-800: #27272a;
   --ink-700: #3f3f46;
@@ -19,8 +19,8 @@
   --ink-100: #f4f4f5;
 
   /* Color — accent */
-  --ember:     #F2683C;
-  --ember-dim: #e34c1c;
+  --green:     #2aa06a;
+  --green-dim: #1f7a51;
 
   /* Color — semantic (used once each in canon) */
   --ok:  #86efac;

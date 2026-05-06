@@ -9,9 +9,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;0,9..144,900;1,9..144,800&family=JetBrains+Mono:wght@400;700;800&display=swap" rel="stylesheet">
 <style>
   :root {
-    --ink-950:#0E0F12; --ink-900:#18181b; --ink-800:#27272a; --ink-700:#3f3f46;
+    --ink-950:#14140f; --ink-900:#18181b; --ink-800:#27272a; --ink-700:#3f3f46;
     --ink-500:#71717a; --ink-400:#a1a1aa; --ink-300:#d4d4d8; --ink-100:#f4f4f5;
-    --ember:#F2683C; --ember-dim:#e34c1c;
+    --green:#2aa06a; --green-dim:#1f7a51;
     --ok:#86efac; --err:#ef4444;
     --display: 'Fraunces', ui-serif, Georgia, serif;
     --mono: 'JetBrains Mono', ui-monospace, monospace;
@@ -24,7 +24,7 @@
   header { display: flex; align-items: center; gap: 24px;
     border-bottom: 1px solid var(--ink-800); padding-bottom: 28px; margin-bottom: 56px; }
   header img { width: 56px; height: 56px; }
-  .eyebrow { font-family: var(--mono); color: var(--ember);
+  .eyebrow { font-family: var(--mono); color: var(--green);
     font-size: 12px; letter-spacing: 0.4em; text-transform: uppercase; font-weight: 800; }
   header h1 {
     margin: 0; font-family: var(--display); font-weight: 900;
@@ -60,7 +60,7 @@
   .stage img { max-width: 80%; max-height: 90%; }
   .bg-dark  { background: var(--ink-950); }
   .bg-light { background: var(--ink-100); }
-  .bg-ember { background: var(--ember); }
+  .bg-ember { background: var(--green); }
 
   /* Lockup hero */
   .hero {
@@ -102,7 +102,7 @@
     padding: 40px;
   }
   .type-card .super {
-    font-family: var(--mono); color: var(--ember); font-weight: 800;
+    font-family: var(--mono); color: var(--green); font-weight: 800;
     font-size: 13px; letter-spacing: 0.4em; text-transform: uppercase; margin-bottom: 16px;
   }
   .type-card .display {
@@ -111,8 +111,8 @@
     font-size: 88px; letter-spacing: -0.045em; line-height: 0.95;
     margin: 0;
   }
-  .type-card .display .caret { color: var(--ember); margin-right: 24px; }
-  .type-card .display .punch { color: var(--ember); font-style: italic;
+  .type-card .display .caret { color: var(--green); margin-right: 24px; }
+  .type-card .display .punch { color: var(--green); font-style: italic;
     font-variation-settings: 'opsz' 144, 'wght' 800; }
   .type-card .body {
     font-family: var(--display); color: var(--ink-300);
@@ -129,7 +129,7 @@
     font-variant-ligatures: none;
     color: var(--ink-300);
   }
-  .code-block .kw  { color: var(--ember); }
+  .code-block .kw  { color: var(--green); }
   .code-block .str { color: var(--ok); }
   .code-block .com { color: var(--ink-700); }
   .code-block .bug { background: rgba(239,68,68,0.14); color: var(--err);
@@ -144,9 +144,9 @@
     font-family: var(--mono); font-weight: 800; font-size: 56px; letter-spacing: -0.015em;
     color: var(--ink-100);
   }
-  .motion-card .wm .caret { color: var(--ember); margin-right: 14px; }
+  .motion-card .wm .caret { color: var(--green); margin-right: 14px; }
   .motion-card .wm .pd-cursor {
-    display: inline-block; width: 28px; height: 8px; background: var(--ember);
+    display: inline-block; width: 28px; height: 8px; background: var(--green);
     margin-left: 12px; vertical-align: 8px; border-radius: 1px;
     animation: pdblink 1s steps(1) infinite;
   }
@@ -163,12 +163,12 @@
     font-variation-settings: 'opsz' 14, 'wght' 400;
     color: var(--ink-300);
   }
-  .voice .quote.right { border-left: 3px solid var(--ember); }
+  .voice .quote.right { border-left: 3px solid var(--green); }
   .voice .quote.wrong { border-left: 3px solid var(--err); color: var(--ink-500); }
   .voice .quote .tag { display: block;
     font-family: var(--mono); font-size: 11px; letter-spacing: 0.3em; text-transform: uppercase;
     margin-bottom: 14px; font-weight: 800; }
-  .voice .quote.right .tag { color: var(--ember); }
+  .voice .quote.right .tag { color: var(--green); }
   .voice .quote.wrong .tag { color: var(--err); }
 
   footer { margin-top: 96px; padding-top: 24px; border-top: 1px solid var(--ink-800);
@@ -217,7 +217,7 @@
   <div class="card">
     <div class="hd"><span class="name">mark · mono</span><span class="file">mark-mono.svg</span></div>
     <div class="stage bg-ember">
-      <svg viewBox="0 0 256 256" width="160" height="160" style="color: #0E0F12">
+      <svg viewBox="0 0 256 256" width="160" height="160" style="color: #14140f">
         <path d="M 200 78 A 90 90 0 1 1 156 56" fill="none" stroke="currentColor" stroke-width="14" stroke-linecap="round"/>
         <path d="M 102 100 L 138 128 L 102 156" fill="none" stroke="currentColor" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
         <rect x="100" y="170" width="56" height="10" rx="2" fill="currentColor"/>
@@ -238,19 +238,19 @@
   </div>
   <div class="card">
     <div class="hd"><span class="name">wordmark · mono</span><span class="file">wordmark-mono.svg</span></div>
-    <div class="stage bg-ember"><img src="logos/wordmark-mono.svg" alt="" style="color: #0E0F12; filter: invert(0)"></div>
+    <div class="stage bg-ember"><img src="logos/wordmark-mono.svg" alt="" style="color: #14140f; filter: invert(0)"></div>
   </div>
 </div>
 
 <!-- ============ COLOR ============ -->
 <h2>Color</h2>
 <div class="palette">
-  <div class="swatch-card" style="background:#0E0F12;color:#f4f4f5"><span class="role">ink-950</span><span class="hex">#0E0F12</span></div>
+  <div class="swatch-card" style="background:#14140f;color:#f4f4f5"><span class="role">ink-950</span><span class="hex">#14140f</span></div>
   <div class="swatch-card" style="background:#18181b;color:#f4f4f5"><span class="role">ink-900</span><span class="hex">#18181b</span></div>
   <div class="swatch-card" style="background:#27272a;color:#f4f4f5"><span class="role">ink-800</span><span class="hex">#27272a</span></div>
-  <div class="swatch-card" style="background:#a1a1aa;color:#0E0F12"><span class="role">ink-400</span><span class="hex">#a1a1aa</span></div>
-  <div class="swatch-card" style="background:#f4f4f5;color:#0E0F12"><span class="role">ink-100</span><span class="hex">#f4f4f5</span></div>
-  <div class="swatch-card" style="background:#F2683C;color:#0E0F12"><span class="role">ember</span><span class="hex">#F2683C</span></div>
+  <div class="swatch-card" style="background:#a1a1aa;color:#14140f"><span class="role">ink-400</span><span class="hex">#a1a1aa</span></div>
+  <div class="swatch-card" style="background:#f4f4f5;color:#14140f"><span class="role">ink-100</span><span class="hex">#f4f4f5</span></div>
+  <div class="swatch-card" style="background:#2aa06a;color:#14140f"><span class="role">ember</span><span class="hex">#2aa06a</span></div>
 </div>
 
 <!-- ============ TYPE ============ -->

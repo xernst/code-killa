@@ -134,9 +134,9 @@ Defaulted dark because that's where coders work and our user is mimicking that p
 
 | Role | Hex | Notes |
 |------|-----|-------|
-| Ink (primary bg, dark mode) | `#0E0F12` | Near-black, slightly cool. Replaces zinc. |
+| Ink (primary bg, dark mode) | `#14140f` | Near-black, slightly cool. Replaces zinc. |
 | Paper (primary bg, light mode) | `#F7F4ED` | Warm off-white. Editorial, not clinical white. |
-| Ember (primary accent) | `#F2683C` | Warm orange. Maps to the streak/ember mechanic. **Replaces emerald as the primary action color.** Differentiates from boot.dev hard. |
+| Ember (primary accent) | `#2aa06a` | Warm orange. Maps to the streak/ember mechanic. **Replaces emerald as the primary action color.** Differentiates from boot.dev hard. |
 | Signal (secondary accent / "correct") | `#5BC8AF` | Muted teal-green. Used sparingly for confirmation, never as a hero color. |
 | Slate (text on Ink / muted UI) | `#9AA0A8` | Body text on dark, secondary chrome. |
 

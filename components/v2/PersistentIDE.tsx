@@ -236,7 +236,7 @@ const PersistentIDE = forwardRef<PersistentIDEHandle, Props>(function Persistent
               className={cn(
                 "inline-flex items-center gap-1.5 px-3 py-2 text-xs font-mono transition",
                 isActive
-                  ? "border-b-2 border-ember-500 text-ink-100"
+                  ? "border-b-2 border-green-500 text-ink-100"
                   : "border-b-2 border-transparent text-ink-500 hover:text-ink-300",
               )}
             >
@@ -274,7 +274,7 @@ const PersistentIDE = forwardRef<PersistentIDEHandle, Props>(function Persistent
         <div
           className={cn(
             "inline-flex items-center gap-1.5 text-xs",
-            ready ? "text-ink-500" : "text-ember-300",
+            ready ? "text-ink-500" : "text-green-300",
           )}
         >
           {!ready && (
@@ -296,7 +296,7 @@ const PersistentIDE = forwardRef<PersistentIDEHandle, Props>(function Persistent
               aria-keyshortcuts="Meta+Enter Control+Enter"
               className={cn(
                 "inline-flex items-center gap-1.5 px-4 py-1.5 font-mono text-xs font-bold uppercase tracking-wider transition motion-reduce:transition-none",
-                "bg-ember-500 text-ink-950 hover:bg-ember-400",
+                "bg-green-500 text-ink-950 hover:bg-green-400",
                 "disabled:cursor-not-allowed disabled:bg-ink-800 disabled:text-ink-500",
               )}
             >
@@ -323,7 +323,7 @@ const PersistentIDE = forwardRef<PersistentIDEHandle, Props>(function Persistent
               </span>
             )}
             {running && (
-              <span className="ml-2 inline-flex items-center gap-1 font-mono text-[10px] normal-case tracking-normal text-ember-400">
+              <span className="ml-2 inline-flex items-center gap-1 font-mono text-[10px] normal-case tracking-normal text-green-400">
                 <Loader2 size={10} className="animate-spin motion-reduce:animate-none" />
                 running…
               </span>
