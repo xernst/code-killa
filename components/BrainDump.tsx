@@ -34,7 +34,7 @@ export default function BrainDump() {
   }
 
   function exportToFile() {
-    const md = `# Brain dump from promptdojo\n\n${items.map((i) => `- ${i}`).join("\n")}\n`;
+    const md = `# brain dump from promptdojo\n\n${items.map((i) => `- ${i}`).join("\n")}\n`;
     const blob = new Blob([md], { type: "text/markdown" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -48,11 +48,11 @@ export default function BrainDump() {
     <>
       <button
         onClick={() => setOpen((v) => !v)}
-        title="Brain dump (⌘⇧B)"
+        title="brain dump (⌘⇧B)"
         className="fixed bottom-4 right-4 z-30 inline-flex items-center gap-1.5 rounded-full border border-ink-800 bg-ink-900 px-3 py-2 text-xs text-ink-400 shadow-lg hover:bg-ink-800 hover:text-ink-200 transition"
       >
         <Brain size={14} />
-        Park a thought
+        park a thought
       </button>
       {open && (
         <div
@@ -65,18 +65,18 @@ export default function BrainDump() {
               id="braindump-title"
               className="flex items-center gap-1.5 text-xs font-medium text-ink-300"
             >
-              <Brain size={12} aria-hidden="true" /> Brain dump
+              <Brain size={12} aria-hidden="true" /> brain dump
             </div>
             <button
               onClick={() => setOpen(false)}
-              aria-label="Close brain dump"
+              aria-label="close brain dump"
               className="text-ink-400 hover:text-ink-200"
             >
               <X size={14} aria-hidden="true" />
             </button>
           </div>
           <label htmlFor="braindump-textarea" className="sr-only">
-            Park a thought
+            park a thought
           </label>
           <textarea
             id="braindump-textarea"
@@ -88,16 +88,16 @@ export default function BrainDump() {
                 add();
               }
             }}
-            placeholder="Park a thought, then get back to the lesson. ⌘↵ to save."
+            placeholder="park a thought, then get back to the lesson. ⌘↵ to save."
             className="w-full resize-none bg-transparent px-3 py-2 text-sm text-ink-100 placeholder:text-ink-500 outline-none"
             rows={3}
           />
           <div className="border-t border-ink-800 px-3 py-2 flex gap-2">
             <button onClick={add} className="flex-1 rounded bg-ember-600 px-2 py-1 text-xs font-medium text-ink-100 hover:bg-ember-500">
-              Save
+              save
             </button>
             <button onClick={exportToFile} className="rounded border border-ink-700 px-2 py-1 text-xs text-ink-300 hover:bg-ink-800">
-              Export .md
+              export .md
             </button>
           </div>
           {items.length > 0 && (

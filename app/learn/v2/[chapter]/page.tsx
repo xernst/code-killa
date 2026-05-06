@@ -85,10 +85,10 @@ export default async function V2ChapterOverviewPage({
           <div className="flex-1 min-h-0 overflow-auto">
             <div className="mx-auto max-w-3xl px-5 py-10 sm:px-8 sm:py-14">
               <div className="text-xs uppercase tracking-[0.2em] text-ember-400">
-                Chapter {String(chapter.number).padStart(2, "0")}
+                chapter {String(chapter.number).padStart(2, "0")}
               </div>
               <h1 className="mt-2 font-display text-4xl font-semibold leading-tight tracking-tight text-ink-50 sm:text-5xl">
-                {chapter.title.replace(/\s*—.*$/, "")}
+                {chapter.title.replace(/\s*—.*$/, "").toLowerCase()}
               </h1>
               {chapter.blurb && (
                 <p className="mt-3 text-lg text-ink-300">{chapter.blurb}</p>
@@ -115,7 +115,7 @@ export default async function V2ChapterOverviewPage({
                     href={`/learn/v2/${chapter.slug}/${firstLesson.slug}/0`}
                     className="inline-flex items-center gap-2 rounded-md bg-ember-500 px-4 py-2 text-sm font-medium text-ink-950 transition hover:bg-ember-400"
                   >
-                    Start chapter
+                    start chapter
                     <ArrowRight size={14} />
                   </Link>
                 )}
@@ -123,13 +123,13 @@ export default async function V2ChapterOverviewPage({
                   href="/"
                   className="text-xs text-ink-500 hover:text-ink-300"
                 >
-                  ← Back to all chapters
+                  ← back to all chapters
                 </Link>
               </div>
 
               <div className="mt-10">
                 <h2 className="font-mono text-[10px] uppercase tracking-widest text-ink-500">
-                  Lessons in this chapter
+                  lessons in this chapter
                 </h2>
                 <ol className="mt-2 flex flex-col divide-y divide-ink-800 rounded-md border border-ink-800 bg-ink-950">
                   {chapter.lessons.map((lesson, idx) => (
@@ -142,7 +142,7 @@ export default async function V2ChapterOverviewPage({
                           <span className="font-mono text-[10px] text-ink-500">
                             {String(idx + 1).padStart(2, "0")}
                           </span>
-                          <span className="text-ink-200">{lesson.title}</span>
+                          <span className="text-ink-200">{lesson.title.toLowerCase()}</span>
                         </span>
                         <span className="font-mono text-[10px] text-ink-500">
                           {lesson.steps.length} steps

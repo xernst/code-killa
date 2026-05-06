@@ -74,10 +74,10 @@ export default function HomeClient({ fallback, chapters }: Props) {
             start here
           </div>
           <div className="mt-1 text-2xl font-semibold text-ink-50">
-            Get started in under a minute
+            get started in under a minute
           </div>
           <div className="mt-1 text-sm text-ink-500">
-            Five questions, then your first lesson.
+            five questions, then your first lesson.
           </div>
         </div>
         <div className="ml-4 shrink-0 rounded-full bg-ember-600 p-3 transition group-hover:bg-ember-500">
@@ -91,8 +91,8 @@ export default function HomeClient({ fallback, chapters }: Props) {
   const link = `/learn/v2/${target.chapterSlug}/${target.lessonSlug}/${target.stepIndex}`;
   const chapter = chapters.find((c) => c.slug === target.chapterSlug);
   const heading = chapter
-    ? `Ch ${chapter.number} · ${chapter.title.replace(/\s*—.*$/, "")}`
-    : "Pick up where you left off";
+    ? `ch ${chapter.number} · ${chapter.title.replace(/\s*—.*$/, "").toLowerCase()}`
+    : "pick up where you left off";
 
   return (
     <Link

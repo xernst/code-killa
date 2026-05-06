@@ -7,23 +7,23 @@ import StreakWidget from "@/components/StreakWidget";
 import PyodidePreloader from "@/components/PyodidePreloader";
 
 export const metadata: Metadata = {
-  title: "promptdojo — free interactive Python course for AI builders",
+  title: "promptdojo — free interactive python course for ai builders",
   description:
-    "Free, open-source Python course for PMs, marketers, and ops folks who use Cursor and Claude Code daily. 22 chapters, 624 interactive steps, runs in your browser. No signup, no paywall.",
+    "free, open-source python course for pms, marketers, and ops folks who use cursor and claude code daily. 22 chapters, 624 interactive steps, runs in your browser. no signup, no paywall.",
   alternates: { canonical: "https://promptdojo.dev/" },
   openGraph: {
     type: "website",
-    title: "promptdojo — free interactive Python course for AI builders",
+    title: "promptdojo — free interactive python course for ai builders",
     description:
-      "Read what AI wrote. Catch what it got wrong. Direct it deliberately. 22 chapters, 624 interactive steps, free forever.",
+      "read what ai wrote. catch what it got wrong. direct it deliberately. 22 chapters, 624 interactive steps, free forever.",
     url: "https://promptdojo.dev/",
     siteName: "promptdojo",
   },
   twitter: {
     card: "summary_large_image",
-    title: "promptdojo — free interactive Python for AI builders",
+    title: "promptdojo — free interactive python for ai builders",
     description:
-      "The Python you need to direct AI agents, read what they wrote, and catch what they got wrong.",
+      "the python you need to direct ai agents, read what they wrote, and catch what they got wrong.",
     creator: "@TFisPython",
   },
 };
@@ -66,16 +66,16 @@ export default async function Home() {
             promptdojo
           </div>
           <h1 className="mt-2 font-display text-5xl font-semibold leading-[1.05] tracking-tight text-ink-50 sm:text-6xl">
-            Python for AI-first builders.
+            python for ai-first builders.
           </h1>
           <p className="mt-4 max-w-2xl text-lg text-ink-300">
-            The Python you need to direct AI agents, read what they wrote, and
+            the python you need to direct ai agents, read what they wrote, and
             catch what they got wrong.
           </p>
           <p className="mt-2 max-w-2xl text-sm text-ink-400">
-            Built for the marketing managers, PMs, and ops folks who use Cursor
+            built for the marketing managers, pms, and ops folks who use cursor
             daily and have hit the ceiling of what they can do without code
-            literacy. Free forever, open source. No certificate, no
+            literacy. free forever, open source. no certificate, no
             leaderboards, no paywall.
           </p>
         </div>
@@ -94,19 +94,19 @@ export default async function Home() {
       <section className="mt-16 grid grid-cols-1 gap-6 sm:grid-cols-3">
         {[
           {
-            title: "Read what AI wrote",
+            title: "read what ai wrote",
             body:
-              "Most lessons start with code Cursor or Claude already produced. You learn to read it, predict its output, and judge whether it works.",
+              "most lessons start with code cursor or claude already produced. you learn to read it, predict its output, and judge whether it works.",
           },
           {
-            title: "Catch what it got wrong",
+            title: "catch what it got wrong",
             body:
-              "Hallucinated APIs, silent type bugs, off-by-one errors, broken imports. The bugs AI ships are different from the bugs humans ship. We drill those.",
+              "hallucinated apis, silent type bugs, off-by-one errors, broken imports. the bugs ai ships are different from the bugs humans ship. we drill those.",
           },
           {
-            title: "Direct it deliberately",
+            title: "direct it deliberately",
             body:
-              "When you understand mutation, scope, and control flow, you can prompt the AI like a tech lead instead of a passenger.",
+              "when you understand mutation, scope, and control flow, you can prompt the ai like a tech lead instead of a passenger.",
           },
         ].map((card) => (
           <div
@@ -124,7 +124,7 @@ export default async function Home() {
       <section className="mt-16">
         <div className="mb-4 flex items-baseline justify-between">
           <h2 className="text-xs uppercase tracking-widest text-ink-400">
-            25 chapters · production-AI track included · free forever
+            25 chapters · production-ai track included · free forever
           </h2>
           <Link
             href="/onboarding"
@@ -147,10 +147,10 @@ export default async function Home() {
             const cardBody = (
               <>
                 <div className="font-mono text-[10px] uppercase tracking-widest text-ink-600">
-                  Ch {String(c.number).padStart(2, "0")}
+                  ch {String(c.number).padStart(2, "0")}
                 </div>
                 <div className="mt-1 text-sm font-medium text-ink-100 group-hover:text-ember-300">
-                  {titleClean}
+                  {titleClean.toLowerCase()}
                 </div>
                 <p className="mt-2 line-clamp-3 text-xs text-ink-500">
                   {c.blurb}
@@ -186,7 +186,7 @@ export default async function Home() {
           <span className="mr-2 inline-block transition group-open:rotate-90">
             ▸
           </span>
-          Legacy 28-chapter course (old style)
+          legacy 28-chapter course (old style)
         </summary>
         <div className="grid grid-cols-1 gap-2 border-t border-ink-800 p-4 sm:grid-cols-2 lg:grid-cols-3">
           {legacyChapters.map((c) => (
@@ -197,10 +197,10 @@ export default async function Home() {
             >
               <div>
                 <div className="font-mono text-[10px] uppercase tracking-widest text-ink-600">
-                  Ch {String(c.number).padStart(2, "0")}
+                  ch {String(c.number).padStart(2, "0")}
                 </div>
                 <div className="mt-0.5 text-sm font-medium text-ink-200 group-hover:text-ember-300">
-                  {c.title.replace(/^Chapter\s+\d+\s*[—\-]\s*/, "")}
+                  {c.title.replace(/^Chapter\s+\d+\s*[—\-]\s*/, "").toLowerCase()}
                 </div>
               </div>
               <div className="text-xs text-ink-600">{c.exercises.length} ex</div>

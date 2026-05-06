@@ -58,7 +58,7 @@ export default async function ChapterOgImage({
             fontWeight: 600,
           }}
         >
-          Chapter {String(number).padStart(2, "0")}
+          chapter {String(number).padStart(2, "0")}
         </div>
 
         <div
@@ -72,7 +72,7 @@ export default async function ChapterOgImage({
             letterSpacing: -2,
           }}
         >
-          {title}
+          {title.toLowerCase()}
         </div>
 
         <div
@@ -117,7 +117,7 @@ export default async function ChapterOgImage({
               color: ink400,
             }}
           >
-            {stepCount ? `${stepCount} interactive steps` : "Interactive Python"}
+            {stepCount ? `${stepCount} interactive steps` : "interactive python"}
           </div>
         </div>
       </div>

@@ -150,14 +150,14 @@ export default function LessonStepClient({
       header={
         <div className="flex flex-col gap-1">
           <div className="flex items-center justify-between text-xs text-ink-400">
-            <span className="uppercase tracking-wide">
-              {chapter.title}
+            <span className="tracking-wide">
+              {chapter.title.toLowerCase()}
             </span>
             <span className="font-mono">
               {stepIndex + 1} / {totalSteps}
             </span>
           </div>
-          <h1 className="font-display text-xl text-ink-100">{lesson.title}</h1>
+          <h1 className="font-display text-xl text-ink-100">{lesson.title.toLowerCase()}</h1>
           <ProgressBar value={(stepIndex + 1) / totalSteps} />
         </div>
       }
@@ -173,7 +173,7 @@ export default function LessonStepClient({
         <div className="flex items-center justify-between">
           <span className="text-xs text-ink-500">
             {passed
-              ? "Locked in. Move on when you're ready."
+              ? "locked in. move on when you're ready."
               : "⌘↵ runs the editor."}
           </span>
           <button
@@ -186,7 +186,7 @@ export default function LessonStepClient({
               "disabled:cursor-not-allowed disabled:bg-ink-800 disabled:text-ink-500",
             )}
           >
-            {next ? "Continue →" : "Finish"}
+            {next ? "continue →" : "finish"}
           </button>
         </div>
       }

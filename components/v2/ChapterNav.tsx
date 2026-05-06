@@ -88,7 +88,7 @@ export default function V2ChapterNav({
                   <span className="font-mono text-[10px] text-ink-500">
                     {String(entry.number).padStart(2, "0")}
                   </span>
-                  <span className="truncate">{shortChapterTitle(entry.title)}</span>
+                  <span className="truncate">{shortChapterTitle(entry.title).toLowerCase()}</span>
                 </span>
                 {chapterDone && <Check size={11} className="shrink-0 text-ember-700" />}
               </button>
@@ -106,7 +106,7 @@ export default function V2ChapterNav({
                     href={`/learn/v2/${entry.slug}`}
                     className="text-ink-400 hover:text-ink-100"
                   >
-                    Open chapter →
+                    open chapter →
                   </Link>
                 </div>
               )}
@@ -149,7 +149,7 @@ function ChapterDetail({
               )}
             >
               {lessonDone && <Check size={10} className="shrink-0" />}
-              <span className="truncate">{lesson.title}</span>
+              <span className="truncate">{lesson.title.toLowerCase()}</span>
             </Link>
             {isActiveLesson && (
               <ol className="mt-1 flex flex-col gap-0.5">
@@ -171,7 +171,7 @@ function ChapterDetail({
                         <span className="font-mono text-[10px] text-ink-500">
                           {String(idx + 1).padStart(2, "0")}
                         </span>
-                        <span className="capitalize">{step.type}</span>
+                        <span>{stepTypeLabel(step.type)}</span>
                       </Link>
                     </li>
                   );
@@ -203,4 +203,17 @@ function StepStatusIcon({
 function shortChapterTitle(full: string): string {
   // Trim everything after the em-dash so "Variables — what AI reaches for" → "Variables"
   return full.split(/\s—\s/)[0];
+}
+
+function stepTypeLabel(t: string): string {
+  return ({
+    mc: "multiple choice",
+    fill: "fill blank",
+    fix: "fix bug",
+    read: "read",
+    predict: "predict",
+    write: "write",
+    reorder: "reorder",
+    checkpoint: "checkpoint",
+  } as Record<string, string>)[t] ?? t;
 }
