@@ -4,6 +4,7 @@ import { getV2Toc, getV2Chapter } from "@/lib/content-v2";
 import HomeClient from "@/components/v2/HomeClient";
 import PhaseBandedRail from "@/components/v2/PhaseBandedRail";
 import PriceBand from "@/components/PriceBand";
+import EmailSignup from "@/components/EmailSignup";
 import StatStrip from "@/components/StatStrip";
 import StreakWidget from "@/components/StreakWidget";
 import PyodidePreloader from "@/components/PyodidePreloader";
@@ -158,6 +159,8 @@ export default async function Home() {
       <StatStrip className="mt-24 mb-12" />
 
       <PriceBand />
+
+      <EmailSignup />
 
       <section>
         <h2 className="t-eyebrow mb-12">

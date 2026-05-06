@@ -81,3 +81,6 @@ lib/generated/manifest.json
 lib/generated/github.json
 public/pyodide/
 assets/launch/
+
+# Allow committing the example env file
+!.env.example
