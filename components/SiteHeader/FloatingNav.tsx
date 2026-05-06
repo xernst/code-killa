@@ -29,11 +29,11 @@ export default function FloatingNav() {
           "fixed left-1/2 top-3 z-40 -translate-x-1/2 w-fit max-w-[calc(100%-1.5rem)]",
           // pill shape — proper rounded
           "rounded-full",
-          // liquid glass — translucent + heavy blur + saturation boost
-          "bg-white/[0.04] backdrop-blur-2xl backdrop-saturate-150",
-          // subtle rim + inset highlight (the apple "edge" effect)
-          "border border-white/10",
-          "shadow-[0_8px_32px_rgba(0,0,0,0.45),inset_0_1px_0_rgba(255,255,255,0.08)]",
+          // apple liquid glass — heavier blur + saturation for the frost
+          "bg-white/[0.06] backdrop-blur-3xl backdrop-saturate-200",
+          // subtle rim + brighter inset highlight (the apple "edge" effect)
+          "border border-white/[0.12]",
+          "shadow-[0_12px_40px_rgba(0,0,0,0.55),0_2px_8px_rgba(0,0,0,0.25),inset_0_1px_0_rgba(255,255,255,0.14)]",
         ].join(" ")}
       >
         <div className="flex h-11 items-center gap-4 whitespace-nowrap px-4 sm:px-5">
