@@ -45,7 +45,9 @@ export default function LessonShell({
   // the desktop two-column view) and we flip after mount on small screens.
   const [drawerOpen, setDrawerOpen] = useState(true);
   useEffect(() => {
-    if (typeof window !== "undefined" && window.innerWidth < 1024) {
+    // md breakpoint = 768px. Below md we want to default to "show prompt"
+    // so first-time visitors see lesson content instead of an empty editor.
+    if (typeof window !== "undefined" && window.innerWidth < 768) {
       setDrawerOpen(false);
     }
   }, []);
@@ -53,15 +55,15 @@ export default function LessonShell({
   return (
     <div className="flex h-[calc(100dvh-40px)] min-h-0 flex-col bg-ink-950 text-ink-100">
       <div className="flex h-full min-h-0 flex-1">
-        <aside className="hidden w-60 shrink-0 border-r border-ink-800 bg-ink-900 lg:flex lg:flex-col">
+        <aside className="hidden w-56 shrink-0 border-r border-ink-800 bg-ink-900 md:flex md:flex-col lg:w-60">
           {sidebar}
         </aside>
-        <main id="main" className="flex min-h-0 w-full flex-1 lg:grid lg:grid-cols-[minmax(0,480px)_minmax(0,1fr)]">
+        <main id="main" className="flex min-h-0 w-full flex-1 md:grid md:grid-cols-[minmax(0,420px)_minmax(0,1fr)] lg:grid-cols-[minmax(0,480px)_minmax(0,1fr)]">
           <section
             className={cn(
               "min-h-0 min-w-0 flex-1 flex-col border-r border-ink-800",
-              "lg:max-w-[520px]",
-              drawerOpen ? "hidden lg:flex" : "flex",
+              "md:max-w-[460px] lg:max-w-[520px]",
+              drawerOpen ? "hidden md:flex" : "flex",
             )}
           >
             {header && (
@@ -82,7 +84,7 @@ export default function LessonShell({
           <section
             className={cn(
               "min-h-0 min-w-0 flex-1 flex-col",
-              drawerOpen ? "flex" : "hidden lg:flex",
+              drawerOpen ? "flex" : "hidden md:flex",
             )}
           >
             {ide}
@@ -93,7 +95,7 @@ export default function LessonShell({
         type="button"
         onClick={() => setDrawerOpen((v) => !v)}
         className={cn(
-          "flex items-center justify-center gap-1.5 border-t border-ink-800 bg-ink-900 py-2 text-xs text-ink-300 lg:hidden",
+          "flex items-center justify-center gap-1.5 border-t border-ink-800 bg-ink-900 py-2 text-xs text-ink-300 md:hidden",
         )}
         aria-label={drawerOpen ? "Show prompt" : "Show editor"}
       >

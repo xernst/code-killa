@@ -158,27 +158,43 @@ export default function LessonStepClient({
             <h1 className="sr-only">
               {lesson.title} — step {stepIndex + 1} of {totalSteps}
             </h1>
-            {phase && (
-              <div className="t-mono-meta">
-                phase {String(phase.number).padStart(2, "0")} · {phase.name}
-              </div>
-            )}
+            <div className="t-mono-meta flex flex-wrap items-center gap-x-1.5 gap-y-1">
+              <Link
+                href="/"
+                className="text-ink-400 transition-colors hover:text-green-400"
+              >
+                promptdojo
+              </Link>
+              <span className="text-ink-600">›</span>
+              {phase && (
+                <>
+                  <Link
+                    href={`/curriculum#phase-${phase.number}`}
+                    className="text-ink-400 transition-colors hover:text-green-400"
+                  >
+                    phase {String(phase.number).padStart(2, "0")} ·{" "}
+                    {phase.name}
+                  </Link>
+                  <span className="text-ink-600">›</span>
+                </>
+              )}
+              <Link
+                href={`/learn/v2/${chapter.slug}`}
+                className="text-ink-300 transition-colors hover:text-green-400"
+              >
+                ch {String(chapter.number).padStart(2, "0")} ·{" "}
+                {chapter.title.replace(/\s*—.*$/, "").toLowerCase()}
+              </Link>
+            </div>
             <div className="flex items-center justify-between gap-3">
-              <div className="flex min-w-0 items-baseline gap-2 truncate">
-                <Link
-                  href={`/learn/v2/${chapter.slug}`}
-                  className="t-mono-meta text-ink-300 transition-colors hover:text-green-400"
-                >
-                  ch {String(chapter.number).padStart(2, "0")} ·{" "}
-                  {chapter.title.replace(/\s*—.*$/, "").toLowerCase()}
-                </Link>
-                <span className="t-mono-meta text-ink-600">›</span>
-                <span className="t-mono-meta truncate">
-                  lesson {lessonIndex + 1} of {chapter.lessons.length} ·{" "}
-                  {lesson.title.toLowerCase()}
-                </span>
-              </div>
-              <span className="t-mono-meta tabular-nums">
+              <Link
+                href={`/learn/v2/${chapter.slug}/${lesson.slug}/0`}
+                className="t-mono-meta truncate text-ink-300 transition-colors hover:text-green-400"
+              >
+                lesson {lessonIndex + 1} of {chapter.lessons.length} ·{" "}
+                {lesson.title.toLowerCase()}
+              </Link>
+              <span className="t-mono-meta shrink-0 tabular-nums">
                 step {stepIndex + 1} / {totalSteps}
               </span>
             </div>

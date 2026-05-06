@@ -84,7 +84,7 @@ export default async function V2ChapterOverviewPage({
   return (
     <div className="flex h-[calc(100dvh-40px)] min-h-0 flex-col bg-ink-950 text-ink-100">
       <div className="flex h-full min-h-0 flex-1">
-        <aside className="hidden w-60 shrink-0 border-r border-ink-800 bg-ink-900 lg:flex lg:flex-col">
+        <aside className="hidden w-56 shrink-0 border-r border-ink-800 bg-ink-900 md:flex md:flex-col lg:w-60">
           <V2ChapterNav
             tree={tree}
             activeChapter={chapter.slug}

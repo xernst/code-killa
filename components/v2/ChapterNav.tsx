@@ -71,6 +71,8 @@ export default function V2ChapterNav({
               <button
                 type="button"
                 onClick={() => setOpenChapter(isOpen ? "" : entry.slug)}
+                aria-expanded={isOpen}
+                aria-current={isActive ? "page" : undefined}
                 className={cn(
                   "flex w-full items-center justify-between px-2 py-1.5 text-left text-xs transition",
                   isActive
@@ -140,6 +142,7 @@ function ChapterDetail({
           <div key={lesson.slug} className="my-2">
             <Link
               href={`/learn/v2/${chapter.slug}/${lesson.slug}`}
+              aria-current={isActiveLesson ? "page" : undefined}
               className={cn(
                 "flex items-center gap-1.5 px-1.5 py-1 text-[11px] uppercase tracking-wide transition",
                 isActiveLesson
@@ -161,6 +164,7 @@ function ChapterDetail({
                     <li key={step.id}>
                       <Link
                         href={`/learn/v2/${chapter.slug}/${lesson.slug}/${idx}`}
+                        aria-current={here ? "step" : undefined}
                         className={cn(
                           "flex items-center gap-2 px-1.5 py-1 text-xs transition",
                           here
