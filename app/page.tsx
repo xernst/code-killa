@@ -163,7 +163,7 @@ export default async function Home() {
 
       <section>
         <h2 className="t-eyebrow mb-12">
-          25 chapters · production-ai track included · free forever
+          25 chapters · 624 steps · free forever
         </h2>
         <PhaseBandedRail
           chapters={v2Chapters}
@@ -201,11 +201,11 @@ export default async function Home() {
 
       <footer className="mt-16 flex flex-wrap items-baseline justify-between gap-3 border-t border-ink-800 pt-6 text-xs text-ink-600">
         <p>
-          Press{" "}
+          press{" "}
           <kbd className="rounded border border-ink-700 bg-ink-900 px-1 py-0.5 font-mono text-[10px] text-ink-300">
             ⌘⇧B
           </kbd>{" "}
-          from anywhere to park a thought without losing your place.
+          anywhere to park a thought without losing your place.
         </p>
         <div className="t-mono-meta">
           {(() => {

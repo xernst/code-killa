@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { cn } from "@/lib/utils";
 
 const EMAIL_KEY = "promptdojo:save-email";
 const PROGRESS_KEY = "promptdojo:progress:v2";
@@ -157,7 +158,12 @@ export default function LoginToSave() {
           setStatus("idle");
           setError(null);
         }}
-        className="inline-flex items-center gap-1.5 border border-green-700/50 bg-green-950/40 px-3 py-1 font-mono text-[11px] uppercase tracking-wider text-green-400 transition hover:border-green-500 hover:text-green-300"
+        className={cn(
+          "inline-flex items-center gap-1.5 px-3 py-1 font-mono text-[11px] uppercase tracking-wider transition",
+          email
+            ? "border border-green-700/50 bg-green-950/40 text-green-400 hover:border-green-500 hover:text-green-300"
+            : "text-ink-500 hover:text-green-400",
+        )}
         aria-label={email ? "manage saved email" : "login to save progress"}
       >
         {buttonLabel}
@@ -192,9 +198,8 @@ export default function LoginToSave() {
             </div>
 
             <p className="mb-5 font-display text-sm leading-relaxed text-ink-400">
-              type your email. we&apos;ll sync your progress here and on any
-              other device. no password. no spam. type the same email anywhere
-              else and your dojo loads.
+              type your email. we sync your progress across devices. no
+              password. no spam. same email anywhere else, same dojo.
             </p>
 
             <form

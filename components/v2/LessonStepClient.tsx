@@ -204,7 +204,7 @@ export default function LessonStepClient({
             disabled={!passed && step.type !== "read"}
             className="dojo-btn-primary"
           >
-            {next ? "continue →" : "finish"}
+            {next ? "continue →" : "that's all 624 →"}
           </button>
         </div>
       }

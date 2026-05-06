@@ -69,7 +69,7 @@ const faqs = [
   },
   {
     q: "do i have to log in?",
-    a: "no. progress saves to your browser. login only syncs progress across devices. no email-list, no upsell, no nag.",
+    a: "no. progress saves to your browser. login only syncs across devices — same email anywhere else, same dojo. no list, no upsell.",
   },
   {
     q: "how long does it take?",
@@ -81,7 +81,11 @@ const faqs = [
   },
   {
     q: "why isn't it on udemy / coursera / boot.dev?",
-    a: "because i wanted it to look how i wanted it to look, ship in browser, and never gate-keep behind a streak.",
+    a: "because i wanted it to look how i wanted, run in the browser, and never gate-keep behind a streak.",
+  },
+  {
+    q: "how often is it updated?",
+    a: "commits land most weeks. content gets revised when models change shape — the agent-loop chapter looks different in 2026 than it did in 2025. follow the build at @TFisPython.",
   },
 ];
 
@@ -118,10 +122,10 @@ export default function AboutPage() {
       <section className="border-b border-ink-800 py-16">
         <div className="t-eyebrow mb-3">the wedge</div>
         <h2 className="t-section">
-          every other course teaches you what python{" "}
+          every course teaches you what python{" "}
           <em className="italic text-green-400">is</em>.
           <br />
-          this one teaches you what it{" "}
+          you need to know what it{" "}
           <em className="italic text-green-400">isn&apos;t</em>.
         </h2>
         <div className="mt-8 grid gap-6 sm:grid-cols-3">
@@ -140,7 +144,7 @@ export default function AboutPage() {
 
       {/* ───────── 3. WHAT'S INSIDE ─────────────────────────────── */}
       <section className="border-b border-ink-800 py-16">
-        <div className="t-eyebrow mb-3">what&apos;s inside</div>
+        <div className="t-eyebrow mb-3">the curriculum</div>
         <h2 className="t-section">
           25 chapters. 624 interactive steps. zero install.
         </h2>
@@ -162,7 +166,7 @@ export default function AboutPage() {
 
       {/* ───────── 4. HOW IT WORKS ──────────────────────────────── */}
       <section className="border-b border-ink-800 py-16">
-        <div className="t-eyebrow mb-3">how it works</div>
+        <div className="t-eyebrow mb-3">the loop</div>
         <h2 className="t-section">read. run. fix. repeat 624 times.</h2>
         <div className="mt-8 grid gap-3 md:grid-cols-3">
           {steps.map((c) => (
@@ -221,11 +225,15 @@ export default function AboutPage() {
       <section className="border-b border-ink-800 py-16">
         <div className="t-eyebrow mb-3">who built it</div>
         <div className="font-display text-lg leading-relaxed text-ink-300">
+          {/* TODO(josh): replace credential sentence with your final shape —
+              one role + one tool stack + one frequency word, lowercase. */}
           <p>
-            i&apos;m josh. i wrote this because i wanted to learn python the
-            way i actually use python — alongside an llm, fixing what it got
-            wrong, not memorizing what it already knows. every other course
-            felt like a museum tour. this one is the workshop floor.
+            i&apos;m josh. i ship python alongside cursor and claude every
+            day for client work. i wrote this because i wanted to learn
+            python the way i actually use python — alongside an llm, fixing
+            what it got wrong, not memorizing what it already knows. every
+            other course felt like a museum tour. this one is the workshop
+            floor.
           </p>
           <p className="mt-4">
             built solo. open source. free forever. follow the build at{" "}

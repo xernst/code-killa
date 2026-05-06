@@ -70,7 +70,7 @@ const LEVEL_OPTIONS: { id: Level; label: string; blurb: string }[] = [
 ];
 
 const DAILY_OPTIONS: { id: DailyGoal; label: string; blurb: string }[] = [
-  { id: 5, label: "5 min", blurb: "a coffee. keep the streak alive." },
+  { id: 5, label: "5 min", blurb: "a coffee. one short read." },
   { id: 10, label: "10 min", blurb: "default. one short lesson a day." },
   { id: 20, label: "20 min", blurb: "two lessons. real progress." },
   { id: 40, label: "40 min", blurb: "a focused block. move fast." },
@@ -335,7 +335,7 @@ function PersonalizationScreen({
           onClick={onSkip}
           className="text-xs text-ink-500 underline-offset-4 hover:text-ink-300 hover:underline"
         >
-          skip — generic examples
+          skip — use generic names
         </button>
         <button
           type="button"
