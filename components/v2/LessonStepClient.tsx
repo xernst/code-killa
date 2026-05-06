@@ -1,8 +1,10 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import LessonShell from "./LessonShell";
+import { phaseForChapter } from "@/lib/curriculum/phases";
 import PersistentIDE, {
   type IDEFile,
   type PersistentIDEHandle,
@@ -146,20 +148,41 @@ export default function LessonStepClient({
           activeStepIndex={stepIndex}
         />
       }
-      header={
-        <div className="flex flex-col gap-1">
-          <div className="flex items-center justify-between text-xs text-ink-400">
-            <span className="tracking-wide">
-              {chapter.title.toLowerCase()}
-            </span>
-            <span className="font-mono">
-              {stepIndex + 1} / {totalSteps}
-            </span>
+      header={(() => {
+        const phase = phaseForChapter(chapter.slug);
+        const lessonIndex = chapter.lessons.findIndex(
+          (l) => l.slug === lesson.slug,
+        );
+        return (
+          <div className="flex flex-col gap-1.5">
+            {phase && (
+              <div className="t-mono-meta">
+                phase {String(phase.number).padStart(2, "0")} · {phase.name}
+              </div>
+            )}
+            <div className="flex items-center justify-between gap-3">
+              <div className="flex min-w-0 items-baseline gap-2 truncate">
+                <Link
+                  href={`/learn/v2/${chapter.slug}`}
+                  className="t-mono-meta text-ink-300 transition-colors hover:text-green-400"
+                >
+                  ch {String(chapter.number).padStart(2, "0")} ·{" "}
+                  {chapter.title.replace(/\s*—.*$/, "").toLowerCase()}
+                </Link>
+                <span className="t-mono-meta text-ink-600">›</span>
+                <span className="t-mono-meta truncate">
+                  lesson {lessonIndex + 1} of {chapter.lessons.length} ·{" "}
+                  {lesson.title.toLowerCase()}
+                </span>
+              </div>
+              <span className="t-mono-meta tabular-nums">
+                step {stepIndex + 1} / {totalSteps}
+              </span>
+            </div>
+            <ProgressBar value={(stepIndex + 1) / totalSteps} />
           </div>
-          <h1 className="font-display text-xl text-ink-100">{lesson.title.toLowerCase()}</h1>
-          <ProgressBar value={(stepIndex + 1) / totalSteps} />
-        </div>
-      }
+        );
+      })()}
       prompt={
         <StepRouter
           step={step}

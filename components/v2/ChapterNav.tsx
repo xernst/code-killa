@@ -7,7 +7,7 @@ import {
   loadProgressV2,
   type ProgressV2,
 } from "@/lib/storage";
-import type { Chapter, ManifestToc } from "@/lib/content/schema";
+import type { Chapter, ManifestToc, Step } from "@/lib/content/schema";
 import { cn } from "@/lib/utils";
 import Wordmark from "@/components/Wordmark";
 
@@ -172,7 +172,7 @@ function ChapterDetail({
                         <span className="font-mono text-[10px] text-ink-500">
                           {String(idx + 1).padStart(2, "0")}
                         </span>
-                        <span>{stepTypeLabel(step.type)}</span>
+                        <span className="truncate">{stepPreview(step)}</span>
                       </Link>
                     </li>
                   );
@@ -217,4 +217,23 @@ function stepTypeLabel(t: string): string {
     reorder: "reorder",
     checkpoint: "checkpoint",
   } as Record<string, string>)[t] ?? t;
+}
+
+// Prefer the authored prompt/body so the sidebar reads like content, not
+// like a step-type catalog. Falls back to the type label for steps that
+// have no extractable prose (defensive — sidebar never goes blank).
+const PREVIEW_MAX = 32;
+function stepPreview(step: Step): string {
+  const raw =
+    "prompt" in step && typeof step.prompt === "string"
+      ? step.prompt
+      : "body" in step && typeof step.body === "string"
+        ? step.body
+        : "";
+  const cleaned = raw.replace(/[`*_#>]/g, "").replace(/\s+/g, " ").trim();
+  if (!cleaned) return stepTypeLabel(step.type);
+  const lower = cleaned.toLowerCase();
+  return lower.length > PREVIEW_MAX
+    ? lower.slice(0, PREVIEW_MAX).trimEnd() + "…"
+    : lower;
 }
