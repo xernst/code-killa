@@ -111,6 +111,7 @@ export default function FillBlankStepView({
               <input
                 type="text"
                 aria-label={`blank ${segment.blankIndex + 1}`}
+                aria-invalid={isWrong || undefined}
                 value={values[blank.id] ?? ""}
                 onChange={(e) =>
                   !submitted &&
@@ -125,9 +126,15 @@ export default function FillBlankStepView({
                 }}
                 className={cn(
                   "rounded border px-2 py-1 font-mono text-sm",
-                  "border-ink-700 bg-ink-950 text-green-300",
-                  "focus:border-green-500 focus:outline-none",
-                  isWrong && "border-ink-700",
+                  "bg-ink-950 text-green-300",
+                  "focus:outline-none",
+                  // Wrong-state must be visually distinct from default
+                  // (was border-ink-700, the same as the default border —
+                  // invisible). Now red border + tinted bg + ring on focus.
+                  // Per design-kit/audit-v5/accessibility.md blocker #2.
+                  isWrong
+                    ? "border-red-500 bg-red-950/40 focus:border-red-400"
+                    : "border-ink-700 focus:border-green-500",
                 )}
                 placeholder="___"
                 autoComplete="off"

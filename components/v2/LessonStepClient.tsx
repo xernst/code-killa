@@ -77,6 +77,20 @@ export default function LessonStepClient({
   const [profile, setProfile] = useState<UserProfile>(FRESH_PROFILE);
   const [latestAttempt, setLatestAttempt] = useState<StepAttempt | null>(null);
   const ideRef = useRef<PersistentIDEHandle>(null);
+  const announceRef = useRef<HTMLHeadingElement>(null);
+  const isFirstStep = useRef(true);
+
+  // Move focus to the sr-only step heading on every step change so screen
+  // reader users hear the new step instead of silence after Continue.
+  // Skip the very first mount (focus would steal from the page's natural
+  // landing target). Per design-kit/audit-v5/accessibility.md.
+  useEffect(() => {
+    if (isFirstStep.current) {
+      isFirstStep.current = false;
+      return;
+    }
+    announceRef.current?.focus();
+  }, [step.id]);
 
   // Load profile + record visit on mount / step change. Restore any
   // previously-passed attempt for this step so reload doesn't ask the user
@@ -177,7 +191,11 @@ export default function LessonStepClient({
         );
         return (
           <div className="flex flex-col gap-1.5">
-            <h1 className="sr-only">
+            <h1
+              ref={announceRef}
+              tabIndex={-1}
+              className="sr-only focus:outline-none"
+            >
               {lesson.title} — step {stepIndex + 1} of {totalSteps}
             </h1>
             <div className="t-mono-meta flex flex-wrap items-center gap-x-1.5 gap-y-1">
