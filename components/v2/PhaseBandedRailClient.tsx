@@ -25,15 +25,21 @@ export type ChapterMeta = {
   hasOverview: boolean;
 };
 
+type LessonSummary = { slug: string; title: string; stepCount: number };
+
 type Props = {
   chapters: ChapterMeta[];
   stepIdsByChapter: Record<string, string[]>;
+  expanded?: boolean;
+  lessonsByChapter?: Record<string, LessonSummary[]>;
   className?: string;
 };
 
 export default function PhaseBandedRailClient({
   chapters,
   stepIdsByChapter,
+  expanded,
+  lessonsByChapter,
   className,
 }: Props) {
   const bySlug = new Map(chapters.map((c) => [c.slug, c]));
@@ -82,7 +88,8 @@ export default function PhaseBandedRailClient({
         return (
           <section
             key={phase.number}
-            className="border-l-2 border-green-700 pl-6"
+            id={`phase-${phase.number}`}
+            className="scroll-mt-20 border-l-2 border-green-700 pl-6"
           >
             <div className="mb-6 flex flex-wrap items-baseline justify-between gap-3">
               <div>
@@ -95,7 +102,13 @@ export default function PhaseBandedRailClient({
                 {phase.range} · ~{formatMinutes(phaseMinutes)}
               </div>
             </div>
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+            <div
+              className={
+                expanded
+                  ? "grid grid-cols-1 gap-3 sm:grid-cols-2"
+                  : "grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
+              }
+            >
               {phaseChapters.map((c) => (
                 <ChapterTile
                   key={c.slug}
@@ -103,6 +116,9 @@ export default function PhaseBandedRailClient({
                   tier={tier}
                   tierColor={tierColor}
                   doneSteps={doneBySlug[c.slug] ?? 0}
+                  lessons={
+                    expanded ? lessonsByChapter?.[c.slug] ?? [] : undefined
+                  }
                 />
               ))}
             </div>
@@ -118,11 +134,13 @@ function ChapterTile({
   tier,
   tierColor,
   doneSteps,
+  lessons,
 }: {
   chapter: ChapterMeta;
   tier: string;
   tierColor: string;
   doneSteps: number;
+  lessons?: LessonSummary[];
 }) {
   const href = c.firstLessonSlug
     ? c.hasOverview
@@ -164,16 +182,35 @@ function ChapterTile({
     </>
   );
 
+  const expandedLessons =
+    lessons && lessons.length > 0 ? (
+      <ul className="mt-3 flex flex-col gap-1 border-t border-ink-800 pt-3 font-mono text-[11px] text-ink-400">
+        {lessons.map((l, idx) => (
+          <li key={l.slug} className="flex items-baseline gap-2 truncate">
+            <span className="text-ink-600">
+              {String(idx + 1).padStart(2, "0")}
+            </span>
+            <span className="truncate">{l.title.toLowerCase()}</span>
+            <span className="ml-auto text-ink-600">
+              {l.stepCount}
+            </span>
+          </li>
+        ))}
+      </ul>
+    ) : null;
+
   if (!href) {
     return (
       <div className="dojo-card-interactive flex flex-col opacity-60">
         {body}
+        {expandedLessons}
       </div>
     );
   }
   return (
     <Link href={href} className="group dojo-card-interactive flex flex-col">
       {body}
+      {expandedLessons}
     </Link>
   );
 }

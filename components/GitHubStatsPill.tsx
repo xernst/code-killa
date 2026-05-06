@@ -12,9 +12,20 @@ export default function GitHubStatsPill({ className }: { className?: string }) {
 
   if (stars === null && rel === null) return null;
 
+  // Demote to text-only when the star count is too small to lead with
+  // (Marketing #6: "★ 0" is the loudest "nobody cares" signal). Lead with
+  // the relative-commit signal instead until the audience grows.
+  const lowStars = stars !== null && stars < 10;
+
   let label: string;
   let aria: string;
-  if (stars !== null && rel !== null) {
+  if (lowStars) {
+    label = rel !== null ? `view source · committed ${rel}` : "view source";
+    aria =
+      rel !== null
+        ? `view source on GitHub, last commit ${rel}`
+        : "view source on GitHub";
+  } else if (stars !== null && rel !== null) {
     label = `[ ★ ${stars} · committed ${rel} ]`;
     aria = `${stars} stars on GitHub, last commit ${rel}`;
   } else if (stars !== null) {
@@ -32,7 +43,9 @@ export default function GitHubStatsPill({ className }: { className?: string }) {
       rel="noopener noreferrer"
       aria-label={aria}
       className={cn(
-        "inline-flex items-center gap-1.5 border border-green-700/50 bg-green-950/40 px-3 py-1 font-mono text-[11px] uppercase tracking-wider text-green-400 transition hover:border-green-500 hover:text-green-300",
+        lowStars
+          ? "inline-flex items-center gap-1.5 px-3 py-1 font-mono text-[11px] uppercase tracking-wider text-ink-400 transition hover:text-green-400"
+          : "inline-flex items-center gap-1.5 border border-green-700/50 bg-green-950/40 px-3 py-1 font-mono text-[11px] uppercase tracking-wider text-green-400 transition hover:border-green-500 hover:text-green-300",
         className,
       )}
     >

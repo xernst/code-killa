@@ -10,6 +10,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const toc = getV2Toc();
   const out: MetadataRoute.Sitemap = [
     { url: `${SITE}/`, changeFrequency: "weekly", priority: 1.0 },
+    { url: `${SITE}/curriculum`, changeFrequency: "weekly", priority: 0.9 },
+    { url: `${SITE}/about`, changeFrequency: "monthly", priority: 0.8 },
+    { url: `${SITE}/changelog`, changeFrequency: "weekly", priority: 0.5 },
   ];
 
   for (const entry of toc.chapters) {

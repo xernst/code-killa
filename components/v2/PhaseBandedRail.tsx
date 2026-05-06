@@ -14,18 +14,29 @@ export type { ChapterMeta };
 type Props = {
   chapters: ChapterMeta[];
   stepIdsByChapter: Record<string, string[]>;
+  /** When true, render each chapter tile with its lesson list expanded. */
+  expanded?: boolean;
+  /** Optional per-chapter lesson summaries — required when `expanded` is true. */
+  lessonsByChapter?: Record<
+    string,
+    { slug: string; title: string; stepCount: number }[]
+  >;
   className?: string;
 };
 
 export default function PhaseBandedRail({
   chapters,
   stepIdsByChapter,
+  expanded,
+  lessonsByChapter,
   className,
 }: Props) {
   return (
     <PhaseBandedRailClient
       chapters={chapters}
       stepIdsByChapter={stepIdsByChapter}
+      expanded={expanded}
+      lessonsByChapter={lessonsByChapter}
       className={className}
     />
   );
