@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import rehypeHighlight from "rehype-highlight";
+import { rehypeHighlightPinned } from "@/lib/rehype-highlight-pinned";
 import { CheckCircle2, XCircle } from "lucide-react";
 import { interpolate, type WriteStep } from "@/lib/content/schema";
 import type { StepViewProps } from "../StepRouter";
@@ -57,7 +57,7 @@ export default function WriteStepView({
   return (
     <div className="flex flex-col gap-5">
       <div className="prose max-w-none text-ink-200">
-        <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeHighlight]}>
+        <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeHighlightPinned]}>
           {prompt}
         </ReactMarkdown>
       </div>

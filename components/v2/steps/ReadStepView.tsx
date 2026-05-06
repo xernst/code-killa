@@ -2,7 +2,7 @@
 
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import rehypeHighlight from "rehype-highlight";
+import { rehypeHighlightPinned } from "@/lib/rehype-highlight-pinned";
 // Code-block syntax tokens live in app/globals.css (.hljs-* selectors).
 import { interpolate, type ReadStep } from "@/lib/content/schema";
 import type { StepViewProps } from "../StepRouter";
@@ -18,7 +18,7 @@ export default function ReadStepView({
       <div className="prose max-w-none text-ink-200">
         <ReactMarkdown
           remarkPlugins={[remarkGfm]}
-          rehypePlugins={[rehypeHighlight]}
+          rehypePlugins={[rehypeHighlightPinned]}
         >
           {body}
         </ReactMarkdown>

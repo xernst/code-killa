@@ -210,7 +210,14 @@ function ChapterTile({
     );
   }
   return (
-    <Link href={href} className="group dojo-card-interactive flex flex-col">
+    <Link
+      href={href}
+      // Skip default prefetch — 25 chapter tiles × prefetch on a homepage
+      // burns idle bandwidth that the Pyodide preloader needs more.
+      // Per design-kit/audit-v5/performance.md.
+      prefetch={false}
+      className="group dojo-card-interactive flex flex-col"
+    >
       {body}
       {expandedLessons}
     </Link>

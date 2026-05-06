@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import rehypeHighlight from "rehype-highlight";
+import { rehypeHighlightPinned } from "@/lib/rehype-highlight-pinned";
 import { CheckCircle2, XCircle } from "lucide-react";
 import {
   interpolate,
@@ -97,7 +97,7 @@ export default function FillBlankStepView({
               <ReactMarkdown
                 key={`txt-${idx}`}
                 remarkPlugins={[remarkGfm]}
-                rehypePlugins={[rehypeHighlight]}
+                rehypePlugins={[rehypeHighlightPinned]}
               >
                 {segment.value}
               </ReactMarkdown>

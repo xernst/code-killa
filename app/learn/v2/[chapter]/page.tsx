@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import rehypeHighlight from "rehype-highlight";
+import { rehypeHighlightPinned } from "@/lib/rehype-highlight-pinned";
 import { ArrowRight } from "lucide-react";
 import {
   getV2Chapter,
@@ -114,7 +114,7 @@ export default async function V2ChapterOverviewPage({
               <div className="prose prose-invert mt-8 max-w-none text-ink-200">
                 <ReactMarkdown
                   remarkPlugins={[remarkGfm]}
-                  rehypePlugins={[rehypeHighlight]}
+                  rehypePlugins={[rehypeHighlightPinned]}
                 >
                   {chapter.overview}
                 </ReactMarkdown>

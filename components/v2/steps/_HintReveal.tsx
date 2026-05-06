@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { Lightbulb } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import rehypeHighlight from "rehype-highlight";
+import { rehypeHighlightPinned } from "@/lib/rehype-highlight-pinned";
 import type { Hint } from "@/lib/content/schema";
 import { cn } from "@/lib/utils";
 
@@ -43,7 +43,7 @@ export default function HintReveal({ hints, resetKey, onReveal }: Props) {
           <div className="prose prose-sm max-w-none text-amber-50">
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
-              rehypePlugins={[rehypeHighlight]}
+              rehypePlugins={[rehypeHighlightPinned]}
             >
               {hint.body}
             </ReactMarkdown>

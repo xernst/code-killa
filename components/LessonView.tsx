@@ -1,7 +1,7 @@
 "use client";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import rehypeHighlight from "rehype-highlight";
+import { rehypeHighlightPinned } from "@/lib/rehype-highlight-pinned";
 // Code-block syntax tokens live in app/globals.css (.hljs-* selectors).
 import type { Chapter, Exercise } from "@/lib/types";
 
@@ -57,7 +57,7 @@ export default function LessonView({ chapter, exercise, view, setView }: Props) 
             )}
           </>
         ) : (
-          <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeHighlight]}>
+          <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeHighlightPinned]}>
             {chapter.readme}
           </ReactMarkdown>
         )}

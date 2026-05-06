@@ -1,17 +1,38 @@
 "use client";
 
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import LessonShell from "./LessonShell";
 import { phaseForChapter } from "@/lib/curriculum/phases";
-import PersistentIDE, {
-  type IDEFile,
-  type PersistentIDEHandle,
-} from "./PersistentIDE";
+import type { IDEFile, PersistentIDEHandle } from "./PersistentIDE";
 import StepRouter, { type StepIDEBridge } from "./StepRouter";
 import V2ChapterNav, { type ChapterNavTree } from "./ChapterNav";
 import Wordmark from "@/components/Wordmark";
+
+// Dynamic-import the IDE so CodeMirror lives in its own chunk and stays
+// off the lesson-route critical path (~80 KB gz). Pyodide preloader
+// still warms the worker in parallel during the skeleton render.
+// Per design-kit/audit-v5/performance.md.
+const PersistentIDE = dynamic(() => import("./PersistentIDE"), {
+  ssr: false,
+  loading: () => (
+    <div
+      role="status"
+      aria-label="loading editor"
+      className="flex h-full min-h-0 w-full flex-col bg-ink-950"
+    >
+      <div className="flex h-9 items-center gap-2 border-b border-ink-800 bg-ink-900 px-3">
+        <div className="h-3 w-20 animate-pulse rounded bg-ink-700" />
+      </div>
+      <div className="flex-1 animate-pulse bg-ink-900/40" />
+      <div className="border-t border-ink-800 bg-ink-900 px-3 py-2">
+        <div className="h-3 w-24 animate-pulse rounded bg-ink-700" />
+      </div>
+    </div>
+  ),
+});
 import type { Chapter, Lesson, Step, StepAttempt, UserProfile } from "@/lib/content/schema";
 import {
   loadProgressV2,
