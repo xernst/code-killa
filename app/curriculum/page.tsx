@@ -8,7 +8,7 @@
 import type { Metadata } from "next";
 
 import StatStrip from "@/components/StatStrip";
-import PhaseBandedRail from "@/components/v2/PhaseBandedRail";
+import CurriculumAccordion from "@/components/v2/CurriculumAccordion";
 import { getV2Toc, getV2Chapter } from "@/lib/content-v2";
 
 export const metadata: Metadata = {
@@ -55,9 +55,6 @@ export default async function Curriculum() {
   );
 
   const chapters = chaptersWithExtras.map((c) => c.meta);
-  const stepIdsByChapter = Object.fromEntries(
-    chaptersWithExtras.map((c) => [c.meta.slug, c.stepIds]),
-  );
   const lessonsByChapter = Object.fromEntries(
     chaptersWithExtras.map((c) => [c.meta.slug, c.lessons]),
   );
@@ -71,11 +68,18 @@ export default async function Curriculum() {
         {chapters.length} chapters · {totalSteps} runnable steps · 8–15h
       </h1>
       <StatStrip className="mt-6" />
-      <PhaseBandedRail
-        chapters={chapters}
-        stepIdsByChapter={stepIdsByChapter}
-        lessonsByChapter={lessonsByChapter}
-        expanded
+      <CurriculumAccordion
+        chapters={chapters.map((c) => ({
+          slug: c.slug,
+          title: c.title,
+          number: c.number,
+          blurb: c.blurb,
+          stepCount: c.stepCount,
+          estMinutes: c.estMinutes,
+          firstLessonSlug: c.firstLessonSlug,
+          hasOverview: c.hasOverview,
+          lessons: lessonsByChapter[c.slug] ?? [],
+        }))}
         className="mt-12"
       />
     </main>
