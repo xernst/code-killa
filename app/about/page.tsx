@@ -60,12 +60,16 @@ const comparison: Array<[string, string]> = [
 
 const faqs = [
   {
-    q: "do i need python experience?",
-    a: "no. chapter 01 starts at variables. if you've used cursor or claude to write code, you know enough to begin.",
-  },
-  {
     q: "is it really free?",
     a: "yes. no paid tier, no premium content. the only money this site costs me is the domain.",
+  },
+  {
+    q: "why isn't it on udemy / coursera / boot.dev?",
+    a: "because i wanted it to look how i wanted, run in the browser, and never gate-keep behind a streak.",
+  },
+  {
+    q: "do i need python experience?",
+    a: "no. chapter 01 starts at variables. if you've used cursor or claude to write code, you know enough to begin.",
   },
   {
     q: "do i have to log in?",
@@ -76,16 +80,12 @@ const faqs = [
     a: "624 steps. most steps are 30 seconds. realistically: 8–15 hours total spread over a few weeks.",
   },
   {
-    q: "what if i find a bug?",
-    a: "open an issue or a pr at github.com/xernst/promptdojo. or dm me on x.",
-  },
-  {
-    q: "why isn't it on udemy / coursera / boot.dev?",
-    a: "because i wanted it to look how i wanted, run in the browser, and never gate-keep behind a streak.",
-  },
-  {
     q: "how often is it updated?",
     a: "commits land most weeks. content gets revised when models change shape — the agent-loop chapter looks different in 2026 than it did in 2025. follow the build at @TFisPython.",
+  },
+  {
+    q: "what if i find a bug?",
+    a: "open an issue or a pr at github.com/xernst/promptdojo. or dm me on x.",
   },
 ];
 
@@ -227,18 +227,13 @@ export default function AboutPage() {
       <section className="border-b border-ink-800 py-16">
         <div className="t-eyebrow mb-3">who built it</div>
         <div className="font-display text-lg leading-relaxed text-ink-300">
-          {/* TODO(josh): replace credential sentence with your final shape —
-              one role + one tool stack + one frequency word, lowercase. */}
           <p>
-            i&apos;m josh. i ship python alongside cursor and claude every
-            day for client work. i wrote this because i wanted to learn
-            python the way i actually use python — alongside an llm, fixing
-            what it got wrong, not memorizing what it already knows. every
-            other course felt like a museum tour. this one is the workshop
-            floor.
+            i&apos;m josh. ai consultant. i ship python with cursor and claude
+            every day for client work. i wrote this because every other course
+            felt like a museum tour and i wanted the workshop floor.
           </p>
           <p className="mt-4">
-            built solo. open source. free forever. follow the build at{" "}
+            i ship to this site weekly. follow the build at{" "}
             <a
               href="https://x.com/TFisPython"
               target="_blank"
@@ -258,12 +253,23 @@ export default function AboutPage() {
         <h2 className="t-section">
           $0. <em className="t-emph">open source</em>. no upsell. <em className="t-emph">ever</em>.
         </h2>
-        <p className="t-body mt-6 max-w-2xl">
-          there is no paid tier. no premium chapters. no certificate-store.
-          login is optional and only saves your progress across devices —
-          it doesn&apos;t unlock anything. the source is on github. fork it.
-          break it. open a pr.
+
+        <ul className="mt-10 flex flex-col items-start gap-3 font-display text-2xl leading-tight text-ink-300 sm:text-3xl">
+          <li>no paid tier.</li>
+          <li>no premium chapters.</li>
+          <li>no certificate store.</li>
+          <li>no streak shame.</li>
+          <li>no email list.</li>
+          <li>no upsell.</li>
+          <li className="text-green-500">open source.</li>
+          <li className="text-green-500">forever.</li>
+        </ul>
+
+        <p className="t-body mt-10 max-w-2xl">
+          fork it. break it. open a pr.{" "}
+          <span className="text-ink-500">+ pull requests welcome.</span>
         </p>
+
         <p className="t-body mt-4 max-w-2xl text-ink-300">
           if this is the python school you wish existed,{" "}
           <a
@@ -276,6 +282,7 @@ export default function AboutPage() {
           </a>
           . it&apos;s the only metric we keep.
         </p>
+
         <div className="mt-6 flex flex-wrap gap-3">
           <a
             href="https://github.com/xernst/promptdojo"
@@ -301,16 +308,17 @@ export default function AboutPage() {
         <div className="t-eyebrow mb-3">faq</div>
         <h2 className="t-section">quick <em className="t-emph">answers</em>.</h2>
         <p className="t-mono-meta mt-3">last revised 2026-05-06</p>
-        <dl className="mt-8 space-y-6">
+        <dl className="mt-8 divide-y divide-ink-800 border-y border-ink-800">
           {faqs.map((f) => (
-            <div key={f.q} className="border-l-2 border-ink-800 pl-5">
-              <dt className="font-display text-lg font-bold text-ink-100">
-                {f.q}
-              </dt>
-              <dd className="mt-2 font-display leading-snug text-ink-300">
-                {f.a}
-              </dd>
-            </div>
+            <details key={f.q} className="group py-5">
+              <summary className="flex cursor-pointer list-none items-baseline gap-3">
+                <span className="font-mono text-green-500 transition group-open:rotate-90">
+                  ❯
+                </span>
+                <dt className="t-h3 font-display">{f.q}</dt>
+              </summary>
+              <dd className="mt-3 pl-6 t-body-sm">{f.a}</dd>
+            </details>
           ))}
         </dl>
       </section>
