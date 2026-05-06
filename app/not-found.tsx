@@ -5,6 +5,7 @@
 
 import Link from "next/link";
 import StatStrip from "@/components/StatStrip";
+import DidYouMean from "@/components/DidYouMean";
 
 export const metadata = {
   title: "page not found · promptdojo",
@@ -19,8 +20,9 @@ export default function NotFound() {
       <div className="t-eyebrow">404 ─ page not found</div>
       <h1 className="t-section mt-4">this lesson does not exist (yet).</h1>
       <p className="t-body mt-6">
-        the curriculum has 25 chapters and 624 steps, but not this one.
+        the curriculum has 25 chapters and 624 runnable steps, but not this one.
       </p>
+      <DidYouMean />
       <div className="mt-10 grid gap-3 sm:grid-cols-3">
         <Link href="/" className="dojo-card-interactive">
           <div className="t-eyebrow">go</div>
