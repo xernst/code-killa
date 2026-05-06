@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" role="img" aria-label="promptdojo mark on light">
   <title>promptdojo</title>
   <rect width="256" height="256" rx="44" fill="#f4f4f5"/>
-  <path d="M 200 78 A 90 90 0 1 1 156 56" fill="none" stroke="#2aa06a" stroke-width="14" stroke-linecap="round"/>
+  <path d="M 200 78 A 90 90 0 1 1 156 56" fill="none" stroke="#F2683C" stroke-width="14" stroke-linecap="round"/>
   <path d="M 102 100 L 138 128 L 102 156" fill="none" stroke="#14140f" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
   <rect x="100" y="170" width="56" height="10" rx="2" fill="#14140f"/>
 </svg>

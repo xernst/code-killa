@@ -270,22 +270,28 @@ function buildFilesForStep(step: Step): IDEFile[] {
   switch (step.type) {
     case "read":
     case "mc": {
+      // Codecademy-style: user can edit and re-run reference code freely.
+      // The example body is the starting state; their changes don't gate
+      // step completion (read/mc don't grade code).
       const code = step.code ?? "";
       return [
         {
           name: "main.py",
           body: code,
-          readOnly: true,
+          readOnly: false,
           language: "python",
         },
       ];
     }
     case "predict":
+      // Predict steps grade against the unmodified example, but letting the
+      // user edit + run AFTER predicting is how Codecademy reinforces the
+      // mental model. Their prediction is captured before they touch the IDE.
       return [
         {
           name: "main.py",
           body: step.code,
-          readOnly: true,
+          readOnly: false,
           language: "python",
         },
       ];
