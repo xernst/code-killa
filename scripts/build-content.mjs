@@ -32,7 +32,14 @@ if (!existsSync(CONTENT)) {
   // `getChapters()` returns []. Home page just renders an empty legacy
   // section instead of breaking the build.
   await mkdir(OUT_DIR, { recursive: true });
-  await writeFile(OUT_FILE, JSON.stringify({ chapters: [] }, null, 2));
+  await writeFile(
+    OUT_FILE,
+    JSON.stringify(
+      { generatedAt: "1970-01-01T00:00:00.000Z", chapters: [] },
+      null,
+      2,
+    ),
+  );
   console.warn(
     `Course content not found at ${CONTENT} — wrote empty manifest. ` +
       `Set COURSE_PATH if you want the legacy v1 course to render.`,
