@@ -79,12 +79,14 @@ export default function PhaseBandedRailClient({
             : phase.number <= 3
               ? "core"
               : "advanced";
+        // UI Polish §8: foundations bright (start now), advanced dim
+        // (future). Inverts the prior bright-advanced gradient.
         const tierColor =
           phase.number === 1
-            ? "text-green-700"
+            ? "text-green-500"
             : phase.number <= 3
-              ? "text-green-500"
-              : "text-ink-100";
+              ? "text-green-700"
+              : "text-ink-500";
         return (
           <section
             key={phase.number}

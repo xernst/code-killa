@@ -260,6 +260,18 @@ export default function AboutPage() {
           it doesn&apos;t unlock anything. the source is on github. fork it.
           break it. open a pr.
         </p>
+        <p className="t-body mt-4 max-w-2xl text-ink-300">
+          if this is the python school you wish existed,{" "}
+          <a
+            href="https://github.com/xernst/promptdojo"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-green-400 underline-offset-2 hover:underline"
+          >
+            star the repo
+          </a>
+          . it&apos;s the only metric we keep.
+        </p>
         <div className="mt-6 flex flex-wrap gap-3">
           <a
             href="https://github.com/xernst/promptdojo"

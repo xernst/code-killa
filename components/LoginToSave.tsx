@@ -327,7 +327,7 @@ export default function LoginToSave() {
               </div>
             </form>
 
-            <p className="mt-5 border-t border-ink-800 pt-4 font-mono text-[10px] leading-relaxed text-ink-600">
+            <p className="mt-5 border-t border-ink-800 pt-4 font-mono text-[10px] leading-relaxed text-ink-500">
               ❯ no account, no auth. anyone with your email can load your
               progress. don&apos;t use a shared mailbox if that bothers you.
             </p>

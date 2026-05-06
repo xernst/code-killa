@@ -7,7 +7,7 @@ import { bracketMatching } from "@codemirror/language";
 import { indentWithTab } from "@codemirror/commands";
 import { EditorView, keymap } from "@codemirror/view";
 import { dojoTheme } from "@/lib/codemirror-theme";
-import { Loader2, Lock, Play, Terminal } from "lucide-react";
+import { Loader2, Lock, Play } from "lucide-react";
 import {
   forwardRef,
   useCallback,
@@ -84,9 +84,9 @@ type Props = {
 };
 
 const STATUS_COPY: Record<"idle" | "loading" | "ready", string> = {
-  idle: "Booting Python…",
-  loading: "Booting Python (one-time, ~5s)…",
-  ready: "press Run or use ⌘↵",
+  idle: "booting python…",
+  loading: "loading wasm…",
+  ready: "press run · ⌘↵",
 };
 
 const PersistentIDE = forwardRef<PersistentIDEHandle, Props>(function PersistentIDE(
@@ -302,11 +302,7 @@ const PersistentIDE = forwardRef<PersistentIDEHandle, Props>(function Persistent
               disabled={running}
               aria-busy={running || !ready}
               aria-keyshortcuts="Meta+Enter Control+Enter"
-              className={cn(
-                "inline-flex items-center gap-1.5 px-4 py-1.5 font-mono text-xs font-bold uppercase tracking-wider transition motion-reduce:transition-none",
-                "bg-green-500 text-ink-950 hover:bg-green-400",
-                "disabled:cursor-not-allowed disabled:bg-ink-800 disabled:text-ink-500",
-              )}
+              className="dojo-btn-primary inline-flex items-center gap-1.5"
             >
               {running || !ready ? (
                 <Loader2 size={14} className="animate-spin motion-reduce:animate-none" />
@@ -323,11 +319,14 @@ const PersistentIDE = forwardRef<PersistentIDEHandle, Props>(function Persistent
       <div className="flex h-44 min-h-0 flex-col border-t border-ink-800 bg-ink-950">
         <div className="flex items-center justify-between border-b border-ink-800 px-3 py-1.5">
           <div className="inline-flex items-center gap-1.5 text-[11px] uppercase tracking-wide text-ink-500">
-            <Terminal size={11} />
-            Output
+            <span className="text-green-500" aria-hidden>❯</span>
+            stdout
             {lastRun && !running && (
-              <span className="ml-2 font-mono text-[10px] normal-case tracking-normal text-ink-600">
-                {stderr ? "✗" : "✓"} ran in {lastRun.durationMs}ms
+              <span className="ml-2 font-mono text-[10px] normal-case tracking-normal text-ink-500">
+                <span className={stderr ? "text-err" : "text-ok"}>
+                  {stderr ? "✗" : "✓"}
+                </span>{" "}
+                ran in {lastRun.durationMs}ms
               </span>
             )}
             {running && (
@@ -349,13 +348,13 @@ const PersistentIDE = forwardRef<PersistentIDEHandle, Props>(function Persistent
             </div>
           )}
           {running && (
-            <div className="italic text-ink-500">Running your code…</div>
+            <div className="italic text-ink-500">running your code…</div>
           )}
           {ranEmpty && (
             <div className="text-ink-500">
-              <span className="text-ok">✓</span> Ran with no output.
-              <span className="ml-1 text-ink-600">
-                Add a <code className="rounded bg-ink-900 px-1 text-ink-400">print(…)</code> to see something.
+              <span className="text-ok">✓</span> ran with no output.
+              <span className="ml-1 text-ink-500">
+                add a <code className="rounded bg-ink-900 px-1 text-ink-400">print(…)</code> to see something.
               </span>
             </div>
           )}

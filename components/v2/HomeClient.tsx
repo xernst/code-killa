@@ -54,7 +54,7 @@ export default function HomeClient({ chapters, stepIdsByChapter }: Props) {
             five questions, then your first lesson.
           </div>
         </div>
-        <kbd className="ml-4 shrink-0 border border-ink-700 px-2 py-1 font-mono text-xs uppercase tracking-wider text-ink-300">
+        <kbd className="dojo-kbd ml-4 shrink-0">
           ↵ continue
         </kbd>
       </Link>
@@ -78,7 +78,7 @@ export default function HomeClient({ chapters, stepIdsByChapter }: Props) {
           </div>
           <div className="t-body-sm mt-1">first lesson, no warm-up.</div>
         </div>
-        <kbd className="ml-4 shrink-0 border border-ink-700 px-2 py-1 font-mono text-xs uppercase tracking-wider text-ink-300">
+        <kbd className="dojo-kbd ml-4 shrink-0">
           ↵ start
         </kbd>
       </Link>
@@ -117,7 +117,7 @@ export default function HomeClient({ chapters, stepIdsByChapter }: Props) {
             {recency ? ` · last visited ${recency}` : ""}
           </div>
         </div>
-        <kbd className="ml-4 shrink-0 border border-ink-700 px-2 py-1 font-mono text-xs uppercase tracking-wider text-ink-300">
+        <kbd className="dojo-kbd ml-4 shrink-0">
           ↵ continue
         </kbd>
       </div>

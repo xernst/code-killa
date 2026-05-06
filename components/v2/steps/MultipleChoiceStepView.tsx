@@ -118,13 +118,9 @@ export default function MultipleChoiceStepView({
             type="button"
             onClick={handleSubmit}
             disabled={!selected}
-            className={cn(
-              "rounded-md bg-green-500 px-4 py-2 text-sm font-medium text-ink-950 transition",
-              "hover:bg-green-400",
-              "disabled:cursor-not-allowed disabled:bg-ink-800 disabled:text-ink-500",
-            )}
+            className="dojo-btn-primary"
           >
-            Check
+            check
           </button>
         ) : (
           <span

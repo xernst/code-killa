@@ -76,13 +76,9 @@ export default function CheckpointStepView({
           type="button"
           onClick={handleSubmit}
           disabled={submitting || submitted?.passed === true}
-          className={cn(
-            "rounded-md bg-green-500 px-4 py-2 text-sm font-medium text-ink-950 transition",
-            "hover:bg-green-400",
-            "disabled:cursor-not-allowed disabled:bg-ink-800 disabled:text-ink-500",
-          )}
+          className="dojo-btn-primary"
         >
-          {submitting ? "Running…" : "Submit"}
+          {submitting ? "running…" : "submit"}
         </button>
         {!submitted?.passed && (
           <button

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { Check, ChevronDown, ChevronRight, Circle, Lock } from "lucide-react";
+import { Check, ChevronDown, ChevronRight, Circle } from "lucide-react";
 import {
   loadProgressV2,
   type ProgressV2,
@@ -72,7 +72,7 @@ export default function V2ChapterNav({
                 type="button"
                 onClick={() => setOpenChapter(isOpen ? "" : entry.slug)}
                 className={cn(
-                  "flex w-full items-center justify-between rounded px-2 py-1.5 text-left text-xs transition",
+                  "flex w-full items-center justify-between px-2 py-1.5 text-left text-xs transition",
                   isActive
                     ? "bg-ink-800 text-ink-100"
                     : chapterDone
@@ -141,7 +141,7 @@ function ChapterDetail({
             <Link
               href={`/learn/v2/${chapter.slug}/${lesson.slug}`}
               className={cn(
-                "flex items-center gap-1.5 rounded px-1.5 py-1 text-[11px] uppercase tracking-wide transition",
+                "flex items-center gap-1.5 px-1.5 py-1 text-[11px] uppercase tracking-wide transition",
                 isActiveLesson
                   ? "text-green-400"
                   : lessonDone
@@ -162,7 +162,7 @@ function ChapterDetail({
                       <Link
                         href={`/learn/v2/${chapter.slug}/${lesson.slug}/${idx}`}
                         className={cn(
-                          "flex items-center gap-2 rounded px-1.5 py-1 text-xs transition",
+                          "flex items-center gap-2 px-1.5 py-1 text-xs transition",
                           here
                             ? "bg-ink-800 text-green-400"
                             : "text-ink-500 hover:text-ink-100",
@@ -198,7 +198,14 @@ function StepStatusIcon({
   if (active) return <Circle size={9} className="text-green-500 fill-green-500" />;
   if (status === "skipped" || status === "failed")
     return <Circle size={9} className="text-ink-500" />;
-  return <Lock size={10} className="text-ink-500" />;
+  return (
+    <span
+      className="font-mono text-[10px] text-ink-700"
+      aria-hidden="true"
+    >
+      ·
+    </span>
+  );
 }
 
 function shortChapterTitle(full: string): string {

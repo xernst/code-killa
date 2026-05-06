@@ -32,6 +32,18 @@ export default async function ChangelogPage() {
       <article className="prose prose-invert mt-6 max-w-none">
         <ReactMarkdown remarkPlugins={[remarkGfm]}>{md}</ReactMarkdown>
       </article>
+      <p className="t-mono-meta mt-12 border-t border-ink-800 pt-6">
+        if this is the python school you wish existed,{" "}
+        <a
+          href="https://github.com/xernst/promptdojo"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-green-400 underline-offset-2 hover:underline"
+        >
+          star the repo
+        </a>
+        . it&apos;s the only metric we keep.
+      </p>
     </main>
   );
 }

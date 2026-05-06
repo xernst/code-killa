@@ -199,10 +199,10 @@ export default async function Home() {
         </div>
       </details>
 
-      <footer className="mt-16 flex flex-wrap items-baseline justify-between gap-3 border-t border-ink-800 pt-6 text-xs text-ink-600">
+      <footer className="mt-16 flex flex-wrap items-baseline justify-between gap-3 border-t border-ink-800 pt-6 t-mono-meta">
         <p>
           press{" "}
-          <kbd className="rounded border border-ink-700 bg-ink-900 px-1 py-0.5 font-mono text-[10px] text-ink-300">
+          <kbd className="dojo-kbd">
             ⌘⇧B
           </kbd>{" "}
           anywhere to park a thought without losing your place.
