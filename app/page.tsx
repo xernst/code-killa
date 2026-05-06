@@ -6,26 +6,30 @@ import HomeClient from "@/components/v2/HomeClient";
 import StreakWidget from "@/components/StreakWidget";
 import PyodidePreloader from "@/components/PyodidePreloader";
 import Wordmark from "@/components/Wordmark";
+import HeroBugSnippet from "@/components/HeroBugSnippet";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://promptdojo.pages.dev"),
   title: "promptdojo — free interactive python course for ai builders",
   description:
-    "free, open-source python course for pms, marketers, and ops folks who use cursor and claude code daily. 22 chapters, 624 interactive steps, runs in your browser. no signup, no paywall.",
+    "free, open-source python course for pms, marketers, and ops folks who use cursor and claude code daily. 25 chapters, 624 interactive steps, runs in your browser. no signup, no paywall.",
   alternates: { canonical: "https://promptdojo.dev/" },
   openGraph: {
     type: "website",
     title: "promptdojo — free interactive python course for ai builders",
     description:
-      "read what ai wrote. catch what it got wrong. direct it deliberately. 22 chapters, 624 interactive steps, free forever.",
+      "ai writes this. it's wrong. learn the python you need to read what ai wrote, catch what it got wrong, and direct it deliberately. 22 chapters, free forever.",
     url: "https://promptdojo.dev/",
     siteName: "promptdojo",
+    images: [{ url: "/og/launch/wedge", width: 1600, height: 900, alt: "ai writes this. it's wrong." }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "promptdojo — free interactive python for ai builders",
+    title: "promptdojo — ai writes this. it's wrong.",
     description:
       "the python you need to direct ai agents, read what they wrote, and catch what they got wrong.",
     creator: "@TFisPython",
+    images: ["/og/launch/wedge"],
   },
 };
 
@@ -61,26 +65,49 @@ export default async function Home() {
   return (
     <main className="mx-auto max-w-6xl px-6 py-10 sm:py-16">
       <PyodidePreloader />
-      <header className="mb-12 flex items-end justify-between">
-        <div>
+
+      <header className="relative mb-24 pt-8 sm:pt-14">
+        <div className="mb-10 flex items-start justify-between gap-4">
           <div className="text-[11px] uppercase tracking-[0.42em]">
             <Wordmark size="text-[11px]" />
           </div>
-          <h1 className="mt-6 font-display text-5xl font-semibold leading-[1.05] tracking-tight text-ink-50 sm:text-6xl">
-            python for ai-first builders.
-          </h1>
-          <p className="mt-4 max-w-2xl text-lg text-ink-300">
-            the python you need to direct ai agents, read what they wrote, and
-            catch what they got wrong.
-          </p>
-          <p className="mt-2 max-w-2xl text-sm text-ink-400">
-            built for the marketing managers, pms, and ops folks who use cursor
-            daily and have hit the ceiling of what they can do without code
-            literacy. free forever, open source. no certificate, no
-            leaderboards, no paywall.
-          </p>
+          <StreakWidget />
         </div>
-        <StreakWidget />
+
+        <h1
+          className="font-display font-black leading-[0.9] tracking-[-0.045em] text-ink-100"
+          style={{
+            fontSize: "clamp(72px, 11vw, 128px)",
+            fontVariationSettings: "'opsz' 144, 'SOFT' 0",
+          }}
+        >
+          ai writes this.<br />
+          <em className="italic text-ember-500">it&apos;s wrong.</em>
+        </h1>
+
+        <p className="mt-8 max-w-2xl font-display text-xl leading-snug text-ink-300">
+          a python school for the version of you that lives in cursor.
+          25 chapters · 624 interactive steps · runs in your browser · free forever.
+        </p>
+
+        <div className="mt-10">
+          <HeroBugSnippet />
+        </div>
+
+        <div className="mt-10 flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:gap-6">
+          <Link
+            href="/learn/v2/variables/naming-things/0"
+            className="inline-flex items-center gap-2 bg-ember-500 px-6 py-3 font-mono text-sm font-bold uppercase tracking-wider text-ink-950 transition hover:bg-ember-400"
+          >
+            start chapter 1 <span aria-hidden>→</span>
+          </Link>
+          <a
+            href="#chapters"
+            className="font-mono text-sm text-ink-400 hover:text-ember-400"
+          >
+            or pick your chapter ↓
+          </a>
+        </div>
       </header>
 
       <HomeClient
@@ -122,17 +149,11 @@ export default async function Home() {
         ))}
       </section>
 
-      <section className="mt-16">
+      <section id="chapters" className="mt-16 scroll-mt-8">
         <div className="mb-4 flex items-baseline justify-between">
           <h2 className="text-xs uppercase tracking-widest text-ink-400">
             25 chapters · production-ai track included · free forever
           </h2>
-          <Link
-            href="/onboarding"
-            className="text-xs text-ember-400 hover:text-ember-300"
-          >
-            new here? start the 5-question onboarding →
-          </Link>
         </div>
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {v2Chapters.map((c) => {
