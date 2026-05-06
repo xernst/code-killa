@@ -1,8 +1,7 @@
 "use client";
 
-import { useEffect, useState, type ReactNode } from "react";
-import { cn } from "@/lib/utils";
-import { ChevronUp, ChevronDown } from "lucide-react";
+import Link from "next/link";
+import type { ReactNode } from "react";
 import DailyGoalDial from "./DailyGoalDial";
 
 type Props = {
@@ -32,6 +31,9 @@ type Props = {
   footer?: ReactNode;
 };
 
+// Mobile-gate copy lives here so the V3 toggle pattern is fully removed.
+// Per design-kit/audit-v4/HEADOFIT-plan.md PR 3 + CEO §3.
+
 export default function LessonShell({
   sidebar,
   prompt,
@@ -39,33 +41,18 @@ export default function LessonShell({
   header,
   footer,
 }: Props) {
-  // Default the mobile drawer to "show prompt" so first-time visitors see
-  // lesson content instead of an empty editor. We can only inspect window
-  // size client-side, so the SSR render falls back to the IDE pane (matches
-  // the desktop two-column view) and we flip after mount on small screens.
-  const [drawerOpen, setDrawerOpen] = useState(true);
-  useEffect(() => {
-    // md breakpoint = 768px. Below md we want to default to "show prompt"
-    // so first-time visitors see lesson content instead of an empty editor.
-    if (typeof window !== "undefined" && window.innerWidth < 768) {
-      setDrawerOpen(false);
-    }
-  }, []);
-
   return (
     <div className="flex h-[calc(100dvh-40px)] min-h-0 flex-col bg-ink-950 text-ink-100">
       <div className="flex h-full min-h-0 flex-1">
         <aside className="hidden w-56 shrink-0 border-r border-ink-800 bg-ink-900 md:flex md:flex-col lg:w-60">
           {sidebar}
         </aside>
-        <main id="main" className="flex min-h-0 w-full flex-1 md:grid md:grid-cols-[minmax(0,420px)_minmax(0,1fr)] lg:grid-cols-[minmax(0,480px)_minmax(0,1fr)]">
-          <section
-            className={cn(
-              "min-h-0 min-w-0 flex-1 flex-col border-r border-ink-800",
-              "md:max-w-[460px] lg:max-w-[520px]",
-              drawerOpen ? "hidden md:flex" : "flex",
-            )}
-          >
+        {/* Desktop / tablet layout — two-column grid, unchanged from V3. */}
+        <main
+          id="main"
+          className="hidden min-h-0 w-full flex-1 md:grid md:grid-cols-[minmax(0,420px)_minmax(0,1fr)] lg:grid-cols-[minmax(0,480px)_minmax(0,1fr)]"
+        >
+          <section className="flex min-h-0 min-w-0 flex-col border-r border-ink-800 md:max-w-[460px] lg:max-w-[520px]">
             {header && (
               <div className="flex items-start justify-between gap-3 border-b border-ink-800 bg-ink-900 px-5 py-3">
                 <div className="min-w-0 flex-1">{header}</div>
@@ -81,36 +68,38 @@ export default function LessonShell({
               </div>
             )}
           </section>
-          <section
-            className={cn(
-              "min-h-0 min-w-0 flex-1 flex-col",
-              drawerOpen ? "flex" : "hidden md:flex",
-            )}
-          >
+          <section className="flex min-h-0 min-w-0 flex-1 flex-col">
             {ide}
           </section>
         </main>
+        {/* Mobile gate (< md) — honest "ship on desktop" message. The V3
+            drawer-toggle was a no-op because the IDE pane mounted at 0×0. */}
+        <main
+          id="main"
+          className="flex min-h-0 w-full flex-1 flex-col md:hidden"
+        >
+          <div className="flex-1 min-h-0 overflow-auto px-4 py-5">
+            {prompt}
+          </div>
+          <div className="border-t border-ink-800 bg-ink-900 p-5">
+            <div className="t-eyebrow mb-2">desktop required</div>
+            <p className="t-body-sm">
+              the editor runs python in your browser via pyodide
+              (~6&thinsp;mb of webassembly). it ships clean on a laptop;
+              on a phone it is a battery tax.
+            </p>
+            <Link
+              href="/lesson/resume"
+              className="dojo-btn-primary mt-4 inline-flex"
+            >
+              ↵ resume on desktop <span aria-hidden>→</span>
+            </Link>
+            <p className="mt-3 t-mono-meta">
+              we save your spot. open this same url on a laptop.
+            </p>
+          </div>
+        </main>
       </div>
-      <button
-        type="button"
-        onClick={() => setDrawerOpen((v) => !v)}
-        className={cn(
-          "flex items-center justify-center gap-1.5 border-t border-ink-800 bg-ink-900 py-2 text-xs text-ink-300 md:hidden",
-        )}
-        aria-label={drawerOpen ? "Show prompt" : "Show editor"}
-      >
-        {drawerOpen ? (
-          <>
-            <ChevronUp size={14} />
-            Show prompt
-          </>
-        ) : (
-          <>
-            <ChevronDown size={14} />
-            Show editor
-          </>
-        )}
-      </button>
     </div>
   );
 }
