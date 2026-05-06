@@ -86,7 +86,7 @@ export default async function Home() {
   }));
 
   return (
-    <main id="main" className="mx-auto max-w-6xl px-6 py-10 sm:py-16">
+    <main id="main" className="mx-auto max-w-6xl px-6 pt-20 pb-10 sm:pt-24 sm:pb-16">
       <PyodidePreloader />
 
       <header className="relative mb-24 pt-8 sm:pt-14">

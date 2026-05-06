@@ -15,7 +15,7 @@ export const metadata = {
 
 export default function NotFound() {
   return (
-    <main id="main" className="mx-auto max-w-2xl px-6 py-16">
+    <main id="main" className="mx-auto max-w-2xl px-6 pt-20 pb-10 sm:pt-24 sm:pb-16">
       <div className="t-eyebrow">404 ─ page not found</div>
       <h1 className="t-section mt-4">this lesson does not exist (yet).</h1>
       <p className="t-body mt-6">
