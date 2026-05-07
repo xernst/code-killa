@@ -7,9 +7,24 @@ type RunResult = {
   stderr: string;
   durationMs?: number;
 };
+type AstRule =
+  | { kind: "calls"; name: string }
+  | { kind: "uses-loop" }
+  | { kind: "defines-function"; name?: string; minArgs?: number }
+  | { kind: "uses-import"; module: string }
+  | { kind: "no-globals" };
+type AstGradeRequest = { must: AstRule[]; mustNot: AstRule[] };
+type AstGradeResult = {
+  parsed: boolean;
+  syntaxError: string | null;
+  must: { rule: AstRule; matched: boolean }[];
+  mustNot: { rule: AstRule; matched: boolean }[];
+  durationMs?: number;
+};
 type WorkerMsg =
   | { type: "status"; payload: "loading" | "ready" }
-  | { type: "result"; id: number; payload: RunResult };
+  | { type: "result"; id: number; payload: RunResult }
+  | { type: "ast-result"; id: number; payload: AstGradeResult };
 
 let workerSingleton: Worker | null = null;
 function getWorker(): Worker {
@@ -25,6 +40,7 @@ function getWorker(): Worker {
 export function usePyodide() {
   const [status, setStatus] = useState<"idle" | "loading" | "ready">("loading");
   const pendingRef = useRef<Map<number, (r: RunResult) => void>>(new Map());
+  const pendingAstRef = useRef<Map<number, (r: AstGradeResult) => void>>(new Map());
   const idRef = useRef(0);
 
   useEffect(() => {
@@ -40,6 +56,12 @@ export function usePyodide() {
         const cb = pendingRef.current.get(msg.id);
         if (cb) {
           pendingRef.current.delete(msg.id);
+          cb(msg.payload);
+        }
+      } else if (msg.type === "ast-result") {
+        const cb = pendingAstRef.current.get(msg.id);
+        if (cb) {
+          pendingAstRef.current.delete(msg.id);
           cb(msg.payload);
         }
       }
@@ -60,5 +82,19 @@ export function usePyodide() {
     });
   }, []);
 
-  return { status, run };
+  const gradeAst = useCallback(
+    (code: string, rules: AstGradeRequest): Promise<AstGradeResult> => {
+      const w = getWorker();
+      const id = ++idRef.current;
+      return new Promise((resolve) => {
+        pendingAstRef.current.set(id, resolve);
+        w.postMessage({ type: "grade-ast", id, code, rules });
+      });
+    },
+    [],
+  );
+
+  return { status, run, gradeAst };
 }
+
+export type { AstRule, AstGradeRequest, AstGradeResult };

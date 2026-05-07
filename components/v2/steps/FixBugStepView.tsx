@@ -8,7 +8,7 @@ import { CheckCircle2, XCircle } from "lucide-react";
 import { interpolate, type FixBugStep } from "@/lib/content/schema";
 import type { StepViewProps } from "../StepRouter";
 import { cn } from "@/lib/utils";
-import { gradeRunResult } from "./_grader";
+import { gradeRunResultAsync } from "./_grader";
 import HintReveal from "./_HintReveal";
 
 export default function FixBugStepView({
@@ -39,7 +39,7 @@ export default function FixBugStepView({
       setSubmitted({ passed: false, reason: "Editor isn't ready yet." });
       return;
     }
-    const grade = gradeRunResult(step.grader, result);
+    const grade = await gradeRunResultAsync(step.grader, result, ide);
     setSubmitted(grade.passed ? { passed: true } : { passed: false, reason: grade.reason });
     if (!grade.passed) setFailedCount((c) => c + 1);
     onAttempt({

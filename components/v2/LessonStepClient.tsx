@@ -122,6 +122,11 @@ export default function LessonStepClient({
     () => ({
       run: async () => ideRef.current?.run() ?? null,
       getActiveCode: () => ideRef.current?.getActiveCode() ?? "",
+      gradeAst: async (code, rules) => {
+        const handle = ideRef.current;
+        if (!handle) return null;
+        return handle.gradeAst(code, rules);
+      },
     }),
     [],
   );

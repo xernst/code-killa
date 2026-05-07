@@ -34,10 +34,13 @@ export type RunResult = {
   durationMs?: number;
 };
 
+import type { AstGradeRequest, AstGradeResult } from "@/lib/use-pyodide";
+
 export type PersistentIDEHandle = {
   run: () => Promise<RunResult | null>;
   getActiveCode: () => string;
   getFile: (name: string) => string | undefined;
+  gradeAst: (code: string, rules: AstGradeRequest) => Promise<AstGradeResult>;
   reset: () => void;
 };
 
@@ -102,7 +105,7 @@ const PersistentIDE = forwardRef<PersistentIDEHandle, Props>(function Persistent
   },
   ref,
 ) {
-  const { status, run } = usePyodide();
+  const { status, run, gradeAst } = usePyodide();
 
   const [drafts, setDrafts] = useState<Record<string, string>>(() =>
     seedDrafts(files),
@@ -202,6 +205,7 @@ const PersistentIDE = forwardRef<PersistentIDEHandle, Props>(function Persistent
       run: () => handleRun(),
       getActiveCode: () => (activeFile ? drafts[activeFile.name] ?? activeFile.body : ""),
       getFile: (name: string) => drafts[name],
+      gradeAst: (code, rules) => gradeAst(code, rules),
       reset: () => {
         setDrafts(seedDrafts(files));
         setStdout("");
@@ -209,7 +213,7 @@ const PersistentIDE = forwardRef<PersistentIDEHandle, Props>(function Persistent
         setLastRun(null);
       },
     }),
-    [activeFile, drafts, files, handleRun],
+    [activeFile, drafts, files, gradeAst, handleRun],
   );
 
   const extensions = useMemo(() => {

@@ -14,6 +14,7 @@ import type {
   WriteStep,
 } from "@/lib/content/schema";
 import type { RunResult } from "./PersistentIDE";
+import type { AstGradeRequest, AstGradeResult } from "@/lib/use-pyodide";
 
 /**
  * Every step view renders only the prompt panel. The IDE is owned by the
@@ -28,6 +29,9 @@ export type StepIDEBridge = {
   run: () => Promise<RunResult | null>;
   /** Read the current contents of the active editor file. */
   getActiveCode: () => string;
+  /** Parse code with Python's `ast` module and report which rules matched.
+   *  Resolves null only if the IDE handle isn't mounted yet. */
+  gradeAst: (code: string, rules: AstGradeRequest) => Promise<AstGradeResult | null>;
 };
 
 export type StepViewProps<T extends Step = Step> = {

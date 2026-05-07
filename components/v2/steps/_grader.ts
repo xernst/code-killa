@@ -4,6 +4,7 @@
 
 import type { Grader } from "@/lib/content/schema";
 import type { RunResult } from "../PersistentIDE";
+import type { StepIDEBridge } from "../StepRouter";
 
 export function normalizeStdout(
   raw: string,
@@ -62,15 +63,98 @@ export function gradeRunResult(grader: Grader, result: RunResult): GradeResult {
     return matched ? { passed: true } : { passed: false, reason: "That answer didn't match." };
   }
   if (grader.kind === "ast-match") {
+    // Synchronous path can't grade AST — async caller should use
+    // gradeRunResultAsync(grader, result, ide) instead. Returning a
+    // hint reason rather than a hard failure so the upstream view can
+    // detect this and dispatch async.
     return {
       passed: false,
-      reason: "AST graders aren't wired client-side yet — Submit needs a stdout grader for now.",
+      reason: "ast-grader-needs-async",
     };
   }
   return {
     passed: false,
     reason: "This step uses a grader the v1 runtime doesn't support yet.",
   };
+}
+
+/**
+ * Async grader for steps that may use ast-match. Falls through to the
+ * sync grader for non-AST kinds so step views don't have to branch.
+ */
+export async function gradeRunResultAsync(
+  grader: Grader,
+  result: RunResult,
+  ide: StepIDEBridge,
+): Promise<GradeResult> {
+  if (grader.kind === "ast-match") {
+    if (!result.ok || result.stderr) {
+      return {
+        passed: false,
+        reason: result.stderr || "Code didn't finish — see the traceback.",
+      };
+    }
+    const code = ide.getActiveCode();
+    const ast = await ide.gradeAst(code, {
+      must: grader.must,
+      mustNot: grader.mustNot,
+    });
+    if (!ast) {
+      return { passed: false, reason: "Editor isn't ready yet." };
+    }
+    if (!ast.parsed) {
+      return {
+        passed: false,
+        reason: ast.syntaxError ?? "Couldn't parse your code.",
+      };
+    }
+    const missing = ast.must.filter((m) => !m.matched).map((m) => describeRule(m.rule));
+    if (missing.length > 0) {
+      return {
+        passed: false,
+        reason: `Missing required pattern: ${missing.join(", ")}`,
+      };
+    }
+    const forbidden = ast.mustNot
+      .filter((m) => m.matched)
+      .map((m) => describeRule(m.rule));
+    if (forbidden.length > 0) {
+      return {
+        passed: false,
+        reason: `Found a forbidden pattern: ${forbidden.join(", ")}`,
+      };
+    }
+    return { passed: true };
+  }
+  return gradeRunResult(grader, result);
+}
+
+function describeRule(rule: {
+  kind: string;
+  name?: string;
+  module?: string;
+  minArgs?: number;
+}): string {
+  switch (rule.kind) {
+    case "calls":
+      return `call to ${rule.name}()`;
+    case "uses-loop":
+      return "a for/while loop";
+    case "defines-function":
+      if (rule.name && rule.minArgs !== undefined) {
+        return `function ${rule.name} with ≥${rule.minArgs} args`;
+      }
+      if (rule.name) return `function ${rule.name}`;
+      if (rule.minArgs !== undefined)
+        return `a function with ≥${rule.minArgs} args`;
+      return "any function definition";
+    case "uses-import":
+      return `import of ${rule.module}`;
+    case "no-globals":
+      return "no `global` statements";
+    default:
+      return rule.kind;
+  }
 }
 
 export type GradeResult =
