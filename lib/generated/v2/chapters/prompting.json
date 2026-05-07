@@ -223,12 +223,12 @@
           "hint": [
             {
               "level": 1,
-              "body": "Build the string with f-strings and `\\n` between the parts. Then `print` the return value.",
+              "body": "Read the message line by line. The four parts are scattered through it. `context` is what file we're touching. `goal` is the one verb. `constraints` are the 'use ... no ...' lines. `format` is what they want back ('diff only').",
               "cost": 0
             },
             {
               "level": 2,
-              "body": "Concatenate four f-strings (`f\"context: {context}\\n\"` ...) and return them. Then call `build_prompt(...)` with the four positional args and print the result.",
+              "body": "Replace the four `...` placeholders with the strings: `\"fastapi route file\"`, `\"add delete handler\"`, `\"use existing pool, no migration\"`, `\"diff only\"`. The `build_prompt` function is already correct — leave it alone.",
               "cost": 0
             }
           ],
@@ -236,14 +236,14 @@
           "phase": "build",
           "estSeconds": 130,
           "concept": "build-the-prompt",
-          "prompt": "Build a function `build_prompt(context, goal, constraints, format)`\nthat returns a single string with each part on its own line, prefixed\nby the part name and a colon. Then call it with these four arguments\nand print the result:\n\n- context: `\"fastapi route file\"`\n- goal: `\"add delete handler\"`\n- constraints: `\"use existing pool\"`\n- format: `\"diff only\"`\n\nExpected output:\n```\ncontext: fastapi route file\ngoal: add delete handler\nconstraints: use existing pool\nformat: diff only\n```\n",
-          "starter": "# define build_prompt below, then print the result\n",
+          "prompt": "A teammate just dropped this in your DMs:\n\n> \"hey can you write me a delete endpoint for our fastapi route file?\n> use the connection pool we already have. just send me the diff to\n> apply, don't write the migration.\"\n\nThe vague version blows your context window and ships the wrong code.\nRewrite it as the four-part scaffold the curriculum just taught you.\n\n`build_prompt` is already defined for you. **Don't change it.** Your\njob is to extract the four parts from the message above and call it\nwith the right arguments.\n\nThe expected output:\n```\ncontext: fastapi route file\ngoal: add delete handler\nconstraints: use existing pool, no migration\nformat: diff only\n```\n",
+          "starter": "# build_prompt is given. don't edit it. extract the four parts from\n# the vague message in the lesson and call it with the right args.\n\ndef build_prompt(context, goal, constraints, format):\n    return (\n        f\"context: {context}\\n\"\n        f\"goal: {goal}\\n\"\n        f\"constraints: {constraints}\\n\"\n        f\"format: {format}\"\n    )\n\nprint(build_prompt(\n    context=...,\n    goal=...,\n    constraints=...,\n    format=...,\n))\n",
           "grader": {
             "kind": "stdout-equality",
-            "expected": "context: fastapi route file\ngoal: add delete handler\nconstraints: use existing pool\nformat: diff only\n",
+            "expected": "context: fastapi route file\ngoal: add delete handler\nconstraints: use existing pool, no migration\nformat: diff only\n",
             "normalize": "collapse-trailing-newline"
           },
-          "solution": "def build_prompt(context, goal, constraints, format):\n    return (\n        f\"context: {context}\\n\"\n        f\"goal: {goal}\\n\"\n        f\"constraints: {constraints}\\n\"\n        f\"format: {format}\"\n    )\n\nprint(build_prompt(\n    \"fastapi route file\",\n    \"add delete handler\",\n    \"use existing pool\",\n    \"diff only\",\n))\n",
+          "solution": "def build_prompt(context, goal, constraints, format):\n    return (\n        f\"context: {context}\\n\"\n        f\"goal: {goal}\\n\"\n        f\"constraints: {constraints}\\n\"\n        f\"format: {format}\"\n    )\n\nprint(build_prompt(\n    context=\"fastapi route file\",\n    goal=\"add delete handler\",\n    constraints=\"use existing pool, no migration\",\n    format=\"diff only\",\n))\n",
           "hiddenTests": []
         },
         {

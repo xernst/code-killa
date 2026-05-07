@@ -1,6 +1,6 @@
 {
   "version": "0.1.0",
-  "generatedAt": "2026-05-07T14:18:06.384Z",
+  "generatedAt": "2026-05-07T14:21:28.456Z",
   "chapters": [
     {
       "number": 1,
@@ -217,30 +217,30 @@
       "slug": "context-and-retrieval",
       "title": "Context and retrieval — feeding the model real data",
       "blurb": "RAG without the overengineering. Chunking, embeddings, vector search, and the small set of patterns that make a model answer from your data instead of its training set.",
-      "lessonCount": 2,
-      "stepCount": 10,
-      "estMinutes": 14,
-      "xpTotal": 33
+      "lessonCount": 1,
+      "stepCount": 9,
+      "estMinutes": 12,
+      "xpTotal": 32
     },
     {
       "number": 23,
       "slug": "production-tradeoffs",
       "title": "Production tradeoffs — cost, latency, quality",
       "blurb": "The three numbers every shipped LLM feature lives or dies by. Token math, caching, streaming, batching, and the small set of decisions that move the product more than a model swap ever will.",
-      "lessonCount": 2,
-      "stepCount": 10,
-      "estMinutes": 14,
-      "xpTotal": 33
+      "lessonCount": 1,
+      "stepCount": 9,
+      "estMinutes": 12,
+      "xpTotal": 32
     },
     {
       "number": 24,
       "slug": "debugging-output",
       "title": "Debugging broken AI output",
       "blurb": "When the model lies to your customer. The methodology for narrowing down what went wrong, the four most-common breakage classes, and the discipline that separates 'we shipped a fix' from 'we blamed the model and shrugged'.",
-      "lessonCount": 2,
-      "stepCount": 10,
-      "estMinutes": 13,
-      "xpTotal": 33
+      "lessonCount": 1,
+      "stepCount": 9,
+      "estMinutes": 11,
+      "xpTotal": 32
     },
     {
       "number": 25,

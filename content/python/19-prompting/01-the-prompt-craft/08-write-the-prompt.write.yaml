@@ -2,32 +2,51 @@ xp: 5
 estSeconds: 130
 concept: build-the-prompt
 prompt: |
-  Build a function `build_prompt(context, goal, constraints, format)`
-  that returns a single string with each part on its own line, prefixed
-  by the part name and a colon. Then call it with these four arguments
-  and print the result:
+  A teammate just dropped this in your DMs:
 
-  - context: `"fastapi route file"`
-  - goal: `"add delete handler"`
-  - constraints: `"use existing pool"`
-  - format: `"diff only"`
+  > "hey can you write me a delete endpoint for our fastapi route file?
+  > use the connection pool we already have. just send me the diff to
+  > apply, don't write the migration."
 
-  Expected output:
+  The vague version blows your context window and ships the wrong code.
+  Rewrite it as the four-part scaffold the curriculum just taught you.
+
+  `build_prompt` is already defined for you. **Don't change it.** Your
+  job is to extract the four parts from the message above and call it
+  with the right arguments.
+
+  The expected output:
   ```
   context: fastapi route file
   goal: add delete handler
-  constraints: use existing pool
+  constraints: use existing pool, no migration
   format: diff only
   ```
 starter: |
-  # define build_prompt below, then print the result
+  # build_prompt is given. don't edit it. extract the four parts from
+  # the vague message in the lesson and call it with the right args.
+
+  def build_prompt(context, goal, constraints, format):
+      return (
+          f"context: {context}\n"
+          f"goal: {goal}\n"
+          f"constraints: {constraints}\n"
+          f"format: {format}"
+      )
+
+  print(build_prompt(
+      context=...,
+      goal=...,
+      constraints=...,
+      format=...,
+  ))
 
 grader:
   kind: stdout-equality
   expected: |
     context: fastapi route file
     goal: add delete handler
-    constraints: use existing pool
+    constraints: use existing pool, no migration
     format: diff only
   normalize: collapse-trailing-newline
 solution: |
@@ -40,13 +59,13 @@ solution: |
       )
 
   print(build_prompt(
-      "fastapi route file",
-      "add delete handler",
-      "use existing pool",
-      "diff only",
+      context="fastapi route file",
+      goal="add delete handler",
+      constraints="use existing pool, no migration",
+      format="diff only",
   ))
 hint:
   - level: 1
-    body: "Build the string with f-strings and `\\n` between the parts. Then `print` the return value."
+    body: "Read the message line by line. The four parts are scattered through it. `context` is what file we're touching. `goal` is the one verb. `constraints` are the 'use ... no ...' lines. `format` is what they want back ('diff only')."
   - level: 2
-    body: "Concatenate four f-strings (`f\"context: {context}\\n\"` ...) and return them. Then call `build_prompt(...)` with the four positional args and print the result."
+    body: "Replace the four `...` placeholders with the strings: `\"fastapi route file\"`, `\"add delete handler\"`, `\"use existing pool, no migration\"`, `\"diff only\"`. The `build_prompt` function is already correct — leave it alone."
