@@ -28,9 +28,9 @@ export default function EmailSignup() {
         body: JSON.stringify({ email }),
       });
       const data = (await res.json().catch(() => null)) as SubscribeResult | null;
-      setState(data ?? { ok: false, error: "network hiccup — try again" });
+      setState(data ?? { ok: false, error: "network failed. try again." });
     } catch {
-      setState({ ok: false, error: "network hiccup — try again" });
+      setState({ ok: false, error: "network failed. try again." });
     } finally {
       setPending(false);
     }
@@ -38,13 +38,12 @@ export default function EmailSignup() {
 
   return (
     <section className="my-24 flex flex-col items-center border-y border-ink-800 py-16 text-center">
-      <div className="t-eyebrow tracking-[0.4em]">stay in the loop</div>
+      <div className="t-eyebrow tracking-[0.4em]">the bugs ai shipped this week</div>
       <h2 className="t-h2 mt-4 max-w-2xl text-ink-100">
-        new chapters, the x-thread version of every lesson, the bugs ai shipped
-        this week
+        a weekly post-mortem of what cursor and claude got wrong
       </h2>
       <p className="t-body-sm mt-4 max-w-xl text-ink-400">
-        no spam, no upsell. one email when there&apos;s something worth reading.
+        one email a week. new chapters, the bugs ai shipped, the threads.
         unsubscribe in one click.
       </p>
 
@@ -69,7 +68,7 @@ export default function EmailSignup() {
           disabled={pending || state?.ok === true}
           className="dojo-btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {pending ? "subscribing…" : state?.ok ? "subscribed ✓" : "subscribe"}
+          {pending ? "sending…" : state?.ok ? "you're in" : "send me the bugs"}
         </button>
       </form>
 

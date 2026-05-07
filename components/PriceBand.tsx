@@ -21,7 +21,7 @@ export default function PriceBand() {
       <div className="t-mono-meta mt-10 flex flex-wrap items-center justify-center gap-x-3 gap-y-2">
         <span>no signup</span>
         <span className="text-ink-700">·</span>
-        <span>no guilt</span>
+        <span>no streak shame</span>
         <span className="text-ink-700">·</span>
         <span>no upsell</span>
         <span className="text-ink-700">·</span>

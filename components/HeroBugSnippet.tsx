@@ -53,14 +53,24 @@ export default function HeroBugSnippet() {
           </code>
         </pre>
       </div>
-      {/* row 3 — annotation strip, always visible */}
-      <div className="border-t border-ink-800 px-4 py-3 font-mono text-xs text-ink-400">
-        <strong className="font-mono uppercase tracking-wider text-err">
+      {/* row 3 — annotation strip. Three stacked display lines because
+          this paragraph is the strongest pain → product fit line on the
+          page (per audit copy-v1/twitter.md + voc.md). Each line is its
+          own quotable beat. */}
+      <div className="border-t border-ink-800 px-5 py-5">
+        <div className="font-mono text-[10px] uppercase tracking-wider text-err">
           the missing check
-        </strong>
-        {" "}— ai does exactly what you asked. it doesn&apos;t ask{" "}
-        <em className="not-italic text-ink-300">should we?</em>. you find
-        this bug in your unsubscribe complaints, not your tests.
+        </div>
+        <p className="mt-2 font-display text-base leading-snug text-ink-100 sm:text-lg">
+          ai does exactly what you asked.
+          <br />
+          it doesn&apos;t ask{" "}
+          <em className="not-italic text-green-400">should we?</em>
+          <br />
+          <span className="text-ink-300">
+            you find this bug in your unsubscribe complaints, not your tests.
+          </span>
+        </p>
       </div>
     </div>
   );

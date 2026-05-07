@@ -112,7 +112,7 @@ export default async function Home() {
         </h1>
 
         <p className="t-body mt-12 max-w-2xl">
-          a python school for the version of you that lives in cursor.
+          a python school for builders whose code is mostly written by ai now.
           {" "}{totalChapters} chapters · {totalSteps} runnable steps · runs
           in your browser · free forever.
         </p>
@@ -126,7 +126,7 @@ export default async function Home() {
             href="/learn/v2/variables/naming-things/0"
             className="dojo-btn-primary"
           >
-            start chapter 1 <span aria-hidden>→</span>
+            run your first lesson <span aria-hidden>→</span>
           </Link>
           <a
             href="#chapters"
@@ -147,17 +147,17 @@ export default async function Home() {
           {
             title: "read what ai wrote",
             body:
-              "most lessons start with code cursor or claude already produced. you learn to read it, predict its output, and judge whether it works.",
+              "ai wrote most of your codebase. you can't read it. that's the new illiteracy.",
           },
           {
             title: "catch what it got wrong",
             body:
-              "hallucinated apis, silent type bugs, off-by-one errors, broken imports. the bugs ai ships are different from the bugs humans ship. we drill those.",
+              "the bugs ai ships are not the bugs humans ship. you've never been trained on them.",
           },
           {
             title: "direct it deliberately",
             body:
-              "when you understand mutation, scope, and control flow, you can prompt the ai like a tech lead instead of a passenger.",
+              "if you don't understand mutation, you're a passenger in your own ide.",
           },
         ].map((card) => (
           <div key={card.title} className="dojo-card">
@@ -175,7 +175,7 @@ export default async function Home() {
 
       <section>
         <h2 className="t-eyebrow mb-12">
-          {totalChapters} chapters. {totalSteps} runnable steps. free forever.
+          the {totalChapters}-chapter path from cursor-passenger to cursor-driver.
         </h2>
         <PhaseBandedRail
           chapters={v2Chapters}
@@ -185,11 +185,8 @@ export default async function Home() {
 
       <footer className="mt-16 flex flex-wrap items-baseline justify-between gap-3 border-t border-ink-800 pt-6 t-mono-meta">
         <p>
-          press{" "}
-          <kbd className="dojo-kbd">
-            ⌘⇧B
-          </kbd>{" "}
-          anywhere to park a thought without losing your place.
+          <kbd className="dojo-kbd">⌘⇧B</kbd>{" "}
+          dumps a thought without losing your spot in the lesson.
         </p>
         <div className="t-mono-meta flex flex-wrap items-baseline gap-x-2">
           {(() => {
