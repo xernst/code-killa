@@ -132,9 +132,21 @@ export default async function Home() {
           >
             catch ai&apos;s first bug <span aria-hidden>→</span>
           </Link>
+          {/* Follow-on-X CTA. Same visual weight as the primary so the
+              X-follower gate (V1→V2 = 1000 follows) gets a real funnel.
+              Per audit-v6/product.md — "no follow-@TFisPython CTA above
+              the footer" was the #1 product call. */}
+          <a
+            href="https://x.com/intent/follow?screen_name=TFisPython"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="dojo-btn-secondary"
+          >
+            follow on x for daily bugs <span aria-hidden>↗</span>
+          </a>
           <a
             href="#chapters"
-            className="dojo-btn-secondary"
+            className="dojo-btn-tertiary"
           >
             or pick your chapter ↓
           </a>

@@ -18,7 +18,15 @@ interface TweetThisStepProps {
   stepIndex: number;
 }
 
-const SITE = "https://promptdojo.dev";
+// Reality Check audit-v6: don't hardcode promptdojo.dev — the live deploy
+// is on promptdojo.pages.dev until the custom domain is attached. Auto-
+// detect from the current origin so tweets always link to a live URL.
+function siteOrigin(): string {
+  if (typeof window !== "undefined" && window.location?.origin) {
+    return window.location.origin;
+  }
+  return "https://promptdojo.pages.dev";
+}
 
 function buildTweet({
   chapterTitle,
@@ -47,7 +55,7 @@ export default function TweetThisStep({
   lessonSlug,
   stepIndex,
 }: TweetThisStepProps) {
-  const url = `${SITE}/learn/v2/${chapterSlug}/${lessonSlug}/${stepIndex}`;
+  const url = `${siteOrigin()}/learn/v2/${chapterSlug}/${lessonSlug}/${stepIndex}`;
   const text = buildTweet({ chapterTitle, lessonTitle, url });
   const intent = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
 

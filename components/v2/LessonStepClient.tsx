@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import LessonShell from "./LessonShell";
 import ChapterEndCard from "./ChapterEndCard";
+import LessonEndCard from "./LessonEndCard";
 import TweetThisStep from "./TweetThisStep";
 import { phaseForChapter } from "@/lib/curriculum/phases";
 import type { IDEFile, PersistentIDEHandle } from "./PersistentIDE";
@@ -260,6 +261,27 @@ export default function LessonStepClient({
                 tree.toc.chapters[tree.toc.chapters.length - 1]?.slug ===
                 chapter.slug
               }
+            />
+          ) : null}
+          {/* Lesson-end card — last step of a LESSON passed, but more
+              lessons remain in the chapter. The macro-loop resolution
+              surface that didn't exist before audit-v6/engagement.md.
+              5.7× share-density compounding vs ChapterEndCard. */}
+          {next &&
+          passed &&
+          stepIndex === lesson.steps.length - 1 &&
+          next.lessonSlug !== lesson.slug ? (
+            <LessonEndCard
+              chapterTitle={chapter.title}
+              chapterSlug={chapter.slug}
+              lessonTitle={lesson.title}
+              lessonSlug={lesson.slug}
+              stepCount={lesson.steps.length}
+              nextLessonTitle={
+                chapter.lessons.find((l) => l.slug === next.lessonSlug)?.title ??
+                "next lesson"
+              }
+              nextLessonHref={`/learn/v2/${next.chapterSlug}/${next.lessonSlug}/${next.stepIndex}`}
             />
           ) : null}
         </>
