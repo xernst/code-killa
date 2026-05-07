@@ -1,47 +1,90 @@
 "use client";
 
-// Aggressively boot Pyodide as soon as the page mounts, so by the time the
-// user navigates from the landing/start flow into their first lesson,
-// the worker is already warm. Cold-load is ~5-10s of WASM download — we
-// just hide it behind start-flow clicks.
+// Boot Pyodide BEFORE the user reaches a lesson, but only when they show
+// real intent — not on every landing-page view. Triggers the 12 MB WASM
+// download on:
+//   1. mouseover on any link to /learn/v2/* (hover = "I'm about to click")
+//   2. touchstart on any link to /learn/v2/* (mobile equivalent)
+//   3. scrolling past 60% of the viewport (commit-to-content signal)
+//   4. fallback: 8s after mount (long-tail; previously this fired in 1.5s)
 //
-// The worker is a singleton in lib/use-pyodide.ts, so repeat preloads are
-// no-ops. Mount this component on any page that renders BEFORE the lesson
-// shell (landing, /start) and the lesson IDE will see status="ready"
-// immediately when it mounts.
+// The worker is a singleton in lib/use-pyodide.ts so repeat preloads are
+// no-ops. The point of this change: visitors who read the home page and
+// bounce don't pay the 12 MB Pyodide tax. Visitors who actually engage
+// (hover Start, scroll, or stay) still get warm Pyodide before their
+// first lesson IDE mounts.
 
 import { useEffect } from "react";
+
+declare global {
+  interface Window {
+    __ck_pyodide_warm?: boolean;
+  }
+}
 
 export default function PyodidePreloader() {
   useEffect(() => {
     if (typeof window === "undefined") return;
-    // Use requestIdleCallback so we don't compete with the page's own
-    // first-paint critical path. If unavailable (Safari), fall back to a
-    // 200ms setTimeout — still after the LCP.
-    const start = () => {
-      if ((window as { __ck_pyodide_warm?: boolean }).__ck_pyodide_warm) return;
-      (window as { __ck_pyodide_warm?: boolean }).__ck_pyodide_warm = true;
+    if (window.__ck_pyodide_warm) return;
+
+    const startWarmup = () => {
+      if (window.__ck_pyodide_warm) return;
+      window.__ck_pyodide_warm = true;
       try {
         const w = new Worker("/pyodide-worker.js");
         w.postMessage({ type: "init", id: -1 });
-        // We deliberately don't keep a handle on this worker. The same
-        // Worker URL gets cached + reused inside lib/use-pyodide.ts the
-        // moment a real lesson page mounts. The browser keeps the WASM in
-        // module cache so the second instantiation is ~instant.
       } catch {
-        // Worker not supported / blocked — silently degrade. Lesson page
-        // will fall back to its own boot path.
+        // Worker blocked — lesson page falls back to its own boot path.
       }
     };
-    const win = window as Window & {
-      requestIdleCallback?: (cb: () => void, opts?: { timeout: number }) => number;
+
+    // Wrap in requestIdleCallback so the warmup never competes with
+    // first paint or the user's first click.
+    const fire = () => {
+      if (typeof window.requestIdleCallback === "function") {
+        window.requestIdleCallback(startWarmup, { timeout: 1500 });
+      } else {
+        setTimeout(startWarmup, 200);
+      }
     };
-    if (typeof win.requestIdleCallback === "function") {
-      win.requestIdleCallback(start, { timeout: 1500 });
-    } else {
-      const t = setTimeout(start, 200);
-      return () => clearTimeout(t);
-    }
+
+    // Intent signal 1+2: hover/touch on any "go learn" link.
+    const onIntent = (e: Event) => {
+      const target = e.target as HTMLElement | null;
+      const link = target?.closest?.("a[href*='/learn/v2']");
+      if (!link) return;
+      cleanup();
+      fire();
+    };
+
+    // Intent signal 3: user scrolled past 60% of first viewport.
+    const onScroll = () => {
+      if (window.scrollY > window.innerHeight * 0.6) {
+        cleanup();
+        fire();
+      }
+    };
+
+    // Fallback: 8s after mount, fire anyway. Long enough that bouncers
+    // have already left; short enough that a thoughtful reader still
+    // gets warm Pyodide if they decide to dive in.
+    const fallbackTimer = window.setTimeout(() => {
+      cleanup();
+      fire();
+    }, 8000);
+
+    const cleanup = () => {
+      document.removeEventListener("mouseover", onIntent, { capture: true });
+      document.removeEventListener("touchstart", onIntent, { capture: true });
+      window.removeEventListener("scroll", onScroll);
+      window.clearTimeout(fallbackTimer);
+    };
+
+    document.addEventListener("mouseover", onIntent, { capture: true, passive: true });
+    document.addEventListener("touchstart", onIntent, { capture: true, passive: true });
+    window.addEventListener("scroll", onScroll, { passive: true });
+
+    return cleanup;
   }, []);
 
   return null;
