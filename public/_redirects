@@ -1,2 +1,8 @@
-/onboarding   /start   301
-/onboarding/  /start/  301
+# Cloudflare Pages redirects.
+# Format: <from> <to> <status>
+
+# v1 lesson routes were deleted in audit-v5 cleanup. Anything that
+# landed under /learn/<chapter>/... from old tweet links now bounces
+# to the curriculum index so users find the v2 equivalent.
+/learn/:chapter           /curriculum   301
+/learn/:chapter/*         /curriculum   301

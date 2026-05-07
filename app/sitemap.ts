@@ -1,6 +1,5 @@
 import type { MetadataRoute } from "next";
 import { getV2Toc, getV2Chapter } from "@/lib/content-v2";
-import { getChapters } from "@/lib/content";
 
 const SITE = "https://promptdojo.dev";
 
@@ -32,14 +31,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         });
       }
     }
-  }
-
-  for (const c of getChapters()) {
-    out.push({
-      url: `${SITE}/learn/${c.slug}`,
-      changeFrequency: "yearly",
-      priority: 0.3,
-    });
   }
 
   return out;
