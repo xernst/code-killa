@@ -23,7 +23,7 @@ function getWorker(): Worker {
 }
 
 export function usePyodide() {
-  const [status, setStatus] = useState<"idle" | "loading" | "ready">("idle");
+  const [status, setStatus] = useState<"idle" | "loading" | "ready">("loading");
   const pendingRef = useRef<Map<number, (r: RunResult) => void>>(new Map());
   const idRef = useRef(0);
 
@@ -45,7 +45,6 @@ export function usePyodide() {
       }
     };
     w.addEventListener("message", onMsg);
-    setStatus((s) => (s === "idle" ? "loading" : s));
     w.postMessage({ type: "init", id: -1 });
     return () => {
       w.removeEventListener("message", onMsg);

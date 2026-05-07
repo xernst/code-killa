@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Lightbulb } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -16,12 +16,10 @@ type Props = {
   onReveal?: (level: number) => void;
 };
 
-export default function HintReveal({ hints, resetKey, onReveal }: Props) {
+export default function HintReveal({ hints, resetKey: _resetKey, onReveal }: Props) {
+  void _resetKey;
   const [revealedLevels, setRevealedLevels] = useState<number[]>([]);
 
-  useEffect(() => {
-    setRevealedLevels([]);
-  }, [resetKey]);
 
   if (!hints || hints.length === 0) return null;
 

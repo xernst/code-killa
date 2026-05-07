@@ -8,6 +8,7 @@ import {
   buildSessionCookie,
   signSession,
 } from "../_lib/session";
+import { safeReturnPath } from "../_lib/return-path";
 
 type AuthKV = {
   get: (key: string) => Promise<string | null>;
@@ -56,9 +57,9 @@ export const onRequestGet = async (ctx: Ctx): Promise<Response> => {
     );
   }
 
-  let parsed: { email?: string };
+  let parsed: { email?: string; next?: string | null };
   try {
-    parsed = JSON.parse(raw) as { email?: string };
+    parsed = JSON.parse(raw) as { email?: string; next?: string | null };
   } catch {
     return htmlError("malformed token.", 500);
   }
@@ -70,10 +71,18 @@ export const onRequestGet = async (ctx: Ctx): Promise<Response> => {
   await ctx.env.AUTH_KV.delete(`auth:${token}`);
 
   const cookieValue = await signSession(email, ctx.env.SESSION_SECRET);
+
+  // Honor the validated `next` path so the user lands back on the
+  // lesson they were on, not the home page. Per audit-v6/code-review #2.
+  const safeNext = safeReturnPath(parsed.next ?? null);
+  const location = safeNext
+    ? `${safeNext}${safeNext.includes("?") ? "&" : "?"}signed-in=1`
+    : "/?signed-in=1";
+
   return new Response(null, {
     status: 302,
     headers: {
-      location: "/?signed-in=1",
+      location,
       "set-cookie": buildSessionCookie(cookieValue),
       "cache-control": "no-store",
     },

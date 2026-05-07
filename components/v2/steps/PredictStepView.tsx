@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { rehypeHighlightPinned } from "@/lib/rehype-highlight-pinned";
@@ -22,12 +22,6 @@ export default function PredictStepView({
   const [hintsUsed, setHintsUsed] = useState(0);
   const startedAtRef = useRef(new Date().toISOString());
 
-  useEffect(() => {
-    setPrediction("");
-    setSubmitted(null);
-    setHintsUsed(0);
-    startedAtRef.current = new Date().toISOString();
-  }, [step.id]);
 
   const prompt = step.personalize ? interpolate(step.prompt, profile) : step.prompt;
 

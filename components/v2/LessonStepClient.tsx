@@ -272,13 +272,17 @@ export default function LessonStepClient({
               : "⌘↵ runs the editor."}
           </span>
           <div className="flex items-center gap-4">
-            <TweetThisStep
-              chapterTitle={chapter.title}
-              chapterSlug={chapter.slug}
-              lessonTitle={lesson.title}
-              lessonSlug={lesson.slug}
-              stepIndex={stepIndex}
-            />
+            {/* Share CTA only at peak emotion (post-pass), never while
+                the user is still grinding. Per audit-v6/engagement.md. */}
+            {passed ? (
+              <TweetThisStep
+                chapterTitle={chapter.title}
+                chapterSlug={chapter.slug}
+                lessonTitle={lesson.title}
+                lessonSlug={lesson.slug}
+                stepIndex={stepIndex}
+              />
+            ) : null}
             <button
               type="button"
               onClick={handleContinue}

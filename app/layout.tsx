@@ -8,6 +8,7 @@ const fraunces = Fraunces({ subsets: ["latin"], variable: "--font-fraunces" });
 const jetbrains = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jetbrains" });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://promptdojo.dev"),
   title: {
     default: "promptdojo — free runnable python course",
     template: "%s",

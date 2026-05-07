@@ -6,7 +6,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useMemo } from "react";
 
 const KNOWN_PATHS = [
   "/",
@@ -41,21 +41,15 @@ function levenshtein(a: string, b: string): number {
 }
 
 export default function DidYouMean() {
-  const [suggestion, setSuggestion] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
+  const suggestion = useMemo(() => {
+    if (typeof window === "undefined") return null;
     const path = window.location.pathname;
     let best: { path: string; dist: number } | null = null;
     for (const cand of KNOWN_PATHS) {
       const dist = levenshtein(path, cand);
-      if (best === null || dist < best.dist) {
-        best = { path: cand, dist };
-      }
+      if (best === null || dist < best.dist) best = { path: cand, dist };
     }
-    if (best && best.dist > 0 && best.dist <= 4) {
-      setSuggestion(best.path);
-    }
+    return best && best.dist > 0 && best.dist <= 4 ? best.path : null;
   }, []);
 
   if (!suggestion) return null;

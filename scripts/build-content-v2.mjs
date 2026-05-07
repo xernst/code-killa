@@ -32,8 +32,8 @@ import matter from "gray-matter";
 import YAML from "yaml";
 
 // We re-derive the schema in this Node script because importing TS directly
-// requires a build step. Zod is JS-native; we mirror the shapes minimally
-// using zod itself, imported from node_modules.
+// requires a build step. This mirror MUST stay in lockstep with
+// lib/content/schema.ts. Keep changes paired, and run `pnpm check`.
 import { z } from "zod";
 
 const REPO = resolve(new URL("..", import.meta.url).pathname);
@@ -85,7 +85,21 @@ const AstMatchGrader = z.object({
   mustNot: z.array(AstRule).default([]),
 });
 
-const Grader = z.union([StringEqualityGrader, StdoutEqualityGrader, AstMatchGrader]);
+const LlmJudgeGrader = z.lazy(() =>
+  z.object({
+    kind: z.literal("llm-judge"),
+    rubric: z.string(),
+    fallbackTo: Grader.optional(),
+    maxScore: z.number().min(0).max(1),
+  }),
+);
+
+const Grader = z.union([
+  StringEqualityGrader,
+  StdoutEqualityGrader,
+  AstMatchGrader,
+  LlmJudgeGrader,
+]);
 
 const StepBaseFields = {
   id: z.string().optional(), // build script supplies if missing
@@ -112,7 +126,7 @@ const MultipleChoiceStep = z.object({
   ...StepBaseFields,
   prompt: z.string(),
   options: z.array(z.object({ id: z.string(), label: z.string(), explain: z.string().optional() })),
-  answerIds: z.array(z.string()).min(1),
+  answerIds: z.array(z.string()).length(1),
   shuffle: z.boolean().default(false),
   code: z.string().optional(),
   runnable: z.boolean().default(true),

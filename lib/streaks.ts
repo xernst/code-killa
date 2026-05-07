@@ -12,7 +12,6 @@ import type { ProgressV2 } from "./storage";
 import {
   FRESH_STREAK,
   loadProgress,
-  loadProgressV2,
   todayISO,
   updateProgressV2,
 } from "./storage";

@@ -43,21 +43,21 @@ export default function StepRouter(props: Props) {
   const { step } = props;
   switch (step.type) {
     case "read":
-      return <ReadView {...(props as StepViewProps<ReadStep>)} />;
+      return <ReadView key={step.id} {...(props as StepViewProps<ReadStep>)} />;
     case "mc":
-      return <MultipleChoiceView {...(props as StepViewProps<MultipleChoiceStep>)} />;
+      return <MultipleChoiceView key={step.id} {...(props as StepViewProps<MultipleChoiceStep>)} />;
     case "fill":
-      return <FillBlankView {...(props as StepViewProps<FillBlankStep>)} />;
+      return <FillBlankView key={step.id} {...(props as StepViewProps<FillBlankStep>)} />;
     case "predict":
-      return <PredictView {...(props as StepViewProps<PredictStep>)} />;
+      return <PredictView key={step.id} {...(props as StepViewProps<PredictStep>)} />;
     case "fix":
-      return <FixBugView {...(props as StepViewProps<FixBugStep>)} />;
+      return <FixBugView key={step.id} {...(props as StepViewProps<FixBugStep>)} />;
     case "write":
-      return <WriteView {...(props as StepViewProps<WriteStep>)} />;
+      return <WriteView key={step.id} {...(props as StepViewProps<WriteStep>)} />;
     case "reorder":
-      return <ReorderView {...(props as StepViewProps<ReorderStep>)} />;
+      return <ReorderView key={step.id} {...(props as StepViewProps<ReorderStep>)} />;
     case "checkpoint":
-      return <CheckpointView {...(props as StepViewProps<CheckpointStep>)} />;
+      return <CheckpointView key={step.id} {...(props as StepViewProps<CheckpointStep>)} />;
     default:
       return <UnknownStep step={step} />;
   }

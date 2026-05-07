@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { rehypeHighlightPinned } from "@/lib/rehype-highlight-pinned";
@@ -63,13 +63,6 @@ export default function FillBlankStepView({
   const [allCorrect, setAllCorrect] = useState(false);
   const [hintsUsed, setHintsUsed] = useState(0);
 
-  useEffect(() => {
-    setValues(Object.fromEntries(step.blanks.map((b) => [b.id, ""])));
-    setSubmitted(false);
-    setAllCorrect(false);
-    setHintsUsed(0);
-    startedAtRef.current = new Date().toISOString();
-  }, [step.id, step.blanks]);
 
   const allFilled = step.blanks.every((b) => values[b.id]?.length > 0);
 

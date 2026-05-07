@@ -46,9 +46,6 @@ export default function V2ChapterNav({
     return () => window.removeEventListener("promptdojo:progress-v2", refresh);
   }, []);
 
-  useEffect(() => {
-    setOpenChapter(activeChapter);
-  }, [activeChapter]);
 
   return (
     <nav className="flex h-full flex-col overflow-y-auto bg-ink-900">

@@ -51,14 +51,19 @@ function writeProgress(payload: unknown) {
 }
 
 function isProgressEmpty(payload: unknown): boolean {
-  if (!payload || typeof payload !== "object") return true;
+  return countSteps(payload) === 0;
+}
+
+function countSteps(payload: unknown): number {
+  if (!payload || typeof payload !== "object") return 0;
   const obj = payload as {
     lessons?: Record<string, unknown>;
     steps?: Record<string, unknown>;
   };
-  const lessonCount = obj.lessons ? Object.keys(obj.lessons).length : 0;
-  const stepCount = obj.steps ? Object.keys(obj.steps).length : 0;
-  return lessonCount === 0 && stepCount === 0;
+  return (
+    (obj.lessons ? Object.keys(obj.lessons).length : 0) +
+    (obj.steps ? Object.keys(obj.steps).length : 0)
+  );
 }
 
 function isValidEmail(s: string): boolean {
@@ -114,10 +119,17 @@ async function postLogout(): Promise<void> {
 
 async function postRequestLink(email: string): Promise<boolean> {
   try {
+    // Send the current path so /api/auth/verify can redirect the user
+    // back to the lesson they were on instead of dumping them on /.
+    // Per audit-v6/code-review #2.
+    const next =
+      typeof window !== "undefined"
+        ? window.location.pathname + window.location.search + window.location.hash
+        : null;
     const r = await fetch("/api/auth/request", {
       method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ email }),
+      body: JSON.stringify({ email, next }),
     });
     return r.ok;
   } catch {
@@ -152,15 +164,24 @@ export default function LoginToSave() {
       if (sessionEmail) {
         setEmail(sessionEmail);
         setStatus("logged-in");
-        // Just-signed-in branch: bring down the remote payload and
-        // overwrite local IFF local is empty. Otherwise push local up.
+        // Just-signed-in branch. Three cases:
+        //   1. local empty, remote exists → take remote (return user)
+        //   2. local non-empty, remote empty → push local (first save)
+        //   3. BOTH non-empty → prefer whichever has MORE step progress.
+        //      audit-v6/code-review #1: prior logic ("push local if non-empty")
+        //      could clobber the other device's months of progress when a
+        //      user signed in on a new laptop after clicking around as a guest.
+        //      Real fix is per-step lastModified merge; this is the safe stopgap.
         const params = new URLSearchParams(window.location.search);
         if (params.get("signed-in") === "1") {
           const local = readProgress();
-          if (isProgressEmpty(local)) {
-            const remote = await fetchLoad();
-            if (!cancelled && remote) writeProgress(remote);
-          } else {
+          const remote = await fetchLoad();
+          if (cancelled) return;
+          const localCount = countSteps(local);
+          const remoteCount = countSteps(remote);
+          if (remoteCount > localCount) {
+            if (remote) writeProgress(remote);
+          } else if (localCount > 0) {
             void postSave(local);
           }
           // Strip the marker so reload doesn't re-run the merge.

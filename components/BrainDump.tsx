@@ -9,10 +9,9 @@ import { loadProgress, updateProgress } from "@/lib/storage";
 export default function BrainDump() {
   const [open, setOpen] = useState(false);
   const [draft, setDraft] = useState("");
-  const [items, setItems] = useState<string[]>([]);
+  const [items, setItems] = useState<string[]>(() => loadProgress().brainDump);
 
   useEffect(() => {
-    setItems(loadProgress().brainDump);
     const onKey = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key.toLowerCase() === "b") {
         e.preventDefault();

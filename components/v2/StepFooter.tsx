@@ -40,10 +40,6 @@ export default function StepFooter({
   const hints = useMemo<Hint[]>(() => step.hint ?? [], [step.hint]);
   const [hintsShown, setHintsShown] = useState(0);
 
-  // Reset reveal count when the step changes (different id = different hints).
-  useEffect(() => {
-    setHintsShown(0);
-  }, [step.id]);
 
   const revealNextHint = useCallback(() => {
     setHintsShown((n) => {

@@ -1,7 +1,7 @@
 // scripts/build-content.mjs
 // Reads the canonical course at $COURSE_PATH (defaults to ../python-course-2026
 // relative to the repo), runs every solutions/exercise_*.py to capture expected
-// stdout, and emits lib/generated/manifest.json — the only thing the app reads
+// stdout, and emits lib/generated/manifest.json for the legacy v1 course surface.
 // at runtime. We deliberately do NOT symlink the course into the repo, because
 // Turbopack/Tailwind walks symlinks and panics when they leave the project root.
 

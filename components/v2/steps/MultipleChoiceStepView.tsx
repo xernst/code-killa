@@ -22,14 +22,6 @@ export default function MultipleChoiceStepView({
   const [hintsUsed, setHintsUsed] = useState(0);
   const startedAtRef = useRef(new Date().toISOString());
 
-  // Reset internal state when the step changes — keeps the view honest
-  // when LessonShell swaps a new step in without unmounting.
-  useEffect(() => {
-    setSelected(null);
-    setSubmitted(false);
-    setHintsUsed(0);
-    startedAtRef.current = new Date().toISOString();
-  }, [step.id]);
 
   const prompt = step.personalize ? interpolate(step.prompt, profile) : step.prompt;
   const isMulti = step.answerIds.length > 1;

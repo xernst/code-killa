@@ -4,12 +4,6 @@
 
 import { buildClearCookie } from "../_lib/session";
 
-const json = (body: unknown, status = 200) =>
-  new Response(JSON.stringify(body), {
-    status,
-    headers: { "content-type": "application/json", "cache-control": "no-store" },
-  });
-
 export const onRequestPost = async (): Promise<Response> => {
   return new Response(JSON.stringify({ ok: true }), {
     status: 200,

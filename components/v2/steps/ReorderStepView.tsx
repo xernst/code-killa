@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { ArrowDown, ArrowUp, CheckCircle2, GripVertical, XCircle } from "lucide-react";
@@ -38,12 +38,6 @@ export default function ReorderStepView({
   const [grabbed, setGrabbed] = useState<string | null>(null);
   const startedAtRef = useRef(new Date().toISOString());
 
-  useEffect(() => {
-    setOrder(initialOrder);
-    setSubmitted(null);
-    setGrabbed(null);
-    startedAtRef.current = new Date().toISOString();
-  }, [initialOrder]);
 
   const prompt = step.personalize ? interpolate(step.prompt, profile) : step.prompt;
 

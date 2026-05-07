@@ -77,26 +77,33 @@ export async function verifySession(
   cookieValue: string | null | undefined,
   secret: string,
 ): Promise<SessionPayload | null> {
-  if (!cookieValue) return null;
-  const parts = cookieValue.split(".");
-  if (parts.length !== 2) return null;
-  const [payloadB64, sig] = parts;
-  const ok = await hmacVerify(secret, payloadB64, sig);
-  if (!ok) return null;
-  let payload: SessionPayload;
+  // Hard-fail safe: any throw inside this function returns null instead
+  // of bubbling 500 to /api/save, /api/load, /api/auth/session.
+  // Per audit-v6/code-review #3.
   try {
-    payload = JSON.parse(dec.decode(b64urlDecode(payloadB64))) as SessionPayload;
+    if (!cookieValue) return null;
+    const parts = cookieValue.split(".");
+    if (parts.length !== 2) return null;
+    const [payloadB64, sig] = parts;
+    const ok = await hmacVerify(secret, payloadB64, sig);
+    if (!ok) return null;
+    let payload: SessionPayload;
+    try {
+      payload = JSON.parse(dec.decode(b64urlDecode(payloadB64))) as SessionPayload;
+    } catch {
+      return null;
+    }
+    if (
+      typeof payload.email !== "string" ||
+      typeof payload.exp !== "number" ||
+      payload.exp < Math.floor(Date.now() / 1000)
+    ) {
+      return null;
+    }
+    return payload;
   } catch {
     return null;
   }
-  if (
-    typeof payload.email !== "string" ||
-    typeof payload.exp !== "number" ||
-    payload.exp < Math.floor(Date.now() / 1000)
-  ) {
-    return null;
-  }
-  return payload;
 }
 
 export function readSessionCookie(req: Request): string | null {

@@ -8,6 +8,8 @@
 import { sendEmail, type EmailEnv } from "../_lib/email";
 import { normalizeEmail } from "../_lib/validate";
 import { generateToken } from "../_lib/session";
+import { safeReturnPath } from "../_lib/return-path";
+import { ipFrom, isRateLimited, tooManyRequests } from "../_lib/rate-limit";
 
 type AuthKV = {
   put: (
@@ -33,15 +35,27 @@ const json = (body: unknown, status = 200) =>
   });
 
 export const onRequestPost = async (ctx: Ctx): Promise<Response> => {
-  let body: { email?: unknown };
+  // 5 magic-link requests per IP per minute. Stops link-bombing a target
+  // inbox. Per audit-v6/code-review #4.
+  const ip = ipFrom(ctx.request);
+  if (isRateLimited(ip, "auth-request", { max: 5, windowMs: 60_000 })) {
+    return tooManyRequests();
+  }
+
+  let body: { email?: unknown; next?: unknown };
   try {
-    body = (await ctx.request.json()) as { email?: unknown };
+    body = (await ctx.request.json()) as { email?: unknown; next?: unknown };
   } catch {
     return json({ ok: false, error: "invalid request" }, 400);
   }
 
   const email = normalizeEmail(body.email);
   if (!email) return json({ ok: false, error: "invalid email" }, 400);
+
+  // Optional same-origin return path so verify can redirect the user
+  // back to the lesson they were on. Per audit-v6/code-review #2.
+  const next =
+    typeof body.next === "string" ? safeReturnPath(body.next) : null;
 
   if (!ctx.env?.AUTH_KV || !ctx.env?.SESSION_SECRET) {
     console.error("[auth:request] AUTH_KV or SESSION_SECRET binding missing");
@@ -51,7 +65,7 @@ export const onRequestPost = async (ctx: Ctx): Promise<Response> => {
   const token = generateToken();
   await ctx.env.AUTH_KV.put(
     `auth:${token}`,
-    JSON.stringify({ email, createdAt: Date.now() }),
+    JSON.stringify({ email, createdAt: Date.now(), next }),
     { expirationTtl: TOKEN_TTL_SECONDS },
   );
 
