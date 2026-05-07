@@ -4,12 +4,20 @@ import Wordmark from "@/components/Wordmark";
 import StatStrip from "@/components/StatStrip";
 import { PHASES } from "@/lib/curriculum/phases";
 import { formatDateShort, githubStats } from "@/lib/github-stats";
+import { getV2Toc } from "@/lib/content-v2";
 
-export const metadata: Metadata = {
-  title: "what is promptdojo? — about the project",
-  description:
-    "promptdojo is a free, open-source python school for builders in the ai era. read what it is, why it exists, what's inside, and how it works. 25 chapters, 624 runnable steps, free forever.",
-};
+// Dynamic metadata + body counts. Per UI audit (2026-05-07): the about page
+// previously lied "25 chapters, 624 steps" while home derives from getV2Toc.
+// Counts now flow from a single source.
+export async function generateMetadata(): Promise<Metadata> {
+  const toc = getV2Toc();
+  const chapters = toc.chapters.length;
+  const steps = toc.chapters.reduce((a, c) => a + c.stepCount, 0);
+  return {
+    title: "what is promptdojo? — about the project",
+    description: `promptdojo is a free, open-source python school for builders in the ai era. read what it is, why it exists, what's inside, and how it works. ${chapters} chapters, ${steps} runnable steps, free forever.`,
+  };
+}
 
 const wedgeColumns = [
   {
@@ -77,7 +85,7 @@ const faqs = [
   },
   {
     q: "how long does it take?",
-    a: "624 steps. most steps are 30 seconds. realistically: 8–15 hours total spread over a few weeks.",
+    a: "most steps are 30 seconds. realistically: 8–15 hours total spread over a few weeks.",
   },
   {
     q: "how often is it updated?",
@@ -89,7 +97,10 @@ const faqs = [
   },
 ];
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const toc = getV2Toc();
+  const chapterCount = toc.chapters.length;
+  const totalSteps = toc.chapters.reduce((a, c) => a + c.stepCount, 0);
   return (
     <main id="main" className="mx-auto max-w-4xl px-6 pt-20 pb-12 sm:pt-24 sm:pb-16">
       {/* ───────── 1. HERO ─────────────────────────────────────── */}
@@ -146,7 +157,7 @@ export default function AboutPage() {
       <section className="py-16">
         <div className="t-eyebrow mb-3">the curriculum</div>
         <h2 className="t-section">
-          25 chapters. 624 <em className="t-emph">runnable</em> steps. zero install.
+          {chapterCount} chapters. {totalSteps} <em className="t-emph">runnable</em> steps. zero install.
         </h2>
         <div className="mt-8 grid gap-3 sm:grid-cols-2">
           {PHASES.map((p) => (
@@ -168,7 +179,7 @@ export default function AboutPage() {
       <section className="py-16">
         <div className="t-eyebrow mb-3">the loop</div>
         <h2 className="t-section">
-          <em className="t-emph">read</em>. <em className="t-emph">run</em>. <em className="t-emph">fix</em>. repeat 624 times.
+          <em className="t-emph">read</em>. <em className="t-emph">run</em>. <em className="t-emph">fix</em>. repeat {totalSteps} times.
         </h2>
         <div className="mt-8 grid gap-3 md:grid-cols-3">
           {steps.map((c) => (

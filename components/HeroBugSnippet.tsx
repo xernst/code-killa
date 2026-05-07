@@ -43,7 +43,7 @@ export default function HeroBugSnippet() {
             {"\n"}
             top_3 ={" "}
             <span
-              style={{ color: "var(--err)", background: "rgba(239,68,68,0.14)" }}
+              style={{ color: "var(--color-err)", background: "rgba(239,68,68,0.14)" }}
             >
               <span className="text-green-500">sorted</span>(products, key=
               <span className="text-green-500">lambda</span> p: p.revenue)[:
