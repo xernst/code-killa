@@ -1,18 +1,25 @@
 // Hero bug snippet — the screenshot-anchor for the home page.
 //
-// The hero needs a bug AI actually ships, with a consequence the
-// audience (PMs, marketers, ops folks) recognizes from real life.
+// The bug must be VISIBLE in the code. Previous versions ("missing
+// check", "truthiness or") had bugs that lived in absence or in
+// Python lore — a non-dev couldn't see the wrongness on the page.
 //
-// Design constraints:
-//   1. Readable to a non-dev (a for-loop with an if is the floor)
-//   2. AI plausibly writes this — not a Python gotcha disguised as one
-//   3. Business consequence is visceral (spam complaints, lost money,
-//      angry customer, broken report — not "AttributeError")
-//   4. The fix is obvious once you see it (one missing line)
+// This version uses Python's ascending-sort default + a slice. The
+// code reads as "get the top 3 by revenue." The reader who knows
+// Python catches the bug instantly: sorted() goes low-to-high, so
+// [:3] picks the WORST sellers, not the best. AI writes this
+// constantly — confidently wrong because Python's default cuts
+// against english intuition ("top 3" → the smallest 3 are NOT
+// the top 3).
 //
-// This bug — "the missing check" — is the #1 thing AI gets wrong.
-// AI does exactly what you asked. It doesn't ask "should we?". You
-// catch this in your unsubscribe complaints, not your tests.
+// Why this is the right hook:
+//   - the code is short, readable to anyone who's seen Python
+//   - the bug is invisible without Python knowledge — which is
+//     literally what the course teaches you
+//   - the consequence is visceral: "you featured your worst
+//     products on the homepage for a week"
+//   - the fix is one keyword (reverse=True) — small enough that
+//     the reader thinks "i could learn that"
 
 export default function HeroBugSnippet() {
   return (
@@ -32,43 +39,37 @@ export default function HeroBugSnippet() {
           style={{ fontVariantLigatures: "none" }}
         >
           <code>
-            <span className="text-ink-500"># email new signups about the launch</span>
+            <span className="text-ink-500"># top 3 best sellers for the homepage</span>
             {"\n"}
-            <span className="text-green-500">for</span> user{" "}
-            <span className="text-green-500">in</span> users:
-            {"\n  "}
-            <span className="text-green-500">if</span> user.created_at{" "}
-            &gt; last_monday:
-            {"\n    "}
-            send_email(user.email,{" "}
-            <span className="text-green-300">&quot;we just launched!&quot;</span>
-            ){"\n\n"}
-            <span className="text-ink-500"># expected: welcome emails to new signups</span>
-            {"\n"}
+            top_3 ={" "}
             <span
               style={{ color: "var(--err)", background: "rgba(239,68,68,0.14)" }}
             >
-              <span className="text-ink-500"># shipped:  also emailed 14 users who unsubscribed last week</span>
+              <span className="text-green-500">sorted</span>(products, key=
+              <span className="text-green-500">lambda</span> p: p.revenue)[:
+              <span className="text-green-300">3</span>]
             </span>
+            {"\n\n"}
+            <span className="text-ink-500"># expected: 3 best-selling products</span>
+            {"\n"}
+            <span className="text-ink-500"># shipped:  3 worst sellers, featured all week</span>
           </code>
         </pre>
       </div>
-      {/* row 3 — annotation strip. Three stacked display lines because
-          this paragraph is the strongest pain → product fit line on the
-          page (per audit copy-v1/twitter.md + voc.md). Each line is its
-          own quotable beat. */}
+      {/* row 3 — annotation strip. Display-line typography so each beat
+          is its own quotable moment (per audit copy-v1/twitter.md). */}
       <div className="border-t border-ink-800 px-5 py-5">
         <div className="font-mono text-[10px] uppercase tracking-wider text-err">
-          the missing check
+          ascending by default
         </div>
         <p className="mt-2 font-display text-base leading-snug text-ink-100 sm:text-lg">
-          ai does exactly what you asked.
+          <code className="font-mono text-green-400">sorted()</code> goes
+          low-to-high unless you tell it.
           <br />
-          it doesn&apos;t ask{" "}
-          <em className="not-italic text-green-400">should we?</em>
+          you didn&apos;t. <span className="text-ink-300">your homepage featured your worst inventory.</span>
           <br />
           <span className="text-ink-300">
-            you find this bug in your unsubscribe complaints, not your tests.
+            this is the python every cursor user ships and never reads.
           </span>
         </p>
       </div>
