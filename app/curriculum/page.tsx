@@ -11,12 +11,18 @@ import StatStrip from "@/components/StatStrip";
 import CurriculumAccordion from "@/components/v2/CurriculumAccordion";
 import { getV2Toc, getV2Chapter } from "@/lib/content-v2";
 
-export const metadata: Metadata = {
-  title: "the curriculum · promptdojo",
-  description:
-    "25 chapters, 624 runnable steps. read · run · fix. free, open-source, no signup.",
-  alternates: { canonical: "/curriculum" },
-};
+// Dynamic metadata so chapter/step counts always match getV2Toc.
+// Per UI audit 2026-05-07.
+export async function generateMetadata(): Promise<Metadata> {
+  const toc = getV2Toc();
+  const chapters = toc.chapters.length;
+  const steps = toc.chapters.reduce((a, c) => a + c.stepCount, 0);
+  return {
+    title: "the curriculum · promptdojo",
+    description: `${chapters} chapters, ${steps} runnable steps. read · run · fix. free, open-source, no signup.`,
+    alternates: { canonical: "/curriculum" },
+  };
+}
 
 export default async function Curriculum() {
   const toc = getV2Toc();

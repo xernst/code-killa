@@ -49,20 +49,28 @@ export default function EmailSignup() {
 
       <form
         onSubmit={onSubmit}
-        className="mt-10 flex w-full max-w-md flex-col gap-3 sm:flex-row"
+        className="mt-10 flex w-full max-w-md flex-col gap-3 text-left sm:flex-row sm:items-end"
       >
-        <input
-          type="email"
-          name="email"
-          required
-          autoComplete="email"
-          placeholder="you@email.com"
-          aria-label="email address"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          disabled={pending || state?.ok === true}
-          className="flex-1 rounded-md border border-ink-700 bg-ink-950 px-4 py-3 text-ink-100 placeholder:text-ink-600 focus:border-green-500 focus:outline-none disabled:opacity-50"
-        />
+        <div className="flex-1">
+          <label
+            htmlFor="email-signup-input"
+            className="mb-1 block font-mono text-[10px] uppercase tracking-[0.3em] text-ink-400"
+          >
+            email
+          </label>
+          <input
+            id="email-signup-input"
+            type="email"
+            name="email"
+            required
+            autoComplete="email"
+            placeholder="you@email.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            disabled={pending || state?.ok === true}
+            className="w-full rounded-md border border-ink-700 bg-ink-950 px-4 py-3 text-ink-100 placeholder:text-ink-600 focus:border-green-500 focus:outline-none disabled:opacity-50"
+          />
+        </div>
         <button
           type="submit"
           disabled={pending || state?.ok === true}

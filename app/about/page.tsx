@@ -110,13 +110,13 @@ export default async function AboutPage() {
           <span>what is this?</span>
         </div>
         <h1 className="t-hero">
-          a python school built for the version of you that lives in cursor.
+          you live in cursor now. <em className="t-emph">read what it wrote.</em>
         </h1>
         <p className="t-body mt-8 max-w-2xl">
-          promptdojo teaches you the python you need to direct ai agents, read
-          what they wrote, and catch what they got wrong.{" "}
+          promptdojo is the python school for the new job — directing ai
+          agents, reading what they wrote, catching what they got wrong.{" "}
           <em className="italic text-ink-100">it&apos;s not a syntax course.</em>{" "}
-          it&apos;s a school for the new job: editing the model.
+          it&apos;s a school for editing the model.
         </p>
         <div className="mt-10 flex flex-wrap items-center gap-3">
           <Link href="/learn/v2/variables" className="dojo-btn-primary">

@@ -3,14 +3,22 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "build:content:v1": "node scripts/build-content.mjs",
+    "build:content:v2": "node scripts/build-content-v2.mjs",
     "build:content": "node scripts/build-content.mjs && node scripts/build-content-v2.mjs",
     "copy:pyodide": "node scripts/copy-pyodide.mjs",
-    "predev": "node scripts/copy-pyodide.mjs && node scripts/build-content.mjs && node scripts/build-content-v2.mjs && node scripts/fetch-github-stats.mjs",
-    "prebuild": "node scripts/copy-pyodide.mjs && node scripts/build-content.mjs && node scripts/build-content-v2.mjs && node scripts/fetch-github-stats.mjs",
+    "predev": "node scripts/copy-pyodide.mjs && node scripts/build-content-v2.mjs && node scripts/fetch-github-stats.mjs",
+    "prebuild": "node scripts/copy-pyodide.mjs && node scripts/build-content-v2.mjs && node scripts/fetch-github-stats.mjs",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit",
+    "check:content:v1": "node scripts/build-content.mjs",
+    "check:content:v2": "node scripts/build-content-v2.mjs",
+    "check": "pnpm lint && pnpm typecheck && pnpm check:content:v2 && pnpm build",
+    "check:full": "pnpm lint && pnpm typecheck && pnpm check:content:v1 && pnpm check:content:v2 && pnpm build",
+    "smoke": "node scripts/smoke.mjs"
   },
   "dependencies": {
     "@codemirror/autocomplete": "^6.20.1",

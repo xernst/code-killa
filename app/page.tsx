@@ -155,29 +155,32 @@ export default async function Home() {
         stepIdsByChapter={stepIdsByChapter}
       />
 
-      <section className="mt-16 grid grid-cols-1 gap-6 sm:grid-cols-3">
-        {[
-          {
-            title: "read what ai wrote",
-            body:
-              "ai wrote most of your codebase. you can't read it. that's the new illiteracy.",
-          },
-          {
-            title: "catch what it got wrong",
-            body:
-              "the bugs ai ships are not the bugs humans ship. you've never been trained on them.",
-          },
-          {
-            title: "direct it deliberately",
-            body:
-              "if you don't understand mutation, you're a passenger in your own ide.",
-          },
-        ].map((card) => (
-          <div key={card.title} className="dojo-card">
-            <div className="t-h3">{card.title}</div>
-            <p className="t-body-sm mt-2">{card.body}</p>
-          </div>
-        ))}
+      <section className="mt-16">
+        <div className="t-eyebrow mb-6">the three things you actually learn</div>
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
+          {[
+            {
+              title: "read what ai wrote",
+              body:
+                "ai wrote most of your codebase. you can't read it. that's the new illiteracy.",
+            },
+            {
+              title: "catch what it got wrong",
+              body:
+                "the bugs ai ships are not the bugs humans ship. you've never been trained on them.",
+            },
+            {
+              title: "direct it deliberately",
+              body:
+                "if you don't understand mutation, you're a passenger in your own ide.",
+            },
+          ].map((card) => (
+            <div key={card.title} className="dojo-card">
+              <div className="t-h3">{card.title}</div>
+              <p className="t-body-sm mt-2">{card.body}</p>
+            </div>
+          ))}
+        </div>
       </section>
 
       <StatStrip className="mt-24 mb-12" />
@@ -197,11 +200,12 @@ export default async function Home() {
       </section>
 
       <footer className="mt-16 flex flex-wrap items-baseline justify-between gap-3 border-t border-ink-800 pt-6 t-mono-meta">
-        <p>
-          <kbd className="dojo-kbd">⌘⇧B</kbd>{" "}
-          dumps a thought without losing your spot in the lesson.
-        </p>
-        <div className="t-mono-meta flex flex-wrap items-baseline gap-x-2">
+        {/* Lesson keyboard hint hidden on the home page — it has no
+            "spot in the lesson" yet, so the kbd promise is unearned.
+            UI audit 2026-05-07. The hint stays on lesson pages where
+            it's contextual. */}
+        <span className="text-ink-500">a school for the new job: editing the model.</span>
+        <div className="t-mono-meta flex flex-wrap items-baseline gap-x-3 sm:gap-x-2">
           {(() => {
             const lc = formatDateShort(githubStats.lastCommitISO);
             return lc ? <span>shipped {lc}</span> : null;
