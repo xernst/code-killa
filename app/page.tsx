@@ -23,7 +23,7 @@ export async function generateMetadata(): Promise<Metadata> {
     0,
   );
   return {
-    metadataBase: new URL("https://promptdojo.pages.dev"),
+    metadataBase: new URL("https://promptdojo.dev"),
     title: "promptdojo — free runnable python course for ai builders",
     description: `free, open-source python course for pms, marketers, and ops folks who use cursor and claude code daily. ${chapters} chapters, ${steps} runnable steps, runs in your browser. no signup, no paywall.`,
     alternates: { canonical: "https://promptdojo.dev/" },

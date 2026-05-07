@@ -41,6 +41,28 @@ npx serve out           # quick local serve at http://localhost:3000
 
 `pnpm dev` still works for development — `output: "export"` only affects `next build`.
 
+## Environment variables
+
+Set in **Cloudflare Pages → your project → Settings → Environment Variables → Production** (and Preview if you want preview deploys to work too).
+
+| Var | Where to get it | Required? |
+| --- | --- | --- |
+| `BEEHIIV_API_KEY` | beehiiv.com → Settings → Workspace → API → Create API Key (requires Stripe Identity Verification) | Required for the landing-page subscribe form to actually subscribe people. Without it, the form returns a graceful "subscription not configured yet" message. |
+| `BEEHIIV_PUBLICATION_ID` | beehiiv.com → Settings → Workspace → API → Publication ID for API V2 (looks like `pub_xxxxxxxx-...`) | Same as above — required for subscriptions to land. Not actually a secret; can be plaintext. |
+
+After saving env vars, click **Retry deployment** on the latest deployment (env var changes don't auto-redeploy). The `functions/api/subscribe.ts` worker reads them at request time.
+
+## Custom domain
+
+`promptdojo.dev` is registered through Cloudflare. To attach to the Pages project:
+
+1. Cloudflare → **Workers & Pages → promptdojo project → Custom domains → Set up a custom domain**.
+2. Enter `promptdojo.dev` (apex) → Continue. Cloudflare auto-creates the necessary CNAME record because the domain lives in the same account.
+3. Repeat for `www.promptdojo.dev` if you want both → Cloudflare auto-creates the redirect.
+4. Wait ~30 seconds for SSL provisioning (Cloudflare uses Universal SSL — automatic).
+
+No manual DNS records needed when domain + Pages project are in the same Cloudflare account.
+
 ## Things to know later
 
 - **Ads.** Vercel Hobby bans them; Cloudflare Pages doesn't. AdSense at <1k followers earns pennies — defer until V2 (1,000 X followers) and prefer **EthicalAds** (dev-audience network, easier approval) over AdSense. When ready, drop the script into `app/layout.tsx`.
