@@ -1,47 +1,73 @@
-// Cloudflare Pages Function — POST /api/save
-// Accepts { email, payload } and persists payload as JSON in KV under the email key.
-// Last-write-wins. Trustless (no auth verification) by design — see LOGIN-SETUP.md.
+// POST /api/save — persist signed-in user's progress to KV.
+//
+// Email is taken from the HMAC-signed session cookie, NOT the request
+// body — so a logged-in user can only save under their own email.
+// Replaces the prior trustless / email-as-key model (audit-v5 critical).
+//
+// Body: { payload: ProgressV2 }
+// 401 if no valid session, 400 if payload malformed.
+
+import {
+  readSessionCookie,
+  verifySession,
+} from "./_lib/session";
+import {
+  MAX_PAYLOAD_BYTES,
+  sanitizeProgressPayload,
+} from "./_lib/validate";
 
 type KV = {
   put: (key: string, value: string) => Promise<void>;
 };
-type Env = { PROGRESS_KV: KV };
+type Env = { PROGRESS_KV: KV; SESSION_SECRET: string };
 type Ctx = { request: Request; env: Env };
-
-const MAX_BYTES = 200_000;
-const MAX_EMAIL = 200;
 
 const json = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body), {
     status,
-    headers: { "content-type": "application/json" },
+    headers: { "content-type": "application/json", "cache-control": "no-store" },
   });
 
-export async function onRequestPost(ctx: Ctx) {
-  let body: { email?: unknown; payload?: unknown };
+export const onRequestPost = async (ctx: Ctx): Promise<Response> => {
+  if (!ctx.env?.PROGRESS_KV || !ctx.env?.SESSION_SECRET) {
+    return json({ ok: false, error: "service not configured" }, 503);
+  }
+
+  // Cheap guard before parsing the body — reject obviously oversized
+  // requests so we don't burn CPU on a 50MB JSON.parse before checking
+  // the byte cap.
+  const contentLength = Number(ctx.request.headers.get("content-length") ?? 0);
+  if (contentLength > MAX_PAYLOAD_BYTES * 2) {
+    return json({ ok: false, error: "payload too large" }, 413);
+  }
+
+  const cookie = readSessionCookie(ctx.request);
+  const session = await verifySession(cookie, ctx.env.SESSION_SECRET);
+  if (!session) return json({ ok: false, error: "not signed in" }, 401);
+
+  let body: { payload?: unknown };
   try {
-    body = await ctx.request.json();
+    body = (await ctx.request.json()) as { payload?: unknown };
   } catch {
-    return json({ error: "invalid json" }, 400);
+    return json({ ok: false, error: "invalid json" }, 400);
   }
 
-  const email = String(body.email ?? "").trim().toLowerCase();
-  if (!email || !email.includes("@") || email.length > MAX_EMAIL) {
-    return json({ error: "invalid email" }, 400);
+  const sanitized = sanitizeProgressPayload(body.payload);
+  if (!sanitized.ok) {
+    return json({ ok: false, error: sanitized.error ?? "invalid payload" }, 400);
   }
 
-  if (!ctx.env?.PROGRESS_KV) {
+  const value = JSON.stringify({
+    payload: sanitized.value,
+    savedAt: Date.now(),
+  });
+  if (value.length > MAX_PAYLOAD_BYTES) {
     return json(
-      { error: "kv binding missing — configure PROGRESS_KV in Pages settings" },
-      503,
+      { ok: false, error: "payload too large", limit: MAX_PAYLOAD_BYTES },
+      413,
     );
   }
 
-  const value = JSON.stringify({ payload: body.payload, savedAt: Date.now() });
-  if (value.length > MAX_BYTES) {
-    return json({ error: "payload too large", limit: MAX_BYTES }, 413);
-  }
-
-  await ctx.env.PROGRESS_KV.put(email, value);
+  await ctx.env.PROGRESS_KV.put(session.email, value);
   return json({ ok: true, savedAt: Date.now() });
-}
+};

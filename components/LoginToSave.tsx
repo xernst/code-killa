@@ -1,5 +1,21 @@
 "use client";
 
+// LoginToSave — magic-link sign-in.
+//
+// Replaces the prior "type your email and we trust you" model (audit-v5
+// critical). Flow:
+//
+//   1. User clicks "save your spot" → modal with email input.
+//   2. Submit → POST /api/auth/request → server sends a magic link.
+//   3. UI shows "check your email" and closes after a beat.
+//   4. User clicks link in inbox → /api/auth/verify sets HMAC cookie
+//      and redirects to /?signed-in=1.
+//   5. On the next page load, GET /api/auth/session returns { email }
+//      and the header pill flips to "saved as <email>".
+//
+// Auto-sync: while signed in, every progress change debounces a POST
+// to /api/save. Email is taken from the session cookie server-side.
+
 import { useCallback, useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import {
@@ -7,21 +23,15 @@ import {
   PROGRESS_KEY_V2 as PROGRESS_KEY,
 } from "@/lib/storage";
 
-const EMAIL_KEY = "promptdojo:save-email";
 const SYNC_DEBOUNCE_MS = 1500;
 
-type Status = "idle" | "saving" | "loading" | "saved" | "loaded" | "error";
-
-function readEmail(): string | null {
-  if (typeof window === "undefined") return null;
-  return window.localStorage.getItem(EMAIL_KEY);
-}
-
-function writeEmail(email: string | null) {
-  if (typeof window === "undefined") return;
-  if (email) window.localStorage.setItem(EMAIL_KEY, email);
-  else window.localStorage.removeItem(EMAIL_KEY);
-}
+type Status =
+  | "idle"
+  | "checking-session"
+  | "requesting"
+  | "link-sent"
+  | "logged-in"
+  | "error";
 
 function readProgress(): unknown {
   if (typeof window === "undefined") return null;
@@ -55,12 +65,24 @@ function isValidEmail(s: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s.trim());
 }
 
-async function postSave(email: string, payload: unknown): Promise<boolean> {
+async function fetchSession(): Promise<string | null> {
+  try {
+    const r = await fetch("/api/auth/session", { credentials: "same-origin" });
+    if (!r.ok) return null;
+    const data = (await r.json()) as { email?: string };
+    return data.email ?? null;
+  } catch {
+    return null;
+  }
+}
+
+async function postSave(payload: unknown): Promise<boolean> {
   try {
     const r = await fetch("/api/save", {
       method: "POST",
+      credentials: "same-origin",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ email, payload }),
+      body: JSON.stringify({ payload }),
     });
     return r.ok;
   } catch {
@@ -68,9 +90,9 @@ async function postSave(email: string, payload: unknown): Promise<boolean> {
   }
 }
 
-async function fetchLoad(email: string): Promise<unknown | null> {
+async function fetchLoad(): Promise<unknown | null> {
   try {
-    const r = await fetch(`/api/load?email=${encodeURIComponent(email)}`);
+    const r = await fetch("/api/load", { credentials: "same-origin" });
     if (!r.ok) return null;
     const data = (await r.json()) as { payload?: unknown };
     return data.payload ?? null;
@@ -79,11 +101,35 @@ async function fetchLoad(email: string): Promise<unknown | null> {
   }
 }
 
+async function postLogout(): Promise<void> {
+  try {
+    await fetch("/api/auth/logout", {
+      method: "POST",
+      credentials: "same-origin",
+    });
+  } catch {
+    /* network errors don't block client-side logout */
+  }
+}
+
+async function postRequestLink(email: string): Promise<boolean> {
+  try {
+    const r = await fetch("/api/auth/request", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ email }),
+    });
+    return r.ok;
+  } catch {
+    return false;
+  }
+}
+
 export default function LoginToSave() {
   const [email, setEmail] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
-  const [status, setStatus] = useState<Status>("idle");
+  const [status, setStatus] = useState<Status>("checking-session");
   const [error, setError] = useState<string | null>(null);
 
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -92,15 +138,48 @@ export default function LoginToSave() {
 
   const closeModal = useCallback(() => {
     setOpen(false);
-    // Return focus to the trigger when the dialog closes — WCAG 2.4.3.
     triggerRef.current?.focus();
   }, []);
 
+  // On mount: check whether the cookie is valid. If we just returned
+  // from the magic-link redirect (?signed-in=1), also pull remote
+  // progress and merge.
   useEffect(() => {
-    setEmail(readEmail());
+    let cancelled = false;
+    void (async () => {
+      const sessionEmail = await fetchSession();
+      if (cancelled) return;
+      if (sessionEmail) {
+        setEmail(sessionEmail);
+        setStatus("logged-in");
+        // Just-signed-in branch: bring down the remote payload and
+        // overwrite local IFF local is empty. Otherwise push local up.
+        const params = new URLSearchParams(window.location.search);
+        if (params.get("signed-in") === "1") {
+          const local = readProgress();
+          if (isProgressEmpty(local)) {
+            const remote = await fetchLoad();
+            if (!cancelled && remote) writeProgress(remote);
+          } else {
+            void postSave(local);
+          }
+          // Strip the marker so reload doesn't re-run the merge.
+          params.delete("signed-in");
+          const qs = params.toString();
+          const newUrl =
+            window.location.pathname + (qs ? `?${qs}` : "") + window.location.hash;
+          window.history.replaceState({}, "", newUrl);
+        }
+      } else {
+        setStatus("idle");
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
-  // Escape closes; Tab cycles within the dialog (focus trap).
+  // Esc + tab-trap inside the modal.
   useEffect(() => {
     if (!open) return;
     function onKeyDown(e: KeyboardEvent) {
@@ -134,14 +213,14 @@ export default function LoginToSave() {
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [open, closeModal]);
 
-  // Auto-sync on progress change when logged in.
+  // Auto-sync local progress to KV while signed in.
   useEffect(() => {
-    if (!email) return;
+    if (status !== "logged-in") return;
     const handler = () => {
       if (debounceRef.current) clearTimeout(debounceRef.current);
       debounceRef.current = setTimeout(() => {
         const payload = readProgress();
-        if (payload) void postSave(email, payload);
+        if (payload) void postSave(payload);
       }, SYNC_DEBOUNCE_MS);
     };
     window.addEventListener(PROGRESS_EVENT, handler);
@@ -149,9 +228,9 @@ export default function LoginToSave() {
       window.removeEventListener(PROGRESS_EVENT, handler);
       if (debounceRef.current) clearTimeout(debounceRef.current);
     };
-  }, [email]);
+  }, [status]);
 
-  const handleLogin = useCallback(async () => {
+  const handleRequestLink = useCallback(async () => {
     const trimmed = input.trim().toLowerCase();
     if (!isValidEmail(trimmed)) {
       setError("that doesn't look like an email");
@@ -159,43 +238,28 @@ export default function LoginToSave() {
       return;
     }
     setError(null);
-
-    const localProgress = readProgress();
-    const localEmpty = isProgressEmpty(localProgress);
-
-    if (localEmpty) {
-      setStatus("loading");
-      const remote = await fetchLoad(trimmed);
-      if (remote) writeProgress(remote);
-      writeEmail(trimmed);
-      setEmail(trimmed);
-      setStatus("loaded");
-      setTimeout(() => setOpen(false), 900);
-    } else {
-      setStatus("saving");
-      const ok = await postSave(trimmed, localProgress);
-      if (!ok) {
-        setError("couldn't reach the server. try again in a sec.");
-        setStatus("error");
-        return;
-      }
-      writeEmail(trimmed);
-      setEmail(trimmed);
-      setStatus("saved");
-      setTimeout(() => setOpen(false), 900);
+    setStatus("requesting");
+    const ok = await postRequestLink(trimmed);
+    if (!ok) {
+      setError("couldn't send the link. try again in a sec.");
+      setStatus("error");
+      return;
     }
+    setStatus("link-sent");
   }, [input]);
 
-  const handleForget = useCallback(() => {
-    writeEmail(null);
+  const handleLogout = useCallback(async () => {
+    await postLogout();
     setEmail(null);
+    setStatus("idle");
     setOpen(false);
     setInput("");
-    setStatus("idle");
-    setError(null);
   }, []);
 
-  const buttonLabel = email ? `[ saved as ${email} ]` : "[ login to save ]";
+  const buttonLabel =
+    status === "logged-in" && email
+      ? `[ saved as ${email} ]`
+      : "[ save your spot ]";
 
   return (
     <>
@@ -204,17 +268,21 @@ export default function LoginToSave() {
         type="button"
         onClick={() => {
           setOpen(true);
-          setInput(email ?? "");
-          setStatus("idle");
+          setInput("");
           setError(null);
+          if (status !== "logged-in") setStatus("idle");
         }}
         className={cn(
           "inline-flex items-center gap-1.5 px-3 py-1 font-mono text-[11px] uppercase tracking-wider transition",
-          email
+          status === "logged-in"
             ? "border border-green-700/50 bg-green-950/40 text-green-400 hover:border-green-500 hover:text-green-300"
             : "text-ink-500 hover:text-green-400",
         )}
-        aria-label={email ? "manage saved email" : "login to save progress"}
+        aria-label={
+          status === "logged-in"
+            ? "manage saved session"
+            : "save your progress"
+        }
       >
         {buttonLabel}
       </button>
@@ -238,7 +306,7 @@ export default function LoginToSave() {
                 id="lts-title"
                 className="font-display text-2xl font-black tracking-tight text-ink-100"
               >
-                login to save
+                {status === "logged-in" ? "you're signed in" : "save your spot"}
               </h2>
               <button
                 onClick={closeModal}
@@ -249,93 +317,111 @@ export default function LoginToSave() {
               </button>
             </div>
 
-            <p
-              id="lts-desc"
-              className="mb-5 font-display text-sm leading-relaxed text-ink-400"
-            >
-              type your email. we sync your progress across devices. no
-              password. no spam. same email anywhere else, same dojo.
-            </p>
-
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                void handleLogin();
-              }}
-              className="space-y-3"
-            >
-              <label htmlFor="lts-email" className="sr-only">
-                your email
-              </label>
-              <input
-                id="lts-email"
-                type="email"
-                inputMode="email"
-                autoComplete="email"
-                autoFocus
-                placeholder="you@somewhere.dev"
-                aria-describedby="lts-desc"
-                aria-invalid={status === "error" ? "true" : undefined}
-                aria-errormessage={status === "error" ? "lts-error" : undefined}
-                value={input}
-                onChange={(e) => {
-                  setInput(e.target.value);
-                  if (status === "error") {
-                    setError(null);
-                    setStatus("idle");
-                  }
-                }}
-                disabled={status === "saving" || status === "loading"}
-                className="w-full border border-ink-800 bg-ink-950 px-3 py-2 font-mono text-sm text-ink-100 placeholder:text-ink-600 focus:border-green-500 focus:outline-none"
-              />
-
-              {error ? (
+            {status === "logged-in" && email ? (
+              <>
                 <p
-                  id="lts-error"
-                  role="alert"
-                  className="font-mono text-xs text-rose-400"
+                  id="lts-desc"
+                  className="mb-5 font-display text-sm leading-relaxed text-ink-400"
                 >
-                  {error}
+                  signed in as{" "}
+                  <span className="font-mono text-green-400">{email}</span>.
+                  your progress syncs to this email automatically. open the
+                  same dojo on another device by signing in there too.
                 </p>
-              ) : null}
-
-              <div className="flex items-center gap-3">
                 <button
-                  type="submit"
-                  disabled={
-                    status === "saving" ||
-                    status === "loading" ||
-                    !input.trim()
-                  }
-                  className="border border-green-500 bg-green-500 px-4 py-2 font-mono text-xs font-bold uppercase tracking-wider text-ink-950 transition hover:bg-green-400 disabled:cursor-not-allowed disabled:opacity-50"
+                  type="button"
+                  onClick={handleLogout}
+                  className="font-mono text-xs text-ink-500 hover:text-rose-400"
                 >
-                  {status === "saving"
-                    ? "saving..."
-                    : status === "loading"
-                      ? "loading..."
-                      : status === "saved"
-                        ? "saved"
-                        : status === "loaded"
-                          ? "loaded"
-                          : "save"}
+                  sign out on this device
                 </button>
+              </>
+            ) : status === "link-sent" ? (
+              <>
+                <p
+                  id="lts-desc"
+                  className="mb-5 font-display text-sm leading-relaxed text-ink-400"
+                >
+                  ✉ check your inbox. we sent a one-time sign-in link.
+                  it expires in 15 minutes. click it to save your spot.
+                </p>
+                <button
+                  type="button"
+                  onClick={closeModal}
+                  className="border border-green-500 bg-green-500 px-4 py-2 font-mono text-xs font-bold uppercase tracking-wider text-ink-950 transition hover:bg-green-400"
+                >
+                  got it
+                </button>
+              </>
+            ) : (
+              <>
+                <p
+                  id="lts-desc"
+                  className="mb-5 font-display text-sm leading-relaxed text-ink-400"
+                >
+                  type your email — we&apos;ll send a one-time sign-in link.
+                  no password to remember. your progress syncs across devices.
+                </p>
 
-                {email ? (
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    void handleRequestLink();
+                  }}
+                  className="space-y-3"
+                >
+                  <label htmlFor="lts-email" className="sr-only">
+                    your email
+                  </label>
+                  <input
+                    id="lts-email"
+                    type="email"
+                    inputMode="email"
+                    autoComplete="email"
+                    autoFocus
+                    placeholder="you@somewhere.dev"
+                    aria-describedby="lts-desc"
+                    aria-invalid={status === "error" ? "true" : undefined}
+                    aria-errormessage={
+                      status === "error" ? "lts-error" : undefined
+                    }
+                    value={input}
+                    onChange={(e) => {
+                      setInput(e.target.value);
+                      if (status === "error") {
+                        setError(null);
+                        setStatus("idle");
+                      }
+                    }}
+                    disabled={status === "requesting"}
+                    className="w-full border border-ink-800 bg-ink-950 px-3 py-2 font-mono text-sm text-ink-100 placeholder:text-ink-600 focus:border-green-500 focus:outline-none"
+                  />
+
+                  {error ? (
+                    <p
+                      id="lts-error"
+                      role="alert"
+                      className="font-mono text-xs text-rose-400"
+                    >
+                      {error}
+                    </p>
+                  ) : null}
+
                   <button
-                    type="button"
-                    onClick={handleForget}
-                    className="font-mono text-xs text-ink-500 hover:text-rose-400"
+                    type="submit"
+                    disabled={status === "requesting" || !input.trim()}
+                    className="border border-green-500 bg-green-500 px-4 py-2 font-mono text-xs font-bold uppercase tracking-wider text-ink-950 transition hover:bg-green-400 disabled:cursor-not-allowed disabled:opacity-50"
                   >
-                    forget my email on this device
+                    {status === "requesting" ? "sending..." : "send link"}
                   </button>
-                ) : null}
-              </div>
-            </form>
+                </form>
 
-            <p className="mt-5 border-t border-ink-800 pt-4 font-mono text-[10px] leading-relaxed text-ink-500">
-              ❯ no account, no auth. anyone with your email can load your
-              progress. don&apos;t use a shared mailbox if that bothers you.
-            </p>
+                <p className="mt-5 border-t border-ink-800 pt-4 font-mono text-[10px] leading-relaxed text-ink-500">
+                  ❯ no password. magic-link only. anyone with access to your
+                  inbox can sign in — same as any newsletter.
+                </p>
+              </>
+            )}
           </div>
         </div>
       ) : null}

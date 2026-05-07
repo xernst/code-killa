@@ -1,124 +1,105 @@
-# Login-to-save setup
+# Magic-link sign-in setup
 
-> One-time Cloudflare Pages binding. After this, `promptdojo.pages.dev/api/save`
-> and `/api/load` will work and progress will sync across devices.
+> Replaces the previous trustless email-as-key model (audit-v5 critical).
+> Users now sign in via a one-time email link; an HMAC-signed cookie
+> carries identity. `/api/save` and `/api/load` require a valid session.
 
-## What this is
+## What changed
 
-The site now has a "login to save" pill in the header. Users type their email,
-their localStorage progress is stored in Cloudflare KV under that email, and
-typing the same email on another device pulls progress back. **No passwords,
-no auth verification** — anyone who knows an email can load that email's
-progress. Trade-off chosen for zero-friction UX on a free open-source course.
+| Before | Now |
+| --- | --- |
+| Type any email and progress saved under that email | Type email then click the link in inbox; cookie set |
+| Anyone who guessed an email could read or write that user progress | Cookie is HMAC-signed; tampering invalidates it |
+| Save body had email plus payload | Save body is just payload; email comes from cookie |
+| Load needed an email query param | Load is cookie-only |
+| Profile name and flavor fields were persisted to KV | Server validator strips identifying fields before KV write |
 
-Backend is two Cloudflare Pages Functions (`functions/api/save.ts` and
-`functions/api/load.ts`) talking to a KV namespace bound as `PROGRESS_KV`.
+## One-time Cloudflare Pages setup
 
-## Setup steps (do this once, in the Cloudflare dashboard)
+### 1. Create a second KV namespace for auth tokens
 
-### 1. Create the KV namespace
+The existing `PROGRESS_KV` keeps user progress. We add `AUTH_KV` for short-
+lived magic-link tokens (15-min TTL).
 
-1. Open https://dash.cloudflare.com → your account → **Workers & Pages**
-   (or **Storage & Databases** → **KV** in the new IA)
-2. Click **Create a namespace** (or **+ Create**)
-3. Name it: `promptdojo-progress`
-4. **Create**
+1. Cloudflare dashboard then Workers and Pages then KV
+2. Create namespace, name it `promptdojo-auth`
+3. Done.
 
-You'll see a namespace ID like `abc123def456...`. Copy it — you don't strictly
-need it (the dashboard binding handles it) but it's useful for `wrangler`.
+### 2. Bind both KV namespaces to the Pages project
 
-### 2. Bind the namespace to the Pages project
+1. Cloudflare dashboard then your Pages project then Settings then KV namespace bindings
+2. Add two bindings:
+   - `PROGRESS_KV` to `promptdojo-progress` (existing)
+   - `AUTH_KV` to `promptdojo-auth` (new)
 
-1. Workers & Pages → **promptdojo** → **Settings**
-2. Scroll to **Functions** → **KV namespace bindings**
-3. Click **Add binding**
-4. Variable name: `PROGRESS_KV` (must match exactly)
-5. KV namespace: pick `promptdojo-progress` from the dropdown
-6. **Save**
+### 3. Add the session secret
 
-There may be separate binding sections for "Production" and "Preview" — bind
-the same namespace to both, or only Production for now.
+1. Generate a secret locally:
+   ```
+   openssl rand -hex 32
+   ```
+2. Cloudflare dashboard then Pages project then Settings then Environment variables
+3. Add Production plus Preview variable:
+   - Name: `SESSION_SECRET`
+   - Value: the hex string from step 1
+   - Type: Encrypted
 
-### 3. Trigger a redeploy
+### 4. Add the email provider key (Resend)
 
-The binding only takes effect on the NEXT deployment. Either:
-- Push a new commit to `main` (auto-deploys), OR
-- In Pages → Deployments → trigger a new deploy of the latest commit
+Without this the magic-link flow still works but emails are logged
+server-side instead of delivered.
 
-### 4. Verify
+1. Sign up at https://resend.com (free tier: 3 000 emails per month, 100 per day)
+2. Verify a domain (or use the default `onboarding@resend.dev` for testing)
+3. Copy your API key (starts with `re_`)
+4. Cloudflare dashboard then Pages project then Settings then Environment variables
+5. Add Production plus Preview variables:
+   - `RESEND_API_KEY` is your key (encrypted)
+   - `RESEND_FROM_EMAIL` is `promptdojo <hello@your-verified-domain>` (optional;
+     defaults to `promptdojo <onboarding@resend.dev>`)
 
-```bash
-# 503 = binding missing (haven't done step 2)
-# 400 = binding works, validation rejected the empty body (good!)
-curl -X POST https://promptdojo.pages.dev/api/save \
-  -H 'content-type: application/json' \
-  -d '{}'
+### 5. (optional) Beehiiv newsletter signup
 
-# Round-trip test
-curl -X POST https://promptdojo.pages.dev/api/save \
-  -H 'content-type: application/json' \
-  -d '{"email":"test@example.com","payload":{"hello":"world"}}'
+The landing-page newsletter form lives at `functions/api/subscribe.ts` and
+forwards to Beehiiv. Set:
 
-curl 'https://promptdojo.pages.dev/api/load?email=test@example.com'
-# expect: {"payload":{"hello":"world"},"savedAt":1234567890}
-```
+- `BEEHIIV_API_KEY` (encrypted)
+- `BEEHIIV_PUBLICATION_ID`
 
-## Limits to know
+Without these, the form returns "subscription not configured yet".
 
-- **KV free tier:** 100K reads/day, 1K writes/day, 1GB storage. We're nowhere
-  close at our current scale.
-- **Payload size:** capped at 200 KB per email in our code (`MAX_BYTES` in
-  `functions/api/save.ts`). Progress blobs are typically <10 KB even after
-  hundreds of completed steps.
-- **Email format:** very loose validation (just `something@something.tld`).
-  We don't verify the email is real or owned by the user. By design.
-- **Last-write-wins:** if a user has progress on Device A and B simultaneously,
-  whichever device syncs last overwrites. No CRDT, no merge. Document this in
-  any user-facing FAQ.
+### 6. Redeploy
 
-## Trust model (read this before promising anything)
+Push any commit to `main` (or click Retry deployment on the latest build).
+The new endpoints need to redeploy to pick up the bindings and secrets.
 
-- Anyone with an email can load that email's progress. Zero protection. The
-  intended threat model is "low — it's just course progress, not money or
-  PII." If that changes, this needs real auth.
-- We DO collect emails. They go into KV with the progress blob, NOT into a
-  marketing list yet. If you want to wire emails into Resend/Buttondown for a
-  newsletter, add a fan-out to that service inside `functions/api/save.ts`.
-- We do NOT email-verify. A typo means a typo'd email gets stored.
-- We do NOT rate-limit. CF Workers DDoS protection is the only floor. Add
-  rate-limiting via CF's Rate Limiting Rules if abuse appears.
+## Threat model (post-magic-link)
 
-## How to read the data
+| Threat | Mitigation |
+| --- | --- |
+| Guess someone email and read their progress | Requires inbox access to complete sign-in |
+| Replay a captured magic link | Token is single-use, deleted from KV on first verify |
+| Steal session cookie | HttpOnly + Secure + SameSite Lax; JS cannot read it |
+| Forge a cookie | Tampering invalidates HMAC; SESSION_SECRET stays server-only |
+| KV-write spam | Save endpoint requires valid session; rate-limit `auth/request` via Cloudflare WAF |
+| PII leak via persisted profile | Server `sanitizeProgressPayload` strips identifying fields before KV write |
+| Email enumeration via "user not found" | `auth/request` always returns ok regardless of validity |
 
-You can browse stored emails + progress directly in the CF dashboard:
-**Workers & Pages → KV → promptdojo-progress → View**.
+## Recommended next step
 
-Each entry's key is the email. Click to inspect the value (JSON).
-
-## Removing a user (manual)
-
-If a user emails asking to be deleted:
-1. Dashboard → KV → `promptdojo-progress`
-2. Find their email
-3. Delete the entry
-
-That's the entire deletion process. Tell them done.
+Add a Cloudflare WAF rule on POST `/api/auth/request`: 5 requests per IP per
+minute. Stops link-bombing a target inbox. Free on the WAF tier.
 
 ## Files
 
-- `functions/api/save.ts` — POST handler
-- `functions/api/load.ts` — GET handler
-- `components/LoginToSave.tsx` — the UI + auto-sync
-- `app/layout.tsx` — mounts the pill in the header
-
-## Next-session work (not blocking V0)
-
-- **Wire emails into Resend Audiences** for the newsletter list — fan-out from
-  `functions/api/save.ts` after the KV write succeeds
-- **Rate limiting** — add CF Rate Limiting Rule on `/api/save` (e.g., 10/min/IP)
-- **Magic-link verification** — when this becomes real auth (V2 problem)
-- **Merge semantics** — per-step `lastModified` so two devices don't lose
-  each other's progress
-- **`/save` page** — full screen settings page where users see their email,
-  manually trigger sync, export their progress as JSON, etc.
-- **Update `/og/launch/price` OG art** — currently still says "no login"
+- `functions/api/auth/request.ts` to send link
+- `functions/api/auth/verify.ts` to set cookie and redirect
+- `functions/api/auth/session.ts` to return logged-in email
+- `functions/api/auth/logout.ts` to clear cookie
+- `functions/api/save.ts` requires session
+- `functions/api/load.ts` requires session
+- `functions/api/subscribe.ts` for Beehiiv (unauthenticated by design)
+- `functions/api/_lib/session.ts` HMAC sign and verify, cookie helpers, token gen
+- `functions/api/_lib/email.ts` Resend sender plus stub fallback
+- `functions/api/_lib/validate.ts` email regex, payload sanitizer
+- `components/LoginToSave.tsx` client UI
