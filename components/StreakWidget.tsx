@@ -21,6 +21,10 @@ export default function StreakWidget() {
   }, []);
 
   if (!s) return null;
+  // Hide for zero-progress users — first-time visitors don't need to see
+  // a streak/ember UI competing with the headline. Reappears the moment
+  // they complete their first step. UI audit 2026-05-07.
+  if (s.current === 0 && s.longest === 0 && s.totalXp === 0) return null;
 
   return (
     <div className="flex items-center gap-3 font-mono text-xs tabular-nums">

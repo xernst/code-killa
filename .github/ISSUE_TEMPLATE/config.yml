@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 💬 X / Twitter — fastest async
+    url: https://x.com/TFisPython
+    about: dm or @-reply for anything that doesn't fit a template
+  - name: 🗣 GitHub Discussions
+    url: https://github.com/xernst/promptdojo/discussions
+    about: questions, ideas, "why is the curriculum structured like this?" type stuff

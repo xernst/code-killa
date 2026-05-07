@@ -1,0 +1,31 @@
+name: "✏️ Typo / broken link / unclear sentence"
+description: Found a typo, a dead link, or a sentence that doesn't make sense? Tell us — small fixes are appreciated and easy to PR.
+title: "[fix]: <one-line description>"
+labels: ["fix", "good-first-issue"]
+body:
+  - type: input
+    id: location
+    attributes:
+      label: where?
+      description: page url + chapter/lesson if applicable
+      placeholder: "promptdojo.dev/learn/v2/agent-loops/the-loop/3 — second paragraph"
+    validations:
+      required: true
+
+  - type: textarea
+    id: what
+    attributes:
+      label: what's wrong?
+      description: paste the offending text or describe the broken behavior
+      placeholder: '"complete idot" should be "complete idiot"'
+    validations:
+      required: true
+
+  - type: input
+    id: suggestion
+    attributes:
+      label: suggested fix (optional)
+      description: skip if you just want to flag it
+      placeholder: ""
+    validations:
+      required: false

@@ -1,0 +1,79 @@
+name: "🐛 AI got this wrong"
+description: You used Cursor / Claude Code / ChatGPT and it shipped a bug. Tell us about it — this is the curriculum's primary input.
+title: "[AI bug]: <one-line description>"
+labels: ["curriculum-input", "ai-bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## thanks for opening this!
+
+        the curriculum is *literally built from* AI-generated bugs that PMs, marketers, and ops folks have hit in real work. every issue you file here might become a lesson — that's the point.
+
+        no need for a clean repro. screenshots, half-remembered context, and the AI's actual output are way more useful than a polished bug report.
+
+  - type: input
+    id: ai_tool
+    attributes:
+      label: which AI tool?
+      description: cursor / claude code / chatgpt / copilot / windsurf / something else
+      placeholder: "claude code"
+    validations:
+      required: true
+
+  - type: textarea
+    id: prompt
+    attributes:
+      label: what did you ask it for?
+      description: the prompt or task — paste verbatim if you have it, paraphrase if not
+      placeholder: "asked cursor to write a function that returns the top 3 best-selling products"
+    validations:
+      required: true
+
+  - type: textarea
+    id: ai_output
+    attributes:
+      label: what did the AI give you?
+      description: paste the buggy code (or paste a screenshot — both work)
+      render: python
+      placeholder: |
+        def top_sellers(products):
+            return sorted(products, key=lambda p: p.revenue)[:3]
+    validations:
+      required: true
+
+  - type: textarea
+    id: what_was_wrong
+    attributes:
+      label: what was actually wrong?
+      description: the bug, in plain english. you don't have to know *why* — just *that*
+      placeholder: "it returned the WORST 3 sellers, not the best — sorted is ascending by default"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: chapter_match
+    attributes:
+      label: which chapter would have caught this? (optional — leave blank if unsure)
+      multiple: false
+      options:
+        - "(unsure — let the maintainer decide)"
+        - "01–05 fundamentals (variables / functions / lists / loops / conditionals)"
+        - "06 tracebacks / 07 mutation / 08 modules"
+        - "09 error handling / 10 files / 11 classes"
+        - "12 http / 13 llm apis / 14 structured output"
+        - "15 mcp / 16 agent loops / 17 git"
+        - "18 secrets / 19 prompting / 20 traces"
+        - "21 evals / 22 retrieval / 23 production tradeoffs"
+        - "24 debugging / 25 capstone / 26 harnesses"
+    validations:
+      required: false
+
+  - type: textarea
+    id: extra
+    attributes:
+      label: anything else?
+      description: not required. context, screenshots, the workaround you eventually found, links to relevant cursor/claude threads, whatever.
+      placeholder: ""
+    validations:
+      required: false

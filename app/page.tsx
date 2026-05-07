@@ -130,7 +130,7 @@ export default async function Home() {
           </Link>
           <a
             href="#chapters"
-            className="dojo-btn-tertiary"
+            className="dojo-btn-secondary"
           >
             or pick your chapter ↓
           </a>

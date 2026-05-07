@@ -180,7 +180,9 @@ body {
 .t-hero {
   font-family: var(--font-display);
   font-weight: 900;
-  font-size: clamp(64px, 9vw, 120px);
+  /* clamp floor lowered 64→48 so headline fits on iPhone SE (375px wide).
+     UI audit 2026-05-07. */
+  font-size: clamp(48px, 11vw, 120px);
   line-height: 0.92;
   letter-spacing: -0.045em;
   font-variation-settings: "opsz" 144;
@@ -305,12 +307,15 @@ body {
 .dojo-btn-primary {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 0.5rem;
   background: var(--color-green-500);
   color: var(--color-ink-950);
   border: 0;
   border-radius: 0;
   padding: 0.625rem 1.25rem; /* 10px 20px */
+  /* iOS minimum touch target. UI audit 2026-05-07. */
+  min-height: 44px;
   font-family: var(--font-mono);
   font-weight: 700;
   font-size: 12px;
@@ -331,12 +336,15 @@ body {
 .dojo-btn-secondary {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 0.5rem;
   background: transparent;
   color: var(--color-ink-300);
   border: 1px solid var(--color-ink-700);
   border-radius: 0;
   padding: 0.625rem 1.25rem;
+  /* iOS minimum touch target. UI audit 2026-05-07. */
+  min-height: 44px;
   font-family: var(--font-mono);
   font-weight: 700;
   font-size: 12px;
