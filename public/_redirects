@@ -4,5 +4,14 @@
 # v1 lesson routes were deleted in audit-v5 cleanup. Anything that
 # landed under /learn/<chapter>/... from old tweet links now bounces
 # to the curriculum index so users find the v2 equivalent.
+#
+# CRITICAL: keep v2 routes ABOVE the catch-all. `/learn/:chapter/*`
+# matches `:chapter=v2, splat=variables` and was redirecting every
+# v2 chapter+lesson page to /curriculum. Without this passthrough,
+# "open chapter" links and every internal v2 nav landed on the
+# curriculum page instead of the lesson.
+/learn/v2/*               /learn/v2/:splat   200
+
+# Old v1 routes → curriculum
 /learn/:chapter           /curriculum   301
 /learn/:chapter/*         /curriculum   301
