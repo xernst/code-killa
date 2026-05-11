@@ -60,7 +60,7 @@ await check("homepage", async () => {
   assertContains("hero copy: 'ai writes this'", text, "ai writes this");
   assertContains("primary CTA: catch ai's first bug", text, "catch ai");
   assertContains("beginner path: new to python", text, "new to python");
-  assertContains("email signup section", text, "stay in the loop");
+  assertContains("email signup section", text, "subscribe in one click");
   assertContains("@TFisPython link", text, "TFisPython");
 });
 
