@@ -1,0 +1,14 @@
+slug: the-model-picker
+title: "The model picker — when Sonnet is wrong and Haiku is right"
+estMinutes: 18
+prerequisites:
+  - reading-the-response
+order:
+  - 01-why-model-choice-is-a-product-decision.read.md
+  - 02-haiku-territory.read.md
+  - 03-which-model-here.mc.yaml
+  - 04-sonnet-territory.read.md
+  - 05-opus-and-the-thinking-budget.read.md
+  - 06-pick-the-model.mc.yaml
+  - 07-write-the-model-routing-memo.write.yaml
+  - 08-checkpoint.checkpoint.yaml

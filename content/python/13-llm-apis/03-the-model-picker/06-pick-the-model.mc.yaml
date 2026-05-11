@@ -1,0 +1,37 @@
+xp: 2
+estSeconds: 70
+concept: pick-model-from-tradeoffs
+code: |
+  # four product scenarios with the volume / quality / latency
+  # tradeoffs spelled out. for each, you have to pick the model
+  # that wins on the actual cost-vs-quality math, not the default.
+
+  scenarios = [
+      "A: Tag 500k support tickets/day with one of 12 categories. Quality must be ~95%+, but a 2% miss rate is recoverable (human triage catches the fallout).",
+      "B: Once a quarter, review a 40-page acquisition contract and surface risk clauses for the legal team. Runs maybe 6 times a year.",
+      "C: A real-time autocomplete for an IDE. Suggestions appear inline as the user types. Latency budget: under 200ms to first token. Volume: ~10 calls/keystroke, millions/day.",
+      "D: A coding agent loop that picks one of 20 tools per turn, calls it, reads the result, and decides what to do next. Runs hundreds of times a day per active user.",
+  ]
+  for s in scenarios:
+      print(s)
+prompt: |
+  Four scenarios, four models. Match each scenario to the BEST
+  model given the volume × stakes × latency tradeoff. Which
+  assignment is right?
+options:
+  - id: a_haiku_b_opus_c_haiku_d_sonnet
+    label: "A→Haiku, B→Opus, C→Haiku, D→Sonnet"
+  - id: all_sonnet
+    label: "A→Sonnet, B→Sonnet, C→Sonnet, D→Sonnet"
+    explain: "The lazy default. Wrong on three of four. A is high-volume classification — Haiku saves 12× with negligible quality loss. B is rare + high-stakes — Opus is the right call. C has a hard latency budget — Haiku is markedly faster to first token. Only D was right."
+  - id: a_haiku_b_sonnet_c_haiku_d_opus
+    label: "A→Haiku, B→Sonnet, C→Haiku, D→Opus"
+    explain: "Close. A, B, C are reasonable. But D is wrong — putting Opus in an agent loop that runs hundreds of times a day per user is how you burn through the budget overnight. Sonnet is the standard for agent loops; Opus is for the rare hard call, not the hot path."
+  - id: a_sonnet_b_opus_c_haiku_d_sonnet
+    label: "A→Sonnet, B→Opus, C→Haiku, D→Sonnet"
+    explain: "Half right. B, C, D look fine. But A is the textbook Haiku case — 500k classifications a day with a 12-category schema and a tolerable miss rate. Picking Sonnet there is paying 12× for a 1-2% quality bump on a task with cheap fallout. That's the most expensive default in the industry."
+answerIds:
+  - a_haiku_b_opus_c_haiku_d_sonnet
+hint:
+  - level: 1
+    body: "Three lenses to apply: (1) high volume + recoverable misses → Haiku, (2) low volume + high stakes → Opus, (3) tight latency + extreme volume → Haiku, (4) agent loop with branching tool use → Sonnet (the workhorse). Two of the four scenarios land on Haiku."

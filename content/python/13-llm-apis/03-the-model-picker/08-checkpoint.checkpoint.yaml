@@ -1,0 +1,98 @@
+xp: 8
+estSeconds: 240
+concept: cost-aware-model-routing
+prompt: |
+  Final drill. Synthesize the model picker AND its cost into one
+  function: `cost_aware_routing(tasks)`.
+
+  Takes a list of task dicts (same shape as step 7:
+  `kind`, `volume_per_day`, `latency_ms_max`, `criticality`).
+
+  Returns a dict:
+  - `routes`: dict mapping each task's `kind` to the chosen model
+    (`"haiku"`, `"sonnet"`, or `"opus"`).
+  - `total_cost`: float, total estimated daily cost across all
+    tasks, rounded to 2 decimal places.
+
+  Use the same routing rules from step 7:
+  1. `volume_per_day >= 10000` → `"haiku"`, unless
+     `criticality == "high"` → `"sonnet"`.
+  2. `volume_per_day < 100` AND `criticality == "high"` → `"opus"`.
+  3. Default → `"sonnet"`.
+
+  Cost math: assume each call averages **1000 tokens**. Blended
+  prices per million tokens:
+  - haiku: $0.30
+  - sonnet: $9.00
+  - opus: $45.00
+
+  Daily cost for one task = `volume_per_day * 1000 * (rate / 1_000_000)`,
+  which simplifies to `volume_per_day * rate / 1000`.
+
+  Five tasks run. Expected output:
+  ```
+  ticket_tagger     -> haiku
+  support_summary   -> sonnet
+  contract_review   -> opus
+  fraud_alert       -> sonnet
+  architect_review  -> opus
+  total daily cost: $240.27
+  ```
+starter: |
+  tasks = [
+      {"kind": "ticket_tagger",    "volume_per_day": 50000, "latency_ms_max": 800,   "criticality": "low"},
+      {"kind": "support_summary",  "volume_per_day": 5000,  "latency_ms_max": 3000,  "criticality": "medium"},
+      {"kind": "contract_review",  "volume_per_day": 4,     "latency_ms_max": 60000, "criticality": "high"},
+      {"kind": "fraud_alert",      "volume_per_day": 20000, "latency_ms_max": 1500,  "criticality": "high"},
+      {"kind": "architect_review", "volume_per_day": 2,     "latency_ms_max": 60000, "criticality": "high"},
+  ]
+
+  # define cost_aware_routing(tasks) below
+
+  result = cost_aware_routing(tasks)
+  for t in tasks:
+      print(f"{t['kind']:17} -> {result['routes'][t['kind']]}")
+  print(f"total daily cost: ${result['total_cost']}")
+grader:
+  kind: stdout-equality
+  expected: |
+    ticket_tagger     -> haiku
+    support_summary   -> sonnet
+    contract_review   -> opus
+    fraud_alert       -> sonnet
+    architect_review  -> opus
+    total daily cost: $240.27
+  normalize: collapse-trailing-newline
+solution: |
+  tasks = [
+      {"kind": "ticket_tagger",    "volume_per_day": 50000, "latency_ms_max": 800,   "criticality": "low"},
+      {"kind": "support_summary",  "volume_per_day": 5000,  "latency_ms_max": 3000,  "criticality": "medium"},
+      {"kind": "contract_review",  "volume_per_day": 4,     "latency_ms_max": 60000, "criticality": "high"},
+      {"kind": "fraud_alert",      "volume_per_day": 20000, "latency_ms_max": 1500,  "criticality": "high"},
+      {"kind": "architect_review", "volume_per_day": 2,     "latency_ms_max": 60000, "criticality": "high"},
+  ]
+
+  RATES = {"haiku": 0.30, "sonnet": 9.00, "opus": 45.00}
+
+  def pick_model(task):
+      v, c = task["volume_per_day"], task["criticality"]
+      if v >= 10000:
+          return "sonnet" if c == "high" else "haiku"
+      if v < 100 and c == "high":
+          return "opus"
+      return "sonnet"
+
+  def cost_aware_routing(tasks):
+      routes = {}
+      total = 0.0
+      for t in tasks:
+          model = pick_model(t)
+          routes[t["kind"]] = model
+          total += t["volume_per_day"] * RATES[model] / 1000
+      return {"routes": routes, "total_cost": round(total, 2)}
+
+  result = cost_aware_routing(tasks)
+  for t in tasks:
+      print(f"{t['kind']:17} -> {result['routes'][t['kind']]}")
+  print(f"total daily cost: ${result['total_cost']}")
+passThreshold: 0.66

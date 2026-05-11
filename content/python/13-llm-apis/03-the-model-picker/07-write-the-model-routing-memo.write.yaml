@@ -1,0 +1,80 @@
+xp: 5
+estSeconds: 200
+concept: pick-model-router
+prompt: |
+  Write `pick_model(task)` that takes a task dict and returns one of
+  `"haiku"`, `"sonnet"`, or `"opus"`.
+
+  The task dict has four fields:
+  - `kind`: string (e.g., `"ticket_tagger"`)
+  - `volume_per_day`: int
+  - `latency_ms_max`: int
+  - `criticality`: one of `"low"`, `"medium"`, `"high"`
+
+  Routing rules, in order:
+
+  1. **High-volume task** (`volume_per_day >= 10000`): route to
+     `"haiku"` UNLESS `criticality == "high"`, in which case
+     route to `"sonnet"` (we don't trust Haiku on the high-stakes
+     hot path).
+  2. **Rare + critical** (`volume_per_day < 100` AND
+     `criticality == "high"`): route to `"opus"`. The call is
+     rare enough that cost doesn't matter and the answer needs
+     to be right.
+  3. **Default**: route to `"sonnet"`. The general-purpose
+     workhorse.
+
+  Two tasks run for you. Expected output:
+  ```
+  ticket_tagger -> haiku
+  contract_review -> opus
+  ```
+starter: |
+  tasks = [
+      {"kind": "ticket_tagger",   "volume_per_day": 50000, "latency_ms_max": 800,  "criticality": "low"},
+      {"kind": "contract_review", "volume_per_day": 4,     "latency_ms_max": 60000, "criticality": "high"},
+  ]
+
+  # define pick_model(task) below
+
+  for t in tasks:
+      print(f"{t['kind']} -> {pick_model(t)}")
+grader:
+  kind: stdout-equality
+  expected: |
+    ticket_tagger -> haiku
+    contract_review -> opus
+  normalize: collapse-trailing-newline
+solution: |
+  tasks = [
+      {"kind": "ticket_tagger",   "volume_per_day": 50000, "latency_ms_max": 800,  "criticality": "low"},
+      {"kind": "contract_review", "volume_per_day": 4,     "latency_ms_max": 60000, "criticality": "high"},
+  ]
+
+  def pick_model(task):
+      volume = task["volume_per_day"]
+      criticality = task["criticality"]
+      if volume >= 10000:
+          if criticality == "high":
+              return "sonnet"
+          return "haiku"
+      if volume < 100 and criticality == "high":
+          return "opus"
+      return "sonnet"
+
+  for t in tasks:
+      print(f"{t['kind']} -> {pick_model(t)}")
+hint:
+  - level: 1
+    body: "Three branches, applied in order. (1) high volume → haiku, unless criticality is high (then sonnet). (2) rare + critical → opus. (3) everything else → sonnet. Read `volume_per_day` and `criticality` off the dict."
+  - level: 2
+    body: |
+      ```python
+      def pick_model(task):
+          v, c = task["volume_per_day"], task["criticality"]
+          if v >= 10000:
+              return "sonnet" if c == "high" else "haiku"
+          if v < 100 and c == "high":
+              return "opus"
+          return "sonnet"
+      ```

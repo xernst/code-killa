@@ -5,3 +5,4 @@ blurb: "every ai feature you ship eventually calls a model api. learn the messag
 lessons:
   - 01-the-messages-pattern
   - 02-reading-the-response
+  - 03-the-model-picker

@@ -1,0 +1,37 @@
+xp: 2
+estSeconds: 70
+concept: pick-haiku-vs-sonnet
+code: |
+  # four real tasks. each one is a real product feature you might ship.
+  # think volume x difficulty before picking.
+  tasks = [
+      "A: Tag every inbound support ticket with one of 8 categories. 20,000 tickets/day.",
+      "B: Generate a 4-week marketing strategy for a Series A SaaS launch. Runs maybe once.",
+      "C: Extract {amount, vendor, date} from 5,000 expense receipts per day.",
+      "D: Architect a multi-tenant database migration plan for a 50-table schema.",
+  ]
+  for t in tasks:
+      print(t)
+prompt: |
+  Four tasks. Two should go to Haiku 4.5 (high-volume, structured,
+  small surface area). Two should go to a bigger model (Sonnet or
+  Opus, depending on how hard).
+
+  Which TWO are pure Haiku jobs?
+options:
+  - id: a_and_c
+    label: "A (tag tickets) and C (extract from receipts)"
+  - id: a_and_b
+    label: "A (tag tickets) and B (marketing strategy)"
+    explain: "A is right (tagging is classification, high volume — pure Haiku). But B is once-and-done strategy writing. Volume is 1. Quality matters far more than cost. That's Sonnet or Opus territory, never Haiku."
+  - id: b_and_d
+    label: "B (marketing strategy) and D (DB migration plan)"
+    explain: "Both of these are exactly the OPPOSITE of Haiku territory. Low volume, high-stakes, multi-step reasoning. You're not saving money by picking the cheap model here — you're paying for a worse answer on a decision that runs once."
+  - id: c_and_d
+    label: "C (extract from receipts) and D (DB migration plan)"
+    explain: "Half right. C is Haiku — structured extraction, high volume. But D is multi-hop architecture reasoning. Haiku will produce a plausible-looking plan that breaks at the third dependency. That's Sonnet-or-better."
+answerIds:
+  - a_and_c
+hint:
+  - level: 1
+    body: "Haiku territory = high volume + structured output + small reasoning surface. Tagging 20k tickets and extracting fields from 5k receipts both fit. The other two are low-volume strategy/architecture work — that's where you pay for the better model."
