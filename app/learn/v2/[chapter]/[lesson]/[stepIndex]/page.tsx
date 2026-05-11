@@ -28,7 +28,7 @@ export async function generateMetadata({
   const totalSteps = found.lesson.steps.length;
   const chapterTitleClean = found.chapter.title.replace(/\s*—.*$/, "");
   const title = `${found.lesson.title} (step ${stepNum}/${totalSteps}) · ${chapterTitleClean} · promptdojo`;
-  const description = `Step ${stepNum} of ${totalSteps} in ${found.lesson.title}. Interactive Python lesson, runs in your browser. Free.`;
+  const description = `step ${stepNum} of ${totalSteps} in ${found.lesson.title}. interactive python lesson, runs in your browser. free.`;
   const url = `/learn/v2/${chapter}/${lesson}/${idx}`;
 
   return {

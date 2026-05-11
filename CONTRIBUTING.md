@@ -53,6 +53,13 @@ Look at `content/python/16-agent-loops/04-evaluator-optimizer/` as the reference
 
 `write` and `checkpoint` solutions are also executed through their graders at build time (`pnpm validate:solutions`). If you change a step's expected output or its grader rules, the build will fail until the `solution` matches. Set `SKIP_VALIDATE_SOLUTIONS=1` to bypass in environments without Python 3.10+.
 
+#### Picking a grader
+
+- **`stdout-equality`** — the default. Run the code, compare its stdout to `expected`. Use when you want to check the answer but not how the student got there.
+- **`ast-match`** — checks the *shape* of the code via Python's `ast` module. Rules: `calls`, `uses-loop`, `defines-function`, `uses-import`, `no-globals`. Use when the lesson teaches a *specific construct* ("use enumerate", "no globals", "define a function called X").
+- **`compound`** — runs every child grader in order; all must pass. Use when you want both: the right output AND the right shape. The list-comprehensions lesson uses `compound([stdout-equality, ast-match.mustNot.uses-loop])` so writing a for-loop fails even if the output matches.
+- **`string-equality`** — for user-typed answers (predict-the-error-type, predict-the-stdout). Not for code.
+
 ### 4. UI / build / infra PRs
 
 Open an issue first to confirm direction. The site is Next.js 16 static export → Cloudflare Pages; bigger architectural changes need a heads-up. For local setup see `DEPLOY.md`.

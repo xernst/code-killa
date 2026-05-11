@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     template: "%s",
   },
   description:
-    "free, open-source python course for people who already use ai to write code. runs in your browser. login to save progress and sync across devices.",
+    "free, open-source python school for people who already use ai to write code. runs in your browser. login to save progress and sync across devices.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

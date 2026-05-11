@@ -186,10 +186,9 @@ const PersistentIDE = forwardRef<PersistentIDEHandle, Props>(function Persistent
       if (!runnable) return;
       if (event.key !== "Enter") return;
       if (!(event.metaKey || event.ctrlKey)) return;
-      // Only own ⌘↵ when focus is inside the CodeMirror editor. Outside the
-      // editor (Continue button focused, prompt panel scrolled, body focused
-      // after a click), let StepFooter's listener advance the step. Prevents
-      // the IDE running twice + footer firing concurrently.
+      // Only own ⌘↵ when focus is inside the CodeMirror editor. Outside it
+      // (Continue button focused, prompt panel scrolled, body focused after
+      // a click), the lesson-level keyboard handler advances the step.
       const target = event.target as HTMLElement | null;
       if (!target?.closest?.(".cm-editor")) return;
       event.preventDefault();
