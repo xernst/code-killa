@@ -253,7 +253,260 @@
         }
       ],
       "xpTotal": 32
+    },
+    {
+      "slug": "reading-the-response",
+      "title": "Reading the response — content blocks, stop_reason, usage",
+      "estMinutes": 11,
+      "prerequisites": [
+        "the-messages-pattern"
+      ],
+      "steps": [
+        {
+          "type": "read",
+          "id": "llm-apis/reading-the-response/s01-01-intro",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "warmup",
+          "estSeconds": 110,
+          "concept": "response-shape-fundamentals",
+          "body": "# Three things every response carries\n\nLesson 01 wired the messages pattern — how you talk TO the model.\nThis lesson is the other half: how you read what comes BACK.\n\nEvery modern LLM API response carries three things you'll touch on\nevery call. The names differ slightly between Anthropic and\nOpenAI, but the shape is the same:\n\n| Anthropic Messages API | OpenAI Responses API | What it is |\n|---|---|---|\n| `response.content[]` (list of blocks) | `response.output[]` (list of blocks) | What the model said |\n| `response.stop_reason` | `response.status` (+ `response.output[].finish_reason` per block) | Why it stopped |\n| `response.usage.input_tokens` / `.output_tokens` | `response.usage.input_tokens` / `.output_tokens` | What it cost |\n\nYou'll iterate `content` to get text and tool calls, branch on\n`stop_reason` to drive your loop, and sum `usage` to track cost.\nThis lesson locks in the access patterns.\n\n## Content is a LIST, even when there's one block\n\nThe single most-shipped beginner bug:\n\n```python\n# WRONG — assumes content is a string\nprint(response.content)              # → \"<TextBlock object at 0x...>\"\n\n# WRONG — assumes the first block is always there and always text\nprint(response.content[0].text)      # → fails when content[0] is a tool_use block\n```\n\nThe right way is to iterate, branch on `.type`, and handle each\nblock kind:\n\n```python\nfor block in response.content:\n    if block.type == \"text\":\n        print(block.text)\n    elif block.type == \"tool_use\":\n        print(f\"calling {block.name} with {block.input}\")\n```\n\nYou'll see `text`, `tool_use`, and (when extended thinking is on)\n`thinking` blocks. Always branch on `type`; never index blindly.\n\n## `stop_reason` is the loop driver\n\nFive values you'll see, ordered by frequency:\n\n| Value | What it means |\n|---|---|\n| `end_turn` | Model is done. Print the text and exit your loop. |\n| `tool_use` | Model wants to run a tool. Run it, send back a `tool_result`, call again. |\n| `max_tokens` | The response was cut off. Bump `max_tokens` or split the task. |\n| `stop_sequence` | A custom stop string fired (rare). |\n| `pause_turn` | A hosted tool's turn ran out of time (Anthropic's hosted tools only). |\n\nTwo stop reasons cover 99% of agent loops: `end_turn` and\n`tool_use`. The others are exception paths. Chapter 16 builds the\nfull agent loop; this lesson teaches you to read the field.\n\n## `usage` is your bill\n\n```python\nresponse.usage.input_tokens          # what you sent (prompt + history)\nresponse.usage.output_tokens         # what came back\nresponse.usage.cache_read_input_tokens     # cached read (0.1× price)\nresponse.usage.cache_creation_input_tokens # cache write (1.25× or 2× price)\n```\n\nThe cache fields are zero unless you opted in to prompt caching\n(chapter 23 covers that). Input and output are non-zero on every\ncall. Sum them across an agent loop and you have the cost.\n\nThe bug worth naming: agents that don't track `usage` find out\nabout the bill at the end of the month, not in real time.\n\n## What you'll build\n\nA `parse_response(response)` that takes a response dict (or real\nSDK object), returns a structured `{\"text\": ..., \"tool_uses\":\n[...], \"stop_reason\": ..., \"tokens\": ...}` shape. Then a fix for\nthe most common bug: hardcoding `content[0].text` even when the\nfirst block is a tool_use.",
+          "cta": "Got it",
+          "code": "# the response from Anthropic's messages.create — shape only,\n# mocked so it runs without API keys.\n\nresponse = {\n    \"id\": \"msg_01abc\",\n    \"model\": \"claude-sonnet-4-6\",\n    \"stop_reason\": \"end_turn\",\n    \"content\": [\n        {\"type\": \"text\", \"text\": \"Paris is the capital of France.\"},\n    ],\n    \"usage\": {\n        \"input_tokens\": 28,\n        \"output_tokens\": 9,\n    },\n}\n\n# three things you read from EVERY response:\nprint(f\"stop_reason: {response['stop_reason']}\")\nprint(f\"text: {response['content'][0]['text']}\")\nprint(f\"tokens: {response['usage']['input_tokens']} in / {response['usage']['output_tokens']} out\")\n",
+          "runnable": true
+        },
+        {
+          "type": "mc",
+          "id": "llm-apis/reading-the-response/s02-02-which-block-do-you-read",
+          "xp": 2,
+          "hint": [
+            {
+              "level": 1,
+              "body": "Filter by `block[\"type\"] == \"text\"`. Skip `thinking` (internal), `tool_use` (structured calls), and any other type that's not for the user.",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "warmup",
+          "estSeconds": 55,
+          "concept": "block-type-discrimination",
+          "prompt": "The user asked \"find me ramen news.\" The model returned four blocks\nin `content`. Your code wants to surface the AI's natural-language\nmessage back to the user. Which blocks should you concatenate?\n",
+          "options": [
+            {
+              "id": "text_only",
+              "label": "Only the `text` blocks (block 2 and block 4)"
+            },
+            {
+              "id": "text_plus_thinking",
+              "label": "Both `text` blocks AND the `thinking` block",
+              "explain": "`thinking` is the model's internal reasoning, not user-facing. Showing it to the user breaks the UX (and on some models, leaks safety reasoning)."
+            },
+            {
+              "id": "first_block_only",
+              "label": "Whatever's in `content[0]`",
+              "explain": "First block is `thinking` here, not text. Hardcoding `[0]` only works when the model returns exactly one text block — which is not always."
+            },
+            {
+              "id": "all_blocks",
+              "label": "All blocks, joined",
+              "explain": "Tool_use blocks aren't natural language — they're structured tool calls. Concatenating them as text produces garbage strings."
+            }
+          ],
+          "answerIds": [
+            "text_only"
+          ],
+          "shuffle": false,
+          "code": "# an assistant turn the model emitted. four blocks of different types.\ncontent = [\n    {\"type\": \"thinking\", \"thinking\": \"Let me consider...\"},\n    {\"type\": \"text\",     \"text\":     \"Sure, I'll check.\"},\n    {\"type\": \"tool_use\", \"id\": \"t1\", \"name\": \"search\", \"input\": {\"q\": \"ramen\"}},\n    {\"type\": \"text\",     \"text\":     \"Looking it up now.\"},\n]\nfor block in content:\n    print(f\"type={block['type']}\")\n",
+          "runnable": true
+        },
+        {
+          "type": "read",
+          "id": "llm-apis/reading-the-response/s03-03-the-five-stop-reasons",
+          "xp": 2,
+          "hint": [],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 95,
+          "concept": "stop-reason-routing",
+          "body": "# Five stop reasons, two that drive 99% of code\n\nYour agent loop's main control flow IS branching on `stop_reason`.\nGet this wrong and the loop either exits early or never exits.\nFive values you'll see:\n\n## `end_turn` — the model is done\n\nThe model finished saying what it had to say. Read the text from\n`content`, return it to the user, exit the loop. This is the\n\"normal\" end state for non-agent calls.\n\n## `tool_use` — the model wants you to run something\n\nThe model emitted at least one `tool_use` block. Your code:\n\n1. Runs each tool by name with its input.\n2. Appends a user-role turn with `tool_result` blocks (one per\n   `tool_use_id`).\n3. Calls the model again with the appended history.\n\nThe loop continues until `end_turn` (or you hit your iteration cap).\n\n## `max_tokens` — the response was cut off\n\nYou set `max_tokens=1024` and the model wanted to write more. The\noutput is *truncated mid-sentence*. Two options:\n\n1. Bump `max_tokens` and retry the whole call (simple, sometimes\n   wasteful).\n2. Continue the conversation by sending the truncated response\n   back as the assistant's prior turn and asking \"continue.\"\n\nIn production agents, you cap `max_tokens` aggressively *and*\ndetect this stop reason as a signal that the task was too big.\nCatching it loudly beats silently shipping a half-answer.\n\n## `stop_sequence` — a custom stop hit\n\nYou passed `stop_sequences=[\"\\n\\nUser:\", \"STOP\"]` and one of those\nstrings appeared in the output. Rare in production; common in\nfine-tuned-model legacy code. If you see this, you know the\nprompt set up custom delimiters; the response was intentionally\ncut at one.\n\n## `pause_turn` — server-side tool ran out of time\n\nAnthropic-only. When you use Anthropic's *hosted* tools (their\nserver runs the tool, not yours) and the tool's internal loop\ncaps out, you get `pause_turn` instead of an error. The fix: just\ncall the API again with the same messages — the server resumes\nfrom where it paused.\n\n## What this maps to in code\n\n```python\ndef drive_loop(response, messages, run_tool):\n    if response.stop_reason == \"end_turn\":\n        return extract_text(response.content), \"done\"\n\n    if response.stop_reason == \"tool_use\":\n        tool_results = []\n        for block in response.content:\n            if block.type == \"tool_use\":\n                tool_results.append({\n                    \"type\": \"tool_result\",\n                    \"tool_use_id\": block.id,\n                    \"content\": run_tool(block.name, block.input),\n                })\n        messages.append({\"role\": \"assistant\", \"content\": response.content})\n        messages.append({\"role\": \"user\", \"content\": tool_results})\n        return None, \"continue\"\n\n    if response.stop_reason == \"max_tokens\":\n        return None, \"truncated\"\n\n    # stop_sequence, pause_turn, refusal: handle as needed\n    return None, response.stop_reason\n```\n\nTwo branches drive 99% of agent code. The others are exception\npaths. The bug step 7 fixes: hardcoding `if response.stop_reason\n== \"stop\"` (a value that *doesn't exist* in the API — it's a\ncommon misremembering of `end_turn`).\n\n## Anthropic vs OpenAI: the same field, slightly different\n\nOpenAI's Responses API exposes `response.status` (`completed`,\n`incomplete`, `failed`) at the response level, plus per-output\n`finish_reason` (`stop`, `length`, `tool_calls`, `content_filter`).\nSame idea, different vocabulary. Code that targets both providers\ntypically wraps `stop_reason` / `finish_reason` into a normalized\nenum.\n\nThe principle is universal: every modern LLM API tells you *why*\nit stopped, and your code branches on that field.",
+          "cta": "Got it",
+          "code": "# five stop_reason values mapped to what your code should do.\nROUTES = {\n    \"end_turn\":      \"Print the text. Exit the loop. Done.\",\n    \"tool_use\":      \"Run the tools. Append tool_result. Call the model again.\",\n    \"max_tokens\":    \"Output cut off. Bump max_tokens or split the task.\",\n    \"stop_sequence\": \"A custom stop string fired (rare).\",\n    \"pause_turn\":    \"Hosted tool ran out of time. Resume by re-calling.\",\n}\n\nfor reason, action in ROUTES.items():\n    print(f\"{reason:14}→ {action}\")\n",
+          "runnable": true
+        },
+        {
+          "type": "predict",
+          "id": "llm-apis/reading-the-response/s04-04-predict-the-text",
+          "xp": 3,
+          "hint": [
+            {
+              "level": 1,
+              "body": "Filter drops the thinking block. Two text blocks remain: \"Found it.\" and \"Here are the results.\". `\" \".join(...)` puts a single space between them.",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 80,
+          "concept": "text-extract-from-mixed-blocks",
+          "code": "# an assistant turn with mixed blocks.\nresponse = {\n    \"stop_reason\": \"end_turn\",\n    \"content\": [\n        {\"type\": \"thinking\", \"thinking\": \"internal reasoning...\"},\n        {\"type\": \"text\",     \"text\":     \"Found it.\"},\n        {\"type\": \"text\",     \"text\":     \"Here are the results.\"},\n    ],\n}\n\n# extract just text, joined with a single space.\ntext_parts = [b[\"text\"] for b in response[\"content\"] if b[\"type\"] == \"text\"]\nprint(\" \".join(text_parts))\n",
+          "prompt": "Read the editor. Three blocks: one thinking, two text. The script\nfilters to just text blocks and joins them with a single space.\nWhat does it print?\n",
+          "grader": {
+            "kind": "stdout-equality",
+            "expected": "Found it. Here are the results.",
+            "normalize": "collapse-trailing-newline"
+          }
+        },
+        {
+          "type": "fill",
+          "id": "llm-apis/reading-the-response/s05-05-fill-the-text-extract",
+          "xp": 3,
+          "hint": [
+            {
+              "level": 1,
+              "body": "List comprehension with a filter: `[expression for item in iterable if condition]`. The expression reads `b[\"text\"]`; the condition is `b[\"type\"] == \"text\"`.",
+              "cost": 0
+            },
+            {
+              "level": 2,
+              "body": "`[b[\"text\"] for b in content if b[\"type\"] == \"text\"]` — pull `text` field, filtered to text-type blocks only.",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 60,
+          "concept": "filter-blocks-by-type",
+          "prompt": "Fill in the list comprehension that extracts the `text` field from\nevery block whose `type` is `\"text\"`. The result should be a list\nof strings — text parts, in original order.\n\nExpected output:\n```\n['Hello', 'world']\n```\n",
+          "code": "content = [\n    {\"type\": \"text\",     \"text\":     \"Hello\"},\n    {\"type\": \"tool_use\", \"id\": \"t1\", \"name\": \"search\", \"input\": {}},\n    {\"type\": \"text\",     \"text\":     \"world\"},\n]\n\ntext_parts = ___\nprint(text_parts)\n",
+          "blanks": [
+            {
+              "id": "comprehension",
+              "accept": [
+                "[b[\"text\"] for b in content if b[\"type\"] == \"text\"]",
+                "[b['text'] for b in content if b['type'] == 'text']"
+              ],
+              "caseSensitive": true,
+              "normalize": "trim"
+            }
+          ]
+        },
+        {
+          "type": "fix",
+          "id": "llm-apis/reading-the-response/s06-06-fix-the-content-zero",
+          "xp": 4,
+          "hint": [
+            {
+              "level": 1,
+              "body": "Filter for text blocks with a comprehension, then take the first one (or join all). `[b for b in content if b[\"type\"] == \"text\"]` gives you only text blocks.",
+              "cost": 0
+            },
+            {
+              "level": 2,
+              "body": "Replace line 9 with:\n\n```python\ntext_blocks = [b for b in response[\"content\"] if b[\"type\"] == \"text\"]\nprint(text_blocks[0][\"text\"])\n```\n",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 95,
+          "concept": "never-hardcode-content-zero",
+          "brokenCode": "response = {\n    \"stop_reason\": \"end_turn\",\n    \"content\": [\n        {\"type\": \"tool_use\", \"id\": \"t1\", \"name\": \"search\", \"input\": {}},\n        {\"type\": \"text\",     \"text\":     \"found.\"},\n    ],\n}\n\n# bug: assumes content[0] is always a text block. it isn't.\nprint(response[\"content\"][0][\"text\"])\n",
+          "prompt": "The code reads `response[\"content\"][0][\"text\"]`. The model returned\na `tool_use` block FIRST, then a `text` block. So `content[0]` is\nthe tool_use — which has no `text` key. The code raises `KeyError`.\n\nFix the code to FILTER for text blocks first, then read the text.\nUse the comprehension pattern from step 5.\n\nExpected output:\n```\nfound.\n```\n",
+          "grader": {
+            "kind": "stdout-equality",
+            "expected": "found.",
+            "normalize": "collapse-trailing-newline"
+          },
+          "bugLines": [
+            10
+          ],
+          "revealAfter": 4
+        },
+        {
+          "type": "fix",
+          "id": "llm-apis/reading-the-response/s07-07-fix-the-stop-assumption",
+          "xp": 4,
+          "hint": [
+            {
+              "level": 1,
+              "body": "The actual stop_reason value from Anthropic is `\"end_turn\"` (two words, underscored). Many people misremember it as just `\"stop\"`.",
+              "cost": 0
+            },
+            {
+              "level": 2,
+              "body": "Change line 10 to:\n\n```python\nif response[\"stop_reason\"] == \"end_turn\":\n```\n",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 95,
+          "concept": "stop-reason-correct-string",
+          "brokenCode": "responses = [{\"stop_reason\": \"end_turn\", \"content\": [{\"type\": \"text\", \"text\": \"Paris\"}]}]\n\ndef fake_call(messages, turn):\n    return responses[turn]\n\ndef loop(messages):\n    for turn in range(5):\n        response = fake_call(messages, turn)\n        # bug: wrong string. Anthropic uses \"end_turn\", not \"stop\".\n        if response[\"stop_reason\"] == \"stop\":\n            return f\"done in {turn + 1} turns\"\n    return \"capped\"\n\nprint(f\"result: {loop([{'role': 'user', 'content': 'capital of France?'}])}\")\n",
+          "prompt": "Cursor wrote this loop with `if response[\"stop_reason\"] == \"stop\":`.\nBut Anthropic's actual stop reason is `\"end_turn\"`, not `\"stop\"`.\nThe condition never fires; the loop runs to its iteration cap and\nreturns `\"capped\"` even though the model finished cleanly on turn 1.\n\nFix the comparison to use the correct stop_reason string.\n\nExpected output:\n```\nresult: done in 1 turns\n```\n",
+          "grader": {
+            "kind": "stdout-equality",
+            "expected": "result: done in 1 turns",
+            "normalize": "collapse-trailing-newline"
+          },
+          "bugLines": [
+            10
+          ],
+          "revealAfter": 4
+        },
+        {
+          "type": "write",
+          "id": "llm-apis/reading-the-response/s08-08-write-the-extractor",
+          "xp": 5,
+          "hint": [
+            {
+              "level": 1,
+              "body": "Two list comprehensions over `response[\"content\"]`: one filters for text blocks and pulls `.text`; one filters for tool_use blocks and builds the tuple dict. Sum input + output tokens for the total.",
+              "cost": 0
+            },
+            {
+              "level": 2,
+              "body": "```python\ndef parse_response(response):\n    text_parts = [b[\"text\"] for b in response[\"content\"] if b[\"type\"] == \"text\"]\n    tool_uses = [{\"id\": b[\"id\"], \"name\": b[\"name\"], \"input\": b[\"input\"]}\n                 for b in response[\"content\"] if b[\"type\"] == \"tool_use\"]\n    return {\n        \"text\": \" \".join(text_parts),\n        \"tool_uses\": tool_uses,\n        \"stop_reason\": response[\"stop_reason\"],\n        \"tokens\": response[\"usage\"][\"input_tokens\"] + response[\"usage\"][\"output_tokens\"],\n    }\n```\n",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 200,
+          "concept": "response-parser",
+          "prompt": "Write `parse_response(response)` that takes a response dict (from\nAnthropic's messages.create) and returns a structured dict:\n\n- `text` — string, joined text from all `text`-type blocks (joined\n  with one space; empty string if none).\n- `tool_uses` — list of `{\"id\": ..., \"name\": ..., \"input\": ...}`\n  dicts, one per `tool_use`-type block.\n- `stop_reason` — copy `response[\"stop_reason\"]` through.\n- `tokens` — int, sum of `usage.input_tokens + usage.output_tokens`.\n\nSkip any block whose type is neither `text` nor `tool_use` (e.g.,\n`thinking` blocks).\n\nThree responses run for you. Expected output:\n```\ntext='Paris.' tool_uses=[] stop=end_turn tokens=37\ntext='Let me search.' tool_uses=[{'id': 't1', 'name': 'search', 'input': {'q': 'ramen'}}] stop=tool_use tokens=58\ntext='' tool_uses=[] stop=max_tokens tokens=1024\n```\n",
+          "starter": "responses = [\n    {\n        \"stop_reason\": \"end_turn\",\n        \"content\": [{\"type\": \"text\", \"text\": \"Paris.\"}],\n        \"usage\": {\"input_tokens\": 28, \"output_tokens\": 9},\n    },\n    {\n        \"stop_reason\": \"tool_use\",\n        \"content\": [\n            {\"type\": \"thinking\", \"thinking\": \"internal\"},\n            {\"type\": \"text\", \"text\": \"Let me search.\"},\n            {\"type\": \"tool_use\", \"id\": \"t1\", \"name\": \"search\", \"input\": {\"q\": \"ramen\"}},\n        ],\n        \"usage\": {\"input_tokens\": 41, \"output_tokens\": 17},\n    },\n    {\n        \"stop_reason\": \"max_tokens\",\n        \"content\": [],\n        \"usage\": {\"input_tokens\": 1024, \"output_tokens\": 0},\n    },\n]\n\n# define parse_response(response) below\n\nfor r in responses:\n    p = parse_response(r)\n    print(f\"text={p['text']!r} tool_uses={p['tool_uses']} stop={p['stop_reason']} tokens={p['tokens']}\")\n",
+          "grader": {
+            "kind": "stdout-equality",
+            "expected": "text='Paris.' tool_uses=[] stop=end_turn tokens=37\ntext='Let me search.' tool_uses=[{'id': 't1', 'name': 'search', 'input': {'q': 'ramen'}}] stop=tool_use tokens=58\ntext='' tool_uses=[] stop=max_tokens tokens=1024\n",
+            "normalize": "collapse-trailing-newline"
+          },
+          "solution": "responses = [\n    {\n        \"stop_reason\": \"end_turn\",\n        \"content\": [{\"type\": \"text\", \"text\": \"Paris.\"}],\n        \"usage\": {\"input_tokens\": 28, \"output_tokens\": 9},\n    },\n    {\n        \"stop_reason\": \"tool_use\",\n        \"content\": [\n            {\"type\": \"thinking\", \"thinking\": \"internal\"},\n            {\"type\": \"text\", \"text\": \"Let me search.\"},\n            {\"type\": \"tool_use\", \"id\": \"t1\", \"name\": \"search\", \"input\": {\"q\": \"ramen\"}},\n        ],\n        \"usage\": {\"input_tokens\": 41, \"output_tokens\": 17},\n    },\n    {\n        \"stop_reason\": \"max_tokens\",\n        \"content\": [],\n        \"usage\": {\"input_tokens\": 1024, \"output_tokens\": 0},\n    },\n]\n\ndef parse_response(response):\n    text_parts = [b[\"text\"] for b in response[\"content\"] if b[\"type\"] == \"text\"]\n    tool_uses = [\n        {\"id\": b[\"id\"], \"name\": b[\"name\"], \"input\": b[\"input\"]}\n        for b in response[\"content\"] if b[\"type\"] == \"tool_use\"\n    ]\n    tokens = response[\"usage\"][\"input_tokens\"] + response[\"usage\"][\"output_tokens\"]\n    return {\n        \"text\": \" \".join(text_parts),\n        \"tool_uses\": tool_uses,\n        \"stop_reason\": response[\"stop_reason\"],\n        \"tokens\": tokens,\n    }\n\nfor r in responses:\n    p = parse_response(r)\n    print(f\"text={p['text']!r} tool_uses={p['tool_uses']} stop={p['stop_reason']} tokens={p['tokens']}\")\n",
+          "hiddenTests": []
+        },
+        {
+          "type": "checkpoint",
+          "id": "llm-apis/reading-the-response/s09-09-checkpoint",
+          "xp": 8,
+          "hint": [],
+          "personalize": false,
+          "phase": "check",
+          "estSeconds": 220,
+          "concept": "full-response-aggregator",
+          "prompt": "Final drill. Build a session-level aggregator across multiple\nresponses. Write `summarize_session(responses)` that:\n\n- For each response in the list, calls `parse_response(r)` (provided).\n- Aggregates across all responses:\n  - `total_text`: all `text` fields joined with `\" | \"` (skip empty texts).\n  - `tool_call_count`: total number of tool_use blocks across all responses.\n  - `total_tokens`: sum of `tokens` across all responses.\n  - `final_stop`: the `stop_reason` of the LAST response.\n- Returns the aggregate dict.\n\nTwo sessions run. Expected output:\n```\nagent session: text='Searching... | Found Tokyo ramen guide.' tools=1 tokens=180 final=end_turn\ntruncated session: text='Starting...' tools=0 tokens=1024 final=max_tokens\n```\n",
+          "starter": "def parse_response(response):\n    text_parts = [b[\"text\"] for b in response[\"content\"] if b[\"type\"] == \"text\"]\n    tool_uses = [{\"id\": b[\"id\"], \"name\": b[\"name\"], \"input\": b[\"input\"]}\n                 for b in response[\"content\"] if b[\"type\"] == \"tool_use\"]\n    return {\n        \"text\": \" \".join(text_parts),\n        \"tool_uses\": tool_uses,\n        \"stop_reason\": response[\"stop_reason\"],\n        \"tokens\": response[\"usage\"][\"input_tokens\"] + response[\"usage\"][\"output_tokens\"],\n    }\n\nagent_session = [\n    {\n        \"stop_reason\": \"tool_use\",\n        \"content\": [\n            {\"type\": \"text\", \"text\": \"Searching...\"},\n            {\"type\": \"tool_use\", \"id\": \"t1\", \"name\": \"search\", \"input\": {\"q\": \"ramen\"}},\n        ],\n        \"usage\": {\"input_tokens\": 60, \"output_tokens\": 20},\n    },\n    {\n        \"stop_reason\": \"end_turn\",\n        \"content\": [{\"type\": \"text\", \"text\": \"Found Tokyo ramen guide.\"}],\n        \"usage\": {\"input_tokens\": 90, \"output_tokens\": 10},\n    },\n]\n\ntruncated_session = [\n    {\n        \"stop_reason\": \"max_tokens\",\n        \"content\": [{\"type\": \"text\", \"text\": \"Starting...\"}],\n        \"usage\": {\"input_tokens\": 1000, \"output_tokens\": 24},\n    },\n]\n\n# define summarize_session(responses) below\n\nfor label, session in [(\"agent session\", agent_session), (\"truncated session\", truncated_session)]:\n    s = summarize_session(session)\n    print(f\"{label}: text={s['total_text']!r} tools={s['tool_call_count']} tokens={s['total_tokens']} final={s['final_stop']}\")\n",
+          "grader": {
+            "kind": "stdout-equality",
+            "expected": "agent session: text='Searching... | Found Tokyo ramen guide.' tools=1 tokens=180 final=end_turn\ntruncated session: text='Starting...' tools=0 tokens=1024 final=max_tokens\n",
+            "normalize": "collapse-trailing-newline"
+          },
+          "solution": "def parse_response(response):\n    text_parts = [b[\"text\"] for b in response[\"content\"] if b[\"type\"] == \"text\"]\n    tool_uses = [{\"id\": b[\"id\"], \"name\": b[\"name\"], \"input\": b[\"input\"]}\n                 for b in response[\"content\"] if b[\"type\"] == \"tool_use\"]\n    return {\n        \"text\": \" \".join(text_parts),\n        \"tool_uses\": tool_uses,\n        \"stop_reason\": response[\"stop_reason\"],\n        \"tokens\": response[\"usage\"][\"input_tokens\"] + response[\"usage\"][\"output_tokens\"],\n    }\n\nagent_session = [\n    {\n        \"stop_reason\": \"tool_use\",\n        \"content\": [\n            {\"type\": \"text\", \"text\": \"Searching...\"},\n            {\"type\": \"tool_use\", \"id\": \"t1\", \"name\": \"search\", \"input\": {\"q\": \"ramen\"}},\n        ],\n        \"usage\": {\"input_tokens\": 60, \"output_tokens\": 20},\n    },\n    {\n        \"stop_reason\": \"end_turn\",\n        \"content\": [{\"type\": \"text\", \"text\": \"Found Tokyo ramen guide.\"}],\n        \"usage\": {\"input_tokens\": 90, \"output_tokens\": 10},\n    },\n]\n\ntruncated_session = [\n    {\n        \"stop_reason\": \"max_tokens\",\n        \"content\": [{\"type\": \"text\", \"text\": \"Starting...\"}],\n        \"usage\": {\"input_tokens\": 1000, \"output_tokens\": 24},\n    },\n]\n\ndef summarize_session(responses):\n    texts = []\n    tool_call_count = 0\n    total_tokens = 0\n    for r in responses:\n        parsed = parse_response(r)\n        if parsed[\"text\"]:\n            texts.append(parsed[\"text\"])\n        tool_call_count += len(parsed[\"tool_uses\"])\n        total_tokens += parsed[\"tokens\"]\n    return {\n        \"total_text\": \" | \".join(texts),\n        \"tool_call_count\": tool_call_count,\n        \"total_tokens\": total_tokens,\n        \"final_stop\": responses[-1][\"stop_reason\"],\n    }\n\nfor label, session in [(\"agent session\", agent_session), (\"truncated session\", truncated_session)]:\n    s = summarize_session(session)\n    print(f\"{label}: text={s['total_text']!r} tools={s['tool_call_count']} tokens={s['total_tokens']} final={s['final_stop']}\")\n",
+          "passThreshold": 0.66
+        }
+      ],
+      "xpTotal": 32
     }
   ],
-  "xpTotal": 32
+  "xpTotal": 64
 }

@@ -4,3 +4,4 @@ title: "llm apis — talking to claude and openai"
 blurb: "every ai feature you ship eventually calls a model api. learn the messages pattern, how to read the response, and the four lines ai writes every single time."
 lessons:
   - 01-the-messages-pattern
+  - 02-reading-the-response

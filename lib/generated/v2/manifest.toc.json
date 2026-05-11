@@ -1,6 +1,6 @@
 {
   "version": "0.1.0",
-  "generatedAt": "2026-05-11T20:03:33.533Z",
+  "generatedAt": "2026-05-11T20:50:54.538Z",
   "chapters": [
     {
       "number": 1,
@@ -127,10 +127,10 @@
       "slug": "llm-apis",
       "title": "llm apis — talking to claude and openai",
       "blurb": "every ai feature you ship eventually calls a model api. learn the messages pattern, how to read the response, and the four lines ai writes every single time.",
-      "lessonCount": 1,
-      "stepCount": 9,
-      "estMinutes": 8,
-      "xpTotal": 32
+      "lessonCount": 2,
+      "stepCount": 18,
+      "estMinutes": 19,
+      "xpTotal": 64
     },
     {
       "number": 14,
