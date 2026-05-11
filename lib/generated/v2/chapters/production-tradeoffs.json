@@ -533,7 +533,207 @@
         }
       ],
       "xpTotal": 32
+    },
+    {
+      "slug": "the-model-price-war",
+      "title": "The 2023-2026 model price war — and why your cost model is already obsolete",
+      "estMinutes": 18,
+      "prerequisites": [
+        "read-the-token-bill"
+      ],
+      "steps": [
+        {
+          "type": "read",
+          "id": "production-tradeoffs/the-model-price-war/s01-01-the-price-curve",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "warmup",
+          "estSeconds": 220,
+          "concept": "model-price-curve",
+          "body": "# Two orders of magnitude in three years\n\nGPT-4 launched in March 2023 at **$30 per million input tokens and $60\nper million output tokens**. That price was the assumption every\nserious LLM company built their unit economics on for the next twelve\nmonths. Funding rounds got raised against it. Pricing pages got\nwritten against it. Headcount got hired against it.\n\nBy May 2026, the frontier looks like this:\n\n- **Claude Haiku 4.5** — $0.25 input / $1.25 output per 1M tokens\n- **Claude Sonnet 4.6** — ~$3 input / $15 output per 1M tokens\n- **Claude Opus 4.7** — $15 input / $75 output per 1M tokens\n- GPT and Gemini frontier tiers track within a small multiple of these\n\nRead those numbers carefully. **Haiku 4.5 input is 120× cheaper than\nGPT-4 input three years earlier.** Sonnet 4.6, which is a genuinely\nbetter reasoner than the original GPT-4, is **10× cheaper on input and\n4× cheaper on output**. The \"expensive\" tier in 2026 (Opus) is half\nthe price of the cheap tier in 2023.\n\nThis is not a one-time drop. It's a power-law collapse.\n\n## What the curve actually looks like\n\nA16z's LLM pricing tracker (the canonical chart in the industry,\nupdated quarterly) shows the per-token cost of \"GPT-4-class\nintelligence\" falling roughly **10× every twelve months** since the\noriginal release. Dylan Patel's SemiAnalysis breakdowns of the\ninference economics give you the why: smaller-better models, better\nserving infrastructure, FP8/FP4 quantization, speculative decoding,\nand a brutal multi-lab competition for developer mindshare.\n\nThe shape of it:\n\n```\nGPT-4 launch (Mar 2023):     $30 / $60 per 1M  ← baseline\nGPT-4 Turbo (Nov 2023):      $10 / $30         ← 3x cheaper input\nClaude 3 Sonnet (Mar 2024):  $3  / $15         ← 10x cheaper input\nGPT-4o (May 2024):           $5  / $15\nClaude 3.5 Sonnet (Jun 2024):$3  / $15\nHaiku 3.5 (Oct 2024):        $1  / $5          ← cheap-tier emerges\nSonnet 4.5 (mid 2025):       $3  / $15\nHaiku 4.5 (Oct 2025):        $0.25 / $1.25     ← 120x cheaper input\nSonnet 4.6 (early 2026):     $3  / $15\nOpus 4.7 (Q1 2026):          $15 / $75\n```\n\nThe frontier label sits at roughly the same price point each year\n($3/$15 for \"best general workhorse\"), because the labs keep\nrelabeling. But the **capability that used to live at $3/$15 keeps\nsliding down to $0.25/$1.25 within twelve months**. Yesterday's\nflagship becomes today's cheap tier.\n\n## Why this matters more than the model itself\n\nIf you built a product in 2023 with GPT-4 cost assumptions baked in,\n**you over-paid by 99% for three years**. If you build a product in\n2026 with Sonnet 4.6 cost assumptions baked in, you will probably\noverpay by 90% by 2027.\n\nThe strategically interesting question is not \"what does my feature\ncost today?\" It is \"**what does my feature cost when the model I'm\nusing is one-tenth the price in twelve months?**\" Features that are\nunaffordable at Sonnet prices but viable at Haiku-4.5 prices are\nfeatures your competitors will ship in 2027 even if you can't ship\nthem today.\n\nThree implications worth burning into your head before the next step:\n\n1. **The unit economics of any LLM feature are dated within twelve\n   months.** You are not pricing against today's model. You are\n   pricing against the model that will exist when the contract\n   renews.\n2. **The biggest lever is \"which model\" — not prompt engineering.**\n   Switching from Opus to Sonnet is a 5× cost reduction. Switching\n   from Sonnet to Haiku is another 12× reduction. No amount of prompt\n   trimming touches that.\n3. **The companies that won the last three years were not the ones\n   with the best 2023 product. They were the ones who restructured\n   their cost model fastest as prices fell.** The next two case\n   studies show this in detail.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "read",
+          "id": "production-tradeoffs/the-model-price-war/s02-02-three-bets-and-how-they-aged",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "warmup",
+          "estSeconds": 220,
+          "concept": "three-bets-aged",
+          "body": "# Three bets and how they aged\n\nTheory only sticks if you can see it in actual P&Ls. Three companies,\nthree different cost-model bets in 2023, three very different outcomes\nby 2026.\n\n## Bet 1: Jasper — \"GPT-4 unit economics are the unit economics\"\n\nJasper was the marketing-copy company. By 2022 they were doing\n~$80M ARR generating ad copy and blog posts on top of OpenAI. In\nearly 2023 they raised $125M at a $1.5B valuation, the textbook\n\"AI-native\" win.\n\nTheir cost model assumed GPT-3.5 and GPT-4 prices were\n**permanent floors**. They priced subscriptions around them. They\nhired around them. They built features around them.\n\nThen the prices fell, and the floor became a ceiling. Three things\nhappened in parallel:\n\n1. Their margins on individual API calls became absurd as costs fell —\n   for about six months — until competitors realized and undercut on\n   price.\n2. New entrants (Copy.ai, then a wave of vertical AI writers) shipped\n   the same feature on cheaper models and charged $20/month where\n   Jasper charged $99.\n3. ChatGPT released a free consumer tier, then Anthropic and Google\n   followed, then everyone shipped \"Write copy with AI\" as a feature\n   inside the tools the customer already paid for (Notion, HubSpot,\n   Mailchimp).\n\nJasper laid off ~30% of staff in 2023, restructured, and **the IPO\nthat had been telegraphed for 2024 quietly unwound**. The cost model\nthey priced against didn't exist twelve months later. They survived as\na smaller company, but they did not capture the upside their cap table\nassumed.\n\n**Lesson**: pricing your product against today's model costs is\npricing against a melting ice cube. Anyone who shipped the same\nfeature at Haiku prices six months later took the customer.\n\n## Bet 2: Perplexity — \"route to the cheapest model that meets the bar\"\n\nPerplexity launched as an \"answer engine\" in late 2022. They had a\nfundamentally harder cost problem than Jasper: every user query\nrequired (a) a search step, (b) a synthesis call against a frontier\nmodel, (c) a re-ranking pass. Three LLM calls per query, often more\nfor complex questions, at GPT-4 prices.\n\nIf Perplexity had taken the Jasper bet — assume GPT-4 economics\nforever — they would have died inside a year.\n\nInstead they built **dynamic model routing** in early 2024. Simple\nqueries got routed to a smaller, cheaper model (initially Claude Haiku\n3, later Sonnet-3.5 once Anthropic released it). Complex queries got\nrouted to the frontier. They ran their own evals continuously to\nre-score which queries needed which tier, and as cheaper models\ngot better, they kept moving the line.\n\nTheir cost-per-query fell **~6× between 2024 and 2026**, faster than\nthe raw model price curve, because they kept downgrading the routing\ntier as cheaper models crossed the quality bar. They survived the\nprice war by **assuming it would happen** and pricing the product\n($20/month Pro) against where the cost curve would be in twelve months,\nnot where it was today.\n\n**Lesson**: if your product is alive in three years, the model\nunderneath it has been swapped two or three times. Build the swap in\nfrom the start.\n\n## Bet 3: Cursor — \"Haiku-class models are free, use them everywhere\"\n\nCursor (the AI code editor) made the most aggressive bet of the three.\nStarting in late 2023, they architected the product around a tiered\nmodel strategy:\n\n- **Frontier model** (Claude Sonnet, then Opus) for the high-stakes\n  \"compose / refactor / explain this codebase\" actions where quality\n  matters and the user is waiting on the answer.\n- **Cheap model** (Haiku, plus their own fine-tuned tab-complete model)\n  for the **invisible** actions — autocomplete predictions, syntax\n  fixups, format suggestions, draft summaries — that run hundreds of\n  times per session per user.\n\nThe frontier calls cost real money. The cheap calls were essentially\nfree per call but ran at ~100× the volume of the frontier calls. Total\nspend was dominated by the cheap tier, but the cheap tier scaled\nroughly with the Haiku price curve — which **collapsed** in 2024-2025.\n\nCursor printed money. The \"Tab\" autocomplete feature became their\nsignature, and they could afford to run it constantly because each\ncall cost a fraction of a cent. By the time the rest of the IDE market\nrealized, Cursor had a year of compounding usage data, their own\nfine-tuned models, and the developer mindshare. They hit ~$300M ARR by\nlate 2025 with a small team.\n\n**Lesson**: features that were \"too expensive to run constantly\" in\n2023 became free in 2026. Whoever shipped them first owned the\ncategory. The cost curve isn't just a margin question — it unlocks\n**new product categories** every twelve months.\n\n## What ties the three together\n\nThe three companies had access to the same models, the same APIs, the\nsame prompt-engineering literature. The only difference was their\n**assumption about the price curve**:\n\n- Jasper assumed it was flat. Wrong.\n- Perplexity assumed it would fall and built routing. Right.\n- Cursor assumed it would fall *and* unlock new product shapes.\n  Most right.\n\nThe next step is a multiple-choice on this exact pattern, applied to\nfour hypothetical 2023 startups. Practice spotting which cost-model\nassumption survives.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "mc",
+          "id": "production-tradeoffs/the-model-price-war/s03-03-which-startup-survived",
+          "xp": 2,
+          "hint": [
+            {
+              "level": 1,
+              "body": "The pattern that survived the price war was 'assume the price will fall, build the swap in from day one.' Look for the architecture that has an explicit mechanism to re-route as cheaper models cross the quality bar — not one that locks itself to today's model.",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 60,
+          "concept": "cost-assumption-survival",
+          "prompt": "Four startups, all shipped in 2023, all with real customers. By\n2026 the model price curve has collapsed two orders of magnitude\n(GPT-4 was $30/$60 per 1M; Haiku 4.5 is $0.25/$1.25).\n\nWhich startup's unit economics STILL work in 2026 — i.e. they\nbenefitted from the price collapse instead of getting crushed by\nit?\n",
+          "options": [
+            {
+              "id": "a_writefast",
+              "label": "A: WriteFast — $99/mo unlimited GPT-4 generator",
+              "explain": "Classic Jasper trap. Priced premium against a model whose capability now lives at 1/100 the cost. Free tools inside Notion, HubSpot, ChatGPT shipped the same feature for $0. The $99 price became indefensible."
+            },
+            {
+              "id": "b_searchpilot",
+              "label": "B: SearchPilot — $20/mo answer engine with quarterly model re-routing"
+            },
+            {
+              "id": "c_codebuddy",
+              "label": "C: CodeBuddy — $15/mo pair-programmer, 90% of calls on the cheap tier",
+              "explain": "Half right. CodeBuddy DID survive — Cursor pattern. But the question asks for the strongest answer. SearchPilot's quarterly re-routing is the model that explicitly assumed the price war and rebid the cost basis on a schedule. C is good; B is the more bulletproof shape."
+            },
+            {
+              "id": "d_promptpro",
+              "label": "D: PromptPro — locked to GPT-4 because templates were tuned for it",
+              "explain": "Locked into yesterday's model with no eval pipeline to switch. By 2026 the templates either still pay GPT-4 prices (margin destroyed) or run on a newer model and the carefully-tuned prompts no longer behave the same. Worst of all worlds."
+            }
+          ],
+          "answerIds": [
+            "b_searchpilot"
+          ],
+          "shuffle": false,
+          "code": "# four 2023-era startup architectures. all wrote real production code.\n# by 2026, only one's unit economics still pencil. pick that one.\nstartups = {\n    \"A\": {\n        \"name\":   \"WriteFast\",\n        \"pitch\":  \"$99/mo unlimited AI blog post generator\",\n        \"stack\":  \"every call hits GPT-4 (the best model). priced for 5x margin at 2023 token cost.\",\n    },\n    \"B\": {\n        \"name\":   \"SearchPilot\",\n        \"pitch\":  \"$20/mo answer engine\",\n        \"stack\":  \"router picks cheapest model that passes an internal eval per query. rerouted every quarter.\",\n    },\n    \"C\": {\n        \"name\":   \"CodeBuddy\",\n        \"pitch\":  \"$15/mo AI pair-programmer (autocomplete + chat)\",\n        \"stack\":  \"autocomplete on cheap small model, chat on frontier. 90% of calls on the cheap tier.\",\n    },\n    \"D\": {\n        \"name\":   \"PromptPro\",\n        \"pitch\":  \"$49/mo prompt-template marketplace, runs prompts for you\",\n        \"stack\":  \"always runs on GPT-4 because templates were tuned against GPT-4 specifically. no eval pipeline.\",\n    },\n}\nfor k, v in startups.items():\n    print(f\"{k}: {v['name']} — {v['pitch']}\")\n",
+          "runnable": true
+        },
+        {
+          "type": "read",
+          "id": "production-tradeoffs/the-model-price-war/s04-04-the-incumbent-trap",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 200,
+          "concept": "pricing-process-debt",
+          "body": "# The incumbent trap — when your cost model is a fossil\n\nIn Chapter 26 we used the phrase \"process debt\" to describe what\nlocks incumbent service businesses out of an AI-native rebuild. The\nsame concept applies, with a different surface area, to LLM products\nthat priced themselves against a model that no longer exists.\n\nCall this **process debt of pricing models**. It's what happens when\nthe price curve has moved but everything about your company — your\npricing page, your sales motion, your headcount, your support\nplaybook, your CFO's spreadsheet — still assumes yesterday's costs.\n\n## The shape of the trap\n\nA company shipping an LLM feature in 2023 made dozens of decisions\ncalibrated to GPT-4 pricing. None of them looked load-bearing at the\ntime:\n\n- The pricing page lists $99/month. The deck explained the price in\n  terms of \"compute cost per request × expected requests.\"\n- Sales was hired to sell the $99 plan. Commissions, quota, OTE all\n  calibrated for that price point.\n- The product team scoped features against \"how many calls per user\n  can we afford?\" The answer was 100/day.\n- Support was sized for a customer base willing to pay $99 — i.e.,\n  power users who use the product a lot.\n- The CFO model assumed 70% gross margin on those calls and modeled\n  three years out from that.\n\nBy 2026, the underlying API costs have fallen 10-100×. In a frictionless\nmarket, this should be pure margin upside. **In practice it is a\nstrategic catastrophe**, because:\n\n1. A new entrant prices the same feature at $9/month and still has\n   80% margin. The $99 product is undefendable on the pricing page —\n   buyers compare and churn.\n2. Dropping the price to $9 to compete blows up the sales motion.\n   Reps quit because they can't make quota on a $9 ACV. The deck\n   doesn't work. The CFO model collapses.\n3. Adding features fast enough to justify the $99 requires shipping\n   2-3× the surface area of the new entrant, which the team is not\n   structured for.\n4. Keeping the price flat and losing customers slowly is the path of\n   least resistance — and the path to irrelevance.\n\nThis is the same trap that hit Jasper. It is the trap currently\nhitting every \"AI for ___\" company that raised at 2023 valuations,\nshipped against 2023 model prices, and built an org chart against\n2023 sales motions. The cost curve moved underneath them and the\ncompany couldn't move with it.\n\n## Why incumbents can't escape\n\nThe new entrant doesn't have any of this debt. They priced from day\none against Haiku-4.5 economics. Their sales motion, their support\nteam, their product surface, their CFO model — all sized for $9\nACV from the start. They get the same margin on a $9 product that\nthe incumbent got on $99, because their cost basis is two orders of\nmagnitude lower.\n\nThe incumbent is stuck. Their options are:\n\n- **Stay at $99, lose customers slowly.** Death by attrition.\n- **Drop to $9, blow up the sales motion.** Self-inflicted layoffs\n  and a quarter or two of pain.\n- **Add 10× more features at $99 to justify the price.** Requires a\n  bigger team than the unit economics now support.\n\nThere is no \"just lower the price\" button. The whole company was\nbuilt around a number that no longer exists. This is what process\ndebt looks like inside an LLM company — and it compounds in the\nwrong direction every quarter the model prices keep falling.\n\n## The strategic lesson\n\nIf you are building today, **assume the model price you're paying\ntoday is the highest price you will ever pay** for that level of\ncapability. Price your product against where the cost curve will be\nin twelve months, not where it is today.\n\nIf you are working at an incumbent that priced against 2023 or 2024\nmodels, **the strategic question is not \"how do we cut API costs?\"**\nIt is \"**how do we restructure the entire company — pricing, sales,\nfeatures, headcount — to be viable against a competitor with a 10×\nlower cost basis?**\" That question is uncomfortable. It's the only\none that matters.\n\nThe next step is a quick check on which features become viable as\nprices fall. Then the build steps put a real cost model in your\nhands so you can see this dynamic on your own products.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "mc",
+          "id": "production-tradeoffs/the-model-price-war/s05-05-features-now-viable",
+          "xp": 2,
+          "hint": [
+            {
+              "level": 1,
+              "body": "The price collapse unlocks features that run MANY TIMES per user per day. Look for the two features whose call volume scales with user activity in real time. Low-volume features (once a week, once a month) were already cheap on GPT-4.",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 70,
+          "concept": "features-unlocked-by-price-collapse",
+          "prompt": "Four features. Two of them were too expensive to run on GPT-4 in\n2023 (would have eaten 100% of revenue per user) but become\nobviously viable on Haiku 4.5 in 2026 (under a dollar per user per\nmonth).\n\nThe other two were ALREADY cheap enough in 2023 that the price\ncollapse didn't change anything — they were viable on either\nmodel.\n\nWhich TWO features were unlocked by the price collapse?\n",
+          "options": [
+            {
+              "id": "a_and_c",
+              "label": "A (per-message moderation) and C (real-time translation per message)"
+            },
+            {
+              "id": "b_and_d",
+              "label": "B (weekly summary) and D (monthly invoice)",
+              "explain": "Both were already cheap in 2023. A weekly call costs pennies even at GPT-4 prices. The price collapse didn't unlock these — they were viable already. Look for features that scale with USER ACTIVITY at high volume."
+            },
+            {
+              "id": "a_and_d",
+              "label": "A (per-message moderation) and D (monthly invoice)",
+              "explain": "Half right. Per-message moderation was the canonical unlocked feature. But monthly invoice generation was already trivial cost-wise in 2023 — one call per month per user is cheap on any model."
+            },
+            {
+              "id": "b_and_c",
+              "label": "B (weekly summary) and C (real-time translation per message)",
+              "explain": "Half right. Real-time translation per message was unlocked by the collapse — running a model on every chat message at GPT-4 prices would have cost more than the subscription. But weekly summary was always cheap (one call per user per week)."
+            }
+          ],
+          "answerIds": [
+            "a_and_c"
+          ],
+          "shuffle": false,
+          "code": "# four features. each runs at a different call volume per user per day.\n# GPT-4 (2023): $30/$60 per 1M tokens.\n# Haiku 4.5 (2026): $0.25/$1.25 per 1M tokens. (~100x cheaper.)\n# assume 500 input tokens + 200 output tokens per call.\n\nIN, OUT = 500, 200\nGPT4_IN, GPT4_OUT       = 30.0,  60.0\nHAIKU_IN, HAIKU_OUT     = 0.25,  1.25\n\ndef cost_per_call(in_rate, out_rate):\n    return (IN / 1_000_000) * in_rate + (OUT / 1_000_000) * out_rate\n\nc_gpt4  = cost_per_call(GPT4_IN, GPT4_OUT)\nc_haiku = cost_per_call(HAIKU_IN, HAIKU_OUT)\n\nfeatures = {\n    \"A: per-message content moderation\":     {\"calls_per_user_per_day\": 200},\n    \"B: weekly summary of user's activity\":  {\"calls_per_user_per_day\": 0.14},  # ~1/week\n    \"C: real-time translation per message\":  {\"calls_per_user_per_day\": 500},\n    \"D: monthly invoice generation\":         {\"calls_per_user_per_day\": 0.03},  # ~1/month\n}\nfor name, f in features.items():\n    gpt4_monthly  = c_gpt4  * f[\"calls_per_user_per_day\"] * 30\n    haiku_monthly = c_haiku * f[\"calls_per_user_per_day\"] * 30\n    print(f\"{name}: GPT-4 ${gpt4_monthly:.2f}/user/mo  vs  Haiku ${haiku_monthly:.4f}/user/mo\")\n",
+          "runnable": true
+        },
+        {
+          "type": "read",
+          "id": "production-tradeoffs/the-model-price-war/s06-06-pricing-for-a-war-you-cant-predict",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 220,
+          "concept": "pricing-rules-for-volatile-costs",
+          "body": "# Pricing for a war you can't predict\n\nIf the model price will be a different number twelve months from now,\nand you can't accurately guess which model you'll be using, **how do\nyou actually price the feature today?**\n\nThere are three rules that the survivors of the 2023-2026 price war\nhave in common. Each is boring on its own. Together they are the\ndifference between a product that compounds and one that gets\nstrip-mined by a cheaper entrant.\n\n## Rule 1: never let model cost exceed 10% of unit revenue\n\nIf a user pays you $20/month, the API calls under that user's account\nshould cost you no more than $2/month. Probably less. The reason isn't\nmargin theory — it's **headroom for the price war you can't predict**.\n\nThree things will happen on a rolling basis and you cannot prevent them:\n\n- A user will get more active than your average and triple their call\n  volume. Your cost goes up 3×.\n- A competitor will ship a free version of the same feature and put\n  pricing pressure on you. Your revenue per user gets squeezed.\n- You will add features that increase call volume per user, because\n  product expansion is how you keep users from churning.\n\nIf model cost is already at 30% of revenue, any of those events\nbreaks your unit economics. If it's at 5-10%, you have headroom to\nabsorb all three. The rule sounds conservative. It is. It's the only\nrule that survives.\n\nThis is why per-message moderation didn't ship in 2023 — at GPT-4\nprices it was 50%+ of subscription revenue. It only became viable\nwhen Haiku-class prices dropped the cost below the 10% line.\n\n## Rule 2: always have a downgrade path\n\nEvery feature you ship should run on **two named models**: a primary\nand a fallback one tier cheaper. If your primary is Sonnet, the\nfallback is Haiku. If your primary is Opus, the fallback is Sonnet.\n\nThe downgrade path matters for three reasons:\n\n1. **Capacity outages**. The frontier model goes down for an hour\n   once a quarter. If your feature can't fall back to the cheaper\n   tier, your feature goes down. Cheap tier never goes down.\n2. **Cost spikes**. When the next price-shock release happens (a new\n   capability tier ships at the existing price), you want to be the\n   product that can route to it within a sprint. Routing\n   infrastructure has to exist already.\n3. **Quality re-evaluation**. Twelve months from now, the cheaper\n   tier will be as good as today's primary on 80% of your queries.\n   You want to be able to flip the routing line **the day** that\n   becomes true, not six months later.\n\nIn code terms, this means **never hardcode a model name in your\nfeature path**. Always read it from a config layer that knows about\nthe primary model, the fallback model, and the routing rule between\nthem. (You'll write a tiny version of this in the next step.)\n\n## Rule 3: price the feature, not the model\n\nThe single biggest pricing mistake in 2023-2024 was this: \"GPT-4\ncosts us $X per call, so the user pays $X × N margin.\" Pricing\n*against the cost basis* locks you into the cost curve. When the\ncurve moves, your pricing has to move with it, and every customer\ncontract has to be renegotiated.\n\nThe right move is to **price the outcome the user is buying**.\n\"Cleaning up 10,000 customer support tickets per month\" is worth\nsomething to the buyer regardless of which model does the work. Price\nthat. As the model cost falls underneath, your margin expands and\nyou reinvest it into product expansion — not into a price cut that\nre-anchors the customer to \"the model fee.\"\n\nThe companies that got this right in 2024-2026 (Perplexity at\n$20/month, Cursor at $20/month, Glean and Harvey at enterprise tiers\npriced per-seat) **never told the customer about the model**. The\nmodel was an implementation detail. The customer paid for the\noutcome. When the model swapped underneath, the price didn't move.\nWhen the price didn't move, the cost-curve collapse showed up as\npure margin.\n\n## One more lever: prompt caching\n\nAlready covered in the last lesson, but worth restating in the context\nof price-war pricing. **Prompt caching is the second-biggest cost\nlever in 2026**, after model choice. A static system prompt that gets\nre-sent on every call can cache at 90% of the input price. On a\nhigh-volume feature, that's another 4-5× cost reduction *on top of*\nwhatever model swap you do.\n\nIf you stack the levers — model choice (10×), caching (4×), output\nbudget (2×) — the same feature can be **80× cheaper** in 2026 than\nit was for a 2023 implementation. That's not optimization; that's a\ndifferent product. Whoever does the stacking owns the category.\n\n## What's next\n\nTwo build steps. First you'll write the cost model itself —\n`cost_per_user_month(usage)` — so you can see your own feature's\nunit economics in code. Then in the checkpoint, you'll write\n`pick_model(constraint)` that picks the cheapest model meeting a\nquality floor under a budget cap. That's the routing logic that\nPerplexity and Cursor built into their products from day one.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "write",
+          "id": "production-tradeoffs/the-model-price-war/s07-07-write-the-cost-model",
+          "xp": 5,
+          "hint": [
+            {
+              "level": 1,
+              "body": "Look up the (input_rate, output_rate) for the model. Per-call cost = (in_tokens/1M * in_rate) + (out_tokens/1M * out_rate). Multiply by messages_per_day, then by 30 days, then round to 2 decimals.",
+              "cost": 0
+            },
+            {
+              "level": 2,
+              "body": "The math for the power user:\n- per call: 400/1M × $0.25 + 150/1M × $1.25 = $0.0001 + $0.0001875 = $0.0002875\n- daily:    $0.0002875 × 50 = $0.014375\n- monthly:  $0.014375 × 30 = $0.43125 → rounds to $0.43\n\nThe sonnet user is roughly 10× the per-call cost on a similar token\nshape — that's the model-choice lever showing up directly in the bill.\n",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 200,
+          "concept": "per-user-monthly-cost-model",
+          "prompt": "Write `cost_per_user_month(usage)` that takes a usage profile dict\nand returns the projected dollar cost per user per month as a float\nrounded to 2 decimals.\n\n`usage` has four fields:\n- `messages_per_day`: int — how many model calls per day for this user\n- `avg_input_tokens`: int — average input tokens per call\n- `avg_output_tokens`: int — average output tokens per call\n- `model`: str — one of `\"haiku\"`, `\"sonnet\"`, `\"opus\"`\n\nUse these 2026-real prices per million tokens (input / output):\n\n- `haiku`:  $0.25 / $1.25\n- `sonnet`: $3.00 / $15.00\n- `opus`:   $15.00 / $75.00\n\nTreat one month as 30 days.\n\nTwo demo users run. Expected output:\n```\npower user (haiku):  $0.43/user/mo\npro user (sonnet):   $4.14/user/mo\n```\n",
+          "starter": "PRICES = {\n    \"haiku\":  (0.25, 1.25),\n    \"sonnet\": (3.00, 15.00),\n    \"opus\":   (15.00, 75.00),\n}\n\npower_user = {\n    \"messages_per_day\": 50,\n    \"avg_input_tokens\": 400,\n    \"avg_output_tokens\": 150,\n    \"model\": \"haiku\",\n}\n\npro_user = {\n    \"messages_per_day\": 20,\n    \"avg_input_tokens\": 800,\n    \"avg_output_tokens\": 300,\n    \"model\": \"sonnet\",\n}\n\n# define cost_per_user_month(usage) below.\n# one month = 30 days. prices are per 1M tokens (input/output).\n# return a float rounded to 2 decimals.\n\nprint(f\"power user (haiku):  ${cost_per_user_month(power_user):.2f}/user/mo\")\nprint(f\"pro user (sonnet):   ${cost_per_user_month(pro_user):.2f}/user/mo\")\n",
+          "grader": {
+            "kind": "stdout-equality",
+            "expected": "power user (haiku):  $0.43/user/mo\npro user (sonnet):   $4.14/user/mo\n",
+            "normalize": "collapse-trailing-newline"
+          },
+          "solution": "PRICES = {\n    \"haiku\":  (0.25, 1.25),\n    \"sonnet\": (3.00, 15.00),\n    \"opus\":   (15.00, 75.00),\n}\n\npower_user = {\n    \"messages_per_day\": 50,\n    \"avg_input_tokens\": 400,\n    \"avg_output_tokens\": 150,\n    \"model\": \"haiku\",\n}\n\npro_user = {\n    \"messages_per_day\": 20,\n    \"avg_input_tokens\": 800,\n    \"avg_output_tokens\": 300,\n    \"model\": \"sonnet\",\n}\n\ndef cost_per_user_month(usage):\n    in_rate, out_rate = PRICES[usage[\"model\"]]\n    in_cost  = (usage[\"avg_input_tokens\"]  / 1_000_000) * in_rate\n    out_cost = (usage[\"avg_output_tokens\"] / 1_000_000) * out_rate\n    per_call = in_cost + out_cost\n    daily    = per_call * usage[\"messages_per_day\"]\n    monthly  = daily * 30\n    return round(monthly, 2)\n\nprint(f\"power user (haiku):  ${cost_per_user_month(power_user):.2f}/user/mo\")\nprint(f\"pro user (sonnet):   ${cost_per_user_month(pro_user):.2f}/user/mo\")\n",
+          "hiddenTests": []
+        },
+        {
+          "type": "checkpoint",
+          "id": "production-tradeoffs/the-model-price-war/s08-08-checkpoint",
+          "xp": 8,
+          "hint": [],
+          "personalize": false,
+          "phase": "check",
+          "estSeconds": 240,
+          "concept": "model-routing-under-budget",
+          "prompt": "Final drill. The pattern Perplexity and Cursor built into their\nproducts from day one: **routing logic that picks the cheapest model\nthat meets a quality floor under a monthly budget cap**.\n\nBuild `pick_model(constraint)` that takes a constraint dict:\n\n- `max_cost_per_month`: float — the budget cap in dollars per user per month\n- `quality_floor`: str — one of `\"haiku\"`, `\"sonnet\"`, `\"opus\"`\n  (the model must be at LEAST this good)\n\nAnd returns one of: `\"haiku\"`, `\"sonnet\"`, `\"opus\"`, or `\"none\"`\nif no model meets both the floor AND the budget.\n\nQuality ranking (low to high): `haiku` < `sonnet` < `opus`. A\n`quality_floor` of `\"sonnet\"` means sonnet or opus qualifies; haiku\ndoes not. Among models that meet the floor, pick the **cheapest one\nthat stays under budget**.\n\nUse this fixed usage profile (don't change it):\n- 20 messages/day\n- 500 avg input tokens, 200 avg output tokens\n- 30 days/month\n- prices: haiku $0.25/$1.25, sonnet $3/$15, opus $15/$75 per 1M tokens\n\nFive constraints run for you. Expected output:\n```\ntight budget, haiku floor:   haiku\nmid budget, sonnet floor:    sonnet\nbig budget, opus floor:      opus\ntight budget, sonnet floor:  none\nbig budget, haiku floor:     haiku\n```\n",
+          "starter": "PRICES = {\n    \"haiku\":  (0.25, 1.25),\n    \"sonnet\": (3.00, 15.00),\n    \"opus\":   (15.00, 75.00),\n}\nQUALITY_RANK = {\"haiku\": 0, \"sonnet\": 1, \"opus\": 2}\n\nUSAGE = {\n    \"messages_per_day\": 20,\n    \"avg_input_tokens\": 500,\n    \"avg_output_tokens\": 200,\n}\n\ndef monthly_cost(model):\n    in_rate, out_rate = PRICES[model]\n    per_call = (USAGE[\"avg_input_tokens\"]  / 1_000_000) * in_rate \\\n             + (USAGE[\"avg_output_tokens\"] / 1_000_000) * out_rate\n    return per_call * USAGE[\"messages_per_day\"] * 30\n\n# define pick_model(constraint) below.\n# 1. filter to models whose quality_rank >= the floor's rank\n# 2. filter to models whose monthly_cost <= max_cost_per_month\n# 3. return the cheapest survivor by monthly_cost (or \"none\")\n\nscenarios = [\n    (\"tight budget, haiku floor\",   {\"max_cost_per_month\": 1.00,   \"quality_floor\": \"haiku\"}),\n    (\"mid budget, sonnet floor\",    {\"max_cost_per_month\": 5.00,   \"quality_floor\": \"sonnet\"}),\n    (\"big budget, opus floor\",      {\"max_cost_per_month\": 20.00,  \"quality_floor\": \"opus\"}),\n    (\"tight budget, sonnet floor\",  {\"max_cost_per_month\": 1.00,   \"quality_floor\": \"sonnet\"}),\n    (\"big budget, haiku floor\",     {\"max_cost_per_month\": 100.00, \"quality_floor\": \"haiku\"}),\n]\nfor label, c in scenarios:\n    print(f\"{label + ':':28s} {pick_model(c)}\")\n",
+          "grader": {
+            "kind": "stdout-equality",
+            "expected": "tight budget, haiku floor:   haiku\nmid budget, sonnet floor:    sonnet\nbig budget, opus floor:      opus\ntight budget, sonnet floor:  none\nbig budget, haiku floor:     haiku\n",
+            "normalize": "collapse-trailing-newline"
+          },
+          "solution": "PRICES = {\n    \"haiku\":  (0.25, 1.25),\n    \"sonnet\": (3.00, 15.00),\n    \"opus\":   (15.00, 75.00),\n}\nQUALITY_RANK = {\"haiku\": 0, \"sonnet\": 1, \"opus\": 2}\n\nUSAGE = {\n    \"messages_per_day\": 20,\n    \"avg_input_tokens\": 500,\n    \"avg_output_tokens\": 200,\n}\n\ndef monthly_cost(model):\n    in_rate, out_rate = PRICES[model]\n    per_call = (USAGE[\"avg_input_tokens\"]  / 1_000_000) * in_rate \\\n             + (USAGE[\"avg_output_tokens\"] / 1_000_000) * out_rate\n    return per_call * USAGE[\"messages_per_day\"] * 30\n\ndef pick_model(constraint):\n    floor_rank = QUALITY_RANK[constraint[\"quality_floor\"]]\n    budget     = constraint[\"max_cost_per_month\"]\n    candidates = [\n        m for m in PRICES\n        if QUALITY_RANK[m] >= floor_rank and monthly_cost(m) <= budget\n    ]\n    if not candidates:\n        return \"none\"\n    return min(candidates, key=monthly_cost)\n\nscenarios = [\n    (\"tight budget, haiku floor\",   {\"max_cost_per_month\": 1.00,   \"quality_floor\": \"haiku\"}),\n    (\"mid budget, sonnet floor\",    {\"max_cost_per_month\": 5.00,   \"quality_floor\": \"sonnet\"}),\n    (\"big budget, opus floor\",      {\"max_cost_per_month\": 20.00,  \"quality_floor\": \"opus\"}),\n    (\"tight budget, sonnet floor\",  {\"max_cost_per_month\": 1.00,   \"quality_floor\": \"sonnet\"}),\n    (\"big budget, haiku floor\",     {\"max_cost_per_month\": 100.00, \"quality_floor\": \"haiku\"}),\n]\nfor label, c in scenarios:\n    print(f\"{label + ':':28s} {pick_model(c)}\")\n",
+          "passThreshold": 0.66
+        }
+      ],
+      "xpTotal": 21
     }
   ],
-  "xpTotal": 64
+  "xpTotal": 85
 }

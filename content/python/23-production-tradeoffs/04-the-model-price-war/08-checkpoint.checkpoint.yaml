@@ -1,0 +1,120 @@
+xp: 8
+estSeconds: 240
+concept: model-routing-under-budget
+prompt: |
+  Final drill. The pattern Perplexity and Cursor built into their
+  products from day one: **routing logic that picks the cheapest model
+  that meets a quality floor under a monthly budget cap**.
+
+  Build `pick_model(constraint)` that takes a constraint dict:
+
+  - `max_cost_per_month`: float — the budget cap in dollars per user per month
+  - `quality_floor`: str — one of `"haiku"`, `"sonnet"`, `"opus"`
+    (the model must be at LEAST this good)
+
+  And returns one of: `"haiku"`, `"sonnet"`, `"opus"`, or `"none"`
+  if no model meets both the floor AND the budget.
+
+  Quality ranking (low to high): `haiku` < `sonnet` < `opus`. A
+  `quality_floor` of `"sonnet"` means sonnet or opus qualifies; haiku
+  does not. Among models that meet the floor, pick the **cheapest one
+  that stays under budget**.
+
+  Use this fixed usage profile (don't change it):
+  - 20 messages/day
+  - 500 avg input tokens, 200 avg output tokens
+  - 30 days/month
+  - prices: haiku $0.25/$1.25, sonnet $3/$15, opus $15/$75 per 1M tokens
+
+  Five constraints run for you. Expected output:
+  ```
+  tight budget, haiku floor:   haiku
+  mid budget, sonnet floor:    sonnet
+  big budget, opus floor:      opus
+  tight budget, sonnet floor:  none
+  big budget, haiku floor:     haiku
+  ```
+starter: |
+  PRICES = {
+      "haiku":  (0.25, 1.25),
+      "sonnet": (3.00, 15.00),
+      "opus":   (15.00, 75.00),
+  }
+  QUALITY_RANK = {"haiku": 0, "sonnet": 1, "opus": 2}
+
+  USAGE = {
+      "messages_per_day": 20,
+      "avg_input_tokens": 500,
+      "avg_output_tokens": 200,
+  }
+
+  def monthly_cost(model):
+      in_rate, out_rate = PRICES[model]
+      per_call = (USAGE["avg_input_tokens"]  / 1_000_000) * in_rate \
+               + (USAGE["avg_output_tokens"] / 1_000_000) * out_rate
+      return per_call * USAGE["messages_per_day"] * 30
+
+  # define pick_model(constraint) below.
+  # 1. filter to models whose quality_rank >= the floor's rank
+  # 2. filter to models whose monthly_cost <= max_cost_per_month
+  # 3. return the cheapest survivor by monthly_cost (or "none")
+
+  scenarios = [
+      ("tight budget, haiku floor",   {"max_cost_per_month": 1.00,   "quality_floor": "haiku"}),
+      ("mid budget, sonnet floor",    {"max_cost_per_month": 5.00,   "quality_floor": "sonnet"}),
+      ("big budget, opus floor",      {"max_cost_per_month": 20.00,  "quality_floor": "opus"}),
+      ("tight budget, sonnet floor",  {"max_cost_per_month": 1.00,   "quality_floor": "sonnet"}),
+      ("big budget, haiku floor",     {"max_cost_per_month": 100.00, "quality_floor": "haiku"}),
+  ]
+  for label, c in scenarios:
+      print(f"{label + ':':28s} {pick_model(c)}")
+grader:
+  kind: stdout-equality
+  expected: |
+    tight budget, haiku floor:   haiku
+    mid budget, sonnet floor:    sonnet
+    big budget, opus floor:      opus
+    tight budget, sonnet floor:  none
+    big budget, haiku floor:     haiku
+  normalize: collapse-trailing-newline
+solution: |
+  PRICES = {
+      "haiku":  (0.25, 1.25),
+      "sonnet": (3.00, 15.00),
+      "opus":   (15.00, 75.00),
+  }
+  QUALITY_RANK = {"haiku": 0, "sonnet": 1, "opus": 2}
+
+  USAGE = {
+      "messages_per_day": 20,
+      "avg_input_tokens": 500,
+      "avg_output_tokens": 200,
+  }
+
+  def monthly_cost(model):
+      in_rate, out_rate = PRICES[model]
+      per_call = (USAGE["avg_input_tokens"]  / 1_000_000) * in_rate \
+               + (USAGE["avg_output_tokens"] / 1_000_000) * out_rate
+      return per_call * USAGE["messages_per_day"] * 30
+
+  def pick_model(constraint):
+      floor_rank = QUALITY_RANK[constraint["quality_floor"]]
+      budget     = constraint["max_cost_per_month"]
+      candidates = [
+          m for m in PRICES
+          if QUALITY_RANK[m] >= floor_rank and monthly_cost(m) <= budget
+      ]
+      if not candidates:
+          return "none"
+      return min(candidates, key=monthly_cost)
+
+  scenarios = [
+      ("tight budget, haiku floor",   {"max_cost_per_month": 1.00,   "quality_floor": "haiku"}),
+      ("mid budget, sonnet floor",    {"max_cost_per_month": 5.00,   "quality_floor": "sonnet"}),
+      ("big budget, opus floor",      {"max_cost_per_month": 20.00,  "quality_floor": "opus"}),
+      ("tight budget, sonnet floor",  {"max_cost_per_month": 1.00,   "quality_floor": "sonnet"}),
+      ("big budget, haiku floor",     {"max_cost_per_month": 100.00, "quality_floor": "haiku"}),
+  ]
+  for label, c in scenarios:
+      print(f"{label + ':':28s} {pick_model(c)}")
+passThreshold: 0.66

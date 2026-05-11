@@ -1,0 +1,104 @@
+xp: 5
+estSeconds: 200
+concept: per-user-monthly-cost-model
+prompt: |
+  Write `cost_per_user_month(usage)` that takes a usage profile dict
+  and returns the projected dollar cost per user per month as a float
+  rounded to 2 decimals.
+
+  `usage` has four fields:
+  - `messages_per_day`: int — how many model calls per day for this user
+  - `avg_input_tokens`: int — average input tokens per call
+  - `avg_output_tokens`: int — average output tokens per call
+  - `model`: str — one of `"haiku"`, `"sonnet"`, `"opus"`
+
+  Use these 2026-real prices per million tokens (input / output):
+
+  - `haiku`:  $0.25 / $1.25
+  - `sonnet`: $3.00 / $15.00
+  - `opus`:   $15.00 / $75.00
+
+  Treat one month as 30 days.
+
+  Two demo users run. Expected output:
+  ```
+  power user (haiku):  $0.43/user/mo
+  pro user (sonnet):   $4.14/user/mo
+  ```
+starter: |
+  PRICES = {
+      "haiku":  (0.25, 1.25),
+      "sonnet": (3.00, 15.00),
+      "opus":   (15.00, 75.00),
+  }
+
+  power_user = {
+      "messages_per_day": 50,
+      "avg_input_tokens": 400,
+      "avg_output_tokens": 150,
+      "model": "haiku",
+  }
+
+  pro_user = {
+      "messages_per_day": 20,
+      "avg_input_tokens": 800,
+      "avg_output_tokens": 300,
+      "model": "sonnet",
+  }
+
+  # define cost_per_user_month(usage) below.
+  # one month = 30 days. prices are per 1M tokens (input/output).
+  # return a float rounded to 2 decimals.
+
+  print(f"power user (haiku):  ${cost_per_user_month(power_user):.2f}/user/mo")
+  print(f"pro user (sonnet):   ${cost_per_user_month(pro_user):.2f}/user/mo")
+grader:
+  kind: stdout-equality
+  expected: |
+    power user (haiku):  $0.43/user/mo
+    pro user (sonnet):   $4.14/user/mo
+  normalize: collapse-trailing-newline
+solution: |
+  PRICES = {
+      "haiku":  (0.25, 1.25),
+      "sonnet": (3.00, 15.00),
+      "opus":   (15.00, 75.00),
+  }
+
+  power_user = {
+      "messages_per_day": 50,
+      "avg_input_tokens": 400,
+      "avg_output_tokens": 150,
+      "model": "haiku",
+  }
+
+  pro_user = {
+      "messages_per_day": 20,
+      "avg_input_tokens": 800,
+      "avg_output_tokens": 300,
+      "model": "sonnet",
+  }
+
+  def cost_per_user_month(usage):
+      in_rate, out_rate = PRICES[usage["model"]]
+      in_cost  = (usage["avg_input_tokens"]  / 1_000_000) * in_rate
+      out_cost = (usage["avg_output_tokens"] / 1_000_000) * out_rate
+      per_call = in_cost + out_cost
+      daily    = per_call * usage["messages_per_day"]
+      monthly  = daily * 30
+      return round(monthly, 2)
+
+  print(f"power user (haiku):  ${cost_per_user_month(power_user):.2f}/user/mo")
+  print(f"pro user (sonnet):   ${cost_per_user_month(pro_user):.2f}/user/mo")
+hint:
+  - level: 1
+    body: "Look up the (input_rate, output_rate) for the model. Per-call cost = (in_tokens/1M * in_rate) + (out_tokens/1M * out_rate). Multiply by messages_per_day, then by 30 days, then round to 2 decimals."
+  - level: 2
+    body: |
+      The math for the power user:
+      - per call: 400/1M × $0.25 + 150/1M × $1.25 = $0.0001 + $0.0001875 = $0.0002875
+      - daily:    $0.0002875 × 50 = $0.014375
+      - monthly:  $0.014375 × 30 = $0.43125 → rounds to $0.43
+
+      The sonnet user is roughly 10× the per-call cost on a similar token
+      shape — that's the model-choice lever showing up directly in the bill.

@@ -1,0 +1,14 @@
+slug: the-model-price-war
+title: "The 2023-2026 model price war — and why your cost model is already obsolete"
+estMinutes: 18
+prerequisites:
+  - read-the-token-bill
+order:
+  - 01-the-price-curve.read.md
+  - 02-three-bets-and-how-they-aged.read.md
+  - 03-which-startup-survived.mc.yaml
+  - 04-the-incumbent-trap.read.md
+  - 05-features-now-viable.mc.yaml
+  - 06-pricing-for-a-war-you-cant-predict.read.md
+  - 07-write-the-cost-model.write.yaml
+  - 08-checkpoint.checkpoint.yaml

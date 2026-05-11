@@ -1,0 +1,57 @@
+xp: 2
+estSeconds: 70
+concept: features-unlocked-by-price-collapse
+code: |
+  # four features. each runs at a different call volume per user per day.
+  # GPT-4 (2023): $30/$60 per 1M tokens.
+  # Haiku 4.5 (2026): $0.25/$1.25 per 1M tokens. (~100x cheaper.)
+  # assume 500 input tokens + 200 output tokens per call.
+
+  IN, OUT = 500, 200
+  GPT4_IN, GPT4_OUT       = 30.0,  60.0
+  HAIKU_IN, HAIKU_OUT     = 0.25,  1.25
+
+  def cost_per_call(in_rate, out_rate):
+      return (IN / 1_000_000) * in_rate + (OUT / 1_000_000) * out_rate
+
+  c_gpt4  = cost_per_call(GPT4_IN, GPT4_OUT)
+  c_haiku = cost_per_call(HAIKU_IN, HAIKU_OUT)
+
+  features = {
+      "A: per-message content moderation":     {"calls_per_user_per_day": 200},
+      "B: weekly summary of user's activity":  {"calls_per_user_per_day": 0.14},  # ~1/week
+      "C: real-time translation per message":  {"calls_per_user_per_day": 500},
+      "D: monthly invoice generation":         {"calls_per_user_per_day": 0.03},  # ~1/month
+  }
+  for name, f in features.items():
+      gpt4_monthly  = c_gpt4  * f["calls_per_user_per_day"] * 30
+      haiku_monthly = c_haiku * f["calls_per_user_per_day"] * 30
+      print(f"{name}: GPT-4 ${gpt4_monthly:.2f}/user/mo  vs  Haiku ${haiku_monthly:.4f}/user/mo")
+prompt: |
+  Four features. Two of them were too expensive to run on GPT-4 in
+  2023 (would have eaten 100% of revenue per user) but become
+  obviously viable on Haiku 4.5 in 2026 (under a dollar per user per
+  month).
+
+  The other two were ALREADY cheap enough in 2023 that the price
+  collapse didn't change anything — they were viable on either
+  model.
+
+  Which TWO features were unlocked by the price collapse?
+options:
+  - id: a_and_c
+    label: "A (per-message moderation) and C (real-time translation per message)"
+  - id: b_and_d
+    label: "B (weekly summary) and D (monthly invoice)"
+    explain: "Both were already cheap in 2023. A weekly call costs pennies even at GPT-4 prices. The price collapse didn't unlock these — they were viable already. Look for features that scale with USER ACTIVITY at high volume."
+  - id: a_and_d
+    label: "A (per-message moderation) and D (monthly invoice)"
+    explain: "Half right. Per-message moderation was the canonical unlocked feature. But monthly invoice generation was already trivial cost-wise in 2023 — one call per month per user is cheap on any model."
+  - id: b_and_c
+    label: "B (weekly summary) and C (real-time translation per message)"
+    explain: "Half right. Real-time translation per message was unlocked by the collapse — running a model on every chat message at GPT-4 prices would have cost more than the subscription. But weekly summary was always cheap (one call per user per week)."
+answerIds:
+  - a_and_c
+hint:
+  - level: 1
+    body: "The price collapse unlocks features that run MANY TIMES per user per day. Look for the two features whose call volume scales with user activity in real time. Low-volume features (once a week, once a month) were already cheap on GPT-4."

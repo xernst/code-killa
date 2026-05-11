@@ -1,0 +1,55 @@
+xp: 2
+estSeconds: 60
+concept: cost-assumption-survival
+code: |
+  # four 2023-era startup architectures. all wrote real production code.
+  # by 2026, only one's unit economics still pencil. pick that one.
+  startups = {
+      "A": {
+          "name":   "WriteFast",
+          "pitch":  "$99/mo unlimited AI blog post generator",
+          "stack":  "every call hits GPT-4 (the best model). priced for 5x margin at 2023 token cost.",
+      },
+      "B": {
+          "name":   "SearchPilot",
+          "pitch":  "$20/mo answer engine",
+          "stack":  "router picks cheapest model that passes an internal eval per query. rerouted every quarter.",
+      },
+      "C": {
+          "name":   "CodeBuddy",
+          "pitch":  "$15/mo AI pair-programmer (autocomplete + chat)",
+          "stack":  "autocomplete on cheap small model, chat on frontier. 90% of calls on the cheap tier.",
+      },
+      "D": {
+          "name":   "PromptPro",
+          "pitch":  "$49/mo prompt-template marketplace, runs prompts for you",
+          "stack":  "always runs on GPT-4 because templates were tuned against GPT-4 specifically. no eval pipeline.",
+      },
+  }
+  for k, v in startups.items():
+      print(f"{k}: {v['name']} — {v['pitch']}")
+prompt: |
+  Four startups, all shipped in 2023, all with real customers. By
+  2026 the model price curve has collapsed two orders of magnitude
+  (GPT-4 was $30/$60 per 1M; Haiku 4.5 is $0.25/$1.25).
+
+  Which startup's unit economics STILL work in 2026 — i.e. they
+  benefitted from the price collapse instead of getting crushed by
+  it?
+options:
+  - id: a_writefast
+    label: "A: WriteFast — $99/mo unlimited GPT-4 generator"
+    explain: "Classic Jasper trap. Priced premium against a model whose capability now lives at 1/100 the cost. Free tools inside Notion, HubSpot, ChatGPT shipped the same feature for $0. The $99 price became indefensible."
+  - id: b_searchpilot
+    label: "B: SearchPilot — $20/mo answer engine with quarterly model re-routing"
+  - id: c_codebuddy
+    label: "C: CodeBuddy — $15/mo pair-programmer, 90% of calls on the cheap tier"
+    explain: "Half right. CodeBuddy DID survive — Cursor pattern. But the question asks for the strongest answer. SearchPilot's quarterly re-routing is the model that explicitly assumed the price war and rebid the cost basis on a schedule. C is good; B is the more bulletproof shape."
+  - id: d_promptpro
+    label: "D: PromptPro — locked to GPT-4 because templates were tuned for it"
+    explain: "Locked into yesterday's model with no eval pipeline to switch. By 2026 the templates either still pay GPT-4 prices (margin destroyed) or run on a newer model and the carefully-tuned prompts no longer behave the same. Worst of all worlds."
+answerIds:
+  - b_searchpilot
+hint:
+  - level: 1
+    body: "The pattern that survived the price war was 'assume the price will fall, build the swap in from day one.' Look for the architecture that has an explicit mechanism to re-route as cheaper models cross the quality bar — not one that locks itself to today's model."

@@ -5,3 +5,4 @@ blurb: "the three numbers every shipped llm feature lives or dies by. token math
 lessons:
   - 02-prompt-caching-correctly
   - 03-read-the-token-bill
+  - 04-the-model-price-war
