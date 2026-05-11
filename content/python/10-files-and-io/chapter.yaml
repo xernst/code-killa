@@ -1,7 +1,7 @@
 number: 10
 slug: files-and-io
 title: "Files and I/O — moving data in and out"
-blurb: "Reading a CSV, writing a log, parsing a JSON dump. The first thing AI does in any real project is touch a file. Learn the few patterns it reaches for and the one it forgets."
+blurb: "reading a csv, writing a log, parsing a json dump. the first thing ai does in any real project is touch a file. learn the few patterns it reaches for and the one it forgets."
 lessons:
   - 01-reading-and-writing
   - 02-pathlib-basics
