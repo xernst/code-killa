@@ -1,0 +1,36 @@
+{
+  "name": "promptdojo-mobile",
+  "version": "0.1.0",
+  "type": "module",
+  "private": true,
+  "description": "capacitor 7 native shell wrapping the promptdojo next.js static export for ios + android",
+  "scripts": {
+    "build:web": "pnpm -C .. build",
+    "sync": "pnpm -C .. build && cap sync",
+    "sync:only": "cap sync",
+    "ios": "cap run ios",
+    "android": "cap run android",
+    "open:ios": "cap open ios",
+    "open:android": "cap open android",
+    "copy": "cap copy",
+    "update": "cap update",
+    "doctor": "cap doctor"
+  },
+  "dependencies": {
+    "@capacitor/app": "^7.0.0",
+    "@capacitor/android": "^7.0.0",
+    "@capacitor/core": "^7.0.0",
+    "@capacitor/ios": "^7.0.0",
+    "@capacitor/network": "^7.0.0",
+    "@capacitor/preferences": "^7.0.0",
+    "@capacitor/share": "^7.0.0",
+    "@capacitor/splash-screen": "^7.0.0",
+    "@revenuecat/purchases-capacitor": "latest"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^7.0.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
