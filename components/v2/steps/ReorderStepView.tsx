@@ -62,7 +62,7 @@ export default function ReorderStepView({
       userIds.every((id, i) => id === expected[i]);
     setSubmitted({
       passed,
-      reason: passed ? undefined : "Order isn't quite right yet — read top-to-bottom.",
+      reason: passed ? undefined : "order isn't quite right yet — read top-to-bottom.",
     });
     onAttempt({
       stepId: step.id,

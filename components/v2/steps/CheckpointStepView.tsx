@@ -32,7 +32,7 @@ export default function CheckpointStepView({
     const result = await ide.run();
     setSubmitting(false);
     if (!result) {
-      setSubmitted({ passed: false, reason: "Editor isn't ready yet." });
+      setSubmitted({ passed: false, reason: "editor isn't ready yet." });
       return;
     }
     const grade = await gradeRunResultAsync(step.grader, result, ide);
@@ -100,7 +100,7 @@ export default function CheckpointStepView({
           )}
           <span>
             {submitted.passed
-              ? "Locked in. That's the lesson."
+              ? "locked in. that's the lesson."
               : submitted.reason}
           </span>
         </div>

@@ -1,6 +1,7 @@
 number: 22
 slug: context-and-retrieval
-title: "Context and retrieval — feeding the model real data"
+title: "context and retrieval — feeding the model real data"
 blurb: "rag without the overengineering. chunking, embeddings, vector search, and the small set of patterns that make a model answer from your data instead of its training set."
 lessons:
   - 02-chunking-that-respects-structure
+  - 03-embedding-that-fits-the-budget

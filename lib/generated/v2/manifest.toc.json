@@ -1,11 +1,11 @@
 {
   "version": "0.1.0",
-  "generatedAt": "2026-05-11T05:42:44.396Z",
+  "generatedAt": "2026-05-11T06:30:49.114Z",
   "chapters": [
     {
       "number": 1,
       "slug": "variables",
-      "title": "Variables — what AI reaches for first",
+      "title": "variables — what ai reaches for first",
       "blurb": "when ai writes python, the first thing it does is name things. learn to read those names on sight, and to write a few yourself.",
       "lessonCount": 3,
       "stepCount": 26,
@@ -15,7 +15,7 @@
     {
       "number": 2,
       "slug": "functions",
-      "title": "Functions — and the most-hallucinated bug AI ships",
+      "title": "functions — and the most-hallucinated bug ai ships",
       "blurb": "ai writes functions constantly, and silently forgets the `return` line about a third of the time. learn to spot the missing return on sight.",
       "lessonCount": 3,
       "stepCount": 27,
@@ -25,7 +25,7 @@
     {
       "number": 3,
       "slug": "lists-and-dicts",
-      "title": "Lists and dicts — the bones of every API",
+      "title": "lists and dicts — the bones of every api",
       "blurb": "every json response you've ever copied out of chatgpt or a rest api is some mix of two things: lists and dicts. read them on sight.",
       "lessonCount": 3,
       "stepCount": 27,
@@ -35,7 +35,7 @@
     {
       "number": 4,
       "slug": "loops",
-      "title": "Loops — predict the output",
+      "title": "loops — predict the output",
       "blurb": "ai writes a loop every time you say *for each*. half the time it's wrong by one. read it before you trust it.",
       "lessonCount": 3,
       "stepCount": 28,
@@ -45,7 +45,7 @@
     {
       "number": 5,
       "slug": "conditionals",
-      "title": "Conditionals — where AI silently bugs",
+      "title": "conditionals — where ai silently bugs",
       "blurb": "`if` looks simple. the traps inside it — empty values, `==` vs `is`, the difference between `0` and `None` — are where ai quietly ships wrong code.",
       "lessonCount": 2,
       "stepCount": 17,
@@ -55,7 +55,7 @@
     {
       "number": 6,
       "slug": "tracebacks",
-      "title": "Tracebacks — Cursor wrote this and crashed",
+      "title": "tracebacks — cursor wrote this and crashed",
       "blurb": "when python crashes, it tells you exactly what happened and where. most non-engineers panic at the wall of text. you're going to learn to read it.",
       "lessonCount": 3,
       "stepCount": 26,
@@ -65,7 +65,7 @@
     {
       "number": 7,
       "slug": "mutation-and-state",
-      "title": "Mutation — why your code mysteriously breaks",
+      "title": "mutation — why your code mysteriously breaks",
       "blurb": "when a list inside a function changes the list outside the function, that's mutation. ai does this constantly without flagging it, and it's the bug class that takes the longest to find.",
       "lessonCount": 2,
       "stepCount": 17,
@@ -75,7 +75,7 @@
     {
       "number": 8,
       "slug": "modules-and-imports",
-      "title": "Modules, imports, and why your venv hates you",
+      "title": "modules, imports, and why your venv hates you",
       "blurb": "half of `pip install x` failures are environment confusion, not python bugs. learn what `import` actually does, what a virtual env is for, and why your script can't find the package you just installed.",
       "lessonCount": 2,
       "stepCount": 17,
@@ -85,7 +85,7 @@
     {
       "number": 9,
       "slug": "error-handling",
-      "title": "Error handling — when AI's code crashes mid-flight",
+      "title": "error handling — when ai's code crashes mid-flight",
       "blurb": "ai loves a happy path. the moment a file isn't there or an api blinks, the script blows up. `try/except` is how you keep the program alive long enough to log what went wrong.",
       "lessonCount": 3,
       "stepCount": 27,
@@ -95,7 +95,7 @@
     {
       "number": 10,
       "slug": "files-and-io",
-      "title": "Files and I/O — moving data in and out",
+      "title": "files and i/o — moving data in and out",
       "blurb": "reading a csv, writing a log, parsing a json dump. the first thing ai does in any real project is touch a file. learn the few patterns it reaches for and the one it forgets.",
       "lessonCount": 3,
       "stepCount": 27,
@@ -105,7 +105,7 @@
     {
       "number": 11,
       "slug": "classes-basics",
-      "title": "Classes — reading what AI just wrote you",
+      "title": "classes — reading what ai just wrote you",
       "blurb": "ai ships classes constantly: sqlalchemy models, fastapi schemas, custom exceptions. you don't need to design them. you need to read one without flinching.",
       "lessonCount": 3,
       "stepCount": 27,
@@ -115,7 +115,7 @@
     {
       "number": 12,
       "slug": "http-and-apis",
-      "title": "HTTP and APIs — making the call",
+      "title": "http and apis — making the call",
       "blurb": "every ai script eventually calls an api. learn the shape of `httpx.get`, what a status code means, and how to pull a value out of the json that comes back.",
       "lessonCount": 3,
       "stepCount": 27,
@@ -125,7 +125,7 @@
     {
       "number": 13,
       "slug": "llm-apis",
-      "title": "LLM APIs — talking to Claude and OpenAI",
+      "title": "llm apis — talking to claude and openai",
       "blurb": "every ai feature you ship eventually calls a model api. learn the messages pattern, how to read the response, and the four lines ai writes every single time.",
       "lessonCount": 1,
       "stepCount": 9,
@@ -135,7 +135,7 @@
     {
       "number": 14,
       "slug": "structured-output",
-      "title": "Structured output — making the model return JSON",
+      "title": "structured output — making the model return json",
       "blurb": "free-form text breaks every pipeline. learn the schema-first pattern ai uses to get reliable json back, validate it with pydantic, and catch the model's lies before they hit prod.",
       "lessonCount": 1,
       "stepCount": 9,
@@ -145,17 +145,17 @@
     {
       "number": 15,
       "slug": "mcp",
-      "title": "MCP — the Model Context Protocol",
+      "title": "mcp — the model context protocol",
       "blurb": "mcp is the new standard for plugging tools and data sources into ai agents. learn what an mcp server actually is, how claude code lists tools, and why this is replacing one-off integrations everywhere.",
-      "lessonCount": 1,
-      "stepCount": 9,
-      "estMinutes": 8,
-      "xpTotal": 32
+      "lessonCount": 2,
+      "stepCount": 18,
+      "estMinutes": 22,
+      "xpTotal": 64
     },
     {
       "number": 16,
       "slug": "agent-loops",
-      "title": "Agent loops — tool_use and the request/tool/respond cycle",
+      "title": "agent loops — tool_use and the request/tool/respond cycle",
       "blurb": "an agent isn't a magic. it's a while loop. learn the actual cycle claude code, cursor, and every other agent uses: model returns tool_use, you run the tool, you send the result back, repeat until end_turn.",
       "lessonCount": 4,
       "stepCount": 36,
@@ -165,7 +165,7 @@
     {
       "number": 17,
       "slug": "git-and-github",
-      "title": "Git and GitHub CLI — the AI builder's actual workflow",
+      "title": "git and github cli — the ai builder's actual workflow",
       "blurb": "cursor and claude code commit on your behalf. reading those commits — and undoing the bad ones — is your job. learn the four-state model, the commands you'll run every day, and what `gh` does that `git` can't.",
       "lessonCount": 1,
       "stepCount": 9,
@@ -175,7 +175,7 @@
     {
       "number": 18,
       "slug": "secrets-and-env",
-      "title": "Secrets — .env, API keys, and what not to commit",
+      "title": "secrets — .env, api keys, and what not to commit",
       "blurb": "ai ships keys to github all the time. learn the .env pattern, why os.getenv is non-negotiable, what to do when a key leaks, and the gitignore lines you need on day one.",
       "lessonCount": 1,
       "stepCount": 9,
@@ -185,7 +185,7 @@
     {
       "number": 19,
       "slug": "prompting",
-      "title": "Prompting Cursor and Claude Code effectively",
+      "title": "prompting cursor and claude code effectively",
       "blurb": "the difference between a one-shot ai session and a four-hour debugging spiral is almost always the first prompt. learn the structure that gets you usable code.",
       "lessonCount": 3,
       "stepCount": 27,
@@ -195,7 +195,7 @@
     {
       "number": 20,
       "slug": "agent-traces",
-      "title": "Reading agent traces and telemetry",
+      "title": "reading agent traces and telemetry",
       "blurb": "when an agent fails, the trace tells you exactly where. learn to read tool calls, tool results, and stop reasons — the json breadcrumbs every agent leaves behind.",
       "lessonCount": 1,
       "stepCount": 9,
@@ -205,7 +205,7 @@
     {
       "number": 21,
       "slug": "evals",
-      "title": "Eval-driven AI development",
+      "title": "eval-driven ai development",
       "blurb": "if you can't test it, you can't ship it. learn the simple-but-strict eval patterns that separate ai features that work from ones that just feel like they do.",
       "lessonCount": 2,
       "stepCount": 18,
@@ -215,37 +215,37 @@
     {
       "number": 22,
       "slug": "context-and-retrieval",
-      "title": "Context and retrieval — feeding the model real data",
+      "title": "context and retrieval — feeding the model real data",
       "blurb": "rag without the overengineering. chunking, embeddings, vector search, and the small set of patterns that make a model answer from your data instead of its training set.",
-      "lessonCount": 1,
-      "stepCount": 9,
-      "estMinutes": 12,
-      "xpTotal": 32
+      "lessonCount": 2,
+      "stepCount": 18,
+      "estMinutes": 24,
+      "xpTotal": 64
     },
     {
       "number": 23,
       "slug": "production-tradeoffs",
-      "title": "Production tradeoffs — cost, latency, quality",
+      "title": "production tradeoffs — cost, latency, quality",
       "blurb": "the three numbers every shipped llm feature lives or dies by. token math, caching, streaming, batching, and the small set of decisions that move the product more than a model swap ever will.",
-      "lessonCount": 1,
-      "stepCount": 9,
-      "estMinutes": 12,
-      "xpTotal": 32
+      "lessonCount": 2,
+      "stepCount": 18,
+      "estMinutes": 24,
+      "xpTotal": 64
     },
     {
       "number": 24,
       "slug": "debugging-output",
-      "title": "Debugging broken AI output",
+      "title": "debugging broken ai output",
       "blurb": "when the model lies to your customer. the methodology for narrowing down what went wrong, the four most-common breakage classes, and the discipline that separates 'we shipped a fix' from 'we blamed the model and shrugged'.",
-      "lessonCount": 1,
-      "stepCount": 9,
-      "estMinutes": 11,
-      "xpTotal": 32
+      "lessonCount": 2,
+      "stepCount": 18,
+      "estMinutes": 25,
+      "xpTotal": 64
     },
     {
       "number": 25,
       "slug": "capstone",
-      "title": "Capstone — ship the system",
+      "title": "capstone — ship the system",
       "blurb": "wire it all together. context, retrieval, the prompt, the call, the trace, the eval, the cost. less a tutorial demo, more the smallest end-to-end llm feature you could ship to a real user.",
       "lessonCount": 5,
       "stepCount": 48,
@@ -255,7 +255,7 @@
     {
       "number": 26,
       "slug": "agent-harnesses",
-      "title": "Agent harnesses — the layer between you and the raw API",
+      "title": "agent harnesses — the layer between you and the raw api",
       "blurb": "claude code, cursor, aider, codex cli — they're all the same four layers wrapped around the same model api. learn what those layers are, what each adds, and what you'd build yourself if you had to.",
       "lessonCount": 1,
       "stepCount": 9,

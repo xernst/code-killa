@@ -1,6 +1,6 @@
 number: 4
 slug: loops
-title: "Loops — predict the output"
+title: "loops — predict the output"
 blurb: "ai writes a loop every time you say *for each*. half the time it's wrong by one. read it before you trust it."
 lessons:
   - 01-predict-the-output

@@ -1,6 +1,6 @@
 number: 3
 slug: lists-and-dicts
-title: "Lists and dicts — the bones of every API"
+title: "lists and dicts — the bones of every api"
 blurb: "every json response you've ever copied out of chatgpt or a rest api is some mix of two things: lists and dicts. read them on sight."
 lessons:
   - 01-the-bones-of-apis

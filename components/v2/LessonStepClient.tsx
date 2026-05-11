@@ -245,7 +245,7 @@ export default function LessonStepClient({
             </div>
             <ProgressBar
               value={(stepIndex + 1) / totalSteps}
-              label={`Lesson progress: step ${stepIndex + 1} of ${totalSteps}`}
+              label={`lesson progress: step ${stepIndex + 1} of ${totalSteps}`}
             />
           </div>
         );
@@ -341,7 +341,7 @@ function ProgressBar({ value, label }: { value: number; label?: string }) {
   return (
     <div
       role="progressbar"
-      aria-label={label ?? "Lesson progress"}
+      aria-label={label ?? "lesson progress"}
       aria-valuenow={Math.round(pct)}
       aria-valuemin={0}
       aria-valuemax={100}

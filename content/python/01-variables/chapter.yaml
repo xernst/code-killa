@@ -1,6 +1,6 @@
 number: 1
 slug: variables
-title: "Variables — what AI reaches for first"
+title: "variables — what ai reaches for first"
 blurb: "when ai writes python, the first thing it does is name things. learn to read those names on sight, and to write a few yourself."
 lessons:
   - 01-naming-things

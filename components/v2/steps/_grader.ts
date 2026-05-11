@@ -42,7 +42,7 @@ export function normalizeString(
 export function gradeRunResult(grader: Grader, result: RunResult): GradeResult {
   if (grader.kind === "stdout-equality") {
     if (!result.ok || result.stderr) {
-      return { passed: false, reason: result.stderr || "Code didn't finish — see the traceback." };
+      return { passed: false, reason: result.stderr || "code didn't finish — see the traceback." };
     }
     const got = normalizeStdout(result.stdout, grader.normalize);
     const expected = normalizeStdout(grader.expected, grader.normalize);
@@ -60,7 +60,7 @@ export function gradeRunResult(grader: Grader, result: RunResult): GradeResult {
     const matched = expected.some(
       (e) => normalizeString(e, grader.normalize) === got,
     );
-    return matched ? { passed: true } : { passed: false, reason: "That answer didn't match." };
+    return matched ? { passed: true } : { passed: false, reason: "that answer didn't match." };
   }
   if (grader.kind === "ast-match") {
     // Synchronous path can't grade AST — async caller should use
@@ -74,7 +74,7 @@ export function gradeRunResult(grader: Grader, result: RunResult): GradeResult {
   }
   return {
     passed: false,
-    reason: "This step uses a grader the v1 runtime doesn't support yet.",
+    reason: "this step uses a grader the v1 runtime doesn't support yet.",
   };
 }
 
@@ -99,7 +99,7 @@ export async function gradeRunResultAsync(
     if (!result.ok || result.stderr) {
       return {
         passed: false,
-        reason: result.stderr || "Code didn't finish — see the traceback.",
+        reason: result.stderr || "code didn't finish — see the traceback.",
       };
     }
     const code = ide.getActiveCode();
@@ -108,12 +108,12 @@ export async function gradeRunResultAsync(
       mustNot: grader.mustNot,
     });
     if (!ast) {
-      return { passed: false, reason: "Editor isn't ready yet." };
+      return { passed: false, reason: "editor isn't ready yet." };
     }
     if (!ast.parsed) {
       return {
         passed: false,
-        reason: ast.syntaxError ?? "Couldn't parse your code.",
+        reason: ast.syntaxError ?? "couldn't parse your code.",
       };
     }
     const missing = ast.must.filter((m) => !m.matched).map((m) => describeRule(m.rule));
