@@ -43,8 +43,25 @@ export default function MultipleChoiceStepView({
   }
 
   // Keyboard: digits 1-9 pick, Enter submits.
+  // Bail out when focus is inside any editable surface (input, textarea,
+  // contenteditable, CodeMirror) — otherwise the BrainDump textarea or
+  // any other text field swallows digits + Enter for MC selection.
   useEffect(() => {
     function onKey(event: KeyboardEvent) {
+      const target = event.target as HTMLElement | null;
+      if (target) {
+        const tag = target.tagName;
+        if (
+          tag === "INPUT" ||
+          tag === "TEXTAREA" ||
+          tag === "SELECT" ||
+          target.isContentEditable ||
+          target.closest?.(".cm-editor")
+        ) {
+          return;
+        }
+      }
+      if (event.metaKey || event.ctrlKey || event.altKey) return;
       if (event.key === "Enter") {
         if (selected && !submitted) {
           event.preventDefault();
@@ -54,6 +71,7 @@ export default function MultipleChoiceStepView({
       }
       const idx = Number(event.key) - 1;
       if (idx >= 0 && idx < step.options.length) {
+        event.preventDefault();
         setSelected(step.options[idx].id);
       }
     }
@@ -67,15 +85,15 @@ export default function MultipleChoiceStepView({
       <div className="prose max-w-none text-ink-200">
         <ReactMarkdown remarkPlugins={[remarkGfm]}>{prompt}</ReactMarkdown>
       </div>
-      <ul className="flex flex-col gap-2" role="radiogroup" aria-label="Choices">
+      <div className="flex flex-col gap-2" role="radiogroup" aria-label="Choices">
         {step.options.map((option, idx) => {
           const isSelected = selected === option.id;
           const isCorrectChoice = correctSet.has(option.id);
           const showCorrect = submitted && isCorrectChoice;
           const showWrong = submitted && isSelected && !isCorrectChoice;
           return (
-            <li key={option.id}>
               <button
+                key={option.id}
                 type="button"
                 role="radio"
                 aria-checked={isSelected}
@@ -100,10 +118,9 @@ export default function MultipleChoiceStepView({
                   </span>
                 )}
               </button>
-            </li>
           );
         })}
-      </ul>
+      </div>
       <div className="flex items-center gap-3">
         {!submitted ? (
           <button

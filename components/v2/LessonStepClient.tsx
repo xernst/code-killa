@@ -243,7 +243,10 @@ export default function LessonStepClient({
                 step {stepIndex + 1} / {totalSteps}
               </span>
             </div>
-            <ProgressBar value={(stepIndex + 1) / totalSteps} />
+            <ProgressBar
+              value={(stepIndex + 1) / totalSteps}
+              label={`Lesson progress: step ${stepIndex + 1} of ${totalSteps}`}
+            />
           </div>
         );
       })()}
@@ -333,11 +336,12 @@ export default function LessonStepClient({
   );
 }
 
-function ProgressBar({ value }: { value: number }) {
+function ProgressBar({ value, label }: { value: number; label?: string }) {
   const pct = Math.min(100, Math.max(0, value * 100));
   return (
     <div
       role="progressbar"
+      aria-label={label ?? "Lesson progress"}
       aria-valuenow={Math.round(pct)}
       aria-valuemin={0}
       aria-valuemax={100}
@@ -346,6 +350,7 @@ function ProgressBar({ value }: { value: number }) {
       <div
         className="h-full bg-green-500 transition-all motion-reduce:transition-none"
         style={{ width: `${pct}%` }}
+        aria-hidden="true"
       />
     </div>
   );

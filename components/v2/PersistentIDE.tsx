@@ -243,14 +243,36 @@ const PersistentIDE = forwardRef<PersistentIDEHandle, Props>(function Persistent
         aria-label="Editor files"
         className="flex items-center gap-1 border-b border-ink-800 bg-ink-900 px-2"
       >
-        {files.map((file) => {
+        {files.map((file, idx) => {
           const isActive = file.name === activeName;
+          const tabId = `ide-tab-${stepId}-${idx}`;
           return (
             <button
               key={file.name}
+              id={tabId}
               role="tab"
+              type="button"
               aria-selected={isActive}
+              aria-controls={`ide-tabpanel-${stepId}`}
+              tabIndex={isActive ? 0 : -1}
               onClick={() => setActiveName(file.name)}
+              onKeyDown={(event) => {
+                // WAI-ARIA tablist pattern: arrow keys move between tabs.
+                if (event.key !== "ArrowRight" && event.key !== "ArrowLeft") return;
+                event.preventDefault();
+                const dir = event.key === "ArrowRight" ? 1 : -1;
+                const nextIdx = (idx + dir + files.length) % files.length;
+                const nextFile = files[nextIdx];
+                if (!nextFile) return;
+                setActiveName(nextFile.name);
+                // Defer focus until the tab re-renders with tabIndex=0.
+                requestAnimationFrame(() => {
+                  const next = document.getElementById(
+                    `ide-tab-${stepId}-${nextIdx}`,
+                  );
+                  next?.focus();
+                });
+              }}
               className={cn(
                 "inline-flex items-center gap-1.5 px-3 py-2 text-xs font-mono transition",
                 isActive
@@ -258,13 +280,21 @@ const PersistentIDE = forwardRef<PersistentIDEHandle, Props>(function Persistent
                   : "border-b-2 border-transparent text-ink-500 hover:text-ink-300",
               )}
             >
-              {file.readOnly && <Lock size={11} className="text-ink-500" />}
+              {file.readOnly && (
+                <Lock size={11} className="text-ink-500" aria-hidden="true" />
+              )}
               {file.name}
+              {file.readOnly && <span className="sr-only"> (read only)</span>}
             </button>
           );
         })}
       </div>
-      <div className="flex-1 min-h-0 overflow-hidden">
+      <div
+        id={`ide-tabpanel-${stepId}`}
+        role="tabpanel"
+        aria-label={activeFile ? `${activeFile.name} editor` : "Editor"}
+        className="flex-1 min-h-0 overflow-hidden"
+      >
         {activeFile ? (
           <CodeMirror
             key={`${stepId}:${activeFile.name}`}
@@ -326,22 +356,38 @@ const PersistentIDE = forwardRef<PersistentIDEHandle, Props>(function Persistent
           {rightActions}
         </div>
       </div>
-      <div className="flex h-44 min-h-0 flex-col border-t border-ink-800 bg-ink-950">
+      <div
+        className="flex h-44 min-h-0 flex-col border-t border-ink-800 bg-ink-950"
+        role="region"
+        aria-label="Code output"
+      >
         <div className="flex items-center justify-between border-b border-ink-800 px-3 py-1.5">
-          <div className="inline-flex items-center gap-1.5 text-[11px] uppercase tracking-wide text-ink-500">
-            <span className="text-green-500" aria-hidden>❯</span>
+          <div
+            id={`ide-status-${stepId}`}
+            aria-live="polite"
+            aria-atomic="true"
+            className="inline-flex items-center gap-1.5 text-[11px] uppercase tracking-wide text-ink-500"
+          >
+            <span className="text-green-500" aria-hidden="true">❯</span>
             stdout
             {lastRun && !running && (
               <span className="ml-2 font-mono text-[10px] normal-case tracking-normal text-ink-500">
-                <span className={stderr ? "text-err" : "text-ok"}>
+                <span className={stderr ? "text-err" : "text-ok"} aria-hidden="true">
                   {stderr ? "✗" : "✓"}
                 </span>{" "}
+                <span className="sr-only">
+                  {stderr ? "run failed." : "run succeeded."}{" "}
+                </span>
                 ran in {lastRun.durationMs}ms
               </span>
             )}
             {running && (
               <span className="ml-2 inline-flex items-center gap-1 font-mono text-[10px] normal-case tracking-normal text-green-400">
-                <Loader2 size={10} className="animate-spin motion-reduce:animate-none" />
+                <Loader2
+                  size={10}
+                  aria-hidden="true"
+                  className="animate-spin motion-reduce:animate-none"
+                />
                 running…
               </span>
             )}
@@ -350,6 +396,7 @@ const PersistentIDE = forwardRef<PersistentIDEHandle, Props>(function Persistent
         </div>
         <div
           aria-live="polite"
+          aria-label="Program output"
           className="flex-1 overflow-auto p-3 font-mono text-[12.5px] leading-relaxed"
         >
           {!hasOutput && !outputExtra && !ranEmpty && !running && (
