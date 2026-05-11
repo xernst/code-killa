@@ -1,0 +1,75 @@
+xp: 5
+estSeconds: 200
+concept: threshold-dedupe-top-k
+prompt: |
+  Write `retrieve(scored, k, threshold)` that returns the top-k
+  candidates, filtered by `score >= threshold`, deduped by
+  chunk_id (keep the highest-scoring occurrence). Order the
+  output by descending score.
+
+  Two cases run. Expected output:
+  ```
+  ['policy/p2', 'policy/p4', 'policy/p7']
+  []
+  ```
+starter: |
+  good = [
+      ("policy/p2", 0.91),
+      ("policy/p2", 0.89),  # dup, lower score
+      ("policy/p4", 0.85),
+      ("policy/p7", 0.72),
+      ("noise",     0.31),  # below threshold
+  ]
+
+  noisy = [
+      ("garbage_1", 0.22),
+      ("garbage_2", 0.18),
+      ("garbage_3", 0.15),
+  ]
+
+  # define retrieve(scored, k, threshold) below
+
+  print([c for c, _ in retrieve(good,  k=3, threshold=0.5)])
+  print([c for c, _ in retrieve(noisy, k=3, threshold=0.5)])
+grader:
+  kind: stdout-equality
+  expected: |
+    ['policy/p2', 'policy/p4', 'policy/p7']
+    []
+  normalize: collapse-trailing-newline
+solution: |
+  good = [
+      ("policy/p2", 0.91),
+      ("policy/p2", 0.89),
+      ("policy/p4", 0.85),
+      ("policy/p7", 0.72),
+      ("noise",     0.31),
+  ]
+
+  noisy = [
+      ("garbage_1", 0.22),
+      ("garbage_2", 0.18),
+      ("garbage_3", 0.15),
+  ]
+
+  def retrieve(scored, k, threshold):
+      filtered = [(c, s) for c, s in scored if s >= threshold]
+      ranked = sorted(filtered, key=lambda x: x[1], reverse=True)
+      seen = set()
+      out = []
+      for c, s in ranked:
+          if c in seen:
+              continue
+          seen.add(c)
+          out.append((c, s))
+          if len(out) == k:
+              break
+      return out
+
+  print([c for c, _ in retrieve(good,  k=3, threshold=0.5)])
+  print([c for c, _ in retrieve(noisy, k=3, threshold=0.5)])
+hint:
+  - level: 1
+    body: "Three steps in order: (1) filter by threshold, (2) sort by score descending, (3) walk the sorted list with a `seen` set to dedupe, stopping at k results."
+  - level: 2
+    body: "Body sketch: `filtered = [...]`, `ranked = sorted(...)`, init `seen = set()` and `out = []`, then a for-loop that skips dupes, appends, and breaks at `len(out) == k`."

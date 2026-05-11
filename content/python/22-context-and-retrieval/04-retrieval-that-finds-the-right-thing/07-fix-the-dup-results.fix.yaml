@@ -1,0 +1,51 @@
+xp: 4
+estSeconds: 100
+concept: dedupe-before-top-k
+prompt: |
+  Two documents indexed the same paragraph (it was copy-pasted
+  across docs). The retriever returns the same chunk_id twice in
+  the top-3, wasting a slot. The fix is to dedupe by chunk_id
+  BEFORE taking the top-k. Keep the highest-scoring occurrence.
+
+  Expected output:
+  ```
+  ['policy/p2', 'policy/p4', 'policy/p7']
+  ```
+brokenCode: |
+  scored = [
+      ("policy/p2", 0.91),
+      ("policy/p2", 0.89),  # same chunk, slightly lower score
+      ("policy/p4", 0.85),
+      ("policy/p7", 0.72),
+      ("policy/p9", 0.65),
+  ]
+
+  def retrieve(scored, k=3):
+      # bug: no dedupe. policy/p2 takes two slots out of three.
+      return sorted(scored, key=lambda x: x[1], reverse=True)[:k]
+
+  print([c for c, _ in retrieve(scored, k=3)])
+bugLines:
+  - 11
+grader:
+  kind: stdout-equality
+  expected: "['policy/p2', 'policy/p4', 'policy/p7']"
+  normalize: collapse-trailing-newline
+hint:
+  - level: 1
+    body: "Sort by score first, then walk the sorted list keeping a `seen` set. Skip any chunk_id already in `seen`."
+  - level: 2
+    body: |
+      ```python
+      ranked = sorted(scored, key=lambda x: x[1], reverse=True)
+      seen = set()
+      out = []
+      for c, s in ranked:
+          if c not in seen:
+              seen.add(c)
+              out.append((c, s))
+              if len(out) == k:
+                  break
+      return out
+      ```
+revealAfter: 4

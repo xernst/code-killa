@@ -1,0 +1,47 @@
+xp: 4
+estSeconds: 95
+concept: threshold-before-slice
+prompt: |
+  AI wrote `retrieve(scored, k=3)` that takes the top-3 candidates
+  regardless of how low their scores go. The test query has zero
+  relevant chunks in the corpus, so the top-3 returns three garbage
+  chunks the model would treat as real.
+
+  Add a threshold filter (>= 0.5) BEFORE the slice. The function
+  should return an empty list when nothing clears the bar.
+
+  Expected output:
+  ```
+  []
+  ```
+brokenCode: |
+  scored = [
+      ("noise_1", 0.21),
+      ("noise_2", 0.18),
+      ("noise_3", 0.15),
+      ("noise_4", 0.09),
+  ]
+
+  def retrieve(scored, k=3):
+      # bug: no threshold. returns garbage when nothing is relevant.
+      return sorted(scored, key=lambda x: x[1], reverse=True)[:k]
+
+  print([c for c, _ in retrieve(scored, k=3)])
+bugLines:
+  - 10
+grader:
+  kind: stdout-equality
+  expected: "[]"
+  normalize: collapse-trailing-newline
+hint:
+  - level: 1
+    body: "Filter the list before sorting. `keep = [(c, s) for c, s in scored if s >= 0.5]`, then sort and slice."
+  - level: 2
+    body: |
+      Replace the function body with two lines:
+      ```python
+      keep = [(c, s) for c, s in scored if s >= 0.5]
+      return sorted(keep, key=lambda x: x[1], reverse=True)[:k]
+      ```
+      With this corpus, `keep` is empty, the sort returns [], and the slice is also [].
+revealAfter: 4

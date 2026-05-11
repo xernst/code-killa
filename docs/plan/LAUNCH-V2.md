@@ -1,3 +1,5 @@
+<!-- /autoplan restore point: /Users/joshernst/.gstack/projects/xernst-promptdojo/main-autoplan-restore-20260511-165117.md -->
+
 # PromptDojo Launch Plan V2
 
 **Date**: 2026-05-11

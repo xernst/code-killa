@@ -1,6 +1,6 @@
 {
   "version": "0.1.0",
-  "generatedAt": "2026-05-11T20:50:54.538Z",
+  "generatedAt": "2026-05-11T20:53:25.456Z",
   "chapters": [
     {
       "number": 1,
@@ -217,10 +217,10 @@
       "slug": "context-and-retrieval",
       "title": "context and retrieval — feeding the model real data",
       "blurb": "rag without the overengineering. chunking, embeddings, vector search, and the small set of patterns that make a model answer from your data instead of its training set.",
-      "lessonCount": 2,
-      "stepCount": 18,
-      "estMinutes": 24,
-      "xpTotal": 64
+      "lessonCount": 3,
+      "stepCount": 27,
+      "estMinutes": 38,
+      "xpTotal": 95
     },
     {
       "number": 23,

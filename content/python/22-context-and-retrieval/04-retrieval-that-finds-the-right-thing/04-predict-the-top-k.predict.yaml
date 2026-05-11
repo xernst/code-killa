@@ -1,0 +1,38 @@
+xp: 3
+estSeconds: 80
+concept: top-k-with-threshold
+code: |
+  scored = [
+      ("doc_a", 0.92),
+      ("doc_b", 0.78),
+      ("doc_c", 0.55),
+      ("doc_d", 0.41),
+      ("doc_e", 0.12),
+  ]
+
+  THRESHOLD = 0.5
+  K = 3
+
+  keep = [(c, s) for c, s in scored if s >= THRESHOLD]
+  top = sorted(keep, key=lambda x: x[1], reverse=True)[:K]
+
+  for c, s in top:
+      print(f"{c}: {s:.2f}")
+prompt: |
+  Five candidates, threshold 0.5, asking for top-3. Predict the
+  printed output. (Hint: only three candidates clear the threshold,
+  so the top-3 cap is generous.)
+
+  What does the script print?
+grader:
+  kind: stdout-equality
+  expected: |
+    doc_a: 0.92
+    doc_b: 0.78
+    doc_c: 0.55
+  normalize: collapse-trailing-newline
+hint:
+  - level: 1
+    body: "Three candidates clear 0.5: doc_a (0.92), doc_b (0.78), doc_c (0.55). doc_d (0.41) and doc_e (0.12) get filtered out. The top-3 cap never bites because only 3 candidates survived."
+  - level: 2
+    body: "Output is doc_a, doc_b, doc_c in descending score order, with two-decimal formatting."

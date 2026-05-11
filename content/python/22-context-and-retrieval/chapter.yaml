@@ -5,3 +5,4 @@ blurb: "rag without the overengineering. chunking, embeddings, vector search, an
 lessons:
   - 02-chunking-that-respects-structure
   - 03-embedding-that-fits-the-budget
+  - 04-retrieval-that-finds-the-right-thing

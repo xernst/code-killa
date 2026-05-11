@@ -1,0 +1,109 @@
+xp: 8
+estSeconds: 220
+concept: full-retrieval-pipeline
+prompt: |
+  Final drill. Build `rag_retrieve(query_vec, indexed, k, threshold)`
+  that:
+
+  - Takes `indexed` as a list of `(chunk_id, doc_vec)` pairs.
+  - Computes cosine similarity between `query_vec` and each `doc_vec`
+    (use `cosine` provided in the starter).
+  - Filters by `score >= threshold`.
+  - Dedupes by `chunk_id`, keeping the highest-scoring occurrence.
+  - Returns the top-k chunk_ids in descending score order.
+
+  Three cases run. Expected output:
+  ```
+  ['policy/refund_terms', 'policy/refund_eligibility']
+  []
+  ['policy/refund_terms']
+  ```
+starter: |
+  import math
+
+  def cosine(a, b):
+      dot = sum(x * y for x, y in zip(a, b))
+      na  = math.sqrt(sum(x * x for x in a))
+      nb  = math.sqrt(sum(y * y for y in b))
+      return dot / (na * nb) if na and nb else 0.0
+
+  query_vec = [1.0, 0.0, 0.0, 0.0]
+
+  good_index = [
+      ("policy/refund_terms",       [0.95, 0.05, 0.0, 0.0]),   # ~1.0
+      ("policy/refund_terms",       [0.92, 0.08, 0.0, 0.0]),   # dup, lower
+      ("policy/refund_eligibility", [0.80, 0.20, 0.0, 0.0]),   # ~0.97
+      ("hr/onboarding",             [0.10, 0.90, 0.0, 0.0]),   # ~0.11
+  ]
+
+  noisy_index = [
+      ("noise_1", [0.10, 0.50, 0.40, 0.0]),  # ~0.18
+      ("noise_2", [0.05, 0.30, 0.60, 0.0]),  # ~0.07
+      ("noise_3", [0.00, 0.10, 0.80, 0.0]),  # ~0.00
+  ]
+
+  one_hit_index = [
+      ("policy/refund_terms", [0.99, 0.01, 0.0, 0.0]),   # ~1.0
+      ("hr/onboarding",       [0.10, 0.90, 0.0, 0.0]),   # ~0.11
+  ]
+
+  # define rag_retrieve(query_vec, indexed, k, threshold) below
+
+  print(rag_retrieve(query_vec, good_index,    k=3, threshold=0.5))
+  print(rag_retrieve(query_vec, noisy_index,   k=3, threshold=0.5))
+  print(rag_retrieve(query_vec, one_hit_index, k=3, threshold=0.5))
+grader:
+  kind: stdout-equality
+  expected: |
+    ['policy/refund_terms', 'policy/refund_eligibility']
+    []
+    ['policy/refund_terms']
+  normalize: collapse-trailing-newline
+solution: |
+  import math
+
+  def cosine(a, b):
+      dot = sum(x * y for x, y in zip(a, b))
+      na  = math.sqrt(sum(x * x for x in a))
+      nb  = math.sqrt(sum(y * y for y in b))
+      return dot / (na * nb) if na and nb else 0.0
+
+  query_vec = [1.0, 0.0, 0.0, 0.0]
+
+  good_index = [
+      ("policy/refund_terms",       [0.95, 0.05, 0.0, 0.0]),
+      ("policy/refund_terms",       [0.92, 0.08, 0.0, 0.0]),
+      ("policy/refund_eligibility", [0.80, 0.20, 0.0, 0.0]),
+      ("hr/onboarding",             [0.10, 0.90, 0.0, 0.0]),
+  ]
+
+  noisy_index = [
+      ("noise_1", [0.10, 0.50, 0.40, 0.0]),
+      ("noise_2", [0.05, 0.30, 0.60, 0.0]),
+      ("noise_3", [0.00, 0.10, 0.80, 0.0]),
+  ]
+
+  one_hit_index = [
+      ("policy/refund_terms", [0.99, 0.01, 0.0, 0.0]),
+      ("hr/onboarding",       [0.10, 0.90, 0.0, 0.0]),
+  ]
+
+  def rag_retrieve(query_vec, indexed, k, threshold):
+      scored = [(cid, cosine(query_vec, v)) for cid, v in indexed]
+      filtered = [(cid, s) for cid, s in scored if s >= threshold]
+      ranked = sorted(filtered, key=lambda x: x[1], reverse=True)
+      seen = set()
+      out = []
+      for cid, s in ranked:
+          if cid in seen:
+              continue
+          seen.add(cid)
+          out.append(cid)
+          if len(out) == k:
+              break
+      return out
+
+  print(rag_retrieve(query_vec, good_index,    k=3, threshold=0.5))
+  print(rag_retrieve(query_vec, noisy_index,   k=3, threshold=0.5))
+  print(rag_retrieve(query_vec, one_hit_index, k=3, threshold=0.5))
+passThreshold: 0.66

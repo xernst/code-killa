@@ -1,0 +1,33 @@
+xp: 2
+estSeconds: 55
+concept: when-top-k-is-misleading
+code: |
+  # four retrieval result sets for the query: "refund policy?"
+  results = {
+      "A": [("policy_doc/p2", 0.88), ("policy_doc/p3", 0.86), ("policy_doc/p9", 0.84)],
+      "B": [("finance/q4_2024", 0.61), ("finance/q3_2024", 0.55), ("hr/onboarding", 0.49)],
+      "C": [("policy_doc/p2", 0.91), ("policy_doc/p2", 0.91), ("policy_doc/p4", 0.87)],
+      "D": [("policy_doc/p2", 0.89), ("policy_doc/p2", 0.89), ("policy_doc/p2", 0.89)],
+  }
+  for k, v in results.items():
+      print(f"{k}: {[s for _, s in v]}")
+prompt: |
+  Four retrieval result sets. Which ONE is the only set you'd be
+  willing to send to the model as-is?
+options:
+  - id: a
+    label: "A — three policy_doc chunks with scores 0.84+"
+  - id: b
+    label: "B — finance + HR chunks with scores 0.49 to 0.61"
+    explain: "Scores below ~0.7 should make you suspicious; below 0.5 is noise on most embedding models. Sending finance docs as 'refund policy' is the hallucination setup."
+  - id: c
+    label: "C — policy_doc/p2 appears TWICE in the top-3"
+    explain: "Duplicate chunks waste a slot in the prompt. The model gets less unique context, the bill is the same, the answer is no better. Dedupe before sending."
+  - id: d
+    label: "D — all three results are the exact same chunk"
+    explain: "This means either your index has duplicates or your top-k sort is broken. Either way, you're sending one chunk's worth of signal pretending to be three."
+answerIds:
+  - a
+hint:
+  - level: 1
+    body: "Three signals make a result set healthy: high scores, distinct chunks, and chunks from the obviously-relevant source. Look for the set that hits all three."

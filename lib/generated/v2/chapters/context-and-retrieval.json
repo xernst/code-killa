@@ -536,7 +536,265 @@
         }
       ],
       "xpTotal": 32
+    },
+    {
+      "slug": "retrieval-that-finds-the-right-thing",
+      "title": "Retrieval that finds the right thing — top-k, thresholds, and the rerank step everyone skips",
+      "estMinutes": 14,
+      "prerequisites": [
+        "embedding-that-fits-the-budget"
+      ],
+      "steps": [
+        {
+          "type": "read",
+          "id": "context-and-retrieval/retrieval-that-finds-the-right-thing/s01-01-intro",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "warmup",
+          "estSeconds": 130,
+          "concept": "top-k-is-not-enough",
+          "body": "# Top-k retrieves the closest chunks. The closest chunks are not always the right answer.\n\nYou've already built the parts: chunked the document, embedded the\nchunks, embedded the query, computed cosine similarity. The naive\nlast step is `sorted(scored, reverse=True)[:3]`. Take the top three.\nDone.\n\nThat's the move that makes a demo work and production fail. The\ntop-3 has three rows whether your corpus is full of the answer or\nempty of it. The third-best chunk in an empty-corpus query is\nuseless garbage, and the model will dutifully use it.\n\n## Two patterns you ship instead\n\n**Pattern 1: distance threshold.** Before slicing the top-k, drop\nany candidate whose score is below a cutoff (typical: 0.5 for\ncosine similarity on a well-aligned embedding model). Run the\neditor. `chunk_56` at 0.12 is clearly noise; the threshold drops it\nbefore the model ever sees it.\n\nThe cutoff depends on the embedding model:\n- `text-embedding-3-small`: ~0.4-0.5 for \"this is relevant\"\n- `text-embedding-3-large`: ~0.5-0.6 (tighter distribution)\n- `voyage-3` and similar reranker-aware models: ~0.7+\n- A model you fine-tuned: measure on a held-out set.\n\nThe threshold is the most important number in your RAG pipeline.\nMost people never tune it.\n\n**Pattern 2: rerank.** Top-k by cosine gets you a candidate set of\nmaybe 20 chunks. A reranker (a small model whose job is to score\nrelevance directly, not as a side effect of embedding distance)\nre-ranks those 20 into the top 3 you actually send to the LLM.\nCohere Rerank, Jina Reranker, and Voyage Rerank are the usual\nchoices. They're cheap and they double the quality of retrieval\nwithout changing anything else in the pipeline.\n\n## What goes wrong without these\n\nThe four classic failure shapes for naive top-k:\n\n1. **Tangential hits.** Question: \"what's our refund policy?\" Top-3\n   includes a chunk that mentions refunds but is about Q4 finance\n   reporting. Model writes \"Per our Q4 report, refunds are at 12%.\"\n2. **Duplicates.** The same paragraph appears in two documents. Top-3\n   is [doc_a/p3, doc_b/p3, doc_a/p4]. You wasted a slot on a copy.\n3. **Empty corpus.** No relevant chunk exists, top-3 returns three\n   garbage chunks, the model treats them as authoritative and\n   hallucinates from noise.\n4. **Order matters.** The model attends more strongly to the FIRST\n   chunk in the prompt than the third. If your sort is unstable, the\n   answer quality flickers between identical-similarity ties.\n\nThis lesson teaches the three fixes that catch all four failures:\nthreshold, dedupe, stable sort.",
+          "cta": "Got it",
+          "code": "# cosine scores for 5 candidate chunks against a single query.\nscored = [\n    (\"chunk_42\", 0.91),  # clearly relevant\n    (\"chunk_07\", 0.87),  # relevant\n    (\"chunk_18\", 0.84),  # related\n    (\"chunk_31\", 0.39),  # tangential\n    (\"chunk_56\", 0.12),  # completely unrelated\n]\n\n# naive top-k: take the highest 3 regardless of how low they go.\ntop_3 = sorted(scored, key=lambda x: x[1], reverse=True)[:3]\nfor c, s in top_3:\n    print(f\"{c}: {s:.2f}\")\n",
+          "runnable": true
+        },
+        {
+          "type": "mc",
+          "id": "context-and-retrieval/retrieval-that-finds-the-right-thing/s02-02-which-result-is-good",
+          "xp": 2,
+          "hint": [
+            {
+              "level": 1,
+              "body": "Three signals make a result set healthy: high scores, distinct chunks, and chunks from the obviously-relevant source. Look for the set that hits all three.",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "warmup",
+          "estSeconds": 55,
+          "concept": "when-top-k-is-misleading",
+          "prompt": "Four retrieval result sets. Which ONE is the only set you'd be\nwilling to send to the model as-is?\n",
+          "options": [
+            {
+              "id": "a",
+              "label": "A — three policy_doc chunks with scores 0.84+"
+            },
+            {
+              "id": "b",
+              "label": "B — finance + HR chunks with scores 0.49 to 0.61",
+              "explain": "Scores below ~0.7 should make you suspicious; below 0.5 is noise on most embedding models. Sending finance docs as 'refund policy' is the hallucination setup."
+            },
+            {
+              "id": "c",
+              "label": "C — policy_doc/p2 appears TWICE in the top-3",
+              "explain": "Duplicate chunks waste a slot in the prompt. The model gets less unique context, the bill is the same, the answer is no better. Dedupe before sending."
+            },
+            {
+              "id": "d",
+              "label": "D — all three results are the exact same chunk",
+              "explain": "This means either your index has duplicates or your top-k sort is broken. Either way, you're sending one chunk's worth of signal pretending to be three."
+            }
+          ],
+          "answerIds": [
+            "a"
+          ],
+          "shuffle": false,
+          "code": "# four retrieval result sets for the query: \"refund policy?\"\nresults = {\n    \"A\": [(\"policy_doc/p2\", 0.88), (\"policy_doc/p3\", 0.86), (\"policy_doc/p9\", 0.84)],\n    \"B\": [(\"finance/q4_2024\", 0.61), (\"finance/q3_2024\", 0.55), (\"hr/onboarding\", 0.49)],\n    \"C\": [(\"policy_doc/p2\", 0.91), (\"policy_doc/p2\", 0.91), (\"policy_doc/p4\", 0.87)],\n    \"D\": [(\"policy_doc/p2\", 0.89), (\"policy_doc/p2\", 0.89), (\"policy_doc/p2\", 0.89)],\n}\nfor k, v in results.items():\n    print(f\"{k}: {[s for _, s in v]}\")\n",
+          "runnable": true
+        },
+        {
+          "type": "read",
+          "id": "context-and-retrieval/retrieval-that-finds-the-right-thing/s03-03-the-distance-threshold",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 110,
+          "concept": "cosine-threshold-cutoff",
+          "body": "# The threshold is the single most important number in your pipeline\n\nRun the editor. Naive top-5 returns all five chunks, including the\nclearly-noise `chunk_56` at 0.12. The thresholded version filters\nfirst, returning only the three relevant chunks even though you\nasked for up to 5.\n\nThat's the property you want in production. **Top-k caps the upper\nbound. The threshold sets the lower bound.** Use both.\n\n## The cutoff is per-model\n\nThe right threshold depends on the embedding model's similarity\ndistribution. Here's the calibration you'll actually do:\n\n1. Take 50 query+chunk pairs you KNOW are relevant. Compute cosine.\n2. Take 50 query+chunk pairs you KNOW are irrelevant. Compute cosine.\n3. The threshold is the value that separates them best.\n\nFor most modern embedding models, the right cutoff lands somewhere\nbetween 0.4 and 0.7. Anything lower than 0.3 is essentially \"model\nguessed semantic similarity from grammar alone,\" not from meaning.\nAnything higher than 0.9 means \"near-duplicate\" — usually not what\nyou want for retrieval breadth.\n\n## What \"score is below threshold\" means in practice\n\nWhen the threshold filters every candidate (no result clears the\nbar), you have three options:\n\n1. **Return empty.** The model gets no retrieved context. Your prompt\n   should handle this case explicitly: \"If you don't have enough\n   information, say so.\" This is the right move.\n2. **Return the best you have anyway.** The model will hallucinate\n   from garbage. This is the bad move.\n3. **Fall back to a different retriever** (keyword search, BM25, a\n   broader corpus). This is the expensive-but-right move.\n\nOption 1 is what production RAG systems do. The \"I don't know\"\nresponse feels worse than a confident wrong answer, but it's\ncatastrophically less expensive.\n\n## The threshold's siblings: dedupe and stable sort\n\nA threshold catches noise. Dedupe catches redundancy. Stable sort\ncatches order-flicker. You need all three before you ship.\n\nDedupe pattern:\n\n```python\nseen = set()\ndeduped = []\nfor c, s in sorted(scored, key=lambda x: x[1], reverse=True):\n    if c not in seen:\n        seen.add(c)\n        deduped.append((c, s))\n```\n\nStable sort is automatic in Python — `sorted` is stable, so ties\npreserve insertion order. That means if you sort by score and the\ntop-3 has two 0.87s, they come out in the order they were inserted.\nPredictable. The reason this matters: when you re-run the same query\ntwice and the top-3 reshuffles between calls, the LLM's answer\nshifts too. Stable sort kills that flicker.",
+          "cta": "Got it",
+          "code": "# naive top-k vs. threshold-then-top-k.\nscored = [\n    (\"chunk_42\", 0.91),\n    (\"chunk_07\", 0.87),\n    (\"chunk_18\", 0.84),\n    (\"chunk_31\", 0.39),\n    (\"chunk_56\", 0.12),\n]\n\nTHRESHOLD = 0.5\n\ndef naive_top_k(scored, k):\n    return sorted(scored, key=lambda x: x[1], reverse=True)[:k]\n\ndef thresholded_top_k(scored, k, threshold):\n    keep = [(c, s) for c, s in scored if s >= threshold]\n    return sorted(keep, key=lambda x: x[1], reverse=True)[:k]\n\nprint(\"naive top-5:    \", [c for c, _ in naive_top_k(scored, 5)])\nprint(\"with threshold: \", [c for c, _ in thresholded_top_k(scored, 5, THRESHOLD)])\n",
+          "runnable": true
+        },
+        {
+          "type": "predict",
+          "id": "context-and-retrieval/retrieval-that-finds-the-right-thing/s04-04-predict-the-top-k",
+          "xp": 3,
+          "hint": [
+            {
+              "level": 1,
+              "body": "Three candidates clear 0.5: doc_a (0.92), doc_b (0.78), doc_c (0.55). doc_d (0.41) and doc_e (0.12) get filtered out. The top-3 cap never bites because only 3 candidates survived.",
+              "cost": 0
+            },
+            {
+              "level": 2,
+              "body": "Output is doc_a, doc_b, doc_c in descending score order, with two-decimal formatting.",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 80,
+          "concept": "top-k-with-threshold",
+          "code": "scored = [\n    (\"doc_a\", 0.92),\n    (\"doc_b\", 0.78),\n    (\"doc_c\", 0.55),\n    (\"doc_d\", 0.41),\n    (\"doc_e\", 0.12),\n]\n\nTHRESHOLD = 0.5\nK = 3\n\nkeep = [(c, s) for c, s in scored if s >= THRESHOLD]\ntop = sorted(keep, key=lambda x: x[1], reverse=True)[:K]\n\nfor c, s in top:\n    print(f\"{c}: {s:.2f}\")\n",
+          "prompt": "Five candidates, threshold 0.5, asking for top-3. Predict the\nprinted output. (Hint: only three candidates clear the threshold,\nso the top-3 cap is generous.)\n\nWhat does the script print?\n",
+          "grader": {
+            "kind": "stdout-equality",
+            "expected": "doc_a: 0.92\ndoc_b: 0.78\ndoc_c: 0.55\n",
+            "normalize": "collapse-trailing-newline"
+          }
+        },
+        {
+          "type": "fill",
+          "id": "context-and-retrieval/retrieval-that-finds-the-right-thing/s05-05-fill-the-cutoff",
+          "xp": 3,
+          "hint": [
+            {
+              "level": 1,
+              "body": "The `(c, s)` unpacking exposes `s` as the score. Compare `s` to `THRESHOLD` with `>=` (not `>` — you want exact-threshold matches to qualify).",
+              "cost": 0
+            },
+            {
+              "level": 2,
+              "body": "`s >= THRESHOLD`. That keeps 0.91, 0.62, and 0.51 (three). 0.48 and 0.10 drop out.",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 65,
+          "concept": "threshold-filter-with-list-comp",
+          "prompt": "Fill the list comprehension so that only candidates with a score\nat least THRESHOLD survive. Use a single `>=` comparison.\n\nExpected output:\n```\n3 candidates above threshold\n```\n",
+          "code": "scored = [\n    (\"a\", 0.91), (\"b\", 0.62), (\"c\", 0.48), (\"d\", 0.51), (\"e\", 0.10),\n]\nTHRESHOLD = 0.5\n\nkeep = [(c, s) for c, s in scored if ___]\n\nprint(f\"{len(keep)} candidates above threshold\")\n",
+          "blanks": [
+            {
+              "id": "filter_expr",
+              "accept": [
+                "s >= THRESHOLD",
+                "s>=THRESHOLD"
+              ],
+              "caseSensitive": true,
+              "normalize": "trim"
+            }
+          ]
+        },
+        {
+          "type": "fix",
+          "id": "context-and-retrieval/retrieval-that-finds-the-right-thing/s06-06-fix-the-no-threshold",
+          "xp": 4,
+          "hint": [
+            {
+              "level": 1,
+              "body": "Filter the list before sorting. `keep = [(c, s) for c, s in scored if s >= 0.5]`, then sort and slice.",
+              "cost": 0
+            },
+            {
+              "level": 2,
+              "body": "Replace the function body with two lines:\n```python\nkeep = [(c, s) for c, s in scored if s >= 0.5]\nreturn sorted(keep, key=lambda x: x[1], reverse=True)[:k]\n```\nWith this corpus, `keep` is empty, the sort returns [], and the slice is also [].\n",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 95,
+          "concept": "threshold-before-slice",
+          "brokenCode": "scored = [\n    (\"noise_1\", 0.21),\n    (\"noise_2\", 0.18),\n    (\"noise_3\", 0.15),\n    (\"noise_4\", 0.09),\n]\n\ndef retrieve(scored, k=3):\n    # bug: no threshold. returns garbage when nothing is relevant.\n    return sorted(scored, key=lambda x: x[1], reverse=True)[:k]\n\nprint([c for c, _ in retrieve(scored, k=3)])\n",
+          "prompt": "AI wrote `retrieve(scored, k=3)` that takes the top-3 candidates\nregardless of how low their scores go. The test query has zero\nrelevant chunks in the corpus, so the top-3 returns three garbage\nchunks the model would treat as real.\n\nAdd a threshold filter (>= 0.5) BEFORE the slice. The function\nshould return an empty list when nothing clears the bar.\n\nExpected output:\n```\n[]\n```\n",
+          "grader": {
+            "kind": "stdout-equality",
+            "expected": "[]",
+            "normalize": "collapse-trailing-newline"
+          },
+          "bugLines": [
+            10
+          ],
+          "revealAfter": 4
+        },
+        {
+          "type": "fix",
+          "id": "context-and-retrieval/retrieval-that-finds-the-right-thing/s07-07-fix-the-dup-results",
+          "xp": 4,
+          "hint": [
+            {
+              "level": 1,
+              "body": "Sort by score first, then walk the sorted list keeping a `seen` set. Skip any chunk_id already in `seen`.",
+              "cost": 0
+            },
+            {
+              "level": 2,
+              "body": "```python\nranked = sorted(scored, key=lambda x: x[1], reverse=True)\nseen = set()\nout = []\nfor c, s in ranked:\n    if c not in seen:\n        seen.add(c)\n        out.append((c, s))\n        if len(out) == k:\n            break\nreturn out\n```\n",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 100,
+          "concept": "dedupe-before-top-k",
+          "brokenCode": "scored = [\n    (\"policy/p2\", 0.91),\n    (\"policy/p2\", 0.89),  # same chunk, slightly lower score\n    (\"policy/p4\", 0.85),\n    (\"policy/p7\", 0.72),\n    (\"policy/p9\", 0.65),\n]\n\ndef retrieve(scored, k=3):\n    # bug: no dedupe. policy/p2 takes two slots out of three.\n    return sorted(scored, key=lambda x: x[1], reverse=True)[:k]\n\nprint([c for c, _ in retrieve(scored, k=3)])\n",
+          "prompt": "Two documents indexed the same paragraph (it was copy-pasted\nacross docs). The retriever returns the same chunk_id twice in\nthe top-3, wasting a slot. The fix is to dedupe by chunk_id\nBEFORE taking the top-k. Keep the highest-scoring occurrence.\n\nExpected output:\n```\n['policy/p2', 'policy/p4', 'policy/p7']\n```\n",
+          "grader": {
+            "kind": "stdout-equality",
+            "expected": "['policy/p2', 'policy/p4', 'policy/p7']",
+            "normalize": "collapse-trailing-newline"
+          },
+          "bugLines": [
+            11
+          ],
+          "revealAfter": 4
+        },
+        {
+          "type": "write",
+          "id": "context-and-retrieval/retrieval-that-finds-the-right-thing/s08-08-write-the-ranker",
+          "xp": 5,
+          "hint": [
+            {
+              "level": 1,
+              "body": "Three steps in order: (1) filter by threshold, (2) sort by score descending, (3) walk the sorted list with a `seen` set to dedupe, stopping at k results.",
+              "cost": 0
+            },
+            {
+              "level": 2,
+              "body": "Body sketch: `filtered = [...]`, `ranked = sorted(...)`, init `seen = set()` and `out = []`, then a for-loop that skips dupes, appends, and breaks at `len(out) == k`.",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 200,
+          "concept": "threshold-dedupe-top-k",
+          "prompt": "Write `retrieve(scored, k, threshold)` that returns the top-k\ncandidates, filtered by `score >= threshold`, deduped by\nchunk_id (keep the highest-scoring occurrence). Order the\noutput by descending score.\n\nTwo cases run. Expected output:\n```\n['policy/p2', 'policy/p4', 'policy/p7']\n[]\n```\n",
+          "starter": "good = [\n    (\"policy/p2\", 0.91),\n    (\"policy/p2\", 0.89),  # dup, lower score\n    (\"policy/p4\", 0.85),\n    (\"policy/p7\", 0.72),\n    (\"noise\",     0.31),  # below threshold\n]\n\nnoisy = [\n    (\"garbage_1\", 0.22),\n    (\"garbage_2\", 0.18),\n    (\"garbage_3\", 0.15),\n]\n\n# define retrieve(scored, k, threshold) below\n\nprint([c for c, _ in retrieve(good,  k=3, threshold=0.5)])\nprint([c for c, _ in retrieve(noisy, k=3, threshold=0.5)])\n",
+          "grader": {
+            "kind": "stdout-equality",
+            "expected": "['policy/p2', 'policy/p4', 'policy/p7']\n[]\n",
+            "normalize": "collapse-trailing-newline"
+          },
+          "solution": "good = [\n    (\"policy/p2\", 0.91),\n    (\"policy/p2\", 0.89),\n    (\"policy/p4\", 0.85),\n    (\"policy/p7\", 0.72),\n    (\"noise\",     0.31),\n]\n\nnoisy = [\n    (\"garbage_1\", 0.22),\n    (\"garbage_2\", 0.18),\n    (\"garbage_3\", 0.15),\n]\n\ndef retrieve(scored, k, threshold):\n    filtered = [(c, s) for c, s in scored if s >= threshold]\n    ranked = sorted(filtered, key=lambda x: x[1], reverse=True)\n    seen = set()\n    out = []\n    for c, s in ranked:\n        if c in seen:\n            continue\n        seen.add(c)\n        out.append((c, s))\n        if len(out) == k:\n            break\n    return out\n\nprint([c for c, _ in retrieve(good,  k=3, threshold=0.5)])\nprint([c for c, _ in retrieve(noisy, k=3, threshold=0.5)])\n",
+          "hiddenTests": []
+        },
+        {
+          "type": "checkpoint",
+          "id": "context-and-retrieval/retrieval-that-finds-the-right-thing/s09-09-checkpoint",
+          "xp": 8,
+          "hint": [],
+          "personalize": false,
+          "phase": "check",
+          "estSeconds": 220,
+          "concept": "full-retrieval-pipeline",
+          "prompt": "Final drill. Build `rag_retrieve(query_vec, indexed, k, threshold)`\nthat:\n\n- Takes `indexed` as a list of `(chunk_id, doc_vec)` pairs.\n- Computes cosine similarity between `query_vec` and each `doc_vec`\n  (use `cosine` provided in the starter).\n- Filters by `score >= threshold`.\n- Dedupes by `chunk_id`, keeping the highest-scoring occurrence.\n- Returns the top-k chunk_ids in descending score order.\n\nThree cases run. Expected output:\n```\n['policy/refund_terms', 'policy/refund_eligibility']\n[]\n['policy/refund_terms']\n```\n",
+          "starter": "import math\n\ndef cosine(a, b):\n    dot = sum(x * y for x, y in zip(a, b))\n    na  = math.sqrt(sum(x * x for x in a))\n    nb  = math.sqrt(sum(y * y for y in b))\n    return dot / (na * nb) if na and nb else 0.0\n\nquery_vec = [1.0, 0.0, 0.0, 0.0]\n\ngood_index = [\n    (\"policy/refund_terms\",       [0.95, 0.05, 0.0, 0.0]),   # ~1.0\n    (\"policy/refund_terms\",       [0.92, 0.08, 0.0, 0.0]),   # dup, lower\n    (\"policy/refund_eligibility\", [0.80, 0.20, 0.0, 0.0]),   # ~0.97\n    (\"hr/onboarding\",             [0.10, 0.90, 0.0, 0.0]),   # ~0.11\n]\n\nnoisy_index = [\n    (\"noise_1\", [0.10, 0.50, 0.40, 0.0]),  # ~0.18\n    (\"noise_2\", [0.05, 0.30, 0.60, 0.0]),  # ~0.07\n    (\"noise_3\", [0.00, 0.10, 0.80, 0.0]),  # ~0.00\n]\n\none_hit_index = [\n    (\"policy/refund_terms\", [0.99, 0.01, 0.0, 0.0]),   # ~1.0\n    (\"hr/onboarding\",       [0.10, 0.90, 0.0, 0.0]),   # ~0.11\n]\n\n# define rag_retrieve(query_vec, indexed, k, threshold) below\n\nprint(rag_retrieve(query_vec, good_index,    k=3, threshold=0.5))\nprint(rag_retrieve(query_vec, noisy_index,   k=3, threshold=0.5))\nprint(rag_retrieve(query_vec, one_hit_index, k=3, threshold=0.5))\n",
+          "grader": {
+            "kind": "stdout-equality",
+            "expected": "['policy/refund_terms', 'policy/refund_eligibility']\n[]\n['policy/refund_terms']\n",
+            "normalize": "collapse-trailing-newline"
+          },
+          "solution": "import math\n\ndef cosine(a, b):\n    dot = sum(x * y for x, y in zip(a, b))\n    na  = math.sqrt(sum(x * x for x in a))\n    nb  = math.sqrt(sum(y * y for y in b))\n    return dot / (na * nb) if na and nb else 0.0\n\nquery_vec = [1.0, 0.0, 0.0, 0.0]\n\ngood_index = [\n    (\"policy/refund_terms\",       [0.95, 0.05, 0.0, 0.0]),\n    (\"policy/refund_terms\",       [0.92, 0.08, 0.0, 0.0]),\n    (\"policy/refund_eligibility\", [0.80, 0.20, 0.0, 0.0]),\n    (\"hr/onboarding\",             [0.10, 0.90, 0.0, 0.0]),\n]\n\nnoisy_index = [\n    (\"noise_1\", [0.10, 0.50, 0.40, 0.0]),\n    (\"noise_2\", [0.05, 0.30, 0.60, 0.0]),\n    (\"noise_3\", [0.00, 0.10, 0.80, 0.0]),\n]\n\none_hit_index = [\n    (\"policy/refund_terms\", [0.99, 0.01, 0.0, 0.0]),\n    (\"hr/onboarding\",       [0.10, 0.90, 0.0, 0.0]),\n]\n\ndef rag_retrieve(query_vec, indexed, k, threshold):\n    scored = [(cid, cosine(query_vec, v)) for cid, v in indexed]\n    filtered = [(cid, s) for cid, s in scored if s >= threshold]\n    ranked = sorted(filtered, key=lambda x: x[1], reverse=True)\n    seen = set()\n    out = []\n    for cid, s in ranked:\n        if cid in seen:\n            continue\n        seen.add(cid)\n        out.append(cid)\n        if len(out) == k:\n            break\n    return out\n\nprint(rag_retrieve(query_vec, good_index,    k=3, threshold=0.5))\nprint(rag_retrieve(query_vec, noisy_index,   k=3, threshold=0.5))\nprint(rag_retrieve(query_vec, one_hit_index, k=3, threshold=0.5))\n",
+          "passThreshold": 0.66
+        }
+      ],
+      "xpTotal": 31
     }
   ],
-  "xpTotal": 64
+  "xpTotal": 95
 }

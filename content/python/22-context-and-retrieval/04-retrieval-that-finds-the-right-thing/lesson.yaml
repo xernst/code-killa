@@ -1,0 +1,15 @@
+slug: retrieval-that-finds-the-right-thing
+title: "Retrieval that finds the right thing — top-k, thresholds, and the rerank step everyone skips"
+estMinutes: 14
+prerequisites:
+  - embedding-that-fits-the-budget
+order:
+  - 01-intro.read.md
+  - 02-which-result-is-good.mc.yaml
+  - 03-the-distance-threshold.read.md
+  - 04-predict-the-top-k.predict.yaml
+  - 05-fill-the-cutoff.fill.yaml
+  - 06-fix-the-no-threshold.fix.yaml
+  - 07-fix-the-dup-results.fix.yaml
+  - 08-write-the-ranker.write.yaml
+  - 09-checkpoint.checkpoint.yaml

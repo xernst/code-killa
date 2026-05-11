@@ -1,0 +1,31 @@
+xp: 3
+estSeconds: 65
+concept: threshold-filter-with-list-comp
+prompt: |
+  Fill the list comprehension so that only candidates with a score
+  at least THRESHOLD survive. Use a single `>=` comparison.
+
+  Expected output:
+  ```
+  3 candidates above threshold
+  ```
+code: |
+  scored = [
+      ("a", 0.91), ("b", 0.62), ("c", 0.48), ("d", 0.51), ("e", 0.10),
+  ]
+  THRESHOLD = 0.5
+
+  keep = [(c, s) for c, s in scored if ___]
+
+  print(f"{len(keep)} candidates above threshold")
+blanks:
+  - id: filter_expr
+    accept:
+      - "s >= THRESHOLD"
+      - "s>=THRESHOLD"
+    caseSensitive: true
+hint:
+  - level: 1
+    body: "The `(c, s)` unpacking exposes `s` as the score. Compare `s` to `THRESHOLD` with `>=` (not `>` — you want exact-threshold matches to qualify)."
+  - level: 2
+    body: "`s >= THRESHOLD`. That keeps 0.91, 0.62, and 0.51 (three). 0.48 and 0.10 drop out."
