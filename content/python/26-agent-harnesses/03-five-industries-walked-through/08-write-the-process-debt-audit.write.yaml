@@ -1,0 +1,112 @@
+xp: 5
+estSeconds: 200
+concept: process-debt-scoring
+prompt: |
+  Write `process_debt_score(company)` that takes a company profile
+  (dict) and returns a dict with two fields:
+
+  - `score`: integer 0-100, higher means MORE process debt (bad)
+  - `verdict`: string, one of:
+    - `"AI-native ready"` if score <= 20
+    - `"manageable debt"` if score <= 50
+    - `"heavy debt"` if score <= 80
+    - `"incumbent trap"` if score > 80
+
+  Score the company on these signals (each adds points to the debt
+  total):
+
+  - `age_years > 10`: add 25 (Isenberg: 22-year-old businesses)
+  - `data_scattered_across_tools >= 5`: add 20 (CRM + Slack + email + spreadsheets...)
+  - `tacit_knowledge_pct > 50`: add 20 (more than half of company knowledge "in someone's head")
+  - `paper_processes > 0`: add 15 (any paper at all)
+  - `headcount_per_revenue_million > 7`: add 10 (overstaffed)
+  - `documented_workflows_pct < 30`: add 10 (mostly undocumented)
+
+  Two companies run. Expected output:
+  ```
+  HVAC Inc:   {'score': 100, 'verdict': 'incumbent trap'}
+  StartupCo:  {'score': 0, 'verdict': 'AI-native ready'}
+  ```
+starter: |
+  hvac_inc = {
+      "name": "HVAC Inc",
+      "age_years": 22,
+      "data_scattered_across_tools": 6,
+      "tacit_knowledge_pct": 65,
+      "paper_processes": 2,
+      "headcount_per_revenue_million": 8,
+      "documented_workflows_pct": 15,
+  }
+
+  startup_co = {
+      "name": "StartupCo",
+      "age_years": 1,
+      "data_scattered_across_tools": 2,
+      "tacit_knowledge_pct": 30,
+      "paper_processes": 0,
+      "headcount_per_revenue_million": 4,
+      "documented_workflows_pct": 80,
+  }
+
+  # define process_debt_score(company) below
+
+  print(f"HVAC Inc:   {process_debt_score(hvac_inc)}")
+  print(f"StartupCo:  {process_debt_score(startup_co)}")
+grader:
+  kind: stdout-equality
+  expected: |
+    HVAC Inc:   {'score': 100, 'verdict': 'incumbent trap'}
+    StartupCo:  {'score': 0, 'verdict': 'AI-native ready'}
+  normalize: collapse-trailing-newline
+solution: |
+  hvac_inc = {
+      "name": "HVAC Inc",
+      "age_years": 22,
+      "data_scattered_across_tools": 6,
+      "tacit_knowledge_pct": 65,
+      "paper_processes": 2,
+      "headcount_per_revenue_million": 8,
+      "documented_workflows_pct": 15,
+  }
+
+  startup_co = {
+      "name": "StartupCo",
+      "age_years": 1,
+      "data_scattered_across_tools": 2,
+      "tacit_knowledge_pct": 30,
+      "paper_processes": 0,
+      "headcount_per_revenue_million": 4,
+      "documented_workflows_pct": 80,
+  }
+
+  def process_debt_score(company):
+      score = 0
+      if company.get("age_years", 0) > 10:
+          score += 25
+      if company.get("data_scattered_across_tools", 0) >= 5:
+          score += 20
+      if company.get("tacit_knowledge_pct", 0) > 50:
+          score += 20
+      if company.get("paper_processes", 0) > 0:
+          score += 15
+      if company.get("headcount_per_revenue_million", 0) > 7:
+          score += 10
+      if company.get("documented_workflows_pct", 100) < 30:
+          score += 10
+      if score <= 20:
+          verdict = "AI-native ready"
+      elif score <= 50:
+          verdict = "manageable debt"
+      elif score <= 80:
+          verdict = "heavy debt"
+      else:
+          verdict = "incumbent trap"
+      return {"score": score, "verdict": verdict}
+
+  print(f"HVAC Inc:   {process_debt_score(hvac_inc)}")
+  print(f"StartupCo:  {process_debt_score(startup_co)}")
+hint:
+  - level: 1
+    body: "Six conditionals, each adds a fixed number of points. Use `.get()` with defaults so missing fields don't crash. Then four-way threshold for the verdict."
+  - level: 2
+    body: "HVAC Inc hits all six conditions: 25 (old) + 20 (scattered) + 20 (tacit) + 15 (paper) + 10 (overstaffed) + 10 (undocumented) = 100. StartupCo hits zero conditions, score 0. The verdict thresholds: <=20 ready, <=50 manageable, <=80 heavy, >80 trap."

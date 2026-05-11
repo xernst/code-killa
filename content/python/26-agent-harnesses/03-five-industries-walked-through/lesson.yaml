@@ -1,0 +1,15 @@
+slug: five-industries-walked-through
+title: "Five industries walked through — what AI-native looks like in the wild"
+estMinutes: 20
+prerequisites:
+  - architecting-an-ai-native-workflow
+order:
+  - 01-the-case-study-method.read.md
+  - 02-home-services.read.md
+  - 03-which-task-belongs-to-the-agent.mc.yaml
+  - 04-insurance-brokerage.read.md
+  - 05-recruiting-firm.read.md
+  - 06-which-industry-wedges-fastest.mc.yaml
+  - 07-the-incumbent-trap.read.md
+  - 08-write-the-process-debt-audit.write.yaml
+  - 09-checkpoint.checkpoint.yaml

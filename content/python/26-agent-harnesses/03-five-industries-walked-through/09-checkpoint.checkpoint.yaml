@@ -1,0 +1,72 @@
+xp: 8
+estSeconds: 240
+concept: synthesize-the-case-study-method
+prompt: |
+  Final drill. Synthesize the case-study method into one function:
+  `pick_industry(candidates)` that takes a list of industry profiles
+  and returns the name of the BEST candidate for an AI-native
+  rebuild.
+
+  Each candidate is a dict with:
+  - `name`: string
+  - `volume_per_week`: int
+  - `rules_explicit`: bool
+  - `outcome_structured`: bool
+  - `incumbent_avg_age_years`: int
+
+  Score each candidate using these rules (higher = better wedge):
+
+  - `volume_per_week >= 100`: +30
+  - `rules_explicit`: +25
+  - `outcome_structured`: +25
+  - `incumbent_avg_age_years >= 20`: +20  (incumbent trap is biggest)
+
+  Return the name of the highest-scoring candidate. On a tie, return
+  the FIRST one (Python's `max` with `key=` preserves stable order).
+
+  Five candidates run. Expected output:
+  ```
+  best: Insurance brokerage
+  ```
+starter: |
+  candidates = [
+      {"name": "Boutique law firm",       "volume_per_week": 2,    "rules_explicit": False, "outcome_structured": False, "incumbent_avg_age_years": 30},
+      {"name": "Insurance brokerage",     "volume_per_week": 200,  "rules_explicit": True,  "outcome_structured": True,  "incumbent_avg_age_years": 35},
+      {"name": "PR agency",               "volume_per_week": 40,   "rules_explicit": False, "outcome_structured": False, "incumbent_avg_age_years": 15},
+      {"name": "Bookkeeping for SMBs",    "volume_per_week": 300,  "rules_explicit": True,  "outcome_structured": True,  "incumbent_avg_age_years": 18},
+      {"name": "VC investing",            "volume_per_week": 1,    "rules_explicit": False, "outcome_structured": False, "incumbent_avg_age_years": 25},
+  ]
+
+  # define pick_industry(candidates) below
+
+  print(f"best: {pick_industry(candidates)}")
+grader:
+  kind: stdout-equality
+  expected: "best: Insurance brokerage"
+  normalize: collapse-trailing-newline
+solution: |
+  candidates = [
+      {"name": "Boutique law firm",       "volume_per_week": 2,    "rules_explicit": False, "outcome_structured": False, "incumbent_avg_age_years": 30},
+      {"name": "Insurance brokerage",     "volume_per_week": 200,  "rules_explicit": True,  "outcome_structured": True,  "incumbent_avg_age_years": 35},
+      {"name": "PR agency",               "volume_per_week": 40,   "rules_explicit": False, "outcome_structured": False, "incumbent_avg_age_years": 15},
+      {"name": "Bookkeeping for SMBs",    "volume_per_week": 300,  "rules_explicit": True,  "outcome_structured": True,  "incumbent_avg_age_years": 18},
+      {"name": "VC investing",            "volume_per_week": 1,    "rules_explicit": False, "outcome_structured": False, "incumbent_avg_age_years": 25},
+  ]
+
+  def score_candidate(c):
+      s = 0
+      if c["volume_per_week"] >= 100:
+          s += 30
+      if c["rules_explicit"]:
+          s += 25
+      if c["outcome_structured"]:
+          s += 25
+      if c["incumbent_avg_age_years"] >= 20:
+          s += 20
+      return s
+
+  def pick_industry(candidates):
+      return max(candidates, key=score_candidate)["name"]
+
+  print(f"best: {pick_industry(candidates)}")
+passThreshold: 0.66

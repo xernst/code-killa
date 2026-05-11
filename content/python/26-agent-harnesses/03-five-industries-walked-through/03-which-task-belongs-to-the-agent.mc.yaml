@@ -1,0 +1,37 @@
+xp: 2
+estSeconds: 55
+concept: agent-vs-human-task-split
+code: |
+  # five tasks from the home-services workflow. who should own each?
+  tasks = [
+      "Classify an incoming call as emergency vs scheduled",
+      "Decide whether to fire a long-tenured tech for repeated rudeness",
+      "Look up the customer's prior service history and draft a job brief",
+      "Negotiate a one-off discount with the customer's lawyer over a disputed invoice",
+      "Generate the invoice draft when the tech says the job is done",
+  ]
+  for i, t in enumerate(tasks, 1):
+      print(f"{i}. {t}")
+prompt: |
+  Five tasks from the home-services rebuild. Three of them belong to
+  the agent (structured work). Two of them belong to a human (taste,
+  trust, judgment, relationships, exceptions).
+
+  Which TWO should stay with humans?
+options:
+  - id: 2_and_4
+    label: "2 (fire a tech) and 4 (negotiate with a lawyer)"
+  - id: 1_and_5
+    label: "1 (classify call) and 5 (generate invoice)"
+    explain: "Both are structured tasks with explicit rules. Classification is one of Isenberg's named agent jobs; invoice drafting is mechanical given a job-done signal. Humans don't need to do either."
+  - id: 3_and_4
+    label: "3 (look up history) and 4 (negotiate with a lawyer)"
+    explain: "Customer-history lookup is exactly what agents are best at — read structured records and synthesize. Don't waste a human on it."
+  - id: 1_and_2
+    label: "1 (classify call) and 2 (fire a tech)"
+    explain: "Half right. Firing a tech is judgment. But classifying calls is the agent's whole reason to exist in this workflow."
+answerIds:
+  - 2_and_4
+hint:
+  - level: 1
+    body: "Isenberg's rule: agents handle structured work, humans handle taste, trust, judgment, relationships, exceptions. Firing someone and lawyer-negotiation are both 100% judgment + relationships."

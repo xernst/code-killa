@@ -1,0 +1,55 @@
+xp: 2
+estSeconds: 70
+concept: pick-the-fastest-wedge
+code: |
+  # four industries. each one is "AI-native rebuildable" in principle.
+  # but which one wedges in fastest with the smallest team?
+  industries = {
+      "A": {
+          "name": "Boutique law firm (M&A advisory)",
+          "volume": "low (10 deals/year)",
+          "rules": "complex, mostly tacit",
+          "outcome": "high-stakes, irreversible",
+      },
+      "B": {
+          "name": "Bookkeeping for SMBs",
+          "volume": "high (300+ clients/month)",
+          "rules": "explicit (GAAP + tax code)",
+          "outcome": "structured, recurring",
+      },
+      "C": {
+          "name": "Public-relations agency",
+          "volume": "medium (40 active campaigns)",
+          "rules": "taste-driven, relationship-heavy",
+          "outcome": "subjective, narrative",
+      },
+      "D": {
+          "name": "Investment banking (capital markets)",
+          "volume": "low (per deal)",
+          "rules": "regulated, judgment-dense",
+          "outcome": "high-stakes, brand-risky",
+      },
+  }
+  for k, v in industries.items():
+      print(f"{k}: {v['name']:35} vol={v['volume']:20} rules={v['rules']}")
+prompt: |
+  Four candidate industries for an AI-native rebuild. Per the
+  case-study method (high volume + explicit rules + structured
+  outcomes), which ONE wedges in fastest?
+options:
+  - id: a
+    label: "A — boutique M&A law firm"
+    explain: "Low volume + mostly tacit rules + high-stakes outcomes. This is the OPPOSITE of the wedge profile. The cost of structuring the workflow exceeds the savings; the irreversible-outcome nature means humans can't be removed."
+  - id: b
+    label: "B — bookkeeping for SMBs"
+  - id: c
+    label: "C — PR agency"
+    explain: "Taste-driven and relationship-heavy. Agents can draft, but the value the client buys is the human taste behind the pitch. Volume's also medium, not high."
+  - id: d
+    label: "D — investment banking capital markets"
+    explain: "Low volume + heavily regulated + brand-risk on every output. Worst possible profile for an agent-first rebuild."
+answerIds:
+  - b
+hint:
+  - level: 1
+    body: "The wedge profile is: HIGH volume, EXPLICIT rules (so the agent has something to ground in), STRUCTURED outcomes (recurring shapes, not one-off bespoke work). Only one of the four hits all three."
