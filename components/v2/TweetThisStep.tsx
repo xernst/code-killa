@@ -64,8 +64,8 @@ export default function TweetThisStep({
       href={intent}
       target="_blank"
       rel="noopener noreferrer"
-      title="Tweet this lesson on X"
-      aria-label="Tweet this lesson on X"
+      title="tweet this lesson on x"
+      aria-label="tweet this lesson on x"
       className="inline-flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-[0.05em] text-ink-500 transition-colors hover:text-green-400"
     >
       <Share2 size={12} aria-hidden />

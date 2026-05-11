@@ -16,7 +16,7 @@ export default function SessionTimer() {
   const m = Math.floor(elapsed / 60);
   const s = elapsed % 60;
   return (
-    <span title="Time on this lesson" className="inline-flex items-center gap-1 text-xs text-ink-500 tabular-nums">
+    <span title="time on this lesson" className="inline-flex items-center gap-1 text-xs text-ink-300 tabular-nums">
       <Clock size={12} />
       {m}:{String(s).padStart(2, "0")}
     </span>

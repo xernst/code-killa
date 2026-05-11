@@ -85,7 +85,7 @@ export default function MultipleChoiceStepView({
       <div className="prose max-w-none text-ink-200">
         <ReactMarkdown remarkPlugins={[remarkGfm]}>{prompt}</ReactMarkdown>
       </div>
-      <div className="flex flex-col gap-2" role="radiogroup" aria-label="Choices">
+      <div className="flex flex-col gap-2" role="radiogroup" aria-label="choices">
         {step.options.map((option, idx) => {
           const isSelected = selected === option.id;
           const isCorrectChoice = correctSet.has(option.id);

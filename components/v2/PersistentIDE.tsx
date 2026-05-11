@@ -239,7 +239,7 @@ const PersistentIDE = forwardRef<PersistentIDEHandle, Props>(function Persistent
     <div className="flex h-full min-h-0 flex-col bg-ink-950">
       <div
         role="tablist"
-        aria-label="Editor files"
+        aria-label="editor files"
         className="flex items-center gap-1 border-b border-ink-800 bg-ink-900 px-2"
       >
         {files.map((file, idx) => {
@@ -291,7 +291,7 @@ const PersistentIDE = forwardRef<PersistentIDEHandle, Props>(function Persistent
       <div
         id={`ide-tabpanel-${stepId}`}
         role="tabpanel"
-        aria-label={activeFile ? `${activeFile.name} editor` : "Editor"}
+        aria-label={activeFile ? `${activeFile.name} editor` : "editor"}
         className="flex-1 min-h-0 overflow-hidden"
       >
         {activeFile ? (
@@ -358,7 +358,7 @@ const PersistentIDE = forwardRef<PersistentIDEHandle, Props>(function Persistent
       <div
         className="flex h-44 min-h-0 flex-col border-t border-ink-800 bg-ink-950"
         role="region"
-        aria-label="Code output"
+        aria-label="code output"
       >
         <div className="flex items-center justify-between border-b border-ink-800 px-3 py-1.5">
           <div
@@ -395,7 +395,7 @@ const PersistentIDE = forwardRef<PersistentIDEHandle, Props>(function Persistent
         </div>
         <div
           aria-live="polite"
-          aria-label="Program output"
+          aria-label="program output"
           className="flex-1 overflow-auto p-3 font-mono text-[12.5px] leading-relaxed"
         >
           {!hasOutput && !outputExtra && !ranEmpty && !running && (

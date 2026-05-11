@@ -69,7 +69,7 @@ export default function PredictStepView({
             "rounded border border-ink-700 bg-ink-950 px-3 py-2 font-mono text-sm",
             "text-green-300 focus:border-green-500 focus:outline-none",
           )}
-          placeholder="What stdout will this print?"
+          placeholder="what stdout will this print?"
           spellCheck={false}
         />
       </label>

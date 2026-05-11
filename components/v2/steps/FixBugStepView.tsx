@@ -36,7 +36,7 @@ export default function FixBugStepView({
     const result = await ide.run();
     setSubmitting(false);
     if (!result) {
-      setSubmitted({ passed: false, reason: "Editor isn't ready yet." });
+      setSubmitted({ passed: false, reason: "editor isn't ready yet." });
       return;
     }
     const grade = await gradeRunResultAsync(step.grader, result, ide);
@@ -102,7 +102,7 @@ export default function FixBugStepView({
           ) : (
             <XCircle size={16} className="mt-0.5" />
           )}
-          <span>{submitted.passed ? "Runs clean now." : submitted.reason}</span>
+          <span>{submitted.passed ? "runs clean now." : submitted.reason}</span>
         </div>
       )}
       {solutionRevealed && step.bugLines.length > 0 && (

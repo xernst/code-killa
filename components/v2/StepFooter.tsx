@@ -106,7 +106,7 @@ export default function StepFooter({
                   ? "hover:border-ink-600 hover:text-ink-100"
                   : "cursor-not-allowed opacity-50",
               )}
-              aria-label={remainingHints > 0 ? "Reveal next hint" : "No more hints"}
+              aria-label={remainingHints > 0 ? "reveal next hint" : "no more hints"}
             >
               <Lightbulb size={14} />
               <span>hint{remainingHints > 0 ? ` (${remainingHints})` : ""}</span>

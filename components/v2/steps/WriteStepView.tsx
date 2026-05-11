@@ -32,7 +32,7 @@ export default function WriteStepView({
     const result = await ide.run();
     setSubmitting(false);
     if (!result) {
-      setSubmitted({ passed: false, reason: "Editor isn't ready yet." });
+      setSubmitted({ passed: false, reason: "editor isn't ready yet." });
       return;
     }
     const grade = await gradeRunResultAsync(step.grader, result, ide);
@@ -88,7 +88,7 @@ export default function WriteStepView({
           ) : (
             <XCircle size={16} className="mt-0.5" />
           )}
-          <span>{submitted.passed ? "That's the one." : submitted.reason}</span>
+          <span>{submitted.passed ? "that's the one." : submitted.reason}</span>
         </div>
       )}
       {solutionRevealed && step.solution && (

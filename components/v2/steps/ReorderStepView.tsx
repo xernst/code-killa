@@ -79,7 +79,7 @@ export default function ReorderStepView({
       <div className="prose max-w-none text-ink-200">
         <ReactMarkdown remarkPlugins={[remarkGfm]}>{prompt}</ReactMarkdown>
       </div>
-      <ol className="flex flex-col gap-1.5" aria-label="Code fragments to reorder">
+      <ol className="flex flex-col gap-1.5" aria-label="code fragments to reorder">
         {order.map((fragment, idx) => {
           const isGrabbed = grabbed === fragment.id;
           return (
@@ -94,7 +94,7 @@ export default function ReorderStepView({
               <button
                 type="button"
                 onClick={() => setGrabbed(isGrabbed ? null : fragment.id)}
-                aria-label={isGrabbed ? "Drop fragment" : "Grab fragment"}
+                aria-label={isGrabbed ? "drop fragment" : "grab fragment"}
                 aria-pressed={isGrabbed}
                 onKeyDown={(e) => {
                   if (e.key === "ArrowUp") {
@@ -120,7 +120,7 @@ export default function ReorderStepView({
                   type="button"
                   onClick={() => move(fragment.id, -1)}
                   disabled={idx === 0}
-                  aria-label="Move up"
+                  aria-label="move up"
                   className="text-ink-500 hover:text-ink-100 disabled:opacity-30"
                 >
                   <ArrowUp size={12} />
@@ -129,7 +129,7 @@ export default function ReorderStepView({
                   type="button"
                   onClick={() => move(fragment.id, 1)}
                   disabled={idx === order.length - 1}
-                  aria-label="Move down"
+                  aria-label="move down"
                   className="text-ink-500 hover:text-ink-100 disabled:opacity-30"
                 >
                   <ArrowDown size={12} />

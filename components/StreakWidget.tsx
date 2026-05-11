@@ -43,8 +43,8 @@ export default function StreakWidget() {
         <Snowflake size={14} className={s.frozenFlames > 0 ? "text-green-500" : "text-ink-700"} />
         {s.frozenFlames}
       </span>
-      <span title="Total XP earned" className="hidden sm:inline text-ink-400">
-        {s.totalXp} XP
+      <span title="total xp earned" className="hidden sm:inline text-ink-300">
+        {s.totalXp} xp
       </span>
     </div>
   );
