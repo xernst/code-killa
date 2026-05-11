@@ -15,7 +15,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const steps = toc.chapters.reduce((a, c) => a + c.stepCount, 0);
   return {
     title: "what is promptdojo? — about the project",
-    description: `promptdojo is a free, open-source python school for builders in the ai era. read what it is, why it exists, what's inside, and how it works. ${chapters} chapters, ${steps} runnable steps, free forever.`,
+    description: `promptdojo is the python school for the ai era. the web is the preview. the app is the school. ${chapters} chapters, ${steps} runnable steps, free preview on the web.`,
   };
 }
 
@@ -63,13 +63,17 @@ const comparison: Array<[string, string]> = [
     "learn the syntax you trip on, ignore the rest",
   ],
   ["hello-world your way to a job", "ship a cli agent by chapter 25"],
-  ["sign up, lose streak, pay $19/mo", "no signup, no streak shame, $0 forever"],
+  ["sign up, lose streak, pay $19/mo", "free preview on the web, the school lives in the app"],
 ];
 
 const faqs = [
   {
-    q: "is it really free?",
-    a: "yes. no paid tier, no premium content. the only money this site costs me is the domain.",
+    q: "is the web preview really free?",
+    a: "yes. three full chapters, no signup, no time limit. about 30 minutes of content. it's a preview, not a trial — it doesn't expire.",
+  },
+  {
+    q: "what does the app cost?",
+    a: "$9.99/mo, $59/yr, or $129 lifetime for the first 100 buyers. then lifetime jumps to $199. apple and google take 15-30% of every sale. the rest funds the build.",
   },
   {
     q: "why isn't it on udemy / coursera / boot.dev?",
@@ -258,43 +262,72 @@ export default async function AboutPage() {
         </div>
       </section>
 
-      {/* ───────── 7. FREE FOREVER ──────────────────────────────── */}
+      {/* ───────── 7. THE PIVOT ─────────────────────────────────── */}
       <section className="py-16">
-        <div className="t-eyebrow mb-3">free forever</div>
+        <div className="t-eyebrow mb-3">why a paid app?</div>
         <h2 className="t-section">
-          $0. <em className="t-emph">open source</em>. no upsell. <em className="t-emph">ever</em>.
+          the web is the <em className="t-emph">preview</em>. the app is the{" "}
+          <em className="t-emph">school</em>.
         </h2>
 
-        <ul className="mt-10 flex flex-col items-start gap-3 font-display text-2xl leading-tight text-ink-300 sm:text-3xl">
-          <li>no paid tier.</li>
-          <li>no premium chapters.</li>
-          <li>no certificate store.</li>
-          <li>no streak shame.</li>
-          <li>no email list.</li>
-          <li>no upsell.</li>
-          <li className="text-green-500">open source.</li>
-          <li className="text-green-500">forever.</li>
-        </ul>
-
-        <p className="t-body mt-10 max-w-2xl">
-          fork it. break it. open a pr.{" "}
-          <span className="text-ink-500">+ pull requests welcome.</span>
+        <p className="t-body mt-8 max-w-2xl text-ink-300">
+          honest update: this site used to promise &ldquo;free forever, no
+          paid tier, ever.&rdquo; that&apos;s no longer true. the app stores
+          have a school in them now, and that school costs money.{" "}
+          <em className="italic text-ink-100">
+            i&apos;d rather tell you the trade than hide it.
+          </em>
         </p>
 
-        <p className="t-body mt-4 max-w-2xl text-ink-300">
-          if this is the python school you wish existed,{" "}
-          <a
-            href="https://github.com/xernst/promptdojo"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-green-400 underline-offset-2 hover:underline"
-          >
-            star the repo
-          </a>
-          . it&apos;s the only metric we keep.
+        <div className="mt-10 space-y-6 font-display text-lg leading-relaxed text-ink-300">
+          <div>
+            <div className="t-eyebrow mb-2">why now</div>
+            <p>
+              i&apos;m one person. i ship to this site weekly between client
+              work and i can&apos;t keep doing that on weekends alone.
+              charging for the app pays for the next chapter, the next
+              revision, the ai tutor compute. no charge, no school.
+            </p>
+          </div>
+
+          <div>
+            <div className="t-eyebrow mb-2">why a paid tier</div>
+            <p>
+              apple and google take 15-30% of every sale. the ai tutor calls
+              claude on every failed attempt and that&apos;s metered tokens.
+              the apple developer fee is $99/yr just to exist on the store.
+              this isn&apos;t a business — it&apos;s a school that has to
+              cover its own bill.
+            </p>
+          </div>
+
+          <div>
+            <div className="t-eyebrow mb-2">what stays free</div>
+            <p>
+              the web preview: three full chapters — variables, llm apis,
+              agent loops. read every step, no signup, no time limit. about
+              30 minutes of content. enough to know if the school is for you
+              before you pay for it.{" "}
+              <em className="italic text-ink-100">
+                the preview is the preview, not a trial. it doesn&apos;t
+                expire.
+              </em>
+            </p>
+          </div>
+        </div>
+
+        <p className="t-body mt-10 max-w-2xl">
+          the app: 26 chapters, the full python ide, ai tutor on every
+          failed attempt, cloud sync, offline mode.{" "}
+          <span className="text-green-400">
+            $9.99/mo · $59/yr · $129 lifetime (first 100 buyers).
+          </span>
         </p>
 
         <div className="mt-6 flex flex-wrap gap-3">
+          <Link href="/pro" className="dojo-btn-primary">
+            see pricing →
+          </Link>
           <a
             href="https://github.com/xernst/promptdojo"
             target="_blank"

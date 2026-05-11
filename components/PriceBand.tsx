@@ -1,31 +1,43 @@
-// $0 forever band — the price billboard. Sits between StatStrip and
-// the chapter rail. Viewport-tall, mono $0, eyebrow+token strip.
-//
-// Per design-kit/audit-v3/HEADOFIT-plan.md PR 7.
+// Pricing band — post-pivot. Free preview on web, paid in the app.
+// Three tier tiles ($9.99/mo · $59/yr · $129 founders). Tight vertical
+// rhythm per UI Designer audit (was min-h-[60vh] py-24, now py-12).
+
+type Tier = {
+  price: string;
+  unit: string;
+  label: string;
+  badge?: string;
+};
+
+const tiers: readonly Tier[] = [
+  { price: "$9.99", unit: "/mo", label: "monthly" },
+  { price: "$59", unit: "/yr", label: "annual", badge: "41% off" },
+  { price: "$129", unit: "lifetime", label: "founders", badge: "founders · first 100" },
+];
 
 export default function PriceBand() {
   return (
-    <section className="my-24 flex min-h-[60vh] flex-col items-center justify-center border-y border-ink-800 py-24 text-center">
-      <div className="t-eyebrow tracking-[0.6em]">forever.</div>
-      <div
-        className="mt-6 font-mono font-black leading-none text-ink-100"
-        style={{ fontSize: "clamp(72px, 22vw, 360px)" }}
-      >
-        $0
-      </div>
-      {/* "no login" was here previously — pulled when magic-link save
-          landed (Pass 5). "no streaks" was here too but contradicted the
-          visible streak widget on the same scroll. "no guilt" is honest
-          (we DO show streaks, but we don't punish skips — frozen flames
-          forgive a missed day). Per audit-v5/ux.md trust-dip fix. */}
-      <div className="t-mono-meta mt-10 flex flex-wrap items-center justify-center gap-x-3 gap-y-2">
-        <span>no signup</span>
-        <span className="text-ink-700">·</span>
-        <span>no streak shame</span>
-        <span className="text-ink-700">·</span>
-        <span>no upsell</span>
-        <span className="text-ink-700">·</span>
-        <span className="text-green-500">open source</span>
+    <section className="my-16 border-y border-ink-800 py-12">
+      <div className="mx-auto max-w-2xl text-center">
+        <div className="t-eyebrow tracking-[0.4em]">pricing</div>
+        <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-3">
+          {tiers.map((t) => (
+            <div key={t.label} className="dojo-card-interactive flex flex-col items-center justify-center p-4">
+              <div className="font-mono text-2xl font-bold leading-none text-ink-100">
+                {t.price}
+                <span className="ml-1 text-base font-normal text-ink-400">{t.unit}</span>
+              </div>
+              {t.badge ? (
+                <div className="t-mono-meta mt-2 text-green-500">{t.badge}</div>
+              ) : (
+                <div className="t-mono-meta mt-2 text-ink-500">{t.label}</div>
+              )}
+            </div>
+          ))}
+        </div>
+        <p className="t-body-sm mt-6 text-ink-400">
+          free preview on the web. full school in the app.
+        </p>
       </div>
     </section>
   );

@@ -114,7 +114,10 @@ export default async function Home() {
         <p className="t-body mt-12 max-w-2xl">
           a python school for builders whose code is mostly written by ai now.
           {" "}{totalChapters} chapters · {totalSteps} runnable steps · runs
-          in your browser · free forever.
+          in your browser · free preview, paid in the app.
+        </p>
+        <p className="t-body-sm mt-3 max-w-2xl text-ink-400">
+          free preview · full python school in the app. $9.99/mo · $59/yr · $129 founders.
         </p>
 
         <div className="mt-10">
@@ -136,6 +139,14 @@ export default async function Home() {
           >
             follow on x for daily bugs <span aria-hidden>↗</span>
           </a>
+        </div>
+        <div className="mt-3">
+          <Link
+            href="/pro"
+            className="t-mono-meta text-ink-300 underline decoration-ink-700 underline-offset-4 hover:text-green-400 hover:decoration-green-500"
+          >
+            see the app · pricing →
+          </Link>
         </div>
         <p className="mt-4 t-mono-meta">
           new to python?{" "}
@@ -209,7 +220,7 @@ export default async function Home() {
             "spot in the lesson" yet, so the kbd promise is unearned.
             UI audit 2026-05-07. The hint stays on lesson pages where
             it's contextual. */}
-        <span className="text-ink-500">a school for the new job: editing the model.</span>
+        <span className="text-ink-500">the python school for the ai era · $9.99/mo in the app</span>
         <div className="t-mono-meta flex flex-wrap items-baseline gap-x-3 sm:gap-x-2">
           {(() => {
             const lc = formatDateShort(githubStats.lastCommitISO);

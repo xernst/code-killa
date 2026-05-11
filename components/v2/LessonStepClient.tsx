@@ -178,8 +178,17 @@ export default function LessonStepClient({
   const totalSteps = lesson.steps.length;
   const passed = latestAttempt?.correct === true;
 
+  // Mobile gate routing per phase 2 of plans/gleaming-orbiting-knuth.md:
+  // active step types need the editor → upsell. Passive types render full
+  // lesson UI on phone (no IDE column, but prompt + header + footer all work).
+  const mobileGate =
+    step.type === "write" || step.type === "checkpoint" || step.type === "fix"
+      ? "active-upsell"
+      : "passive-pass-through";
+
   return (
     <LessonShell
+      mobileGate={mobileGate}
       sidebar={
         <V2ChapterNav
           tree={tree}

@@ -4,6 +4,8 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import DailyGoalDial from "./DailyGoalDial";
 
+type MobileGate = "passive-pass-through" | "active-upsell";
+
 type Props = {
   /**
    * Left rail — chapter / lesson / step navigation. v2-specific sidebar
@@ -29,6 +31,15 @@ type Props = {
    * buttons usually live here (StepFooter, C2).
    */
   footer?: ReactNode;
+  /**
+   * Mobile gate behavior. Passive step types (read/mc/predict/fill/reorder)
+   * render the full lesson UI on phone — no IDE column, but the prompt is
+   * fully interactive. Active step types (write/checkpoint/fix) need the
+   * editor and render an upsell card instead. Defaults to active-upsell to
+   * preserve the historical behavior for any caller that forgets the prop.
+   * Per phase 2 of plans/gleaming-orbiting-knuth.md.
+   */
+  mobileGate?: MobileGate;
 };
 
 // Mobile-gate copy lives here so the V3 toggle pattern is fully removed.
@@ -40,6 +51,7 @@ export default function LessonShell({
   ide,
   header,
   footer,
+  mobileGate = "active-upsell",
 }: Props) {
   return (
     <div className="flex h-[calc(100dvh-40px)] min-h-0 flex-col bg-ink-950 text-ink-100">
@@ -72,45 +84,67 @@ export default function LessonShell({
               {ide}
             </section>
           </div>
-          {/* Mobile gate (< md). The lesson body reads fine here — only the
-              IDE column is hidden, since pyodide is a battery tax on phone.
-              Audit 2026-05-11: previously this was a single dead-end button
-              ("resume on desktop"), which leaked ~70% of X traffic. Now we
-              acknowledge they can read the lesson, save their spot, AND
-              feed the X funnel which is the actual growth metric. */}
-          <div className="flex min-h-0 w-full flex-1 flex-col md:hidden">
-            <div className="flex-1 min-h-0 overflow-auto px-4 py-5">
-              {prompt}
-            </div>
-            <div className="border-t border-ink-800 bg-ink-900 p-5">
-              <h2 className="t-eyebrow mb-2">editor lives on desktop</h2>
-              <p className="t-body-sm">
-                you can read the chapter here. the editor itself runs python
-                in your browser via pyodide (~6&thinsp;mb of webassembly) and
-                ships clean on a laptop. on a phone it&apos;s a battery tax,
-                so we don&apos;t mount it.
-              </p>
-              <div className="mt-4 flex flex-col items-stretch gap-3 sm:flex-row sm:items-center">
-                <Link
-                  href="/lesson/resume"
-                  className="dojo-btn-primary inline-flex justify-center"
-                >
-                  save my spot <span aria-hidden>→</span>
-                </Link>
-                <a
-                  href="https://x.com/intent/follow?screen_name=TFisPython"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="dojo-btn-secondary inline-flex justify-center"
-                >
-                  follow on x for daily bugs <span aria-hidden>↗</span>
-                </a>
+          {/* Mobile gate (< md). Step-type-aware per phase 2 of
+              plans/gleaming-orbiting-knuth.md (audit 2026-05-11).
+              - Passive steps (read/mc/predict/fill/reorder): render the
+                full lesson UI on phone. Header → prompt → footer, just
+                like desktop minus the IDE column.
+              - Active steps (write/checkpoint/fix): render the upsell
+                card. These types REQUIRE the editor; the card preserves
+                the save-my-spot growth funnel + X-follow CTA. */}
+          {mobileGate === "passive-pass-through" ? (
+            <div className="flex min-h-0 w-full flex-1 flex-col md:hidden">
+              {header && (
+                <div className="border-b border-ink-800 bg-ink-900 px-4 py-3">
+                  {header}
+                </div>
+              )}
+              <div className="flex-1 min-h-0 overflow-auto px-4 py-5">
+                {prompt}
               </div>
-              <p className="mt-3 t-mono-meta">
-                open this same url on a laptop to keep going.
-              </p>
+              {footer && (
+                <div className="border-t border-ink-800 bg-ink-900 px-4 py-3">
+                  {footer}
+                </div>
+              )}
             </div>
-          </div>
+          ) : (
+            <div className="flex min-h-0 w-full flex-1 flex-col md:hidden">
+              <div className="flex-1 min-h-0 overflow-auto px-4 py-5">
+                {prompt}
+              </div>
+              <div className="border-t border-ink-800 bg-ink-900 p-5">
+                <h2 className="t-eyebrow mb-2">
+                  this step needs the editor
+                </h2>
+                <p className="t-body-sm">
+                  on desktop today; in the app (coming soon). save your
+                  spot and we&apos;ll bring you back here when you&apos;re
+                  ready.
+                </p>
+                <div className="mt-4 flex flex-col items-stretch gap-3 sm:flex-row sm:items-center">
+                  <Link
+                    href="/lesson/resume"
+                    className="dojo-btn-primary inline-flex justify-center"
+                  >
+                    save my spot <span aria-hidden>→</span>
+                  </Link>
+                  <a
+                    href="https://x.com/intent/follow?screen_name=TFisPython"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="dojo-btn-secondary inline-flex justify-center"
+                  >
+                    follow @TFisPython for the app launch{" "}
+                    <span aria-hidden>↗</span>
+                  </a>
+                </div>
+                <p className="mt-3 t-mono-meta">
+                  open this same url on a laptop to keep going today.
+                </p>
+              </div>
+            </div>
+          )}
         </main>
       </div>
     </div>
