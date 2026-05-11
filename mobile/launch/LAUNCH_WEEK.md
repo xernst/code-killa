@@ -151,21 +151,63 @@ timing: 9am ET tweet (catches eu+us morning, asia evening)
 
 ---
 
-## bug bash findings (monday — populated by agents)
-
-_(agents will write findings here as they complete)_
+## bug bash findings (monday — 7 of 8 agents reported)
 
 ### critical (must fix before launch)
-- _(none yet — pending agent reports)_
+
+| # | source | issue | status |
+|---|---|---|---|
+| C1 | security | `entitlement.ts` HMAC compare wasn't constant-time | ✅ fixed `6fc184b` |
+| C2 | seo + copy | Stale "course" / "free forever" copy on every OG card + metadata description (7 surfaces) | ✅ fixed `d515586` |
+| C3 | ux-research | Beehiiv env vars missing in production → every email signup returns 503, all dropped | ⏳ **USER ACTION** — Cloudflare Pages → Settings → Env vars |
+| C4 | a11y | Footer separator dots at 1.4:1 contrast (text-ink-700 on ink-950) | ✅ fixed `d515586` |
+| C5 | a11y | Input placeholders at 3.1:1 (placeholder:text-ink-600) | ✅ fixed `d515586` |
+| C6 | perf | Homepage TBT 4060ms — PyodidePreloader firing during Lighthouse runs | ✅ fixed `d515586` (60%→90% scroll, 8s→25s fallback, saveData skip) |
+| C7 | mobile | Sticky lesson footer ("⌘↵ runs the editor") overlapped body text on mobile | ✅ fixed `d515586` |
+| C8 | mobile + a11y | Hamburger menu 30×30, below Apple HIG 44×44 touch target | ✅ fixed `d515586` |
+| C9 | mobile | BrainDump FAB overlapped page content + failed touch target | ✅ fixed `d515586` (now 44×44 circle on mobile, full pill on desktop) |
+| C10 | browser-qa | `/lesson/resume` falls through to `/onboarding` for fresh visitors on first click | ⏳ **DEFERRED** — needs router refactor; falls to `/curriculum` already if hasProfile=false, only `/onboarding` if entirely fresh |
 
 ### high (should fix before launch)
-- _(none yet)_
+
+| # | source | issue | status |
+|---|---|---|---|
+| H1 | security | Zero HTTP security headers (no HSTS, CSP, nosniff, etc.) | ✅ fixed `6fc184b` (full CSP + 6 headers) |
+| H2 | security | Dead `rehype-raw` dep — footgun for future user-input markdown surface | ✅ fixed `6fc184b` (removed) |
+| H3 | seo | Sitemap missing `/pro`, `/privacy`, `/terms` + no `<lastmod>` dates | ✅ fixed `6fc184b` (sitemap rewrite) |
+| H4 | seo | Favicon missing — `/favicon.ico` 404 (X/LinkedIn embed thumbnails fail) | ⏳ TODO — needs an actual icon file authored |
+| H5 | a11y | Lesson page renders 3 `<h1>` elements (shell + markdown body) | ⏳ DEFERRED — chapter-wide markdown sweep needed |
+| H6 | a11y | CodeMirror Tab traps keyboard nav (no escape hint) | ⏳ DEFERRED — needs UX call on indent-with-tab |
+| H7 | a11y | Mobile menu `aria-expanded` had no `aria-controls` pointing at the drawer | ✅ fixed `d515586` |
+| H8 | a11y | `<details>` curriculum accordion missing heading semantics | ⏳ DEFERRED — post-launch polish |
+| H9 | a11y | Various `text-ink-500` on `bg-ink-900` marginal (~4.55:1) on small text | ⏳ partial fix in `d515586` (lesson footer) — full pass post-launch |
+| H10 | perf | `react-markdown` + `remark-gfm` + `rehype-highlight` bundled into 9 step views (161KB gz, 98KB unused) | ⏳ **DEFERRED** — biggest LCP win, 2-4h `next/dynamic` refactor |
+| H11 | perf | CodeMirror 151KB gz on first paint, 75KB unused | ⏳ DEFERRED — `next/dynamic` gating |
 
 ### medium (post-launch ok)
-- _(none yet)_
+
+| # | source | issue |
+|---|---|---|
+| M1 | security | `subscribe.ts` in-memory rate-limit Map leaks (workers isolates recycle, low priority) |
+| M2 | security | Magic-link session cookie missing `__Host-` prefix |
+| M3 | copy | `app/pro/page.tsx` hero: "the app is coming." → "the web is live. the app is coming." |
+| M4 | copy | `app/about/page.tsx` comparison-row comma splice |
+| M5 | copy | x-thread.md says "~250 runnable steps" but site has ~548 |
+| M6 | copy | "26-chapter path" copy mismatches the 25-tile PhaseBandedRail |
+| M7 | a11y | BrainDump `title="brain dump (⌘⇧B)"` — title attr doesn't surface on keyboard nav |
+| M8 | mobile | Curriculum chapter rows cramp wide titles in 3-col grid on mobile |
+| M9 | mobile | Footer nav links 12-23px tall, below 44px touch target |
 
 ---
 
-## known issues / won't-fix
+## user actions required (cannot fix from code)
 
-_(populated tuesday)_
+1. **Cloudflare Pages → Settings → Environment Variables (Production)**: set `BEEHIIV_API_KEY` and `BEEHIIV_PUBLICATION_ID` (the publication ID is `pub_9dbf87cd-f9d5-4643-b0be-6a7c81797128` per project memory). Without this, every Friday signup returns 503. This is the #1 launch blocker.
+2. **Cloudflare WAF / bot-fight mode**: enable for the promptdojo project to compensate for the non-functional in-memory rate limiter.
+3. **Apple Developer Account ($99/yr)**: DEFERRED per the web-first launch plan. Only revisit if waitlist clears 1,000.
+
+## known issues / won't-fix (acceptance list)
+
+- **In-memory rate limiter weakness**: Workers isolates are stateless across requests, so the `subscribe.ts` rate limit is best-effort only. Belt-and-suspenders = Cloudflare WAF (see user action 2).
+- **Pyodide ~12 MB on first lesson load**: by design, bundled offline for Capacitor later.
+- **No JIT for Pyodide on iOS WKWebView**: deferred — relevant only when mobile app ships.
