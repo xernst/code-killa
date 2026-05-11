@@ -1,0 +1,14 @@
+slug: what-aged-in-prompting
+title: "What aged: the 2023 prompting tricks that became 2026 traps"
+estMinutes: 18
+prerequisites:
+  - few-shot-and-reasoning
+order:
+  - 01-prompting-as-a-moving-target.read.md
+  - 02-cot-then-vs-now.read.md
+  - 03-which-still-works.mc.yaml
+  - 04-the-system-prompt-arms-race.read.md
+  - 05-spot-the-stale-technique.mc.yaml
+  - 06-the-prompt-engineer-debate.read.md
+  - 07-write-the-cheatsheet-update.write.yaml
+  - 08-checkpoint.checkpoint.yaml

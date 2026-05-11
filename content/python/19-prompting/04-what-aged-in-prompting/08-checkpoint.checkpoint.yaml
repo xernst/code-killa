@@ -1,0 +1,91 @@
+xp: 8
+estSeconds: 240
+concept: audit-the-prompting-cheatsheet
+prompt: |
+  Final drill. Synthesize this lesson into one function:
+  `audit_prompts(techniques)` that takes a list of technique dicts and
+  returns a dict with TWO keys:
+
+  - `verdicts`: a dict mapping technique name → verdict string
+  - `counts`: a dict mapping each verdict to how many techniques got
+    that verdict. Include all four verdicts as keys even if the count
+    is zero.
+
+  Each technique dict has three fields: `name`, `year_introduced`,
+  `model_native_in` (which may be `None`).
+
+  Use the same verdict rules as step 07:
+
+  - `model_native_in` is `None` → `"still useful"`
+  - `model_native_in <= 2025` and name in reasoning set → `"redundant"`
+  - `model_native_in <= 2025` and name NOT in reasoning set →
+    `"counterproductive"`
+  - otherwise → `"context-dependent"`
+
+  Reasoning set:
+  `{"chain-of-thought", "think-step-by-step", "self-critique"}`.
+
+  Five techniques demoed. Expected output:
+  ```
+  verdicts: {'chain-of-thought': 'redundant', 'few-shot-examples': 'still useful', 'structured-output-schema': 'counterproductive', 'self-critique': 'redundant', 'multi-tool-orchestration': 'context-dependent'}
+  counts: {'still useful': 1, 'redundant': 2, 'counterproductive': 1, 'context-dependent': 1}
+  ```
+starter: |
+  REASONING_RELATED = {"chain-of-thought", "think-step-by-step", "self-critique"}
+
+  techniques = [
+      {"name": "chain-of-thought",          "year_introduced": 2022, "model_native_in": 2024},
+      {"name": "few-shot-examples",         "year_introduced": 2020, "model_native_in": None},
+      {"name": "structured-output-schema",  "year_introduced": 2023, "model_native_in": 2024},
+      {"name": "self-critique",             "year_introduced": 2023, "model_native_in": 2025},
+      {"name": "multi-tool-orchestration",  "year_introduced": 2024, "model_native_in": 2027},
+  ]
+
+  # define audit_prompts(techniques) below
+
+  result = audit_prompts(techniques)
+  print(f"verdicts: {result['verdicts']}")
+  print(f"counts: {result['counts']}")
+solution: |
+  REASONING_RELATED = {"chain-of-thought", "think-step-by-step", "self-critique"}
+
+  techniques = [
+      {"name": "chain-of-thought",          "year_introduced": 2022, "model_native_in": 2024},
+      {"name": "few-shot-examples",         "year_introduced": 2020, "model_native_in": None},
+      {"name": "structured-output-schema",  "year_introduced": 2023, "model_native_in": 2024},
+      {"name": "self-critique",             "year_introduced": 2023, "model_native_in": 2025},
+      {"name": "multi-tool-orchestration",  "year_introduced": 2024, "model_native_in": 2027},
+  ]
+
+  def verdict_for(t):
+      native = t["model_native_in"]
+      if native is None:
+          return "still useful"
+      if native <= 2025:
+          if t["name"] in REASONING_RELATED:
+              return "redundant"
+          return "counterproductive"
+      return "context-dependent"
+
+  def audit_prompts(techniques):
+      verdicts = {t["name"]: verdict_for(t) for t in techniques}
+      counts = {
+          "still useful": 0,
+          "redundant": 0,
+          "counterproductive": 0,
+          "context-dependent": 0,
+      }
+      for v in verdicts.values():
+          counts[v] += 1
+      return {"verdicts": verdicts, "counts": counts}
+
+  result = audit_prompts(techniques)
+  print(f"verdicts: {result['verdicts']}")
+  print(f"counts: {result['counts']}")
+grader:
+  kind: stdout-equality
+  expected: |
+    verdicts: {'chain-of-thought': 'redundant', 'few-shot-examples': 'still useful', 'structured-output-schema': 'counterproductive', 'self-critique': 'redundant', 'multi-tool-orchestration': 'context-dependent'}
+    counts: {'still useful': 1, 'redundant': 2, 'counterproductive': 1, 'context-dependent': 1}
+  normalize: collapse-trailing-newline
+passThreshold: 0.66

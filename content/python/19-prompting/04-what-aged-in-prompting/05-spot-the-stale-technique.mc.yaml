@@ -1,0 +1,59 @@
+xp: 2
+estSeconds: 70
+concept: spot-the-stale-technique
+code: |
+  # four prompts written this week by different developers.
+  # all four are real shapes you'll see in the wild.
+  # ONE of them is leaning on a 2023 technique that's now noise or worse.
+
+  prompt_a = """You are a world-class senior Python engineer with 25
+  years of experience and three PhDs. Please refactor this function
+  with the elegance and rigor your reputation demands.
+
+  Think step by step before answering."""
+
+  prompt_b = """We're in a Next.js 16 project, app router only.
+  Refactor the login endpoint to use the new server actions API.
+  Don't add new dependencies. Diff only, no prose."""
+
+  prompt_c = """Classify these support tickets as 'bug', 'billing',
+  or 'how-to'. Here are three examples:
+
+  Ticket: 'page crashes when I click save' -> bug
+  Ticket: 'why did my card get charged twice' -> billing
+  Ticket: 'how do I export to CSV' -> how-to
+
+  Now classify: 'my exports are blank since yesterday'"""
+
+  prompt_d = """Goal: write a SQL query that returns top 10 customers
+  by revenue last quarter.
+  Schema: customers(id, name), orders(id, customer_id, total, created_at).
+  Return: query only, no explanation."""
+
+  for name, p in [("A", prompt_a), ("B", prompt_b), ("C", prompt_c), ("D", prompt_d)]:
+      print(f"--- prompt {name} ---")
+      print(p[:80] + "...")
+prompt: |
+  Four prompts written today. Three of them are clean — they transfer
+  information the model can't infer (stack, schema, examples, format).
+  One of them is leaning on a 2023-era technique that's now noise on a
+  modern reasoning-capable frontier model.
+
+  Which one?
+options:
+  - id: a
+    label: "A"
+  - id: b
+    label: "B"
+    explain: "This is exactly the four-part scaffold from lesson 01 (context, goal, constraints, format). Every line transfers information the model can't infer. This is the durable shape."
+  - id: c
+    label: "C"
+    explain: "Few-shot examples for classification. This is the shape that aged WELL — examples ground the model in your labels and format. Still load-bearing in 2026."
+  - id: d
+    label: "D"
+    explain: "Schema + goal + format directive. Pure information transfer. This is the kind of prompt that will still work in 2028."
+answerIds:
+  - a
+hint:
+  - level: 1
+    body: "Two red flags. First: 'world-class senior engineer with 25 years of experience and three PhDs' is role prompting — modern instruction-tuned models barely respond to identity claims for capability. Second: 'think step by step' on a reasoning-capable model is the canonical aged technique. Both shapes are coaxing behavior the model either does natively or doesn't respond to."

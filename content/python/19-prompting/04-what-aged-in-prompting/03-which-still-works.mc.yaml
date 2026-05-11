@@ -1,0 +1,38 @@
+xp: 2
+estSeconds: 70
+concept: which-prompting-techniques-still-work
+code: |
+  # four prompting techniques. all four were "best practices" in 2023.
+  # which ONE is still load-bearing on a 2026 frontier model?
+  techniques = {
+      "A": "Few-shot examples (2-5 input/output pairs before the real query)",
+      "B": "Role prompting ('You are a world-class senior engineer...')",
+      "C": '"Think step by step" added to every prompt',
+      "D": "DAN-style jailbreak prefixes ('Ignore previous instructions...')",
+  }
+  for k, v in techniques.items():
+      print(f"{k}: {v}")
+prompt: |
+  Four 2023-era prompting techniques. Three of them are now noise,
+  redundant, or counterproductive on modern frontier models. ONE of
+  them is still genuinely load-bearing — it transfers information the
+  model can't infer, so it never aged out.
+
+  Which one is still worth using?
+options:
+  - id: a
+    label: "A — few-shot examples"
+  - id: b
+    label: "B — role prompting ('you are an expert')"
+    explain: "Role prompting was always weak evidence in benchmarks (it nudges tone but not capability) and modern instruction-tuned models barely respond to it. Anthropic's own docs advise against it for capability uplift. Not load-bearing — it's vibes."
+  - id: c
+    label: "C — 'think step by step' on every prompt"
+    explain: "This is the canonical aged technique. Redundant on reasoning models, mildly helpful on non-reasoning models for complex tasks — but as a blanket rule, it's wrong now. The previous step is literally about why this aged."
+  - id: d
+    label: "D — DAN-style jailbreak prefixes"
+    explain: "These exploited alignment weakness in 2023-era models. The labs trained against them. They mostly don't work now and they violate every TOS. Definitely not a 2026 best practice."
+answerIds:
+  - a
+hint:
+  - level: 1
+    body: "Apply the durability heuristic from step 01: techniques that transfer INFORMATION (which the model can't infer) age well. Techniques that COAX BEHAVIOR (which the model now does natively) or EXPLOIT WEAKNESS (which got patched) age badly. Which option transfers information?"

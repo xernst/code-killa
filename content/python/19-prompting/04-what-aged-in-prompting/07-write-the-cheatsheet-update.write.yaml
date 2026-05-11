@@ -1,0 +1,84 @@
+xp: 5
+estSeconds: 200
+concept: score-prompting-technique
+prompt: |
+  Write `score_technique(name, year_introduced, model_native_in)` that
+  returns a dict with two fields:
+
+  - `verdict`: one of `"still useful"`, `"redundant"`,
+    `"counterproductive"`, `"context-dependent"`
+  - `reason`: a short string explaining the verdict
+
+  Rules:
+
+  - If `model_native_in` is `None`, the technique is **still useful**.
+    The model never absorbed it, so you still have to provide it.
+    Reason: `"model has not absorbed this natively"`.
+  - If `model_native_in <= 2025` AND the technique is reasoning-
+    related, the technique is **redundant**. The model now does this
+    internally. Reason:
+    `"model does this internally since {year}"`.
+  - If `model_native_in <= 2025` AND the technique is NOT reasoning-
+    related, the technique is **counterproductive**. It fights the
+    native API. Reason:
+    `"native API exists since {year}; prompt-level version conflicts"`.
+  - Otherwise (`model_native_in > 2025`), the technique is
+    **context-dependent**. Some models have it, some don't.
+    Reason: `"depends on model class"`.
+
+  Reasoning-related techniques (use this exact set):
+  `{"chain-of-thought", "think-step-by-step", "self-critique"}`.
+
+  Two techniques demoed. Expected output:
+  ```
+  chain-of-thought: {'verdict': 'redundant', 'reason': 'model does this internally since 2024'}
+  structured-output-schema: {'verdict': 'counterproductive', 'reason': 'native API exists since 2024; prompt-level version conflicts'}
+  ```
+starter: |
+  REASONING_RELATED = {"chain-of-thought", "think-step-by-step", "self-critique"}
+
+  # define score_technique(name, year_introduced, model_native_in) below
+
+  cot = score_technique("chain-of-thought", year_introduced=2022, model_native_in=2024)
+  sos = score_technique("structured-output-schema", year_introduced=2023, model_native_in=2024)
+  print(f"chain-of-thought: {cot}")
+  print(f"structured-output-schema: {sos}")
+grader:
+  kind: stdout-equality
+  expected: |
+    chain-of-thought: {'verdict': 'redundant', 'reason': 'model does this internally since 2024'}
+    structured-output-schema: {'verdict': 'counterproductive', 'reason': 'native API exists since 2024; prompt-level version conflicts'}
+  normalize: collapse-trailing-newline
+solution: |
+  REASONING_RELATED = {"chain-of-thought", "think-step-by-step", "self-critique"}
+
+  def score_technique(name, year_introduced, model_native_in):
+      if model_native_in is None:
+          return {
+              "verdict": "still useful",
+              "reason": "model has not absorbed this natively",
+          }
+      if model_native_in <= 2025:
+          if name in REASONING_RELATED:
+              return {
+                  "verdict": "redundant",
+                  "reason": f"model does this internally since {model_native_in}",
+              }
+          return {
+              "verdict": "counterproductive",
+              "reason": f"native API exists since {model_native_in}; prompt-level version conflicts",
+          }
+      return {
+          "verdict": "context-dependent",
+          "reason": "depends on model class",
+      }
+
+  cot = score_technique("chain-of-thought", year_introduced=2022, model_native_in=2024)
+  sos = score_technique("structured-output-schema", year_introduced=2023, model_native_in=2024)
+  print(f"chain-of-thought: {cot}")
+  print(f"structured-output-schema: {sos}")
+hint:
+  - level: 1
+    body: "Four verdicts, four branches. First check if model_native_in is None (still useful). Then check the <= 2025 cases — split on whether the name is in REASONING_RELATED. Otherwise context-dependent."
+  - level: 2
+    body: "CoT: name 'chain-of-thought' is in REASONING_RELATED and model_native_in=2024 <= 2025 → 'redundant', reason includes the year 2024. Structured-output-schema: name NOT in REASONING_RELATED, model_native_in=2024 <= 2025 → 'counterproductive', reason mentions the year and the conflict."
