@@ -1,0 +1,57 @@
+xp: 2
+estSeconds: 70
+concept: spot-the-mcp-wedge
+code: |
+  # four product ideas. each one COULD ship an MCP server.
+  # but which one is the strongest WEDGE — a service every AI client
+  # genuinely wants to call, where being first to ship MCP locks in
+  # distribution?
+  ideas = [
+      {
+          "id": "A",
+          "name": "MCP server for a niche fantasy-football stats site",
+          "audience": "small (10k hobbyists)",
+          "use_in_agent": "rare — fantasy stats are not on the AI workflow path",
+      },
+      {
+          "id": "B",
+          "name": "MCP server for a production-grade observability SaaS (logs, traces, metrics)",
+          "audience": "tens of thousands of dev teams",
+          "use_in_agent": "constant — every coding agent wants to read logs and traces",
+      },
+      {
+          "id": "C",
+          "name": "MCP server for a single-tenant internal HR tool",
+          "audience": "one company",
+          "use_in_agent": "internal only — no third-party agents will call it",
+      },
+      {
+          "id": "D",
+          "name": "MCP server that wraps the OpenAI Plugin API",
+          "audience": "near zero — the underlying ecosystem is dead",
+          "use_in_agent": "almost never — nobody is building on dead Plugins",
+      },
+  ]
+  for idea in ideas:
+      print(f"{idea['id']}: {idea['name']}")
+prompt: |
+  Four product ideas built around shipping an MCP server. Which is
+  the strongest WEDGE — a service every AI client wants to call,
+  where being first to ship MCP locks in distribution?
+options:
+  - id: a
+    label: "A — fantasy-football stats"
+    explain: "Small audience and rare use in agent workflows. Niche tools can ship MCP servers, but they're not wedges — agents won't reach for them often enough to lock in distribution."
+  - id: b
+    label: "B — observability SaaS"
+  - id: c
+    label: "C — internal HR tool"
+    explain: "Single-tenant and not externally callable. This is a useful internal integration, but it can't be a wedge because no third-party agents will ever talk to it."
+  - id: d
+    label: "D — wraps OpenAI Plugins"
+    explain: "Builds on a dead ecosystem. The wedge requires riding ecosystems that are growing, not ones that already lost. This is the worst option."
+answerIds:
+  - b
+hint:
+  - level: 1
+    body: "The wedge profile is: (1) large audience, (2) service that AI agents naturally want to call during everyday work, (3) being the first MCP server in that category gives durable distribution. Only one of the four hits all three."

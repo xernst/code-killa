@@ -1,0 +1,94 @@
+xp: 8
+estSeconds: 240
+concept: rank-the-protocols
+prompt: |
+  Final drill. Synthesize the postmortem method into one function:
+  `rank_protocols(protocols)` that takes a list of protocol specs and
+  returns a DICT mapping each protocol's `name` to its verdict, sorted
+  by score DESCENDING (highest scoring first).
+
+  Each protocol is a dict with:
+  - `name`: string
+  - `open_spec`: bool
+  - `multi_client`: bool
+  - `low_publisher_bar`: bool
+  - `primitive_not_marketplace`: bool
+
+  Score each protocol the same way as step 07 (25 points per `True`
+  signal). Verdict thresholds:
+
+  - score >= 75: `"will-win"`
+  - score >= 50: `"maybe"`
+  - score >= 25: `"niche"`
+  - score < 25: `"dead-on-arrival"`
+
+  On a tie, preserve the order the protocols appeared in the input
+  (Python's `sorted` is stable).
+
+  Five protocols run. Expected output:
+  ```
+  MCP: will-win
+  LangChain Tools: will-win
+  GitHub Copilot Skills: maybe
+  OpenAI Plugins: niche
+  ChatGPT Actions: dead-on-arrival
+  ```
+starter: |
+  protocols = [
+      {"name": "OpenAI Plugins",        "open_spec": False, "multi_client": False, "low_publisher_bar": False, "primitive_not_marketplace": True},
+      {"name": "MCP",                   "open_spec": True,  "multi_client": True,  "low_publisher_bar": True,  "primitive_not_marketplace": True},
+      {"name": "ChatGPT Actions",       "open_spec": False, "multi_client": False, "low_publisher_bar": False, "primitive_not_marketplace": False},
+      {"name": "LangChain Tools",       "open_spec": True,  "multi_client": False, "low_publisher_bar": True,  "primitive_not_marketplace": True},
+      {"name": "GitHub Copilot Skills", "open_spec": False, "multi_client": False, "low_publisher_bar": True,  "primitive_not_marketplace": True},
+  ]
+
+  # define rank_protocols(protocols) below
+
+  ranked = rank_protocols(protocols)
+  for name, verdict in ranked.items():
+      print(f"{name}: {verdict}")
+grader:
+  kind: stdout-equality
+  expected: |
+    MCP: will-win
+    LangChain Tools: will-win
+    GitHub Copilot Skills: maybe
+    OpenAI Plugins: niche
+    ChatGPT Actions: dead-on-arrival
+  normalize: collapse-trailing-newline
+solution: |
+  protocols = [
+      {"name": "OpenAI Plugins",        "open_spec": False, "multi_client": False, "low_publisher_bar": False, "primitive_not_marketplace": True},
+      {"name": "MCP",                   "open_spec": True,  "multi_client": True,  "low_publisher_bar": True,  "primitive_not_marketplace": True},
+      {"name": "ChatGPT Actions",       "open_spec": False, "multi_client": False, "low_publisher_bar": False, "primitive_not_marketplace": False},
+      {"name": "LangChain Tools",       "open_spec": True,  "multi_client": False, "low_publisher_bar": True,  "primitive_not_marketplace": True},
+      {"name": "GitHub Copilot Skills", "open_spec": False, "multi_client": False, "low_publisher_bar": True,  "primitive_not_marketplace": True},
+  ]
+
+  SIGNALS = [
+      "open_spec",
+      "multi_client",
+      "low_publisher_bar",
+      "primitive_not_marketplace",
+  ]
+
+  def score(p):
+      return sum(25 for s in SIGNALS if p.get(s))
+
+  def verdict_for(s):
+      if s >= 75:
+          return "will-win"
+      if s >= 50:
+          return "maybe"
+      if s >= 25:
+          return "niche"
+      return "dead-on-arrival"
+
+  def rank_protocols(protocols):
+      ordered = sorted(protocols, key=score, reverse=True)
+      return {p["name"]: verdict_for(score(p)) for p in ordered}
+
+  ranked = rank_protocols(protocols)
+  for name, verdict in ranked.items():
+      print(f"{name}: {verdict}")
+passThreshold: 0.66

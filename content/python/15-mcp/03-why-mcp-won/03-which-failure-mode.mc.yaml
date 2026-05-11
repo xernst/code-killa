@@ -1,0 +1,59 @@
+xp: 2
+estSeconds: 70
+concept: predict-protocol-failure
+code: |
+  # four hypothetical "new universal protocols" announced by big AI labs.
+  # which one will fail by the SAME pattern as OpenAI Plugins?
+  protocols = [
+      {
+          "id": "A",
+          "name": "BigCorpAI Skills",
+          "where_it_runs": "BigCorpAI app only",
+          "publisher_bar": "OAuth + hosted manifest + marketplace review",
+          "discovery": "in-app marketplace users browse",
+      },
+      {
+          "id": "B",
+          "name": "OpenToolSpec",
+          "where_it_runs": "any client that implements the spec",
+          "publisher_bar": "one JSON file in your repo",
+          "discovery": "developer adds it to agent config",
+      },
+      {
+          "id": "C",
+          "name": "FastTools",
+          "where_it_runs": "any client",
+          "publisher_bar": "one Python file with a decorator",
+          "discovery": "developer adds it to agent config",
+      },
+      {
+          "id": "D",
+          "name": "LangFlow Marketplace",
+          "where_it_runs": "LangFlow Studio only",
+          "publisher_bar": "free, ten clicks",
+          "discovery": "in-app marketplace users browse",
+      },
+  ]
+  for p in protocols:
+      print(f"{p['id']}: runs in {p['where_it_runs']}")
+prompt: |
+  Four hypothetical "new universal protocols." Which one will fail by
+  the same three-failure-mode pattern as OpenAI Plugins (closed
+  ecosystem, high publisher bar, marketplace-not-primitive discovery)?
+options:
+  - id: a
+    label: "A — BigCorpAI Skills"
+  - id: b
+    label: "B — OpenToolSpec"
+    explain: "Open spec, low bar, primitive discovery. Inverts all three plugin failure modes. This is the shape that wins, not the shape that fails."
+  - id: c
+    label: "C — FastTools"
+    explain: "Same as B — open, easy to ship, primitive discovery. Good shape."
+  - id: d
+    label: "D — LangFlow Marketplace"
+    explain: "Half right. Closed to LangFlow and marketplace-based. But the publisher bar is low, so it only hits two of the three failure modes — not the FULL pattern. A is the cleaner match."
+answerIds:
+  - a
+hint:
+  - level: 1
+    body: "Look for the protocol that ticks all three failure boxes: only runs in one product (closed), expensive to publish (OAuth + review), and assumes users will browse a marketplace. Only one option hits all three."

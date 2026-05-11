@@ -516,7 +516,207 @@
         }
       ],
       "xpTotal": 32
+    },
+    {
+      "slug": "why-mcp-won",
+      "title": "Why MCP won — the protocol wars of 2024-25",
+      "estMinutes": 18,
+      "prerequisites": [
+        "writing-a-tiny-mcp-server"
+      ],
+      "steps": [
+        {
+          "type": "read",
+          "id": "mcp/why-mcp-won/s01-01-the-graveyard-of-tool-protocols",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "warmup",
+          "estSeconds": 220,
+          "concept": "graveyard-of-tool-protocols",
+          "body": "# The graveyard of tool protocols (2023-2024)\n\nBy the time MCP showed up in November 2024, the industry had already\ntried — and abandoned — several other attempts at \"let the model call\nyour tool.\" This lesson is mostly prose. The goal isn't to write code;\nit's to understand *why* one specific shape won and the others didn't,\nso the next time you see a \"new universal protocol for X\" announcement\nyou can predict whether it'll stick.\n\nIf you skip the history, MCP looks inevitable. It wasn't. Multiple\nbig companies tried to own this layer and failed. The reasons they\nfailed are the reasons MCP succeeded, and they generalize beyond AI.\n\n## March 2023: OpenAI Plugins launch\n\nIn March 2023, OpenAI launched ChatGPT Plugins. The pitch was: any\nservice can ship a plugin, ChatGPT users can install them like browser\nextensions, and the model can call the service's API when it's\nrelevant. Expedia for flights. Wolfram for math. Instacart for\ngroceries. Zapier for the long tail.\n\nFor about six weeks, this looked like the future. Every B2B SaaS\ncompany hired someone to \"build the plugin.\" Articles compared it to\nthe iPhone App Store moment for AI. A small ecosystem formed.\n\nThen it stalled.\n\n## April 2024: the store quietly closes\n\nA year later — April 2024 — OpenAI announced they were sunsetting the\nPlugins store. The replacement was \"GPTs\" and later \"ChatGPT Actions,\"\nboth of which were arguably less ambitious. The original cross-app\n\"any tool can be called by any model\" vision quietly died.\n\nMost plugins had been downloaded by fewer than 100 people. The ones\nthat worked were mostly inside OpenAI's walled garden. The flywheel\nnever started spinning. Why?\n\n## The fragmented middle: every framework had its own shape\n\nWhile OpenAI was running the plugin experiment, every agent framework\nhad its own way to declare \"here's a tool the model can call\":\n\n- **LangChain** had `Tool` objects and a custom decorator pattern.\n- **LlamaIndex** had its own `FunctionTool` shape.\n- **CrewAI** rolled its own tool spec.\n- **AutoGen** had a different one.\n- **OpenAI's own SDK** had function-calling JSON schemas, which were\n  the closest thing to a standard — but only worked with OpenAI's\n  models.\n- **Anthropic's SDK** had a similar-but-not-identical tool-use JSON\n  schema, which only worked with Claude.\n\nThe result was that a tool author had to write the same integration\nsix different ways for six different audiences. Nobody wanted to do\nthat, so most tools got integrated for one framework and the others\nwent without.\n\nThe whole space looked like the early-2000s mobile web, where every\nphone OS had its own browser and developers had to choose one. That\nera ended only when WebKit ate everything. Until something analogous\nhappened here, \"AI tool integration\" was going to stay a mess.\n\n## Why this graveyard matters\n\nThree things to take from this:\n\n- **Protocols don't win on technical merit; they win on adoption\n  asymmetry.** OpenAI Plugins worked fine technically. They lost\n  because nobody outside ChatGPT could use them.\n- **Fragmentation is the default state of any new ecosystem.** You\n  should *expect* six competing standards before one wins. The\n  question is which one has the right adoption profile.\n- **The pattern repeats.** Every layer of the stack — model APIs,\n  agent frameworks, evals, retrieval — has its own version of this\n  fragmentation phase. Watch for the standardizer.\n\nIn the next step we look at what specifically OpenAI Plugins got\nwrong — three concrete failure modes you can use as a checklist on\nany future \"protocol\" launch.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "read",
+          "id": "mcp/why-mcp-won/s02-02-what-openai-plugins-got-wrong",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "warmup",
+          "estSeconds": 220,
+          "concept": "plugins-failure-modes",
+          "body": "# What OpenAI Plugins got wrong (three failure modes)\n\nOpenAI Plugins were a genuinely thoughtful attempt at the problem.\nThey had a manifest format, an auth story, a discovery mechanism, and\nbacking from the dominant AI company. They still didn't work. Three\nreasons matter, and you should memorize them — they're a generic\nchecklist for predicting whether *any* future protocol will stick.\n\n## Failure mode 1: closed ecosystem\n\nA Plugin written for ChatGPT only worked inside ChatGPT.\n\nNot inside Claude. Not inside a developer's own agent. Not inside\nCursor or Zed or anywhere else. If you spent two weeks building the\nExpedia plugin, the only humans who could ever use it were ChatGPT\nusers on the specific plan tier that had plugins enabled.\n\nCompare that to writing an iOS app. An iOS app runs on iPhone, iPad,\nMac, and Apple Watch — four surfaces with hundreds of millions of\ncombined users. The investment compounds.\n\nA ChatGPT plugin compounded against exactly one surface. And that\nsurface controlled discovery, deprecated your work whenever it wanted,\nand competed with you (the model itself could just learn to do what\nyour plugin did and route around you).\n\n**The general rule:** when a \"protocol\" only works inside one\ncompany's product, it isn't a protocol. It's a feature with a public\nAPI. Investments against features-with-public-APIs decay fast.\n\n## Failure mode 2: too high a bar for the publisher\n\nTo ship a plugin, you needed to:\n\n- Host a publicly-reachable manifest file at a well-known URL.\n- Implement OAuth (or one of three other auth flows) against your\n  service.\n- Write an OpenAPI spec for the subset of your API you were\n  exposing.\n- Get reviewed and listed in OpenAI's plugin directory.\n- Maintain it as ChatGPT changed under you.\n\nFor Expedia and Instacart, this was fine — they had teams. For an\nindie dev who wanted to expose their tool to AI agents, this was a\nmulti-week project, and the upside was access to one surface with no\nproof of distribution.\n\nA protocol succeeds when the *easiest* thing to ship is a server.\nThe Plugin spec made shipping a server one of the harder things.\n\n**The general rule:** if the publisher bar is \"real production\ninfrastructure plus auth plus marketplace review,\" you've already\nlost the long tail. Long tail is where the surprising and load-bearing\nintegrations come from. (Almost everyone who ships an MCP server\ntoday would never have shipped an OpenAI Plugin.)\n\n## Failure mode 3: discovery was a marketplace, not a primitive\n\nThis is the subtle one. The Plugin model assumed users would *browse\na store* to find plugins, like apps. They didn't. Most users never\nwent to the plugin store. The ones who did installed two or three\nplugins, none of which they used regularly, and then forgot about\nthem.\n\nCompare that to how tools actually get used in modern AI agents:\nthe *developer* configures which tools the agent has access to, and\nthe *agent* uses them automatically based on the task. There is no\n\"user browsing.\" The tool is a primitive the developer wires up.\n\nBy making discovery a marketplace, OpenAI built the wrong UX. The\nright UX is \"list this server in my agent's config file.\" That's a\ntwo-line config change, not a shopping trip.\n\n**The general rule:** if your protocol assumes end users will browse\na catalog, you've optimized for the wrong actor. The actor who decides\nwhether a tool gets adopted is the developer wiring up the agent,\nnot the end user.\n\n## The pattern across all three\n\nAll three failure modes share one root: **OpenAI tried to own the\ndistribution.** Closed ecosystem, high publisher bar, marketplace\ngatekeeping — those are all moves a company makes when it wants to\ncapture the value of an ecosystem rather than enable one.\n\nThe protocol that won (spoiler: MCP) inverted every one of those.\nOpen spec, low publisher bar, primitive-not-marketplace. That's why\nit stuck.\n\nNext step is a multiple-choice drill: given four hypothetical new\nprotocols, can you predict which ones will fail by the same pattern?",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "mc",
+          "id": "mcp/why-mcp-won/s03-03-which-failure-mode",
+          "xp": 2,
+          "hint": [
+            {
+              "level": 1,
+              "body": "Look for the protocol that ticks all three failure boxes: only runs in one product (closed), expensive to publish (OAuth + review), and assumes users will browse a marketplace. Only one option hits all three.",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 70,
+          "concept": "predict-protocol-failure",
+          "prompt": "Four hypothetical \"new universal protocols.\" Which one will fail by\nthe same three-failure-mode pattern as OpenAI Plugins (closed\necosystem, high publisher bar, marketplace-not-primitive discovery)?\n",
+          "options": [
+            {
+              "id": "a",
+              "label": "A — BigCorpAI Skills"
+            },
+            {
+              "id": "b",
+              "label": "B — OpenToolSpec",
+              "explain": "Open spec, low bar, primitive discovery. Inverts all three plugin failure modes. This is the shape that wins, not the shape that fails."
+            },
+            {
+              "id": "c",
+              "label": "C — FastTools",
+              "explain": "Same as B — open, easy to ship, primitive discovery. Good shape."
+            },
+            {
+              "id": "d",
+              "label": "D — LangFlow Marketplace",
+              "explain": "Half right. Closed to LangFlow and marketplace-based. But the publisher bar is low, so it only hits two of the three failure modes — not the FULL pattern. A is the cleaner match."
+            }
+          ],
+          "answerIds": [
+            "a"
+          ],
+          "shuffle": false,
+          "code": "# four hypothetical \"new universal protocols\" announced by big AI labs.\n# which one will fail by the SAME pattern as OpenAI Plugins?\nprotocols = [\n    {\n        \"id\": \"A\",\n        \"name\": \"BigCorpAI Skills\",\n        \"where_it_runs\": \"BigCorpAI app only\",\n        \"publisher_bar\": \"OAuth + hosted manifest + marketplace review\",\n        \"discovery\": \"in-app marketplace users browse\",\n    },\n    {\n        \"id\": \"B\",\n        \"name\": \"OpenToolSpec\",\n        \"where_it_runs\": \"any client that implements the spec\",\n        \"publisher_bar\": \"one JSON file in your repo\",\n        \"discovery\": \"developer adds it to agent config\",\n    },\n    {\n        \"id\": \"C\",\n        \"name\": \"FastTools\",\n        \"where_it_runs\": \"any client\",\n        \"publisher_bar\": \"one Python file with a decorator\",\n        \"discovery\": \"developer adds it to agent config\",\n    },\n    {\n        \"id\": \"D\",\n        \"name\": \"LangFlow Marketplace\",\n        \"where_it_runs\": \"LangFlow Studio only\",\n        \"publisher_bar\": \"free, ten clicks\",\n        \"discovery\": \"in-app marketplace users browse\",\n    },\n]\nfor p in protocols:\n    print(f\"{p['id']}: runs in {p['where_it_runs']}\")\n",
+          "runnable": true
+        },
+        {
+          "type": "read",
+          "id": "mcp/why-mcp-won/s04-04-the-mcp-bet",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 220,
+          "concept": "the-mcp-bet",
+          "body": "# The MCP bet (November 2024)\n\nEight months after OpenAI Plugins quietly closed, Anthropic announced\nthe Model Context Protocol. The announcement was unusually low-key for\nsomething this consequential — a blog post, an open-source spec, and\na handful of reference servers (filesystem, git, Postgres). No fanfare,\nno marketplace, no app store.\n\nThe technical contents looked modest. JSON-RPC 2.0 over stdio or\nHTTP. Three primitives (tools, resources, prompts). A discovery\nmethod (`tools/list`) and a call method (`tools/call`). You already\nsaw all of this in lessons 01 and 02.\n\nThe strategic contents looked more interesting. Anthropic had\ndeliberately structured MCP to invert every one of the three plugin\nfailure modes:\n\n## Inversion 1: open spec, not closed ecosystem\n\nThe spec was published on day one, MIT-licensed, with reference\nimplementations in Python and TypeScript. *Anyone* could write a\nhost. *Anyone* could write a server. The spec was small enough\n(a few dozen pages) to fit in a normal engineer's head, and the\nJSON-RPC wire format was already battle-tested across the industry.\n\nThis was the move OpenAI couldn't make — they had business reasons\nto keep plugins inside ChatGPT. Anthropic was further from the\ndistribution game and could afford to commoditize the protocol\nlayer.\n\nThe chapter has already used the framing once: **\"USB-C for AI\nagents.\"** That phrase is doing a lot of work — USB-C succeeded as a\nstandard for exactly the same reason. It was open, the bar to ship\na peripheral was low, and the discovery model was \"plug it in.\"\nMCP is the same shape applied to AI tooling.\n\n## Inversion 2: low publisher bar\n\nA minimum-viable MCP server is one Python file. A few dozen lines.\nYou declare a tool, write a function, and the SDK handles the\nJSON-RPC plumbing. There is no manifest hosting, no OAuth\nrequirement, no marketplace review, no listing process.\n\nCompare that to the Plugin checklist from the previous step. The\npublisher bar went from \"real production infrastructure plus auth\nplus review\" down to \"a single file in a repo.\" That difference is\nwhat unlocks the long tail.\n\nA few months in, the long tail was already showing up: people had\nwritten MCP servers for their own Notion workspaces, their internal\nJira boards, their home automation, their private wikis, niche\ndatabases, weather APIs, and dozens of one-off internal tools.\nAlmost none of these would have been viable as OpenAI Plugins.\n\n## Inversion 3: primitive, not marketplace\n\nThere is no MCP store. There never was. The way you \"install\" an\nMCP server is by editing your agent's config file:\n\n```json\n{\n  \"mcpServers\": {\n    \"filesystem\": {\n      \"command\": \"npx\",\n      \"args\": [\"-y\", \"@modelcontextprotocol/server-filesystem\", \"/Users/josh\"]\n    }\n  }\n}\n```\n\nTwo lines of config. No browsing. No \"install this plugin.\" The\ndeveloper wires up the tool, the agent uses it automatically.\n\nThat changes who the protocol is optimized for. OpenAI Plugins were\noptimized for end users browsing a store. MCP is optimized for\ndevelopers wiring up agents. The developer is the actor that\nactually decides which tools an agent has, so this is the right\noptimization.\n\n## What Anthropic was betting on\n\nAnthropic's bet, implicit in all of this, was: **the value of an\nopen protocol exceeds the value of owning the integration layer.**\nEven though they could have built their own walled-garden integration\nsystem (the way OpenAI did with Plugins), they shipped a protocol\nthat any competitor could adopt.\n\nThat's not altruism. It's strategy. By open-sourcing the protocol,\nAnthropic ensured that *every* AI app that integrated MCP made every\n*other* MCP-speaking app more useful. The network effects would\ncompound faster than any one walled garden could.\n\nThen, the bet had to be validated. A protocol with no adopters is\njust a blog post. What made MCP win wasn't the spec — it was the\nsix months after.\n\nThat's the next step.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "read",
+          "id": "mcp/why-mcp-won/s05-05-the-network-effect",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 220,
+          "concept": "mcp-network-effect",
+          "body": "# The network effect (six months that hardened the flywheel)\n\nThe MCP spec landed in November 2024. By mid-2025 it was the default\nacross the major AI coding tools. That's a fast turn for a protocol,\nand it happened because adoption hit a tipping point most protocols\nnever reach.\n\n## The four adopters that mattered\n\nFour client adoptions, in order, locked the flywheel:\n\n1. **Cursor** — by late 2024 / early 2025, Cursor shipped MCP support.\n   This was the first major adopter outside Anthropic's own products,\n   and it mattered because Cursor was the fastest-growing AI coding\n   tool. Millions of developers suddenly had MCP in their default\n   tool.\n2. **Zed** — the Rust-based editor with a small-but-influential\n   developer audience added MCP early. Zed's adoption signaled that\n   MCP wasn't just a \"Cursor + Claude\" thing.\n3. **VS Code (via GitHub Copilot Chat and other extensions)** — once\n   VS Code-side support shipped, you had the dominant editor in the\n   world speaking the protocol. That's not a niche client anymore;\n   that's the default development environment for tens of millions\n   of engineers.\n4. **Claude Code** — Anthropic's own terminal/IDE agent (the thing\n   you're often hearing about as \"the coding agent that uses Claude\")\n   was MCP-native from day one. Inside Claude Code, *every* tool the\n   agent calls — filesystem reads, git commands, web fetch — is an\n   MCP server.\n\nOnce those four clients were all speaking the same protocol, the\nmath for tool authors flipped completely.\n\n## The flipped equation\n\nBefore the network effect, a tool author had to decide: do I write\nan integration for Cursor, or Claude Code, or VS Code, or... five\nothers? Each integration was a separate codebase. The math said\n\"pick one or two.\"\n\nAfter the network effect, a tool author wrote *one* MCP server and\nit worked everywhere. Cursor, Claude Code, Zed, VS Code, Continue,\nand any future MCP client picked it up automatically.\n\nThe math flipped from \"pick one client, ignore the rest\" to \"write\nthe MCP server first; everything else is downstream.\" That's the\nmoment a protocol stops being a \"good idea\" and becomes the only\nsane choice for new work.\n\n## The pattern in detail\n\nIf you watch the flywheel turn, it has three phases:\n\n**Phase 1: a few servers exist.** The official servers (filesystem,\ngit, Postgres) plus a handful of motivated early adopters. A few\nhundred servers total. Useful, but not load-bearing.\n\n**Phase 2: clients adopt.** Cursor, Zed, VS Code, Claude Code all\nship MCP support. Now any new server you write reaches millions of\ndevelopers across multiple tools, with zero per-client work.\n\n**Phase 3: every new tool ships an MCP server FIRST.** This is the\nhardening moment. When the default move for a new SaaS is \"we ship\nan MCP server on launch day,\" the protocol has won. By mid-2025,\nlaunches from Linear, Sentry, Vercel, Cloudflare, Browserbase, and\ndozens of others followed this pattern. The MCP server wasn't a\nv2 nice-to-have; it was a v1 must-have.\n\nOnce you're in phase 3, the next round of clients HAS to adopt MCP\njust to access the existing ecosystem. ChatGPT itself added MCP\nsupport. The OpenAI SDK added MCP support. Vercel's AI SDK added\nMCP support. The protocol Anthropic shipped became the protocol\ntheir competitors had to speak to stay relevant.\n\n## Why this is hard to compete with\n\nImagine you're a new AI lab in 2026 and you don't like MCP. You\nwant to ship your own protocol. The problem is:\n\n- Every existing tool author has written MCP, not your protocol.\n- Every existing client speaks MCP, not your protocol.\n- A developer choosing between \"use the existing 1,000 MCP servers\"\n  and \"wait for the ecosystem to write your-protocol servers\" picks\n  MCP every time.\n\nThe only way to compete is to either (a) be the dominant client and\nforce adopters to your protocol — which OpenAI tried to do with\nPlugins and couldn't pull off — or (b) speak MCP yourself and try to\nextend it. Everyone is currently picking (b).\n\n## The lesson that generalizes\n\nThe protocol that wins isn't the protocol with the best spec. It's\nthe protocol that hits four client adoptions fast enough to flip the\ntool-author math. Four well-chosen clients with combined audiences\nin the tens of millions is the threshold.\n\nWhen you hear \"new protocol announced\" in any domain — payments,\nidentity, agentic communication, RAG, evals — the question to ask is:\n**how many independent clients have adopted it, and what's the\ncombined user base?** Under that threshold, it's a blog post. Over\nit, it's a standard.\n\nIn the next step you pick which of four product ideas is the\nstrongest \"MCP server as wedge\" play. Knowing how the flywheel turned\nis half the answer.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "mc",
+          "id": "mcp/why-mcp-won/s06-06-spot-the-mcp-wedge",
+          "xp": 2,
+          "hint": [
+            {
+              "level": 1,
+              "body": "The wedge profile is: (1) large audience, (2) service that AI agents naturally want to call during everyday work, (3) being the first MCP server in that category gives durable distribution. Only one of the four hits all three.",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 70,
+          "concept": "spot-the-mcp-wedge",
+          "prompt": "Four product ideas built around shipping an MCP server. Which is\nthe strongest WEDGE — a service every AI client wants to call,\nwhere being first to ship MCP locks in distribution?\n",
+          "options": [
+            {
+              "id": "a",
+              "label": "A — fantasy-football stats",
+              "explain": "Small audience and rare use in agent workflows. Niche tools can ship MCP servers, but they're not wedges — agents won't reach for them often enough to lock in distribution."
+            },
+            {
+              "id": "b",
+              "label": "B — observability SaaS"
+            },
+            {
+              "id": "c",
+              "label": "C — internal HR tool",
+              "explain": "Single-tenant and not externally callable. This is a useful internal integration, but it can't be a wedge because no third-party agents will ever talk to it."
+            },
+            {
+              "id": "d",
+              "label": "D — wraps OpenAI Plugins",
+              "explain": "Builds on a dead ecosystem. The wedge requires riding ecosystems that are growing, not ones that already lost. This is the worst option."
+            }
+          ],
+          "answerIds": [
+            "b"
+          ],
+          "shuffle": false,
+          "code": "# four product ideas. each one COULD ship an MCP server.\n# but which one is the strongest WEDGE — a service every AI client\n# genuinely wants to call, where being first to ship MCP locks in\n# distribution?\nideas = [\n    {\n        \"id\": \"A\",\n        \"name\": \"MCP server for a niche fantasy-football stats site\",\n        \"audience\": \"small (10k hobbyists)\",\n        \"use_in_agent\": \"rare — fantasy stats are not on the AI workflow path\",\n    },\n    {\n        \"id\": \"B\",\n        \"name\": \"MCP server for a production-grade observability SaaS (logs, traces, metrics)\",\n        \"audience\": \"tens of thousands of dev teams\",\n        \"use_in_agent\": \"constant — every coding agent wants to read logs and traces\",\n    },\n    {\n        \"id\": \"C\",\n        \"name\": \"MCP server for a single-tenant internal HR tool\",\n        \"audience\": \"one company\",\n        \"use_in_agent\": \"internal only — no third-party agents will call it\",\n    },\n    {\n        \"id\": \"D\",\n        \"name\": \"MCP server that wraps the OpenAI Plugin API\",\n        \"audience\": \"near zero — the underlying ecosystem is dead\",\n        \"use_in_agent\": \"almost never — nobody is building on dead Plugins\",\n    },\n]\nfor idea in ideas:\n    print(f\"{idea['id']}: {idea['name']}\")\n",
+          "runnable": true
+        },
+        {
+          "type": "write",
+          "id": "mcp/why-mcp-won/s07-07-write-the-protocol-postmortem",
+          "xp": 5,
+          "hint": [
+            {
+              "level": 1,
+              "body": "Four boolean signals, each worth 25 points. Use `.get()` with a default of False so missing keys don't crash. Then a four-way threshold for the verdict (>=75, >=50, >=25, else).",
+              "cost": 0
+            },
+            {
+              "level": 2,
+              "body": "MCP hits all four signals: 25 + 25 + 25 + 25 = 100, verdict 'will-win'. OpenAI Plugins hits zero, score 0, verdict 'dead-on-arrival'. The verdict thresholds: >=75 will-win, >=50 maybe, >=25 niche, <25 dead-on-arrival.",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 200,
+          "concept": "protocol-postmortem",
+          "prompt": "Write `audit_protocol(spec)` that takes a protocol spec (dict) and\nreturns a dict with two fields:\n\n- `score`: integer 0-100, higher means more likely to WIN\n- `verdict`: string, one of:\n  - `\"will-win\"` if score >= 75\n  - `\"maybe\"` if score >= 50\n  - `\"niche\"` if score >= 25\n  - `\"dead-on-arrival\"` if score < 25\n\nScore the spec on these four signals (each worth 25 points when `True`):\n\n- `open_spec`: 25 points (anyone can implement)\n- `multi_client`: 25 points (more than one host adopts it)\n- `low_publisher_bar`: 25 points (one file, no marketplace review)\n- `primitive_not_marketplace`: 25 points (developer wires it up, not end-user browse)\n\nTwo protocols run. Expected output:\n```\nMCP:            {'score': 100, 'verdict': 'will-win'}\nOpenAI Plugins: {'score': 0, 'verdict': 'dead-on-arrival'}\n```\n",
+          "starter": "mcp = {\n    \"name\": \"MCP\",\n    \"open_spec\": True,\n    \"multi_client\": True,\n    \"low_publisher_bar\": True,\n    \"primitive_not_marketplace\": True,\n}\n\nopenai_plugins = {\n    \"name\": \"OpenAI Plugins\",\n    \"open_spec\": False,\n    \"multi_client\": False,\n    \"low_publisher_bar\": False,\n    \"primitive_not_marketplace\": False,\n}\n\n# define audit_protocol(spec) below\n\nprint(f\"MCP:            {audit_protocol(mcp)}\")\nprint(f\"OpenAI Plugins: {audit_protocol(openai_plugins)}\")\n",
+          "grader": {
+            "kind": "stdout-equality",
+            "expected": "MCP:            {'score': 100, 'verdict': 'will-win'}\nOpenAI Plugins: {'score': 0, 'verdict': 'dead-on-arrival'}\n",
+            "normalize": "collapse-trailing-newline"
+          },
+          "solution": "mcp = {\n    \"name\": \"MCP\",\n    \"open_spec\": True,\n    \"multi_client\": True,\n    \"low_publisher_bar\": True,\n    \"primitive_not_marketplace\": True,\n}\n\nopenai_plugins = {\n    \"name\": \"OpenAI Plugins\",\n    \"open_spec\": False,\n    \"multi_client\": False,\n    \"low_publisher_bar\": False,\n    \"primitive_not_marketplace\": False,\n}\n\ndef audit_protocol(spec):\n    signals = [\n        \"open_spec\",\n        \"multi_client\",\n        \"low_publisher_bar\",\n        \"primitive_not_marketplace\",\n    ]\n    score = 0\n    for s in signals:\n        if spec.get(s):\n            score += 25\n    if score >= 75:\n        verdict = \"will-win\"\n    elif score >= 50:\n        verdict = \"maybe\"\n    elif score >= 25:\n        verdict = \"niche\"\n    else:\n        verdict = \"dead-on-arrival\"\n    return {\"score\": score, \"verdict\": verdict}\n\nprint(f\"MCP:            {audit_protocol(mcp)}\")\nprint(f\"OpenAI Plugins: {audit_protocol(openai_plugins)}\")\n",
+          "hiddenTests": []
+        },
+        {
+          "type": "checkpoint",
+          "id": "mcp/why-mcp-won/s08-08-checkpoint",
+          "xp": 8,
+          "hint": [],
+          "personalize": false,
+          "phase": "check",
+          "estSeconds": 240,
+          "concept": "rank-the-protocols",
+          "prompt": "Final drill. Synthesize the postmortem method into one function:\n`rank_protocols(protocols)` that takes a list of protocol specs and\nreturns a DICT mapping each protocol's `name` to its verdict, sorted\nby score DESCENDING (highest scoring first).\n\nEach protocol is a dict with:\n- `name`: string\n- `open_spec`: bool\n- `multi_client`: bool\n- `low_publisher_bar`: bool\n- `primitive_not_marketplace`: bool\n\nScore each protocol the same way as step 07 (25 points per `True`\nsignal). Verdict thresholds:\n\n- score >= 75: `\"will-win\"`\n- score >= 50: `\"maybe\"`\n- score >= 25: `\"niche\"`\n- score < 25: `\"dead-on-arrival\"`\n\nOn a tie, preserve the order the protocols appeared in the input\n(Python's `sorted` is stable).\n\nFive protocols run. Expected output:\n```\nMCP: will-win\nLangChain Tools: will-win\nGitHub Copilot Skills: maybe\nOpenAI Plugins: niche\nChatGPT Actions: dead-on-arrival\n```\n",
+          "starter": "protocols = [\n    {\"name\": \"OpenAI Plugins\",        \"open_spec\": False, \"multi_client\": False, \"low_publisher_bar\": False, \"primitive_not_marketplace\": True},\n    {\"name\": \"MCP\",                   \"open_spec\": True,  \"multi_client\": True,  \"low_publisher_bar\": True,  \"primitive_not_marketplace\": True},\n    {\"name\": \"ChatGPT Actions\",       \"open_spec\": False, \"multi_client\": False, \"low_publisher_bar\": False, \"primitive_not_marketplace\": False},\n    {\"name\": \"LangChain Tools\",       \"open_spec\": True,  \"multi_client\": False, \"low_publisher_bar\": True,  \"primitive_not_marketplace\": True},\n    {\"name\": \"GitHub Copilot Skills\", \"open_spec\": False, \"multi_client\": False, \"low_publisher_bar\": True,  \"primitive_not_marketplace\": True},\n]\n\n# define rank_protocols(protocols) below\n\nranked = rank_protocols(protocols)\nfor name, verdict in ranked.items():\n    print(f\"{name}: {verdict}\")\n",
+          "grader": {
+            "kind": "stdout-equality",
+            "expected": "MCP: will-win\nLangChain Tools: will-win\nGitHub Copilot Skills: maybe\nOpenAI Plugins: niche\nChatGPT Actions: dead-on-arrival\n",
+            "normalize": "collapse-trailing-newline"
+          },
+          "solution": "protocols = [\n    {\"name\": \"OpenAI Plugins\",        \"open_spec\": False, \"multi_client\": False, \"low_publisher_bar\": False, \"primitive_not_marketplace\": True},\n    {\"name\": \"MCP\",                   \"open_spec\": True,  \"multi_client\": True,  \"low_publisher_bar\": True,  \"primitive_not_marketplace\": True},\n    {\"name\": \"ChatGPT Actions\",       \"open_spec\": False, \"multi_client\": False, \"low_publisher_bar\": False, \"primitive_not_marketplace\": False},\n    {\"name\": \"LangChain Tools\",       \"open_spec\": True,  \"multi_client\": False, \"low_publisher_bar\": True,  \"primitive_not_marketplace\": True},\n    {\"name\": \"GitHub Copilot Skills\", \"open_spec\": False, \"multi_client\": False, \"low_publisher_bar\": True,  \"primitive_not_marketplace\": True},\n]\n\nSIGNALS = [\n    \"open_spec\",\n    \"multi_client\",\n    \"low_publisher_bar\",\n    \"primitive_not_marketplace\",\n]\n\ndef score(p):\n    return sum(25 for s in SIGNALS if p.get(s))\n\ndef verdict_for(s):\n    if s >= 75:\n        return \"will-win\"\n    if s >= 50:\n        return \"maybe\"\n    if s >= 25:\n        return \"niche\"\n    return \"dead-on-arrival\"\n\ndef rank_protocols(protocols):\n    ordered = sorted(protocols, key=score, reverse=True)\n    return {p[\"name\"]: verdict_for(score(p)) for p in ordered}\n\nranked = rank_protocols(protocols)\nfor name, verdict in ranked.items():\n    print(f\"{name}: {verdict}\")\n",
+          "passThreshold": 0.66
+        }
+      ],
+      "xpTotal": 21
     }
   ],
-  "xpTotal": 64
+  "xpTotal": 85
 }

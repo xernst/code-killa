@@ -5,3 +5,4 @@ blurb: "mcp is the new standard for plugging tools and data sources into ai agen
 lessons:
   - 01-what-mcp-is
   - 02-writing-a-tiny-mcp-server
+  - 03-why-mcp-won

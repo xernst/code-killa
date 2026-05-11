@@ -1,0 +1,14 @@
+slug: why-mcp-won
+title: "Why MCP won — the protocol wars of 2024-25"
+estMinutes: 18
+prerequisites:
+  - writing-a-tiny-mcp-server
+order:
+  - 01-the-graveyard-of-tool-protocols.read.md
+  - 02-what-openai-plugins-got-wrong.read.md
+  - 03-which-failure-mode.mc.yaml
+  - 04-the-mcp-bet.read.md
+  - 05-the-network-effect.read.md
+  - 06-spot-the-mcp-wedge.mc.yaml
+  - 07-write-the-protocol-postmortem.write.yaml
+  - 08-checkpoint.checkpoint.yaml
