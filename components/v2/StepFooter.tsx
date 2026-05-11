@@ -81,7 +81,7 @@ export default function StepFooter({
       <div className="flex items-center gap-3">
         <div className="min-w-0 flex-1">
           <div className="flex items-center justify-between text-[10px] uppercase tracking-widest text-ink-500">
-            <span>lesson xp</span>
+            <span>lesson progress</span>
             <span>
               {earnedXp} / {totalXp}
             </span>

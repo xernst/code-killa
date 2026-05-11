@@ -69,7 +69,7 @@ export default async function Curriculum() {
 
   return (
     <main id="main" className="mx-auto max-w-6xl px-6 pt-20 pb-10 sm:pt-24 sm:pb-16">
-      <div className="t-eyebrow">the whole course</div>
+      <div className="t-eyebrow">the whole school</div>
       <h1 className="t-section mt-3">
         {chapters.length} chapters · {totalSteps} runnable steps · 8–15h
       </h1>

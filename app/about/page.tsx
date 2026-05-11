@@ -123,7 +123,7 @@ export default async function AboutPage() {
             start chapter 1 →
           </Link>
           <Link href="/" className="dojo-btn-secondary">
-            back to home
+            ← home
           </Link>
         </div>
         <StatStrip className="mt-10" />

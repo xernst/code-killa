@@ -22,7 +22,7 @@ export default function ChapterEndCard({
   return (
     <section className="my-8 flex flex-col items-start gap-4 border border-green-500/40 bg-ink-900 p-6">
       <div className="t-eyebrow text-green-500">
-        {isCourseEnd ? "you finished the course." : "chapter complete."}
+        {isCourseEnd ? "you finished the school." : "chapter complete."}
       </div>
       <h2 className="t-h2 max-w-2xl">
         you finished{" "}
@@ -43,7 +43,7 @@ export default function ChapterEndCard({
           follow @tfispython <span aria-hidden>→</span>
         </a>
         <Link href="/" className="dojo-btn-secondary">
-          back to home
+          ← home
         </Link>
       </div>
     </section>

@@ -76,7 +76,7 @@ export default function EmailSignup() {
           disabled={pending || state?.ok === true}
           className="dojo-btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {pending ? "sending…" : state?.ok ? "you're in" : "send me the bugs"}
+          {pending ? "sending…" : state?.ok ? "subscribed" : "send me the bugs"}
         </button>
       </form>
 
