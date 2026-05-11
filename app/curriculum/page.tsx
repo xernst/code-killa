@@ -19,7 +19,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const steps = toc.chapters.reduce((a, c) => a + c.stepCount, 0);
   return {
     title: "the curriculum · promptdojo",
-    description: `${chapters} chapters, ${steps} runnable steps. read · run · fix. free, open-source, no signup.`,
+    description: `${chapters} chapters, ${steps} runnable steps. read · run · fix. free preview on the web, paid app coming after.`,
     alternates: { canonical: "/curriculum" },
   };
 }

@@ -217,7 +217,7 @@ function renderHook() {
             fontFamily: SERIF_STACK,
           }}
         >
-          a python course for builders whose code is mostly written by ai now.
+          a python school for builders whose code is mostly written by ai now.
         </div>
 
         <div style={{ display: "flex", flex: 1 }} />

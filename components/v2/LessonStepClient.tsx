@@ -305,10 +305,15 @@ export default function LessonStepClient({
       }
       footer={
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <span className="text-xs text-ink-500">
+          <span className="text-xs text-ink-300">
             {passed
               ? "locked in. move on when you're ready."
-              : "⌘↵ runs the editor."}
+              : (
+                <>
+                  <span className="hidden md:inline">⌘↵ runs the editor.</span>
+                  <span className="md:hidden">read, then continue.</span>
+                </>
+              )}
           </span>
           <div className="flex items-center gap-4">
             {/* Share CTA only at peak emotion (post-pass), never while

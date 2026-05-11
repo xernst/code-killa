@@ -1,18 +1,21 @@
 "use client";
 
 // Boot Pyodide BEFORE the user reaches a lesson, but only when they show
-// real intent — not on every landing-page view. Triggers the 12 MB WASM
-// download on:
+// REAL intent. Per launch-week perf audit (2026-05-11), the homepage
+// Pyodide warmup was firing inside Lighthouse runs, blowing TBT to 4060ms
+// and tanking the homepage perf score to 56. Tightened thresholds:
 //   1. mouseover on any link to /learn/v2/* (hover = "I'm about to click")
 //   2. touchstart on any link to /learn/v2/* (mobile equivalent)
-//   3. scrolling past 60% of the viewport (commit-to-content signal)
-//   4. fallback: 8s after mount (long-tail; previously this fired in 1.5s)
+//   3. scrolling past 90% of the viewport (was 60% — too aggressive)
+//   4. fallback: 25s after mount (was 8s — homepage bouncers leave before)
+//
+// Additional gates: skip warmup when Data Saver is on or the connection
+// is 2g/slow-2g. Pyodide is 12 MB; respecting saveData is table stakes.
 //
 // The worker is a singleton in lib/use-pyodide.ts so repeat preloads are
-// no-ops. The point of this change: visitors who read the home page and
-// bounce don't pay the 12 MB Pyodide tax. Visitors who actually engage
-// (hover Start, scroll, or stay) still get warm Pyodide before their
-// first lesson IDE mounts.
+// no-ops. The point: visitors who read the home page and bounce don't
+// pay the 12 MB Pyodide tax. Visitors who actually engage still get warm
+// Pyodide before their first lesson IDE mounts.
 
 import { useEffect } from "react";
 import { warmPyodide } from "@/lib/use-pyodide";
@@ -23,28 +26,38 @@ declare global {
   }
 }
 
+// Network Information API typing — not in lib.dom.d.ts yet.
+type NetworkInformation = {
+  effectiveType?: "slow-2g" | "2g" | "3g" | "4g";
+  saveData?: boolean;
+};
+
+function shouldSkipWarmup(): boolean {
+  const conn = (
+    navigator as Navigator & { connection?: NetworkInformation }
+  ).connection;
+  if (!conn) return false;
+  if (conn.saveData === true) return true;
+  if (conn.effectiveType === "slow-2g" || conn.effectiveType === "2g") return true;
+  return false;
+}
+
 export default function PyodidePreloader() {
   useEffect(() => {
     if (typeof window === "undefined") return;
     if (window.__ck_pyodide_warm) return;
+    if (shouldSkipWarmup()) return;
 
     const startWarmup = () => {
       if (window.__ck_pyodide_warm) return;
       window.__ck_pyodide_warm = true;
       try {
-        // Critical: warmPyodide() targets the SAME singleton the lesson
-        // runtime will reuse. Spawning a fresh Worker here would download
-        // Pyodide twice — once into a preload worker that gets GC'd, then
-        // again when the lesson route boots cold. (Bug caught by the
-        // 2026-05-11 frontend audit.)
         warmPyodide();
       } catch {
         // Worker blocked — lesson page falls back to its own boot path.
       }
     };
 
-    // Wrap in requestIdleCallback so the warmup never competes with
-    // first paint or the user's first click.
     const fire = () => {
       if (typeof window.requestIdleCallback === "function") {
         window.requestIdleCallback(startWarmup, { timeout: 1500 });
@@ -62,21 +75,22 @@ export default function PyodidePreloader() {
       fire();
     };
 
-    // Intent signal 3: user scrolled past 60% of first viewport.
+    // Intent signal 3: user scrolled past 90% of first viewport (was 60%).
+    // 60% triggered while readers were still in the hero — too soon.
     const onScroll = () => {
-      if (window.scrollY > window.innerHeight * 0.6) {
+      if (window.scrollY > window.innerHeight * 0.9) {
         cleanup();
         fire();
       }
     };
 
-    // Fallback: 8s after mount, fire anyway. Long enough that bouncers
-    // have already left; short enough that a thoughtful reader still
-    // gets warm Pyodide if they decide to dive in.
+    // Fallback: 25s after mount (was 8s). Bouncers leave inside 15s;
+    // the rare reader who stays past 25s without scrolling or hovering
+    // still gets warm Pyodide.
     const fallbackTimer = window.setTimeout(() => {
       cleanup();
       fire();
-    }, 8000);
+    }, 25000);
 
     const cleanup = () => {
       document.removeEventListener("mouseover", onIntent, { capture: true });

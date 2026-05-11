@@ -412,7 +412,7 @@ export default function LoginToSave() {
                       }
                     }}
                     disabled={status === "requesting"}
-                    className="w-full border border-ink-800 bg-ink-950 px-3 py-2 font-mono text-sm text-ink-100 placeholder:text-ink-600 focus:border-green-500 focus:outline-none"
+                    className="w-full border border-ink-800 bg-ink-950 px-3 py-2 font-mono text-sm text-ink-100 placeholder:text-ink-400 focus:border-green-500 focus:outline-none"
                   />
 
                   {error ? (

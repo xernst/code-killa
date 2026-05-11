@@ -10,11 +10,11 @@ const jetbrains = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jetbrai
 export const metadata: Metadata = {
   metadataBase: new URL("https://promptdojo.dev"),
   title: {
-    default: "promptdojo — free runnable python course",
+    default: "promptdojo — free runnable python school",
     template: "%s",
   },
   description:
-    "free, open-source python school for people who already use ai to write code. runs in your browser. login to save progress and sync across devices.",
+    "free preview of the python school for people who already use ai to write code. runs in your browser. the native app ships once the waitlist clears 1,000.",
   appleWebApp: {
     capable: true,
     title: "promptdojo",

@@ -70,7 +70,7 @@ export default function EmailSignup() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             disabled={pending || state?.ok === true}
-            className="w-full rounded-md border border-ink-700 bg-ink-950 px-4 py-3 text-ink-100 placeholder:text-ink-600 focus:border-green-500 focus:outline-none disabled:opacity-50"
+            className="w-full rounded-md border border-ink-700 bg-ink-950 px-4 py-3 text-ink-100 placeholder:text-ink-400 focus:border-green-500 focus:outline-none disabled:opacity-50"
           />
         </div>
         <button

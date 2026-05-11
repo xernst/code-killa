@@ -24,13 +24,13 @@ export async function generateMetadata(): Promise<Metadata> {
   );
   return {
     metadataBase: new URL("https://promptdojo.dev"),
-    title: "promptdojo — free runnable python course for ai builders",
-    description: `free, open-source python course for pms, marketers, and ops folks who use cursor and claude code daily. ${chapters} chapters, ${steps} runnable steps, runs in your browser. no signup, no paywall.`,
+    title: "promptdojo — free runnable python school for ai builders",
+    description: `free, open-source python school for pms, marketers, and ops folks who use cursor and claude code daily. ${chapters} chapters, ${steps} runnable steps. free preview in the browser, paid app coming after.`,
     alternates: { canonical: "https://promptdojo.dev/" },
     openGraph: {
       type: "website",
-      title: "promptdojo — free runnable python course for ai builders",
-      description: `ai writes this. it's wrong. learn the python you need to read what ai wrote, catch what it got wrong, and direct it deliberately. ${chapters} chapters, free forever.`,
+      title: "promptdojo — free runnable python school for ai builders",
+      description: `ai writes this. it's wrong. learn the python you need to read what ai wrote, catch what it got wrong, and direct it deliberately. ${chapters} chapters. free preview on the web, paid app coming after.`,
       url: "https://promptdojo.dev/",
       siteName: "promptdojo",
       images: [{ url: "/og/launch/wedge", width: 1600, height: 900, alt: "ai writes this. it's wrong." }],
@@ -226,11 +226,11 @@ export default async function Home() {
             const lc = formatDateShort(githubStats.lastCommitISO);
             return lc ? <span>shipped {lc}</span> : null;
           })()}
-          <span className="text-ink-700">·</span>
+          <span aria-hidden="true" className="text-ink-400">·</span>
           <Link href="/changelog" className="hover:text-green-400">
             changelog
           </Link>
-          <span className="text-ink-700">·</span>
+          <span aria-hidden="true" className="text-ink-400">·</span>
           <a
             href="https://github.com/xernst/promptdojo"
             target="_blank"
@@ -239,7 +239,7 @@ export default async function Home() {
           >
             github
           </a>
-          <span className="text-ink-700">·</span>
+          <span aria-hidden="true" className="text-ink-400">·</span>
           <a
             href="https://x.com/TFisPython"
             target="_blank"

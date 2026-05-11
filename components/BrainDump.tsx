@@ -64,10 +64,10 @@ export default function BrainDump() {
         title="brain dump (⌘⇧B)"
         aria-expanded={open}
         aria-controls="braindump-dialog"
-        className="fixed bottom-4 right-4 z-30 inline-flex items-center gap-1.5 rounded-full border border-ink-800 bg-ink-900 px-3 py-2 text-xs text-ink-300 shadow-lg hover:bg-ink-800 hover:text-ink-200 transition"
+        className="fixed bottom-4 right-4 z-30 inline-flex h-11 w-11 items-center justify-center rounded-full border border-ink-800 bg-ink-900 text-ink-300 shadow-lg hover:bg-ink-800 hover:text-ink-200 transition md:h-auto md:w-auto md:gap-1.5 md:px-3 md:py-2 md:text-xs"
       >
         <Brain size={14} />
-        park a thought
+        <span className="hidden md:inline">park a thought</span>
       </button>
       {open && (
         <div

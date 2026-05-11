@@ -48,8 +48,9 @@ export default function FlatHeader({ onLesson }: Props) {
           <button
             type="button"
             onClick={() => setDrawerOpen(true)}
-            className="inline-flex items-center justify-center p-2 text-ink-400 hover:text-green-400 md:hidden"
+            className="inline-flex h-11 w-11 items-center justify-center text-ink-300 hover:text-green-400 md:hidden"
             aria-label="open menu"
+            aria-controls="site-mobile-drawer"
             aria-expanded={drawerOpen}
           >
             <Menu size={20} />

@@ -4,7 +4,7 @@ import HealthClient from "@/components/HealthClient";
 export const metadata: Metadata = {
   title: "system status · promptdojo",
   description:
-    "live status of every promptdojo service. auth, progress, email, newsletter. transparent and free forever.",
+    "live status of every promptdojo service. auth, progress, email, newsletter. transparent. web preview free, app paid after launch.",
   robots: { index: false },
   alternates: { canonical: "https://promptdojo.dev/health/" },
 };

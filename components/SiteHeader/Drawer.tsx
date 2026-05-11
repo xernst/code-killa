@@ -40,6 +40,7 @@ export default function HeaderDrawer({ open, onClose }: Props) {
 
   return (
     <div
+      id="site-mobile-drawer"
       role="dialog"
       aria-modal="true"
       aria-label="site navigation"
