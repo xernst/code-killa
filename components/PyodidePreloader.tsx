@@ -15,6 +15,7 @@
 // first lesson IDE mounts.
 
 import { useEffect } from "react";
+import { warmPyodide } from "@/lib/use-pyodide";
 
 declare global {
   interface Window {
@@ -31,8 +32,12 @@ export default function PyodidePreloader() {
       if (window.__ck_pyodide_warm) return;
       window.__ck_pyodide_warm = true;
       try {
-        const w = new Worker("/pyodide-worker.js");
-        w.postMessage({ type: "init", id: -1 });
+        // Critical: warmPyodide() targets the SAME singleton the lesson
+        // runtime will reuse. Spawning a fresh Worker here would download
+        // Pyodide twice — once into a preload worker that gets GC'd, then
+        // again when the lesson route boots cold. (Bug caught by the
+        // 2026-05-11 frontend audit.)
+        warmPyodide();
       } catch {
         // Worker blocked — lesson page falls back to its own boot path.
       }

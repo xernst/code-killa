@@ -37,6 +37,26 @@ function getWorker(): Worker {
   return workerSingleton;
 }
 
+/**
+ * Kick off the Pyodide download on the singleton worker before the user
+ * reaches a lesson. The PyodidePreloader calls this on intent signals
+ * (hover, scroll, touchstart) so the WASM (~12 MB) lands while they're
+ * still scrolling instead of when their first IDE mounts.
+ *
+ * Critical: must use the SAME worker the lesson runtime will use later.
+ * Spawning a separate Worker here downloads Pyodide twice — once into
+ * the preload worker that immediately gets GC'd, then again when the
+ * lesson route boots a cold singleton. That's the bug audit-2026-05-11
+ * caught.
+ */
+export function warmPyodide(): void {
+  if (typeof window === "undefined") return;
+  const w = getWorker();
+  w.postMessage({ type: "init", id: -1 });
+}
+
+const PENDING_TIMEOUT_MS = 30_000;
+
 export function usePyodide() {
   const [status, setStatus] = useState<"idle" | "loading" | "ready">("loading");
   const pendingRef = useRef<Map<number, (r: RunResult) => void>>(new Map());
@@ -77,7 +97,19 @@ export function usePyodide() {
     const w = getWorker();
     const id = ++idRef.current;
     return new Promise((resolve) => {
-      pendingRef.current.set(id, resolve);
+      const timer = window.setTimeout(() => {
+        pendingRef.current.delete(id);
+        resolve({
+          ok: false,
+          stdout: "",
+          stderr: "code timed out — runs longer than 30s are killed",
+          durationMs: PENDING_TIMEOUT_MS,
+        });
+      }, PENDING_TIMEOUT_MS);
+      pendingRef.current.set(id, (r) => {
+        window.clearTimeout(timer);
+        resolve(r);
+      });
       w.postMessage({ type: "run", id, code });
     });
   }, []);
@@ -87,7 +119,20 @@ export function usePyodide() {
       const w = getWorker();
       const id = ++idRef.current;
       return new Promise((resolve) => {
-        pendingAstRef.current.set(id, resolve);
+        const timer = window.setTimeout(() => {
+          pendingAstRef.current.delete(id);
+          resolve({
+            parsed: false,
+            syntaxError: "AST grader timed out",
+            must: [],
+            mustNot: [],
+            durationMs: PENDING_TIMEOUT_MS,
+          });
+        }, PENDING_TIMEOUT_MS);
+        pendingAstRef.current.set(id, (r) => {
+          window.clearTimeout(timer);
+          resolve(r);
+        });
         w.postMessage({ type: "grade-ast", id, code, rules });
       });
     },
