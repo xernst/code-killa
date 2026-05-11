@@ -1,0 +1,46 @@
+xp: 2
+estSeconds: 70
+concept: framework-free-when
+code: |
+  # four situations. in which one does adding a framework make things WORSE?
+  cases = [
+      {
+          "id": "A",
+          "team": "Solo founder, 2-week MVP, throwaway code",
+      },
+      {
+          "id": "B",
+          "team": "12 engineers, 18-month roadmap, durable agents",
+      },
+      {
+          "id": "C",
+          "team": "Single-file Python script that runs nightly via cron",
+      },
+      {
+          "id": "D",
+          "team": "Eng team learning agent loops for the first time",
+      },
+  ]
+  for c in cases:
+      print(f"{c['id']}: {c['team']}")
+prompt: |
+  Adopting a framework adds setup tax, vocabulary, version churn,
+  and lock-in. In which case below does that tax come out NEGATIVE
+  — i.e., framework-free is strictly better?
+options:
+  - id: only_b
+    label: "Only B (12 engineers, 18-month roadmap)"
+    explain: "Inverted. That's exactly the profile where a framework's coordination value pays back. Framework-free works when scope is small, not when scope is large."
+  - id: a_c_d
+    label: "A, C, and D — small scope, single-file, or learning the loop"
+  - id: only_c
+    label: "Only C (single-file script)"
+    explain: "Half right. The single-file script doesn't need a framework — but the 2-week MVP and the learning team are both also worse off with one. Setup tax exceeds value in all three."
+  - id: none_all_need_one
+    label: "None of them — every agent needs a framework"
+    explain: "This is the marketing pitch, not the reality. Cursor, Devin, Perplexity, and most shipped agent products run custom loops. 'Every agent needs a framework' is false."
+answerIds:
+  - a_c_d
+hint:
+  - level: 1
+    body: "Frameworks earn their weight on large teams + long horizons + durability needs. They cost more than they save on prototypes, single-file scripts, and teams that don't yet understand the underlying loop."

@@ -1,0 +1,98 @@
+xp: 5
+estSeconds: 200
+concept: framework-recommendation-rules
+prompt: |
+  Write `recommend_framework(project)` that takes a project profile
+  (dict) and returns a string — one of:
+
+  - `"framework-free"`
+  - `"vercel-ai-sdk"`
+  - `"langgraph"`
+  - `"crewai"`
+
+  Each project has:
+  - `team_size`: int
+  - `language`: `"python"`, `"typescript"`, or `"both"`
+  - `needs_streaming`: bool
+  - `needs_durable_state`: bool
+  - `time_to_first_demo_days`: int
+
+  Apply the rules in this exact order (first match wins):
+
+  1. **framework-free** when the team is small AND the deadline is
+     short: `team_size <= 2` AND `time_to_first_demo_days <= 14`.
+     Prototypes don't earn the framework tax.
+  2. **vercel-ai-sdk** when streaming is required AND the stack is
+     TypeScript-compatible: `needs_streaming` AND `language` in
+     (`"typescript"`, `"both"`).
+  3. **langgraph** when state must persist across restarts AND the
+     stack is Python-compatible: `needs_durable_state` AND
+     `language` in (`"python"`, `"both"`).
+  4. Otherwise → **crewai** (multi-agent default when no other rule
+     fires).
+
+  Two projects run. Expected output:
+  ```
+  Solo MVP:        framework-free
+  Research agent:  langgraph
+  ```
+starter: |
+  solo_mvp = {
+      "team_size": 1,
+      "language": "python",
+      "needs_streaming": False,
+      "needs_durable_state": False,
+      "time_to_first_demo_days": 10,
+  }
+
+  research_agent = {
+      "team_size": 6,
+      "language": "python",
+      "needs_streaming": False,
+      "needs_durable_state": True,
+      "time_to_first_demo_days": 90,
+  }
+
+  # define recommend_framework(project) below
+
+  print(f"Solo MVP:        {recommend_framework(solo_mvp)}")
+  print(f"Research agent:  {recommend_framework(research_agent)}")
+grader:
+  kind: stdout-equality
+  expected: |
+    Solo MVP:        framework-free
+    Research agent:  langgraph
+  normalize: collapse-trailing-newline
+solution: |
+  solo_mvp = {
+      "team_size": 1,
+      "language": "python",
+      "needs_streaming": False,
+      "needs_durable_state": False,
+      "time_to_first_demo_days": 10,
+  }
+
+  research_agent = {
+      "team_size": 6,
+      "language": "python",
+      "needs_streaming": False,
+      "needs_durable_state": True,
+      "time_to_first_demo_days": 90,
+  }
+
+  def recommend_framework(project):
+      if project["team_size"] <= 2 and project["time_to_first_demo_days"] <= 14:
+          return "framework-free"
+      if project["needs_streaming"] and project["language"] in ("typescript", "both"):
+          return "vercel-ai-sdk"
+      if project["needs_durable_state"] and project["language"] in ("python", "both"):
+          return "langgraph"
+      return "crewai"
+
+  print(f"Solo MVP:        {recommend_framework(solo_mvp)}")
+  print(f"Research agent:  {recommend_framework(research_agent)}")
+hint:
+  - level: 1
+    body: "Four `if` statements in order. First-match-wins, so use early `return` inside each branch. The fallback at the bottom returns `\"crewai\"` with no condition."
+  - level: 2
+    body: "Solo MVP hits rule 1 (team_size=1 <= 2 AND days=10 <= 14) → framework-free. Research agent fails rule 1 (team_size=6), fails rule 2 (no streaming), passes rule 3 (durable + python) → langgraph."

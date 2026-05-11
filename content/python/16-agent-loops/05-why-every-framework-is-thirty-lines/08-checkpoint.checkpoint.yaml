@@ -1,0 +1,86 @@
+xp: 8
+estSeconds: 240
+concept: framework-stack-audit
+prompt: |
+  Final drill. Audit a real-shaped agent stack. Write
+  `audit_stack(projects)` that takes a list of project profiles and
+  returns a dict with two fields:
+
+  - `recommendations`: dict mapping each project's `name` to its
+    recommendation string (`"framework-free"`, `"vercel-ai-sdk"`,
+    `"langgraph"`, or `"crewai"`).
+  - `framework_free_count`: int — how many projects stay
+    framework-free.
+
+  Use the SAME rule order as step 7 (first match wins):
+
+  1. `team_size <= 2` AND `time_to_first_demo_days <= 14` →
+     `"framework-free"`
+  2. `needs_streaming` AND `language` in (`"typescript"`, `"both"`) →
+     `"vercel-ai-sdk"`
+  3. `needs_durable_state` AND `language` in (`"python"`, `"both"`) →
+     `"langgraph"`
+  4. else → `"crewai"`
+
+  Five projects run. Expected output:
+  ```
+  Solo MVP             -> framework-free
+  Chat widget          -> vercel-ai-sdk
+  Research agent       -> langgraph
+  Newsroom sim         -> crewai
+  Pair scripting tool  -> framework-free
+  framework-free count: 2
+  ```
+starter: |
+  projects = [
+      {"name": "Solo MVP",            "team_size": 1, "language": "python",     "needs_streaming": False, "needs_durable_state": False, "time_to_first_demo_days": 10},
+      {"name": "Chat widget",         "team_size": 4, "language": "both",       "needs_streaming": True,  "needs_durable_state": False, "time_to_first_demo_days": 30},
+      {"name": "Research agent",      "team_size": 6, "language": "python",     "needs_streaming": False, "needs_durable_state": True,  "time_to_first_demo_days": 90},
+      {"name": "Newsroom sim",        "team_size": 5, "language": "python",     "needs_streaming": False, "needs_durable_state": False, "time_to_first_demo_days": 60},
+      {"name": "Pair scripting tool", "team_size": 2, "language": "typescript", "needs_streaming": False, "needs_durable_state": False, "time_to_first_demo_days": 7},
+  ]
+
+  # define audit_stack(projects) below
+
+  result = audit_stack(projects)
+  for p in projects:
+      print(f"{p['name']:20} -> {result['recommendations'][p['name']]}")
+  print(f"framework-free count: {result['framework_free_count']}")
+grader:
+  kind: stdout-equality
+  expected: |
+    Solo MVP             -> framework-free
+    Chat widget          -> vercel-ai-sdk
+    Research agent       -> langgraph
+    Newsroom sim         -> crewai
+    Pair scripting tool  -> framework-free
+    framework-free count: 2
+  normalize: collapse-trailing-newline
+solution: |
+  projects = [
+      {"name": "Solo MVP",            "team_size": 1, "language": "python",     "needs_streaming": False, "needs_durable_state": False, "time_to_first_demo_days": 10},
+      {"name": "Chat widget",         "team_size": 4, "language": "both",       "needs_streaming": True,  "needs_durable_state": False, "time_to_first_demo_days": 30},
+      {"name": "Research agent",      "team_size": 6, "language": "python",     "needs_streaming": False, "needs_durable_state": True,  "time_to_first_demo_days": 90},
+      {"name": "Newsroom sim",        "team_size": 5, "language": "python",     "needs_streaming": False, "needs_durable_state": False, "time_to_first_demo_days": 60},
+      {"name": "Pair scripting tool", "team_size": 2, "language": "typescript", "needs_streaming": False, "needs_durable_state": False, "time_to_first_demo_days": 7},
+  ]
+
+  def recommend_framework(project):
+      if project["team_size"] <= 2 and project["time_to_first_demo_days"] <= 14:
+          return "framework-free"
+      if project["needs_streaming"] and project["language"] in ("typescript", "both"):
+          return "vercel-ai-sdk"
+      if project["needs_durable_state"] and project["language"] in ("python", "both"):
+          return "langgraph"
+      return "crewai"
+
+  def audit_stack(projects):
+      recs = {p["name"]: recommend_framework(p) for p in projects}
+      ff = sum(1 for v in recs.values() if v == "framework-free")
+      return {"recommendations": recs, "framework_free_count": ff}
+
+  result = audit_stack(projects)
+  for p in projects:
+      print(f"{p['name']:20} -> {result['recommendations'][p['name']]}")
+  print(f"framework-free count: {result['framework_free_count']}")
+passThreshold: 0.66

@@ -1,0 +1,45 @@
+xp: 2
+estSeconds: 70
+concept: framework-fit-scenarios
+code: |
+  # four project profiles. each wants a different answer.
+  projects = [
+      {
+          "name": "Research agent",
+          "detail": "60-min runs, must survive server restarts, Python backend",
+      },
+      {
+          "name": "Solo SaaS prototype",
+          "detail": "2-week deadline, one dev, single-file script, throwaway code",
+      },
+      {
+          "name": "Next.js chatbot",
+          "detail": "streaming responses, React UI, deployed to Vercel",
+      },
+      {
+          "name": "5-agent newsroom sim",
+          "detail": "editor + 4 writers with named handoffs, role-based prompts",
+      },
+  ]
+  for p in projects:
+      print(f"- {p['name']:24} | {p['detail']}")
+prompt: |
+  Four real project profiles. Each one points at a different
+  framework (or none). Which mapping is correct?
+options:
+  - id: all_langgraph
+    label: "All four → LangGraph (it's the most popular)"
+    explain: "Popularity isn't fit. A Next.js streaming chatbot wants the Vercel AI SDK. A solo prototype wants framework-free. Defaulting to LangGraph for everything is exactly the failure mode Anthropic warned about."
+  - id: correct_split
+    label: "LangGraph → research agent; framework-free → solo prototype; Vercel AI SDK → Next.js chatbot; CrewAI → 5-agent newsroom"
+  - id: all_vercel
+    label: "All four → Vercel AI SDK (streaming is universal)"
+    explain: "Streaming matters for chat UX, not for a 60-minute research run. And Vercel AI SDK is a TypeScript SDK — a Python research agent doesn't live in its ecosystem."
+  - id: prototype_gets_langgraph
+    label: "LangGraph for everything except the prototype, which gets CrewAI"
+    explain: "Backwards. CrewAI's whole pitch is multi-agent role-play, which is exactly the newsroom sim — not a solo prototype. The prototype wants the least framework, not a different one."
+answerIds:
+  - correct_split
+hint:
+  - level: 1
+    body: "Match each project to its dominant constraint. Long-running + Python = LangGraph (checkpointing). Solo + deadline = framework-free. Next.js + streaming = Vercel AI SDK. Named multi-agent handoffs = CrewAI."
