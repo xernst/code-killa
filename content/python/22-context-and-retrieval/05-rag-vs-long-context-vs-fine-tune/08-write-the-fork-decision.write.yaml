@@ -1,0 +1,105 @@
+xp: 5
+estSeconds: 200
+concept: pick-fork-decision-function
+prompt: |
+  Write `pick_fork(spec)` that takes a product spec (dict) and
+  returns one of: `"rag"`, `"long_context"`, `"fine_tune"`,
+  `"hybrid"`.
+
+  Spec fields you'll be given:
+
+  - `corpus_size_tokens`: int (how big the corpus is in tokens)
+  - `update_frequency_days`: int (how often the corpus changes;
+    9999 means "essentially never")
+  - `style_critical`: bool (does the output need to read like a
+    domain expert wrote it?)
+  - `cost_per_call_max`: float (USD ceiling per query)
+  - `latency_budget_ms`: int (max acceptable latency)
+
+  Apply the rubric in this order (first match wins):
+
+  1. If `corpus_size_tokens > 2_000_000`: return `"rag"` (doesn't
+     fit in any context window, RAG by physics).
+  2. If `style_critical` AND `update_frequency_days <= 7`: return
+     `"hybrid"` (style + freshness both matter).
+  3. If `style_critical`: return `"fine_tune"` (style is the product,
+     corpus is stable enough).
+  4. If `update_frequency_days <= 7`: return `"rag"` (freshness
+     pressure, no style demand).
+  5. If `corpus_size_tokens <= 2_000_000`: return `"long_context"`
+     (stable, fits in window).
+  6. Fallback: return `"rag"`.
+
+  Two products demoed. Expected output:
+  ```
+  Glean (enterprise search):       rag
+  Harvey (legal AI):               hybrid
+  ```
+starter: |
+  glean = {
+      "name": "Glean (enterprise search)",
+      "corpus_size_tokens": 50_000_000_000,
+      "update_frequency_days": 1,
+      "style_critical": False,
+      "cost_per_call_max": 0.05,
+      "latency_budget_ms": 2000,
+  }
+
+  harvey = {
+      "name": "Harvey (legal AI)",
+      "corpus_size_tokens": 1_500_000,
+      "update_frequency_days": 3,
+      "style_critical": True,
+      "cost_per_call_max": 0.50,
+      "latency_budget_ms": 5000,
+  }
+
+  # define pick_fork(spec) below
+
+  print(f"{glean['name'] + ':':33}{pick_fork(glean)}")
+  print(f"{harvey['name'] + ':':33}{pick_fork(harvey)}")
+grader:
+  kind: stdout-equality
+  expected: |
+    Glean (enterprise search):       rag
+    Harvey (legal AI):               hybrid
+  normalize: collapse-trailing-newline
+solution: |
+  glean = {
+      "name": "Glean (enterprise search)",
+      "corpus_size_tokens": 50_000_000_000,
+      "update_frequency_days": 1,
+      "style_critical": False,
+      "cost_per_call_max": 0.05,
+      "latency_budget_ms": 2000,
+  }
+
+  harvey = {
+      "name": "Harvey (legal AI)",
+      "corpus_size_tokens": 1_500_000,
+      "update_frequency_days": 3,
+      "style_critical": True,
+      "cost_per_call_max": 0.50,
+      "latency_budget_ms": 5000,
+  }
+
+  def pick_fork(spec):
+      if spec.get("corpus_size_tokens", 0) > 2_000_000:
+          return "rag"
+      if spec.get("style_critical", False) and spec.get("update_frequency_days", 9999) <= 7:
+          return "hybrid"
+      if spec.get("style_critical", False):
+          return "fine_tune"
+      if spec.get("update_frequency_days", 9999) <= 7:
+          return "rag"
+      if spec.get("corpus_size_tokens", 0) <= 2_000_000:
+          return "long_context"
+      return "rag"
+
+  print(f"{glean['name'] + ':':33}{pick_fork(glean)}")
+  print(f"{harvey['name'] + ':':33}{pick_fork(harvey)}")
+hint:
+  - level: 1
+    body: "Six if-branches, first match wins. Use `.get()` with sane defaults so missing fields don't crash. Order matters — the size-exceeds-2M check has to be first because it overrides everything else (RAG by physics)."
+  - level: 2
+    body: "Glean: corpus is 50B tokens, way over 2M, so rule 1 fires immediately and returns rag. Harvey: corpus is 1.5M tokens (under 2M), so rule 1 doesn't fire. Rule 2 checks style_critical (True) AND update_frequency_days <= 7 (3 days qualifies) → both true, return hybrid. The order of rules matters: hybrid has to come before plain fine-tune, otherwise Harvey would return fine_tune instead."

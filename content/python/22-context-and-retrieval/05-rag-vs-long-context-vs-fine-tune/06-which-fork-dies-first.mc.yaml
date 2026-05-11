@@ -1,0 +1,48 @@
+xp: 2
+estSeconds: 70
+concept: which-fork-dies-first
+code: |
+  # 2027 scenario. three forks, three possible "futures get bad for me" stories.
+  futures_2027 = {
+      "RAG": {
+          "context_windows": "10M tokens commodity, prompt cache TTL up to 1 hour",
+          "infra": "vector stores commoditized, $0/mo on shared infra",
+          "competitor_move": "long-context took the small-corpus market",
+      },
+      "long_context": {
+          "context_windows": "10M tokens commodity, prompt cache TTL up to 1 hour",
+          "infra": "near-zero marginal cost on cached prompts",
+          "competitor_move": "took most of RAG's small-stable-corpus territory",
+      },
+      "fine_tune": {
+          "training": "fine-tune-as-a-service: $50 to train, deploy in 5 min",
+          "base_models": "GPT-6 + Claude 5 ship with 1M-token cached context that matches most fine-tunes on style",
+          "competitor_move": "long-context + few-shot prompting closes most of the style gap",
+      },
+  }
+  for fork, conditions in futures_2027.items():
+      print(f"{fork}:")
+      for k, v in conditions.items():
+          print(f"  {k}: {v}")
+prompt: |
+  Look ahead to 2027. Context windows are 10M tokens commodity.
+  Fine-tune-as-a-service is cheap. Vector store infra is
+  commoditized. Given those three trends, WHICH fork has the worst
+  long-term odds as a standalone architecture?
+options:
+  - id: rag
+    label: "RAG dies first"
+    explain: "RAG still owns big-corpus + high-freshness, both of which compound as enterprises generate more data. Long-context encroached on the small-corpus territory but the big-corpus story is structurally untouchable. RAG is squeezed, not dying."
+  - id: long_context
+    label: "Long-context dies first"
+    explain: "Long-context is gaining territory in 2027, not losing it. 10M-token windows and longer cache TTLs make it dominant for the corpus shapes it already won. Wrong direction."
+  - id: fine_tune
+    label: "Fine-tune dies first"
+  - id: all_three
+    label: "All three die, replaced by something new"
+    explain: "Tempting but lazy. The three forks describe physics-level options for getting knowledge into a model: pull at query time, stuff in context, bake in weights. Those don't disappear; they just shift in relative dominance."
+answerIds:
+  - fine_tune
+hint:
+  - level: 1
+    body: "Fine-tune's main wedge was style/format that base models couldn't match. As base models get better at in-context style transfer and few-shot prompting, that gap closes. Plus fine-tune-as-a-service democratizes the moat. Harvey's defense becomes thin when GPT-6 + 100 example prompts produces 90% of Harvey's quality. RAG and long-context have structural moats fine-tune doesn't."

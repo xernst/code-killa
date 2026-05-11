@@ -1,0 +1,122 @@
+xp: 8
+estSeconds: 240
+concept: evaluate-fork-against-product
+prompt: |
+  Final drill. Invert the rubric. Given a product spec AND a fork
+  someone picked, decide whether the fork fits the product.
+
+  Write `evaluate_strategy(product, fork)` that returns a tuple
+  `(ok: bool, reason: str)`.
+
+  The product spec has the same fields as in step 08:
+  `corpus_size_tokens`, `update_frequency_days`, `style_critical`,
+  `cost_per_call_max`, `latency_budget_ms`.
+
+  The fork is one of: `"rag"`, `"long_context"`, `"fine_tune"`,
+  `"hybrid"`.
+
+  Apply these checks (first failure wins; if none fail, return ok=True):
+
+  - If fork is `"long_context"` AND `corpus_size_tokens > 2_000_000`:
+    return `(False, "corpus too large for long-context window")`
+  - If fork is `"fine_tune"` AND `update_frequency_days <= 7`:
+    return `(False, "freshness too high for fine-tune")`
+  - If fork is `"rag"` AND `corpus_size_tokens <= 200_000` AND
+    `update_frequency_days >= 90`:
+    return `(False, "RAG overkill for small stable corpus")`
+  - If fork is `"hybrid"` AND NOT `style_critical`:
+    return `(False, "hybrid wasted without style demand")`
+  - Otherwise return `(True, "fork fits product")`
+
+  Three product-fork pairs run. Expected output:
+  ```
+  Harvey + fine_tune:       (False, 'freshness too high for fine-tune')
+  Glean + long_context:     (False, 'corpus too large for long-context window')
+  Handbook bot + rag:       (False, 'RAG overkill for small stable corpus')
+  ```
+starter: |
+  harvey = {
+      "name": "Harvey",
+      "corpus_size_tokens": 1_500_000,
+      "update_frequency_days": 3,
+      "style_critical": True,
+      "cost_per_call_max": 0.50,
+      "latency_budget_ms": 5000,
+  }
+
+  glean = {
+      "name": "Glean",
+      "corpus_size_tokens": 50_000_000_000,
+      "update_frequency_days": 1,
+      "style_critical": False,
+      "cost_per_call_max": 0.05,
+      "latency_budget_ms": 2000,
+  }
+
+  handbook_bot = {
+      "name": "Handbook bot",
+      "corpus_size_tokens": 80_000,
+      "update_frequency_days": 365,
+      "style_critical": False,
+      "cost_per_call_max": 0.05,
+      "latency_budget_ms": 2000,
+  }
+
+  # define evaluate_strategy(product, fork) below
+
+  print(f"Harvey + fine_tune:       {evaluate_strategy(harvey, 'fine_tune')}")
+  print(f"Glean + long_context:     {evaluate_strategy(glean, 'long_context')}")
+  print(f"Handbook bot + rag:       {evaluate_strategy(handbook_bot, 'rag')}")
+grader:
+  kind: stdout-equality
+  expected: |
+    Harvey + fine_tune:       (False, 'freshness too high for fine-tune')
+    Glean + long_context:     (False, 'corpus too large for long-context window')
+    Handbook bot + rag:       (False, 'RAG overkill for small stable corpus')
+  normalize: collapse-trailing-newline
+solution: |
+  harvey = {
+      "name": "Harvey",
+      "corpus_size_tokens": 1_500_000,
+      "update_frequency_days": 3,
+      "style_critical": True,
+      "cost_per_call_max": 0.50,
+      "latency_budget_ms": 5000,
+  }
+
+  glean = {
+      "name": "Glean",
+      "corpus_size_tokens": 50_000_000_000,
+      "update_frequency_days": 1,
+      "style_critical": False,
+      "cost_per_call_max": 0.05,
+      "latency_budget_ms": 2000,
+  }
+
+  handbook_bot = {
+      "name": "Handbook bot",
+      "corpus_size_tokens": 80_000,
+      "update_frequency_days": 365,
+      "style_critical": False,
+      "cost_per_call_max": 0.05,
+      "latency_budget_ms": 2000,
+  }
+
+  def evaluate_strategy(product, fork):
+      size = product.get("corpus_size_tokens", 0)
+      freshness = product.get("update_frequency_days", 9999)
+      style = product.get("style_critical", False)
+      if fork == "long_context" and size > 2_000_000:
+          return (False, "corpus too large for long-context window")
+      if fork == "fine_tune" and freshness <= 7:
+          return (False, "freshness too high for fine-tune")
+      if fork == "rag" and size <= 200_000 and freshness >= 90:
+          return (False, "RAG overkill for small stable corpus")
+      if fork == "hybrid" and not style:
+          return (False, "hybrid wasted without style demand")
+      return (True, "fork fits product")
+
+  print(f"Harvey + fine_tune:       {evaluate_strategy(harvey, 'fine_tune')}")
+  print(f"Glean + long_context:     {evaluate_strategy(glean, 'long_context')}")
+  print(f"Handbook bot + rag:       {evaluate_strategy(handbook_bot, 'rag')}")
+passThreshold: 0.66

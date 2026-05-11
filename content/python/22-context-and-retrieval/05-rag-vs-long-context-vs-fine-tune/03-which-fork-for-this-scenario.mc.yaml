@@ -1,0 +1,34 @@
+xp: 2
+estSeconds: 60
+concept: pick-the-fork-for-scenario
+code: |
+  # four product scenarios. each picks ONE fork. which goes with which?
+  scenarios = [
+      ("A", "Customer support bot reading docs that ship 3x/week"),
+      ("B", "Legal-review bot loading one 400-page contract per session"),
+      ("C", "Code review bot trained to match a company's house style"),
+      ("D", "Internal handbook chatbot for a 180-page policy doc that hasn't changed in 18 months"),
+  ]
+  for k, v in scenarios:
+      print(f"{k}: {v}")
+prompt: |
+  Four product scenarios. Each one has a clear best fork (RAG,
+  long-context, or fine-tune). Per the five-axis tradeoffs from the
+  reading, which assignment is correct?
+options:
+  - id: a_rag_b_lc_c_ft_d_lc
+    label: "A=RAG, B=long-context, C=fine-tune, D=long-context"
+  - id: a_rag_b_rag_c_rag_d_rag
+    label: "A=RAG, B=RAG, C=RAG, D=RAG"
+    explain: "RAG isn't a universal answer. A handbook that never changes doesn't need a vector store. A contract you load once per session fits in context. A style problem isn't a freshness problem."
+  - id: a_ft_b_rag_c_lc_d_ft
+    label: "A=fine-tune, B=RAG, C=long-context, D=fine-tune"
+    explain: "Fine-tune on docs that ship 3x/week means retraining 3x/week — the worst possible match. And fine-tuning a handbook locks the policy into weights, no citations, no updates."
+  - id: a_lc_b_ft_c_rag_d_ft
+    label: "A=long-context, B=fine-tune, C=RAG, D=fine-tune"
+    explain: "Long-context on a daily-changing doc set means re-stuffing the prompt every release with no cache hits. Fine-tuning a 400-page one-off contract is absurd — it'll never be queried again."
+answerIds:
+  - a_rag_b_lc_c_ft_d_lc
+hint:
+  - level: 1
+    body: "Map each scenario to its dominant axis. A: freshness (changes 3x/week). B: stable corpus per session (one contract). C: capability gap (house style). D: stable corpus, small enough to fit in context. Then pick the fork that wins on that axis."

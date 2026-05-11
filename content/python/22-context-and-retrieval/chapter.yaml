@@ -6,3 +6,4 @@ lessons:
   - 02-chunking-that-respects-structure
   - 03-embedding-that-fits-the-budget
   - 04-retrieval-that-finds-the-right-thing
+  - 05-rag-vs-long-context-vs-fine-tune

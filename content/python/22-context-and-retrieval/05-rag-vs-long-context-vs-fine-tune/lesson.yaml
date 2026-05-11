@@ -1,0 +1,15 @@
+slug: rag-vs-long-context-vs-fine-tune
+title: "RAG vs long context vs fine-tune — the decision that's killed more AI startups than any model swap"
+estMinutes: 20
+prerequisites:
+  - retrieval-that-finds-the-right-thing
+order:
+  - 01-the-three-way-fork.read.md
+  - 02-rag-when-you-need-freshness.read.md
+  - 03-which-fork-for-this-scenario.mc.yaml
+  - 04-long-context-when-the-corpus-fits.read.md
+  - 05-fine-tune-when-style-or-format-is-the-product.read.md
+  - 06-which-fork-dies-first.mc.yaml
+  - 07-the-rubric.read.md
+  - 08-write-the-fork-decision.write.yaml
+  - 09-checkpoint.checkpoint.yaml
