@@ -1,0 +1,31 @@
+xp: 3
+estSeconds: 75
+concept: count-distinct-calls
+code: |
+  trace = [
+      {"turn": 1, "tool": "search", "args": {"q": "auth"}},
+      {"turn": 2, "tool": "search", "args": {"q": "auth"}},
+      {"turn": 3, "tool": "lookup", "args": {"id": 7}},
+      {"turn": 4, "tool": "search", "args": {"q": "billing"}},
+      {"turn": 5, "tool": "search", "args": {"q": "auth"}},
+      {"turn": 6, "tool": "lookup", "args": {"id": 7}},
+  ]
+
+  fingerprints = {
+      (t["tool"], frozenset(t["args"].items())) for t in trace
+  }
+  print(f"distinct calls: {len(fingerprints)}")
+prompt: |
+  Six rows, four of them repeat. Count the DISTINCT `(tool, args)`
+  fingerprints across the trace.
+
+  What does the script print?
+grader:
+  kind: stdout-equality
+  expected: "distinct calls: 3"
+  normalize: collapse-trailing-newline
+hint:
+  - level: 1
+    body: "Group the rows by (tool, args). Turns 1+2+5 share `(search, {q: auth})`. Turn 4 is `(search, {q: billing})`. Turns 3+6 share `(lookup, {id: 7})`. Three distinct fingerprints."
+  - level: 2
+    body: "3 distinct fingerprints: `(search, {q: auth})` (3 turns), `(search, {q: billing})` (1 turn), `(lookup, {id: 7})` (2 turns)."

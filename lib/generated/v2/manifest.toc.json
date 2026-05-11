@@ -1,6 +1,6 @@
 {
   "version": "0.1.0",
-  "generatedAt": "2026-05-11T16:24:15.604Z",
+  "generatedAt": "2026-05-11T20:03:33.533Z",
   "chapters": [
     {
       "number": 1,
@@ -197,10 +197,10 @@
       "slug": "agent-traces",
       "title": "reading agent traces and telemetry",
       "blurb": "when an agent fails, the trace tells you exactly where. learn to read tool calls, tool results, and stop reasons — the json breadcrumbs every agent leaves behind.",
-      "lessonCount": 1,
-      "stepCount": 9,
-      "estMinutes": 9,
-      "xpTotal": 31
+      "lessonCount": 2,
+      "stepCount": 18,
+      "estMinutes": 22,
+      "xpTotal": 62
     },
     {
       "number": 21,

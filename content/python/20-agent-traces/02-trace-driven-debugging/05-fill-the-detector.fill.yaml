@@ -1,0 +1,36 @@
+xp: 3
+estSeconds: 70
+concept: frozenset-args-for-uniqueness
+prompt: |
+  The detector needs a fingerprint for each row that's hashable so
+  it can go into a set. `args` is a dict (not hashable). Wrap it in
+  `frozenset(...)` over its `.items()` so two dicts with the same
+  content produce the same fingerprint regardless of key order.
+
+  Fill the blank.
+
+  Expected output:
+  ```
+  distinct calls: 2
+  ```
+code: |
+  trace = [
+      {"tool": "search", "args": {"q": "auth", "limit": 10}},
+      {"tool": "search", "args": {"limit": 10, "q": "auth"}},
+      {"tool": "lookup", "args": {"id": 7}},
+  ]
+
+  fingerprints = {
+      (t["tool"], ___(t["args"].items())) for t in trace
+  }
+  print(f"distinct calls: {len(fingerprints)}")
+blanks:
+  - id: hashable_wrapper
+    accept:
+      - "frozenset"
+    caseSensitive: true
+hint:
+  - level: 1
+    body: "`frozenset` is the hashable cousin of `set`. It collapses `{a: 1, b: 2}.items()` and `{b: 2, a: 1}.items()` to the same value."
+  - level: 2
+    body: "Fill `frozenset`. Without it, you'd need to sort the items and tuple them, which is more work for the same result."

@@ -11,13 +11,13 @@ code: |
 runnable: true
 ---
 
-# Variables — the names AI reaches for first
+# Variables: the names AI reaches for first
 
 Here's what's about to happen, hundreds of times this year:
 
 You'll ask Cursor to *track the user's score*, *store the API response*, or
 *remember the last result*. Before it writes a function, before any logic,
-the very first thing the AI does is invent a **variable** — a name that
+the very first thing the AI does is invent a **variable**: a name that
 holds a value. Every other line in the program then refers back to that
 name. The whole script flows through these names.
 

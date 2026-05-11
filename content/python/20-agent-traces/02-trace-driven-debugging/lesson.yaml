@@ -1,0 +1,15 @@
+slug: trace-driven-debugging
+title: "Trace-driven debugging — turn a 4-hour panic into a 20-minute investigation"
+estMinutes: 13
+prerequisites:
+  - reading-the-trace
+order:
+  - 01-intro.read.md
+  - 02-which-pattern-is-this.mc.yaml
+  - 03-the-loop-signature.read.md
+  - 04-predict-the-call-count.predict.yaml
+  - 05-fill-the-detector.fill.yaml
+  - 06-fix-the-tool-routing.fix.yaml
+  - 07-fix-the-prompt-bloat.fix.yaml
+  - 08-write-the-trace-summary.write.yaml
+  - 09-checkpoint.checkpoint.yaml

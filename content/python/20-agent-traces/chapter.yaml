@@ -4,3 +4,4 @@ title: "reading agent traces and telemetry"
 blurb: "when an agent fails, the trace tells you exactly where. learn to read tool calls, tool results, and stop reasons — the json breadcrumbs every agent leaves behind."
 lessons:
   - 01-reading-the-trace
+  - 02-trace-driven-debugging

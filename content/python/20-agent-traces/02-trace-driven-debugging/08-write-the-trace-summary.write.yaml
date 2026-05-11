@@ -1,0 +1,82 @@
+xp: 5
+estSeconds: 180
+concept: summarize-trace-for-a-bug-report
+prompt: |
+  Write `bug_report(trace)` that returns a dict with:
+
+  - `total_turns`: integer, length of the trace
+  - `distinct_tools_called`: integer, count of unique `(tool, args)` fingerprints (use `frozenset(args.items())` for the args part)
+  - `looping`: boolean, True if any window of 3 consecutive turns has identical `(tool, args)` (your detector from step 03)
+  - `total_tokens`: integer, sum of the `tokens` field across all turns
+
+  Two traces run for you. Expected output:
+  ```
+  {'total_turns': 4, 'distinct_tools_called': 1, 'looping': True, 'total_tokens': 880}
+  {'total_turns': 3, 'distinct_tools_called': 3, 'looping': False, 'total_tokens': 540}
+  ```
+starter: |
+  loop_trace = [
+      {"tool": "search", "args": {"q": "auth"}, "tokens": 200},
+      {"tool": "search", "args": {"q": "auth"}, "tokens": 210},
+      {"tool": "search", "args": {"q": "auth"}, "tokens": 230},
+      {"tool": "search", "args": {"q": "auth"}, "tokens": 240},
+  ]
+
+  clean_trace = [
+      {"tool": "search", "args": {"q": "auth"},      "tokens": 180},
+      {"tool": "lookup", "args": {"id": 7},          "tokens": 160},
+      {"tool": "search", "args": {"q": "billing"},   "tokens": 200},
+  ]
+
+  # define bug_report(trace) below
+
+  print(bug_report(loop_trace))
+  print(bug_report(clean_trace))
+grader:
+  kind: stdout-equality
+  expected: |
+    {'total_turns': 4, 'distinct_tools_called': 1, 'looping': True, 'total_tokens': 880}
+    {'total_turns': 3, 'distinct_tools_called': 3, 'looping': False, 'total_tokens': 540}
+  normalize: collapse-trailing-newline
+solution: |
+  loop_trace = [
+      {"tool": "search", "args": {"q": "auth"}, "tokens": 200},
+      {"tool": "search", "args": {"q": "auth"}, "tokens": 210},
+      {"tool": "search", "args": {"q": "auth"}, "tokens": 230},
+      {"tool": "search", "args": {"q": "auth"}, "tokens": 240},
+  ]
+
+  clean_trace = [
+      {"tool": "search", "args": {"q": "auth"},      "tokens": 180},
+      {"tool": "lookup", "args": {"id": 7},          "tokens": 160},
+      {"tool": "search", "args": {"q": "billing"},   "tokens": 200},
+  ]
+
+  def bug_report(trace):
+      fingerprints = {
+          (t["tool"], frozenset(t["args"].items())) for t in trace
+      }
+      looping = False
+      for i in range(len(trace) - 2):
+          window = trace[i:i + 3]
+          first = (window[0]["tool"], frozenset(window[0]["args"].items()))
+          if all(
+              (t["tool"], frozenset(t["args"].items())) == first
+              for t in window
+          ):
+              looping = True
+              break
+      return {
+          "total_turns": len(trace),
+          "distinct_tools_called": len(fingerprints),
+          "looping": looping,
+          "total_tokens": sum(t["tokens"] for t in trace),
+      }
+
+  print(bug_report(loop_trace))
+  print(bug_report(clean_trace))
+hint:
+  - level: 1
+    body: "Four keys. Build the fingerprint set once with a set comprehension, count its length for `distinct_tools_called`. The `looping` flag is just `detect_loop(trace, k=3)` from step 03 inlined."
+  - level: 2
+    body: "Body: `fingerprints = {(t['tool'], frozenset(t['args'].items())) for t in trace}`. Loop over `range(len(trace) - 2)` to check 3-row windows for the `looping` flag. Sum `t['tokens']` for the last field."

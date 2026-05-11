@@ -2,14 +2,13 @@ xp: 2
 estSeconds: 50
 concept: enumerate-vs-zip
 code: |
-  # enumerate(items)            -> (0, item0), (1, item1), ...
-  # zip(list_a, list_b)         -> (a0, b0), (a1, b1), ...
-  # zip stops at the SHORTER list.
-  names = ["maya", "marcus"]
+  names = ["maya", "marcus", "priya"]
   scores = [95, 88, 71]
 
-  for n, s in zip(names, scores):
-      print(n, s)
+  # enumerate walks one list and gives you (index, value).
+  # the task on the right is different: walk two lists side-by-side.
+  for i, n in enumerate(names):
+      print(i, n)
 prompt: |
   Cursor wrote a loop that needs to walk **two** lists side-by-side —
   pairing each name with the score at the same position. Which built-in

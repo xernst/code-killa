@@ -1,0 +1,89 @@
+xp: 8
+estSeconds: 220
+concept: triage-three-traces
+prompt: |
+  Final drill. You have three traces from this morning's on-call queue.
+  Each fits one of the three failure patterns from this lesson. Write
+  `classify(trace)` that returns one of `"loop"`, `"bloat"`, `"clean"`
+  based on these rules:
+
+  - `"loop"` if any 3-row window has identical `(tool, args)`
+  - `"bloat"` if the last turn's `tokens` is more than 3× the first turn's `tokens`
+  - `"clean"` otherwise
+
+  (Note: routing bugs don't surface as a trace pattern alone — they need
+  the tool result content to detect, which is out of scope here.)
+
+  Three traces run. Expected output:
+  ```
+  loop
+  bloat
+  clean
+  ```
+starter: |
+  trace_loop = [
+      {"tool": "search", "args": {"q": "auth"}, "tokens": 200},
+      {"tool": "search", "args": {"q": "auth"}, "tokens": 210},
+      {"tool": "search", "args": {"q": "auth"}, "tokens": 220},
+  ]
+
+  trace_bloat = [
+      {"tool": "search", "args": {"q": "x"}, "tokens": 200},
+      {"tool": "lookup", "args": {"id": 1}, "tokens": 800},
+      {"tool": "lookup", "args": {"id": 2}, "tokens": 1800},
+      {"tool": "summarize", "args": {}, "tokens": 3200},
+  ]
+
+  trace_clean = [
+      {"tool": "search", "args": {"q": "auth"}, "tokens": 180},
+      {"tool": "lookup", "args": {"id": 7},     "tokens": 160},
+      {"tool": "summarize", "args": {},         "tokens": 200},
+  ]
+
+  # define classify(trace) below
+
+  for tr in [trace_loop, trace_bloat, trace_clean]:
+      print(classify(tr))
+grader:
+  kind: stdout-equality
+  expected: |
+    loop
+    bloat
+    clean
+  normalize: collapse-trailing-newline
+solution: |
+  trace_loop = [
+      {"tool": "search", "args": {"q": "auth"}, "tokens": 200},
+      {"tool": "search", "args": {"q": "auth"}, "tokens": 210},
+      {"tool": "search", "args": {"q": "auth"}, "tokens": 220},
+  ]
+
+  trace_bloat = [
+      {"tool": "search", "args": {"q": "x"}, "tokens": 200},
+      {"tool": "lookup", "args": {"id": 1}, "tokens": 800},
+      {"tool": "lookup", "args": {"id": 2}, "tokens": 1800},
+      {"tool": "summarize", "args": {}, "tokens": 3200},
+  ]
+
+  trace_clean = [
+      {"tool": "search", "args": {"q": "auth"}, "tokens": 180},
+      {"tool": "lookup", "args": {"id": 7},     "tokens": 160},
+      {"tool": "summarize", "args": {},         "tokens": 200},
+  ]
+
+  def classify(trace):
+      for i in range(len(trace) - 2):
+          window = trace[i:i + 3]
+          first = (window[0]["tool"], frozenset(window[0]["args"].items()))
+          if all(
+              (t["tool"], frozenset(t["args"].items())) == first
+              for t in window
+          ):
+              return "loop"
+      if trace[-1]["tokens"] > 3 * trace[0]["tokens"]:
+          return "bloat"
+      return "clean"
+
+  for tr in [trace_loop, trace_bloat, trace_clean]:
+      print(classify(tr))
+passThreshold: 0.66

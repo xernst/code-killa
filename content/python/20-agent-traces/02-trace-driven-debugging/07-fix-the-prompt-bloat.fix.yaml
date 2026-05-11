@@ -1,0 +1,43 @@
+xp: 4
+estSeconds: 100
+concept: token-budget-from-trace
+prompt: |
+  The chat history accumulates EVERY prior tool result across turns.
+  The current code returns the full history every call. The trace
+  shows tokens climbing turn-over-turn until the context fills with
+  irrelevant chatter.
+
+  Fix line 8 so the assembled context only includes messages with
+  `age <= 2` (the most recent 2 turns). Older `tool_result` rows
+  fall off the back.
+
+  Expected output:
+  ```
+  3
+  ```
+brokenCode: |
+  messages = [
+      {"role": "tool_result", "content": "hits 1", "age": 5},
+      {"role": "tool_result", "content": "hits 2", "age": 4},
+      {"role": "tool_result", "content": "hits 3", "age": 3},
+      {"role": "tool_result", "content": "hits 4", "age": 2},
+      {"role": "tool_result", "content": "hits 5", "age": 1},
+      {"role": "user",        "content": "what now?", "age": 0},
+  ]
+
+  # bug: every prior tool_result lives in the prompt forever.
+  recent = [m for m in messages]
+
+  print(len(recent))
+bugLines:
+  - 13
+grader:
+  kind: stdout-equality
+  expected: "3"
+  normalize: collapse-trailing-newline
+hint:
+  - level: 1
+    body: "Filter the list comprehension on `age <= 2`. That keeps the user turn (age 0), and tool_results with age 1 and 2."
+  - level: 2
+    body: "Change line 13 to `recent = [m for m in messages if m[\"age\"] <= 2]`. The three rows with age 3, 4, 5 drop off."
+revealAfter: 4

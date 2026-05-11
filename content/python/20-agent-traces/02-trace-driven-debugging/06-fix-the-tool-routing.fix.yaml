@@ -1,0 +1,42 @@
+xp: 4
+estSeconds: 95
+concept: mis-routed-tool-call
+prompt: |
+  The router does a case-sensitive lookup. The model returned the tool
+  name as `"Search"` (capitalized). The registry uses lowercase keys.
+  The lookup falls into the fallback branch and returns the string
+  `"(unknown tool)"`. The agent then treats that string as a real
+  search result.
+
+  Fix line 9 so the lookup normalizes the name to lowercase before
+  matching the registry. The script should print the real result.
+
+  Expected output:
+  ```
+  hits for auth
+  ```
+brokenCode: |
+  registry = {
+      "search": lambda q: f"hits for {q}",
+      "lookup": lambda id: f"record #{id}",
+  }
+
+  def call_tool(name, args):
+      # bug: case-sensitive lookup. registry uses lowercase keys,
+      # but the model returned "Search" with a capital S.
+      tool = registry.get(name, lambda **_: "(unknown tool)")
+      return tool(**args)
+
+  print(call_tool("Search", {"q": "auth"}))
+bugLines:
+  - 9
+grader:
+  kind: stdout-equality
+  expected: "hits for auth"
+  normalize: collapse-trailing-newline
+hint:
+  - level: 1
+    body: "Normalize the name before the lookup. `name.lower()` is the one-line fix."
+  - level: 2
+    body: "Change line 9 to `tool = registry.get(name.lower(), lambda **_: \"(unknown tool)\")`."
+revealAfter: 4

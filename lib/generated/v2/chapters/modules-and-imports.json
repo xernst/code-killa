@@ -66,7 +66,7 @@
             "b"
           ],
           "shuffle": false,
-          "code": "from math import pi\nprint(pi)\n# 3.141592653589793 — no `math.` prefix because we imported pi by name.\n",
+          "code": "# this line gives you the name `sqrt` directly — no `math.` prefix.\nfrom math import sqrt\nprint(sqrt(16))\n",
           "runnable": true
         },
         {

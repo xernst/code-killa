@@ -639,7 +639,7 @@
             "b"
           ],
           "shuffle": false,
-          "code": "# enumerate(items)            -> (0, item0), (1, item1), ...\n# zip(list_a, list_b)         -> (a0, b0), (a1, b1), ...\n# zip stops at the SHORTER list.\nnames = [\"maya\", \"marcus\"]\nscores = [95, 88, 71]\n\nfor n, s in zip(names, scores):\n    print(n, s)\n",
+          "code": "names = [\"maya\", \"marcus\", \"priya\"]\nscores = [95, 88, 71]\n\n# enumerate walks one list and gives you (index, value).\n# the task on the right is different: walk two lists side-by-side.\nfor i, n in enumerate(names):\n    print(i, n)\n",
           "runnable": true
         },
         {

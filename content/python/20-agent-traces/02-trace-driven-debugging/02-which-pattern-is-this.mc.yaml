@@ -1,0 +1,33 @@
+xp: 2
+estSeconds: 50
+concept: identify-failure-pattern-from-trace
+code: |
+  trace = [
+      {"turn": 1, "tool": "search_repo", "args": {"q": "billing"}, "tokens": 180},
+      {"turn": 2, "tool": "search_repo", "args": {"q": "billing"}, "tokens": 195},
+      {"turn": 3, "tool": "search_repo", "args": {"q": "billing"}, "tokens": 210},
+      {"turn": 4, "tool": "search_repo", "args": {"q": "billing"}, "tokens": 225},
+  ]
+  for t in trace:
+      print(t)
+prompt: |
+  Four turns. The agent never returned a final answer. Tokens
+  climbed slowly, no tool errors, no exceptions. Which failure
+  pattern does this fit?
+options:
+  - id: loop
+    label: "loop with no progress — same tool, same args, no end_turn"
+  - id: routing
+    label: "tool routing bug — router returned a fallback string the agent treated as real"
+    explain: "Routing bugs show up as a single tool call returning garbage, then the agent answering from it. This trace has four IDENTICAL calls — the signature of a loop, not a routing miss."
+  - id: bloat
+    label: "prompt bloat — context window filling with prior tool results"
+    explain: "Bloat shows up as exponentially-rising tokens per turn (200 to 4000). This trace climbs linearly by ~15 tokens. That's a loop calling the same tool, not a bloat curve."
+  - id: clean
+    label: "clean trace — the agent is fine, the user just doesn't like the answer"
+    explain: "Clean traces end with `stop_reason: end_turn`. This one never terminated."
+answerIds:
+  - loop
+hint:
+  - level: 1
+    body: "Look at the (tool, args) pair across all rows. If it's identical for 3+ rows, that's the loop signal."

@@ -2,9 +2,9 @@ xp: 2
 estSeconds: 40
 concept: import-syntax
 code: |
-  from math import pi
-  print(pi)
-  # 3.141592653589793 — no `math.` prefix because we imported pi by name.
+  # this line gives you the name `sqrt` directly — no `math.` prefix.
+  from math import sqrt
+  print(sqrt(16))
 prompt: |
   Cursor wants to use `pi` from the `math` module without the `math.` prefix
   every time. Which import line lets you write just `pi`?

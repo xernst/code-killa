@@ -264,7 +264,264 @@
         }
       ],
       "xpTotal": 31
+    },
+    {
+      "slug": "trace-driven-debugging",
+      "title": "Trace-driven debugging — turn a 4-hour panic into a 20-minute investigation",
+      "estMinutes": 13,
+      "prerequisites": [
+        "reading-the-trace"
+      ],
+      "steps": [
+        {
+          "type": "read",
+          "id": "agent-traces/trace-driven-debugging/s01-01-intro",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "warmup",
+          "estSeconds": 130,
+          "concept": "three-failure-shapes",
+          "body": "# A trace turns a four-hour panic into a twenty-minute investigation\n\nYou read traces in lesson 1. Now you use them.\n\nMost \"the agent is broken\" reports look the same from the outside:\nthe user sent a question, the agent answered something unhelpful, the\nuser is unhappy. The TRACE tells you which kind of broken it is.\nThree patterns cover the majority of failures:\n\n## Pattern 1: looping with no progress\n\nSame tool, same arguments, repeated. The agent is asking the same\nquestion to the same tool and getting the same answer. The signature\nin the trace is mechanical: three or more rows where\n`(tool, args)` is identical. Run the editor. The trace above has\nthree identical `search` calls. `summarize(trace)` returns\n`distinct_calls = 1` against `turns = 3` — that ratio is the\nloop signal.\n\n## Pattern 2: tool routing bug\n\nThe model asked for `Search` (capitalized) and the router did a\ncase-sensitive lookup against a lowercase registry. The router\nreturned `\"(unknown tool)\"` as a fallback string. The agent treated\nthat string as a real search result and made up an answer from it.\nThe trace shows tool calls that \"succeeded\" with garbage results\nthat look real if you don't squint.\n\n## Pattern 3: prompt bloat\n\nTurn 1 uses 200 tokens. Turn 5 uses 4000. The chat history is\naccumulating every prior tool result. The agent is rereading the\nwhole conversation on every turn, paying for it, and slowly losing\nfocus as the context fills with irrelevant chatter. The trace's\n`tokens` column is the signal.\n\n## What you're going to do\n\nThis lesson teaches the mechanical signatures of each pattern,\nthen you fix two of them in code. By the end you'll have a\n`bug_report(trace)` that classifies any trace into one of the\nthree failure shapes (or `clean` if none fire), which is exactly\nthe kind of helper you'd paste into your on-call rotation.",
+          "cta": "Got it",
+          "code": "# most \"agent broke\" reports fit one of three trace shapes.\ntrace = [\n    {\"turn\": 1, \"tool\": \"search\", \"args\": {\"q\": \"auth bug\"}, \"tokens\": 220},\n    {\"turn\": 2, \"tool\": \"search\", \"args\": {\"q\": \"auth bug\"}, \"tokens\": 240},\n    {\"turn\": 3, \"tool\": \"search\", \"args\": {\"q\": \"auth bug\"}, \"tokens\": 260},\n]\n\ndef summarize(trace):\n    tools = {(t[\"tool\"], frozenset(t[\"args\"].items())) for t in trace}\n    total_tokens = sum(t[\"tokens\"] for t in trace)\n    return {\n        \"turns\": len(trace),\n        \"distinct_calls\": len(tools),\n        \"tokens\": total_tokens,\n    }\n\nprint(summarize(trace))\n",
+          "runnable": true
+        },
+        {
+          "type": "mc",
+          "id": "agent-traces/trace-driven-debugging/s02-02-which-pattern-is-this",
+          "xp": 2,
+          "hint": [
+            {
+              "level": 1,
+              "body": "Look at the (tool, args) pair across all rows. If it's identical for 3+ rows, that's the loop signal.",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "warmup",
+          "estSeconds": 50,
+          "concept": "identify-failure-pattern-from-trace",
+          "prompt": "Four turns. The agent never returned a final answer. Tokens\nclimbed slowly, no tool errors, no exceptions. Which failure\npattern does this fit?\n",
+          "options": [
+            {
+              "id": "loop",
+              "label": "loop with no progress — same tool, same args, no end_turn"
+            },
+            {
+              "id": "routing",
+              "label": "tool routing bug — router returned a fallback string the agent treated as real",
+              "explain": "Routing bugs show up as a single tool call returning garbage, then the agent answering from it. This trace has four IDENTICAL calls — the signature of a loop, not a routing miss."
+            },
+            {
+              "id": "bloat",
+              "label": "prompt bloat — context window filling with prior tool results",
+              "explain": "Bloat shows up as exponentially-rising tokens per turn (200 to 4000). This trace climbs linearly by ~15 tokens. That's a loop calling the same tool, not a bloat curve."
+            },
+            {
+              "id": "clean",
+              "label": "clean trace — the agent is fine, the user just doesn't like the answer",
+              "explain": "Clean traces end with `stop_reason: end_turn`. This one never terminated."
+            }
+          ],
+          "answerIds": [
+            "loop"
+          ],
+          "shuffle": false,
+          "code": "trace = [\n    {\"turn\": 1, \"tool\": \"search_repo\", \"args\": {\"q\": \"billing\"}, \"tokens\": 180},\n    {\"turn\": 2, \"tool\": \"search_repo\", \"args\": {\"q\": \"billing\"}, \"tokens\": 195},\n    {\"turn\": 3, \"tool\": \"search_repo\", \"args\": {\"q\": \"billing\"}, \"tokens\": 210},\n    {\"turn\": 4, \"tool\": \"search_repo\", \"args\": {\"q\": \"billing\"}, \"tokens\": 225},\n]\nfor t in trace:\n    print(t)\n",
+          "runnable": true
+        },
+        {
+          "type": "read",
+          "id": "agent-traces/trace-driven-debugging/s03-03-the-loop-signature",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 110,
+          "concept": "repeated-identical-calls-means-loop",
+          "body": "# A loop has a mechanical signature\n\nRun the editor. The trace has four turns. Turns 1, 2, 3 are identical\ncalls. Turn 4 is something different. `detect_loop(trace, k=3)`\nreturns `True` because there exists a window of 3 consecutive identical\ncalls (turns 1, 2, 3).\n\nThe trick is comparing `args`. `args` is a dict. Dicts aren't\nhashable, so you can't put them in a set or use them as dict keys.\nThe fix is `frozenset(args.items())`. A frozenset is hashable and\npreserves the (key, value) pairs — so two dicts with the same content\nproduce the same frozenset, even if the iteration order differs.\n\nThat one detail is why loop detection is harder than it looks. Your\nagent might call `search(q=\"auth\", limit=10)` and the next turn the\nmodel orders the args differently as `search(limit=10, q=\"auth\")`.\nA naive comparison treats those as different calls. The frozenset\ntrick collapses them to the same fingerprint.\n\n## What `k` should be\n\n`k = 3` is the production default — two repeats is just polling, three\nis intent. Some teams use `k = 2` with a confidence threshold (a\nsecond identical call is suspicious; flag and review). For an agent\nloop you control, `k = 3` is the breakpoint where you should\nshort-circuit the loop and return an error rather than burn more\ntokens.\n\n## Where this fires\n\n- A bad `tool_use_id` matching — the model thinks the tool didn't\n  return, so it asks again.\n- A vague prompt where every search returns the same top-3 results\n  and the model can't tell it already saw them.\n- A buggy retry layer that calls the tool again after a `429` but\n  forgets to update the `messages` list with the new attempt.\n\nThe fix is almost always upstream of the loop. The loop is just\nthe symptom your trace surfaces.",
+          "cta": "Got it",
+          "code": "# the mechanical signature of a loop:\n#   same `tool` + same `args` for k consecutive turns.\ntrace = [\n    {\"turn\": 1, \"tool\": \"search\", \"args\": {\"q\": \"auth\"}},\n    {\"turn\": 2, \"tool\": \"search\", \"args\": {\"q\": \"auth\"}},\n    {\"turn\": 3, \"tool\": \"search\", \"args\": {\"q\": \"auth\"}},\n    {\"turn\": 4, \"tool\": \"lookup\", \"args\": {\"id\": 42}},\n]\n\ndef detect_loop(trace, k=3):\n    for i in range(len(trace) - k + 1):\n        window = trace[i:i + k]\n        first = (window[0][\"tool\"], frozenset(window[0][\"args\"].items()))\n        if all(\n            (t[\"tool\"], frozenset(t[\"args\"].items())) == first\n            for t in window\n        ):\n            return True\n    return False\n\nprint(detect_loop(trace, k=3))\n",
+          "runnable": true
+        },
+        {
+          "type": "predict",
+          "id": "agent-traces/trace-driven-debugging/s04-04-predict-the-call-count",
+          "xp": 3,
+          "hint": [
+            {
+              "level": 1,
+              "body": "Group the rows by (tool, args). Turns 1+2+5 share `(search, {q: auth})`. Turn 4 is `(search, {q: billing})`. Turns 3+6 share `(lookup, {id: 7})`. Three distinct fingerprints.",
+              "cost": 0
+            },
+            {
+              "level": 2,
+              "body": "3 distinct fingerprints: `(search, {q: auth})` (3 turns), `(search, {q: billing})` (1 turn), `(lookup, {id: 7})` (2 turns).",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 75,
+          "concept": "count-distinct-calls",
+          "code": "trace = [\n    {\"turn\": 1, \"tool\": \"search\", \"args\": {\"q\": \"auth\"}},\n    {\"turn\": 2, \"tool\": \"search\", \"args\": {\"q\": \"auth\"}},\n    {\"turn\": 3, \"tool\": \"lookup\", \"args\": {\"id\": 7}},\n    {\"turn\": 4, \"tool\": \"search\", \"args\": {\"q\": \"billing\"}},\n    {\"turn\": 5, \"tool\": \"search\", \"args\": {\"q\": \"auth\"}},\n    {\"turn\": 6, \"tool\": \"lookup\", \"args\": {\"id\": 7}},\n]\n\nfingerprints = {\n    (t[\"tool\"], frozenset(t[\"args\"].items())) for t in trace\n}\nprint(f\"distinct calls: {len(fingerprints)}\")\n",
+          "prompt": "Six rows, four of them repeat. Count the DISTINCT `(tool, args)`\nfingerprints across the trace.\n\nWhat does the script print?\n",
+          "grader": {
+            "kind": "stdout-equality",
+            "expected": "distinct calls: 3",
+            "normalize": "collapse-trailing-newline"
+          }
+        },
+        {
+          "type": "fill",
+          "id": "agent-traces/trace-driven-debugging/s05-05-fill-the-detector",
+          "xp": 3,
+          "hint": [
+            {
+              "level": 1,
+              "body": "`frozenset` is the hashable cousin of `set`. It collapses `{a: 1, b: 2}.items()` and `{b: 2, a: 1}.items()` to the same value.",
+              "cost": 0
+            },
+            {
+              "level": 2,
+              "body": "Fill `frozenset`. Without it, you'd need to sort the items and tuple them, which is more work for the same result.",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 70,
+          "concept": "frozenset-args-for-uniqueness",
+          "prompt": "The detector needs a fingerprint for each row that's hashable so\nit can go into a set. `args` is a dict (not hashable). Wrap it in\n`frozenset(...)` over its `.items()` so two dicts with the same\ncontent produce the same fingerprint regardless of key order.\n\nFill the blank.\n\nExpected output:\n```\ndistinct calls: 2\n```\n",
+          "code": "trace = [\n    {\"tool\": \"search\", \"args\": {\"q\": \"auth\", \"limit\": 10}},\n    {\"tool\": \"search\", \"args\": {\"limit\": 10, \"q\": \"auth\"}},\n    {\"tool\": \"lookup\", \"args\": {\"id\": 7}},\n]\n\nfingerprints = {\n    (t[\"tool\"], ___(t[\"args\"].items())) for t in trace\n}\nprint(f\"distinct calls: {len(fingerprints)}\")\n",
+          "blanks": [
+            {
+              "id": "hashable_wrapper",
+              "accept": [
+                "frozenset"
+              ],
+              "caseSensitive": true,
+              "normalize": "trim"
+            }
+          ]
+        },
+        {
+          "type": "fix",
+          "id": "agent-traces/trace-driven-debugging/s06-06-fix-the-tool-routing",
+          "xp": 4,
+          "hint": [
+            {
+              "level": 1,
+              "body": "Normalize the name before the lookup. `name.lower()` is the one-line fix.",
+              "cost": 0
+            },
+            {
+              "level": 2,
+              "body": "Change line 9 to `tool = registry.get(name.lower(), lambda **_: \"(unknown tool)\")`.",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 95,
+          "concept": "mis-routed-tool-call",
+          "brokenCode": "registry = {\n    \"search\": lambda q: f\"hits for {q}\",\n    \"lookup\": lambda id: f\"record #{id}\",\n}\n\ndef call_tool(name, args):\n    # bug: case-sensitive lookup. registry uses lowercase keys,\n    # but the model returned \"Search\" with a capital S.\n    tool = registry.get(name, lambda **_: \"(unknown tool)\")\n    return tool(**args)\n\nprint(call_tool(\"Search\", {\"q\": \"auth\"}))\n",
+          "prompt": "The router does a case-sensitive lookup. The model returned the tool\nname as `\"Search\"` (capitalized). The registry uses lowercase keys.\nThe lookup falls into the fallback branch and returns the string\n`\"(unknown tool)\"`. The agent then treats that string as a real\nsearch result.\n\nFix line 9 so the lookup normalizes the name to lowercase before\nmatching the registry. The script should print the real result.\n\nExpected output:\n```\nhits for auth\n```\n",
+          "grader": {
+            "kind": "stdout-equality",
+            "expected": "hits for auth",
+            "normalize": "collapse-trailing-newline"
+          },
+          "bugLines": [
+            9
+          ],
+          "revealAfter": 4
+        },
+        {
+          "type": "fix",
+          "id": "agent-traces/trace-driven-debugging/s07-07-fix-the-prompt-bloat",
+          "xp": 4,
+          "hint": [
+            {
+              "level": 1,
+              "body": "Filter the list comprehension on `age <= 2`. That keeps the user turn (age 0), and tool_results with age 1 and 2.",
+              "cost": 0
+            },
+            {
+              "level": 2,
+              "body": "Change line 13 to `recent = [m for m in messages if m[\"age\"] <= 2]`. The three rows with age 3, 4, 5 drop off.",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 100,
+          "concept": "token-budget-from-trace",
+          "brokenCode": "messages = [\n    {\"role\": \"tool_result\", \"content\": \"hits 1\", \"age\": 5},\n    {\"role\": \"tool_result\", \"content\": \"hits 2\", \"age\": 4},\n    {\"role\": \"tool_result\", \"content\": \"hits 3\", \"age\": 3},\n    {\"role\": \"tool_result\", \"content\": \"hits 4\", \"age\": 2},\n    {\"role\": \"tool_result\", \"content\": \"hits 5\", \"age\": 1},\n    {\"role\": \"user\",        \"content\": \"what now?\", \"age\": 0},\n]\n\n# bug: every prior tool_result lives in the prompt forever.\nrecent = [m for m in messages]\n\nprint(len(recent))\n",
+          "prompt": "The chat history accumulates EVERY prior tool result across turns.\nThe current code returns the full history every call. The trace\nshows tokens climbing turn-over-turn until the context fills with\nirrelevant chatter.\n\nFix line 8 so the assembled context only includes messages with\n`age <= 2` (the most recent 2 turns). Older `tool_result` rows\nfall off the back.\n\nExpected output:\n```\n3\n```\n",
+          "grader": {
+            "kind": "stdout-equality",
+            "expected": "3",
+            "normalize": "collapse-trailing-newline"
+          },
+          "bugLines": [
+            13
+          ],
+          "revealAfter": 4
+        },
+        {
+          "type": "write",
+          "id": "agent-traces/trace-driven-debugging/s08-08-write-the-trace-summary",
+          "xp": 5,
+          "hint": [
+            {
+              "level": 1,
+              "body": "Four keys. Build the fingerprint set once with a set comprehension, count its length for `distinct_tools_called`. The `looping` flag is just `detect_loop(trace, k=3)` from step 03 inlined.",
+              "cost": 0
+            },
+            {
+              "level": 2,
+              "body": "Body: `fingerprints = {(t['tool'], frozenset(t['args'].items())) for t in trace}`. Loop over `range(len(trace) - 2)` to check 3-row windows for the `looping` flag. Sum `t['tokens']` for the last field.",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 180,
+          "concept": "summarize-trace-for-a-bug-report",
+          "prompt": "Write `bug_report(trace)` that returns a dict with:\n\n- `total_turns`: integer, length of the trace\n- `distinct_tools_called`: integer, count of unique `(tool, args)` fingerprints (use `frozenset(args.items())` for the args part)\n- `looping`: boolean, True if any window of 3 consecutive turns has identical `(tool, args)` (your detector from step 03)\n- `total_tokens`: integer, sum of the `tokens` field across all turns\n\nTwo traces run for you. Expected output:\n```\n{'total_turns': 4, 'distinct_tools_called': 1, 'looping': True, 'total_tokens': 880}\n{'total_turns': 3, 'distinct_tools_called': 3, 'looping': False, 'total_tokens': 540}\n```\n",
+          "starter": "loop_trace = [\n    {\"tool\": \"search\", \"args\": {\"q\": \"auth\"}, \"tokens\": 200},\n    {\"tool\": \"search\", \"args\": {\"q\": \"auth\"}, \"tokens\": 210},\n    {\"tool\": \"search\", \"args\": {\"q\": \"auth\"}, \"tokens\": 230},\n    {\"tool\": \"search\", \"args\": {\"q\": \"auth\"}, \"tokens\": 240},\n]\n\nclean_trace = [\n    {\"tool\": \"search\", \"args\": {\"q\": \"auth\"},      \"tokens\": 180},\n    {\"tool\": \"lookup\", \"args\": {\"id\": 7},          \"tokens\": 160},\n    {\"tool\": \"search\", \"args\": {\"q\": \"billing\"},   \"tokens\": 200},\n]\n\n# define bug_report(trace) below\n\nprint(bug_report(loop_trace))\nprint(bug_report(clean_trace))\n",
+          "grader": {
+            "kind": "stdout-equality",
+            "expected": "{'total_turns': 4, 'distinct_tools_called': 1, 'looping': True, 'total_tokens': 880}\n{'total_turns': 3, 'distinct_tools_called': 3, 'looping': False, 'total_tokens': 540}\n",
+            "normalize": "collapse-trailing-newline"
+          },
+          "solution": "loop_trace = [\n    {\"tool\": \"search\", \"args\": {\"q\": \"auth\"}, \"tokens\": 200},\n    {\"tool\": \"search\", \"args\": {\"q\": \"auth\"}, \"tokens\": 210},\n    {\"tool\": \"search\", \"args\": {\"q\": \"auth\"}, \"tokens\": 230},\n    {\"tool\": \"search\", \"args\": {\"q\": \"auth\"}, \"tokens\": 240},\n]\n\nclean_trace = [\n    {\"tool\": \"search\", \"args\": {\"q\": \"auth\"},      \"tokens\": 180},\n    {\"tool\": \"lookup\", \"args\": {\"id\": 7},          \"tokens\": 160},\n    {\"tool\": \"search\", \"args\": {\"q\": \"billing\"},   \"tokens\": 200},\n]\n\ndef bug_report(trace):\n    fingerprints = {\n        (t[\"tool\"], frozenset(t[\"args\"].items())) for t in trace\n    }\n    looping = False\n    for i in range(len(trace) - 2):\n        window = trace[i:i + 3]\n        first = (window[0][\"tool\"], frozenset(window[0][\"args\"].items()))\n        if all(\n            (t[\"tool\"], frozenset(t[\"args\"].items())) == first\n            for t in window\n        ):\n            looping = True\n            break\n    return {\n        \"total_turns\": len(trace),\n        \"distinct_tools_called\": len(fingerprints),\n        \"looping\": looping,\n        \"total_tokens\": sum(t[\"tokens\"] for t in trace),\n    }\n\nprint(bug_report(loop_trace))\nprint(bug_report(clean_trace))\n",
+          "hiddenTests": []
+        },
+        {
+          "type": "checkpoint",
+          "id": "agent-traces/trace-driven-debugging/s09-09-checkpoint",
+          "xp": 8,
+          "hint": [],
+          "personalize": false,
+          "phase": "check",
+          "estSeconds": 220,
+          "concept": "triage-three-traces",
+          "prompt": "Final drill. You have three traces from this morning's on-call queue.\nEach fits one of the three failure patterns from this lesson. Write\n`classify(trace)` that returns one of `\"loop\"`, `\"bloat\"`, `\"clean\"`\nbased on these rules:\n\n- `\"loop\"` if any 3-row window has identical `(tool, args)`\n- `\"bloat\"` if the last turn's `tokens` is more than 3× the first turn's `tokens`\n- `\"clean\"` otherwise\n\n(Note: routing bugs don't surface as a trace pattern alone — they need\nthe tool result content to detect, which is out of scope here.)\n\nThree traces run. Expected output:\n```\nloop\nbloat\nclean\n```\n",
+          "starter": "trace_loop = [\n    {\"tool\": \"search\", \"args\": {\"q\": \"auth\"}, \"tokens\": 200},\n    {\"tool\": \"search\", \"args\": {\"q\": \"auth\"}, \"tokens\": 210},\n    {\"tool\": \"search\", \"args\": {\"q\": \"auth\"}, \"tokens\": 220},\n]\n\ntrace_bloat = [\n    {\"tool\": \"search\", \"args\": {\"q\": \"x\"}, \"tokens\": 200},\n    {\"tool\": \"lookup\", \"args\": {\"id\": 1}, \"tokens\": 800},\n    {\"tool\": \"lookup\", \"args\": {\"id\": 2}, \"tokens\": 1800},\n    {\"tool\": \"summarize\", \"args\": {}, \"tokens\": 3200},\n]\n\ntrace_clean = [\n    {\"tool\": \"search\", \"args\": {\"q\": \"auth\"}, \"tokens\": 180},\n    {\"tool\": \"lookup\", \"args\": {\"id\": 7},     \"tokens\": 160},\n    {\"tool\": \"summarize\", \"args\": {},         \"tokens\": 200},\n]\n\n# define classify(trace) below\n\nfor tr in [trace_loop, trace_bloat, trace_clean]:\n    print(classify(tr))\n",
+          "grader": {
+            "kind": "stdout-equality",
+            "expected": "loop\nbloat\nclean\n",
+            "normalize": "collapse-trailing-newline"
+          },
+          "solution": "trace_loop = [\n    {\"tool\": \"search\", \"args\": {\"q\": \"auth\"}, \"tokens\": 200},\n    {\"tool\": \"search\", \"args\": {\"q\": \"auth\"}, \"tokens\": 210},\n    {\"tool\": \"search\", \"args\": {\"q\": \"auth\"}, \"tokens\": 220},\n]\n\ntrace_bloat = [\n    {\"tool\": \"search\", \"args\": {\"q\": \"x\"}, \"tokens\": 200},\n    {\"tool\": \"lookup\", \"args\": {\"id\": 1}, \"tokens\": 800},\n    {\"tool\": \"lookup\", \"args\": {\"id\": 2}, \"tokens\": 1800},\n    {\"tool\": \"summarize\", \"args\": {}, \"tokens\": 3200},\n]\n\ntrace_clean = [\n    {\"tool\": \"search\", \"args\": {\"q\": \"auth\"}, \"tokens\": 180},\n    {\"tool\": \"lookup\", \"args\": {\"id\": 7},     \"tokens\": 160},\n    {\"tool\": \"summarize\", \"args\": {},         \"tokens\": 200},\n]\n\ndef classify(trace):\n    for i in range(len(trace) - 2):\n        window = trace[i:i + 3]\n        first = (window[0][\"tool\"], frozenset(window[0][\"args\"].items()))\n        if all(\n            (t[\"tool\"], frozenset(t[\"args\"].items())) == first\n            for t in window\n        ):\n            return \"loop\"\n    if trace[-1][\"tokens\"] > 3 * trace[0][\"tokens\"]:\n        return \"bloat\"\n    return \"clean\"\n\nfor tr in [trace_loop, trace_bloat, trace_clean]:\n    print(classify(tr))\n",
+          "passThreshold": 0.66
+        }
+      ],
+      "xpTotal": 31
     }
   ],
-  "xpTotal": 31
+  "xpTotal": 62
 }
