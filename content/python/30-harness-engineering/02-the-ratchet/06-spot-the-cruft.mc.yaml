@@ -1,0 +1,36 @@
+xp: 2
+estSeconds: 70
+concept: spot-the-cruft
+code: |
+  # four lines from an AGENTS.md last touched in early 2024. it's now 2026.
+  # which line is most likely obsolete because the model handles it natively?
+  lines = {
+      "A": '"# 2024-08-12 — always specify temperature explicitly because the SDK default was wildly inconsistent across providers."',
+      "B": '"# 2026-01-15 — never run `gh pr merge --admin` to bypass review; came up in PR #1942."',
+      "C": '"# 2026-03-22 — when writing TypeScript, always run `pnpm tsc` before declaring done; PR #2418 shipped 12 type errors."',
+      "D": '"# 2026-04-10 — for new endpoints, always add OpenAPI annotations matching our internal style guide; PR #2503."',
+  }
+  for k, v in lines.items():
+      print(f"{k}: {v}")
+prompt: |
+  Quarterly ratchet audit. Modern 2026 SDKs all default sanely, and
+  most labs post-train models to do basic hygiene. Which of these
+  rules is the strongest candidate for REMOVAL because the failure it
+  was guarding against is now model-native or SDK-native?
+options:
+  - id: a
+    label: "A — explicit temperature"
+  - id: b
+    label: "B — never run `gh pr merge --admin`"
+    explain: "Still load-bearing. This is a destructive command that bypasses reviewers; no model is post-trained to never do this. It earned its place and still earns it."
+  - id: c
+    label: "C — run `pnpm tsc` before done"
+    explain: "Recent failure (March 2026), still earning its line. Even with smarter models, edit-then-check is a hook discipline that no current model self-enforces consistently."
+  - id: d
+    label: "D — OpenAPI annotations"
+    explain: "Project-specific style guide. The model can't know your internal style guide without being told. This rule keeps earning its place every time a new endpoint is written."
+answerIds:
+  - a
+hint:
+  - level: 1
+    body: "Three of these are 2026-vintage and trace to specific recent failures. One is from 2024 and addressed a problem (inconsistent SDK temperature defaults) that current SDKs have fixed. That's the candidate for removal — but only after you verify the SDK default is now sane via an eval."

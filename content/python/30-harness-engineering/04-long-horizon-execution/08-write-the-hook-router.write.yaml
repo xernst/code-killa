@@ -1,0 +1,60 @@
+xp: 5
+estSeconds: 220
+concept: hook-lifecycle-routing
+prompt: |
+  Write `pick_hook_lifecycle(action)` that takes an action dict and
+  returns the appropriate hook lifecycle name as a string.
+
+  The action dict has a `kind` field. Map kinds to lifecycles:
+
+  - `bash` → `"pre"` (block destructive commands BEFORE they run)
+  - `edit` → `"post"` (run tsc / lint AFTER the edit)
+  - `file_write` → `"post"` (run formatter AFTER the write)
+  - `commit` → `"pre"` (run tests BEFORE the commit)
+  - any other / unknown kind → `"none"`
+
+  Two actions run for you. Expected output:
+
+  ```
+  bash → pre
+  edit → post
+  ```
+starter: |
+  actions = [
+      {"kind": "bash", "command": "rm -rf /tmp"},
+      {"kind": "edit", "path": "src/auth.ts"},
+  ]
+
+  # define pick_hook_lifecycle(action) below
+
+  for a in actions:
+      print(f"{a['kind']} → {pick_hook_lifecycle(a)}")
+grader:
+  kind: stdout-equality
+  expected: |
+    bash → pre
+    edit → post
+  normalize: collapse-trailing-newline
+solution: |
+  actions = [
+      {"kind": "bash", "command": "rm -rf /tmp"},
+      {"kind": "edit", "path": "src/auth.ts"},
+  ]
+
+  LIFECYCLE_BY_KIND = {
+      "bash": "pre",
+      "edit": "post",
+      "file_write": "post",
+      "commit": "pre",
+  }
+
+  def pick_hook_lifecycle(action):
+      return LIFECYCLE_BY_KIND.get(action.get("kind", ""), "none")
+
+  for a in actions:
+      print(f"{a['kind']} → {pick_hook_lifecycle(a)}")
+hint:
+  - level: 1
+    body: "Build a dict mapping kind → lifecycle, return `mapping.get(kind, 'none')`. Cleaner than a chain of if/elif and easier to extend when new kinds are added."
+  - level: 2
+    body: "The mental model: pre-lifecycle for BLOCKING (bash, commit). Post-lifecycle for CHECKING after the fact (edits, writes). Unknown kinds get 'none' so the harness doesn't crash on new action types."

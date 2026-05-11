@@ -1,6 +1,6 @@
 {
   "version": "0.1.0",
-  "generatedAt": "2026-05-11T22:28:04.220Z",
+  "generatedAt": "2026-05-11T23:21:38.371Z",
   "chapters": [
     {
       "number": 1,
@@ -261,6 +261,46 @@
       "stepCount": 27,
       "estMinutes": 47,
       "xpTotal": 85
+    },
+    {
+      "number": 27,
+      "slug": "ai-image-generation",
+      "title": "ai image generation — from prompt to production asset",
+      "blurb": "the 2026 image model landscape, the prompts that work, and the pipeline that turns one good idea into a hundred ready-to-ship images. nano-banana, flux, midjourney, ideogram — when each wins and what they cost.",
+      "lessonCount": 3,
+      "stepCount": 24,
+      "estMinutes": 60,
+      "xpTotal": 67
+    },
+    {
+      "number": 28,
+      "slug": "ai-video-generation",
+      "title": "ai video generation — sora, veo, higgsfield, and the second wave",
+      "blurb": "video is the hardest content type to generate, the most expensive, and the most strategically interesting. learn the 2026 model lineup, the camera-control patterns that separate slop from craft, and the cost math that decides whether your idea is viable.",
+      "lessonCount": 3,
+      "stepCount": 23,
+      "estMinutes": 50,
+      "xpTotal": 61
+    },
+    {
+      "number": 29,
+      "slug": "programmatic-design",
+      "title": "programmatic design — code-driven video and the new design pipeline",
+      "blurb": "ai generates raw assets; code stitches them into something shippable. hyperframes, remotion, claude design — when each tool wins, how they combine, and the data-driven workflows that turn one template into a hundred videos.",
+      "lessonCount": 3,
+      "stepCount": 24,
+      "estMinutes": 46,
+      "xpTotal": 66
+    },
+    {
+      "number": 30,
+      "slug": "harness-engineering",
+      "title": "harness engineering — the discipline behind the model",
+      "blurb": "every coding agent is a model plus a harness. the model is bought; the harness is engineered. learn the discipline: how to ratchet rules from failures, fight context rot, design long-horizon loops, wire hooks as enforcement, and read the haas shift that's reshaping what you build vs buy.",
+      "lessonCount": 5,
+      "stepCount": 45,
+      "estMinutes": 112,
+      "xpTotal": 117
     }
   ]
 }

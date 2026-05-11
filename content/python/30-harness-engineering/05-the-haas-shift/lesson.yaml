@@ -1,0 +1,15 @@
+slug: the-haas-shift
+title: "The HaaS shift — Harness-as-a-Service and what to build vs buy"
+estMinutes: 22
+prerequisites:
+  - long-horizon-execution
+order:
+  - 01-llm-apis-to-harness-apis.read.md
+  - 02-the-convergence.read.md
+  - 03-which-haas-fits.mc.yaml
+  - 04-harnesses-dont-shrink-they-move.read.md
+  - 05-the-overfitting-feedback-loop.read.md
+  - 06-mcp-security-as-prompt-injection.read.md
+  - 07-which-component-is-debt.mc.yaml
+  - 08-write-the-build-vs-buy.write.yaml
+  - 09-checkpoint.checkpoint.yaml

@@ -1,0 +1,97 @@
+xp: 5
+estSeconds: 220
+concept: harness-inventory-audit
+prompt: |
+  Write `audit_harness(setup)` that takes a dict describing a harness
+  and returns a dict with two fields:
+
+  - `score`: int 0-100, higher means more complete
+  - `gaps`: list of strings, the missing pieces by canonical name
+
+  The six canonical pieces (in this exact order):
+
+  ```
+  ["config", "tools", "infra", "orchestration", "hooks", "observability"]
+  ```
+
+  Scoring rules:
+
+  - Each piece present adds 16 to the score (six pieces × 16 = 96).
+  - If ALL six pieces are present, return score 100 (rounding bonus).
+  - Missing pieces go into `gaps` in the canonical order above.
+
+  Two harnesses run for you. Expected output:
+
+  ```
+  Claude Code: {'score': 80, 'gaps': ['observability']}
+  Raw API:     {'score': 0, 'gaps': ['config', 'tools', 'infra', 'orchestration', 'hooks', 'observability']}
+  ```
+starter: |
+  claude_code = {
+      "config": True,
+      "tools": True,
+      "infra": True,
+      "orchestration": True,
+      "hooks": True,
+      "observability": False,
+  }
+
+  raw_api = {
+      "config": False,
+      "tools": False,
+      "infra": False,
+      "orchestration": False,
+      "hooks": False,
+      "observability": False,
+  }
+
+  # define audit_harness(setup) below
+
+  print(f"Claude Code: {audit_harness(claude_code)}")
+  print(f"Raw API:     {audit_harness(raw_api)}")
+grader:
+  kind: stdout-equality
+  expected: |
+    Claude Code: {'score': 80, 'gaps': ['observability']}
+    Raw API:     {'score': 0, 'gaps': ['config', 'tools', 'infra', 'orchestration', 'hooks', 'observability']}
+  normalize: collapse-trailing-newline
+solution: |
+  claude_code = {
+      "config": True,
+      "tools": True,
+      "infra": True,
+      "orchestration": True,
+      "hooks": True,
+      "observability": False,
+  }
+
+  raw_api = {
+      "config": False,
+      "tools": False,
+      "infra": False,
+      "orchestration": False,
+      "hooks": False,
+      "observability": False,
+  }
+
+  PIECES = ["config", "tools", "infra", "orchestration", "hooks", "observability"]
+
+  def audit_harness(setup):
+      score = 0
+      gaps = []
+      for piece in PIECES:
+          if setup.get(piece, False):
+              score += 16
+          else:
+              gaps.append(piece)
+      if not gaps:
+          score = 100
+      return {"score": score, "gaps": gaps}
+
+  print(f"Claude Code: {audit_harness(claude_code)}")
+  print(f"Raw API:     {audit_harness(raw_api)}")
+hint:
+  - level: 1
+    body: "Iterate the six pieces in canonical order. Each present piece adds 16 to the score. Each missing piece is appended to the gaps list. After the loop, if gaps is empty, override score = 100."
+  - level: 2
+    body: "Claude Code has 5 of 6 pieces (everything except observability): 5 × 16 = 80. Raw API has zero pieces: score 0, all six in gaps in canonical order."

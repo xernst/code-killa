@@ -1,0 +1,33 @@
+xp: 2
+estSeconds: 70
+concept: pattern-vs-failure
+code: |
+  # four long-horizon failures. match each to the right structural fix.
+  failures = {
+      "A": "Agent declared 'task complete' at step 32 but the test suite still has 7 failing tests. Confidence-shipped done.",
+      "B": "By step 22 of a 40-step migration, the agent has drifted from what it said it would do at step 4. Half the original goals weren't touched.",
+      "C": "Agent wrote 50 unit tests, then graded its own tests as 'comprehensive and well-structured.' Manual review showed 18 of them had `assert True` as the body.",
+      "D": "Agent ran a long task that converged after step 8 but kept looping until it hit the 100-iteration budget cap because there was no exit check.",
+  }
+  for k, v in failures.items():
+      print(f"{k}: {v}")
+prompt: |
+  Three structural fixes: loops with completion guards, planner/executor
+  split, generator/evaluator split. Match each failure to its fix.
+options:
+  - id: guard_planner_evaluator_guard
+    label: "A=completion guard, B=planner/executor split, C=generator/evaluator split, D=completion guard (with early-exit)"
+  - id: planner_planner_planner_planner
+    label: "All four need a planner step"
+    explain: "Planning helps B (drifting from original plan). A is about an end-of-loop check (completion guard). C is about positive self-bias when grading (evaluator split). D is about the loop running too long (also a completion-guard property — exit when goal is met)."
+  - id: evaluator_evaluator_evaluator_evaluator
+    label: "All four need a generator/evaluator split"
+    explain: "The split catches C cleanly (self-grading). It can also help A in principle. But B is fundamentally a planning failure (no durable plan), and D is a loop-control failure (no exit when goal is met)."
+  - id: guard_guard_guard_guard
+    label: "All four are completion-guard problems"
+    explain: "The guard handles A and D. B needs a planner so there's a stable plan to converge to. C needs an evaluator with a different system prompt to defeat self-bias."
+answerIds:
+  - guard_planner_evaluator_guard
+hint:
+  - level: 1
+    body: "A is premature exit (guard). B is plan-drift (planner/executor). C is self-grading bias (evaluator split). D is the *symmetric* failure to A — the loop runs too long. Both A and D are completion-guard concerns; the guard's job is to enter when goal isn't met AND exit when it is."

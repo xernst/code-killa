@@ -1,0 +1,15 @@
+slug: the-ratchet
+title: "The ratchet — every mistake becomes a rule"
+estMinutes: 22
+prerequisites:
+  - the-harness-engineering-mindset
+order:
+  - 01-failures-are-signals-not-flukes.read.md
+  - 02-every-line-traces-to-a-failure.read.md
+  - 03-which-rule-earned-its-line.mc.yaml
+  - 04-working-backwards-from-behavior.read.md
+  - 05-the-ratchet-log.read.md
+  - 06-spot-the-cruft.mc.yaml
+  - 07-write-the-ratchet-update.write.yaml
+  - 08-audit-the-ratchet.write.yaml
+  - 09-checkpoint.checkpoint.yaml

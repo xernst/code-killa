@@ -1,0 +1,80 @@
+xp: 5
+estSeconds: 220
+concept: plan-the-context-budget
+prompt: |
+  Write `plan_context(tokens_avail, items)` that decides which items
+  to load into context now and which to offload (filesystem / RAG /
+  fetch-on-demand). Returns a dict:
+
+  ```
+  {"loaded": [<item names>], "offloaded": [<item names>]}
+  ```
+
+  Rules:
+
+  - Each item is a dict with `name` (str), `tokens` (int), and
+    `priority` (int — higher = more important).
+  - Sort items by `priority` descending. Ties broken by `name`
+    ascending (alphabetical, for stable ordering).
+  - Greedily load items in that order until the next item would
+    exceed `tokens_avail`. Anything that doesn't fit goes to `offloaded`.
+  - Do NOT mutate the input list.
+
+  Six items, 4000-token budget. Expected output:
+
+  ```
+  loaded: ['claude_md', 'current_task', 'recent_tool_results', 'deploy_skill']
+  offloaded: ['session_history', 'rust_skill']
+  ```
+starter: |
+  items = [
+      {"name": "claude_md",            "tokens": 800,  "priority": 10},
+      {"name": "current_task",         "tokens": 200,  "priority": 10},
+      {"name": "recent_tool_results",  "tokens": 1500, "priority": 8},
+      {"name": "session_history",      "tokens": 5000, "priority": 6},
+      {"name": "deploy_skill",         "tokens": 1200, "priority": 4},
+      {"name": "rust_skill",           "tokens": 900,  "priority": 2},
+  ]
+
+  # define plan_context(tokens_avail, items) below
+
+  result = plan_context(4000, items)
+  print(f"loaded: {result['loaded']}")
+  print(f"offloaded: {result['offloaded']}")
+grader:
+  kind: stdout-equality
+  expected: |
+    loaded: ['claude_md', 'current_task', 'recent_tool_results', 'deploy_skill']
+    offloaded: ['session_history', 'rust_skill']
+  normalize: collapse-trailing-newline
+solution: |
+  items = [
+      {"name": "claude_md",            "tokens": 800,  "priority": 10},
+      {"name": "current_task",         "tokens": 200,  "priority": 10},
+      {"name": "recent_tool_results",  "tokens": 1500, "priority": 8},
+      {"name": "session_history",      "tokens": 5000, "priority": 6},
+      {"name": "deploy_skill",         "tokens": 1200, "priority": 4},
+      {"name": "rust_skill",           "tokens": 900,  "priority": 2},
+  ]
+
+  def plan_context(tokens_avail, items):
+      sorted_items = sorted(items, key=lambda x: (-x["priority"], x["name"]))
+      loaded = []
+      offloaded = []
+      used = 0
+      for item in sorted_items:
+          if used + item["tokens"] <= tokens_avail:
+              loaded.append(item["name"])
+              used += item["tokens"]
+          else:
+              offloaded.append(item["name"])
+      return {"loaded": loaded, "offloaded": offloaded}
+
+  result = plan_context(4000, items)
+  print(f"loaded: {result['loaded']}")
+  print(f"offloaded: {result['offloaded']}")
+hint:
+  - level: 1
+    body: "Three steps: (1) sort a copy of items by `(-priority, name)`, (2) walk sorted items keeping a running `used` total, (3) on each item check `used + item['tokens'] <= tokens_avail` to decide loaded vs offloaded. Both lists end up in sorted order, which preserves a deterministic output."
+  - level: 2
+    body: "The greedy decision can skip an item that doesn't fit and still load smaller items that come later. That's a real choice — alternative would be 'stop at first overflow' — but the spec here says load anything that still fits."

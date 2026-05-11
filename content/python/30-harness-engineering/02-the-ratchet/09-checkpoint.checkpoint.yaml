@@ -1,0 +1,67 @@
+xp: 8
+estSeconds: 240
+concept: synthesize-the-ratchet-discipline
+prompt: |
+  Final ratchet drill. Combine the audit + the leverage assessment
+  into one function: `triage_ratchet(rules)`.
+
+  Each rule is a dict with `date` (YYYY-MM-DD), `rule` (string), and
+  `model_native_in_year` (int, 9999 if never).
+
+  Return a dict with three fields:
+
+  - `kept_count`: int, rules still earning their place
+    (`model_native_in_year > 2025`)
+  - `remove_count`: int, rules to retire (`model_native_in_year <= 2025`)
+  - `highest_leverage`: string, the rule with the MOST RECENT `date`
+    among the kept rules (the rule that most recently earned its
+    place is the highest-leverage rule still in the harness)
+
+  On a tie for the most recent date, return the LAST one in input
+  order (Python's `max` is stable).
+
+  Five rules run. Expected output:
+
+  ```
+  {'kept_count': 3, 'remove_count': 2, 'highest_leverage': 'use structlog, not stdlib logging'}
+  ```
+starter: |
+  rules = [
+      {"date": "2026-04-02", "rule": "no force push to main",                "model_native_in_year": 9999},
+      {"date": "2024-08-12", "rule": "always specify temperature",            "model_native_in_year": 2024},
+      {"date": "2026-03-22", "rule": "run tsc before done",                   "model_native_in_year": 9999},
+      {"date": "2023-11-01", "rule": "think step by step",                    "model_native_in_year": 2023},
+      {"date": "2026-05-01", "rule": "use structlog, not stdlib logging",     "model_native_in_year": 9999},
+  ]
+
+  # define triage_ratchet(rules) below
+
+  print(triage_ratchet(rules))
+grader:
+  kind: stdout-equality
+  expected: "{'kept_count': 3, 'remove_count': 2, 'highest_leverage': 'use structlog, not stdlib logging'}"
+  normalize: collapse-trailing-newline
+solution: |
+  rules = [
+      {"date": "2026-04-02", "rule": "no force push to main",                "model_native_in_year": 9999},
+      {"date": "2024-08-12", "rule": "always specify temperature",            "model_native_in_year": 2024},
+      {"date": "2026-03-22", "rule": "run tsc before done",                   "model_native_in_year": 9999},
+      {"date": "2023-11-01", "rule": "think step by step",                    "model_native_in_year": 2023},
+      {"date": "2026-05-01", "rule": "use structlog, not stdlib logging",     "model_native_in_year": 9999},
+  ]
+
+  def triage_ratchet(rules):
+      kept = [r for r in rules if r.get("model_native_in_year", 9999) > 2025]
+      remove = [r for r in rules if r.get("model_native_in_year", 9999) <= 2025]
+      if kept:
+          leverage = max(kept, key=lambda r: r["date"])["rule"]
+      else:
+          leverage = None
+      return {
+          "kept_count": len(kept),
+          "remove_count": len(remove),
+          "highest_leverage": leverage,
+      }
+
+  print(triage_ratchet(rules))
+passThreshold: 0.66

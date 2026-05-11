@@ -1,0 +1,13 @@
+slug: the-harness-engineering-mindset
+title: "The harness-engineering mindset — Agent equals Model plus Harness"
+estMinutes: 22
+prerequisites: []
+order:
+  - 01-the-model-is-only-one-input.read.md
+  - 02-the-six-pieces-of-a-harness.read.md
+  - 03-which-piece-is-missing.mc.yaml
+  - 04-the-skill-issue-reframe.read.md
+  - 05-pick-the-fix.mc.yaml
+  - 06-the-harness-gap.read.md
+  - 07-write-the-harness-inventory.write.yaml
+  - 08-checkpoint.checkpoint.yaml

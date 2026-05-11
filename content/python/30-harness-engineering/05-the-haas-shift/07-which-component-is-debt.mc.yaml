@@ -1,0 +1,34 @@
+xp: 2
+estSeconds: 70
+concept: which-component-is-debt
+code: |
+  # four harness components. which one is most likely to be obsolete in 12 months
+  # because the model will probably handle it natively or the SDK will absorb it?
+  components = {
+      "A": "A 60-line validator wrapping every tool call against a JSONSchema, retrying on validation errors.",
+      "B": "A pre-commit hook that runs the project's eslint + tsc and feeds errors back as backpressure.",
+      "C": "An AGENTS.md line: 'always run tests before declaring done'.",
+      "D": "A reviewer subagent that scans PR diffs for commented-out tests with a different system prompt than the generator.",
+  }
+  for k, v in components.items():
+      print(f"{k}: {v}")
+prompt: |
+  Which component is most likely to be debt in 12 months because the
+  model or SDK will probably absorb it?
+options:
+  - id: a
+    label: "A — JSONSchema tool-call validator"
+  - id: b
+    label: "B — pre-commit hook running eslint + tsc"
+    explain: "Backpressure hooks are LOAD-BEARING and likely getting MORE important, not less. Models still don't reliably self-correct without an external check. This is a durable component."
+  - id: c
+    label: "C — 'always run tests' AGENTS.md rule"
+    explain: "This rule still earns its place. Even smarter models forget to verify; the rule is cheap insurance. It's not obsolete soon."
+  - id: d
+    label: "D — reviewer subagent for commented-out tests"
+    explain: "Generator/evaluator splits are if anything getting MORE common, not less. The positive-self-bias problem hasn't been solved by model improvements; splits remain load-bearing."
+answerIds:
+  - a
+hint:
+  - level: 1
+    body: "Modern (2026) models very rarely produce malformed tool calls; the validation layer fires rarely and could be removed or thinned. The other three are enforcement / patterns that the moving harness keeps load-bearing because they address durable failure modes (positive self-bias, premature stopping, missing verification)."

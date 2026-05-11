@@ -1,0 +1,83 @@
+xp: 8
+estSeconds: 240
+concept: audit-long-horizon-harness
+prompt: |
+  Final long-horizon drill. Write `audit_long_horizon(harness)` that
+  scores a harness across the six long-horizon capabilities:
+
+  ```
+  ["loop_intercept", "planning_step", "eval_split",
+   "pre_tool_hooks", "post_edit_hooks", "completion_guard"]
+  ```
+
+  Returns a dict:
+
+  - `score`: int 0-100. Each capability present = 16 points. All six
+    present = 100 (rounding bonus).
+  - `missing`: list of capability names not present, in the canonical
+    order above.
+
+  Five harnesses run for you. Expected output:
+
+  ```
+  claude-code-plus: {'score': 100, 'missing': []}
+  cursor-default: {'score': 32, 'missing': ['loop_intercept', 'eval_split', 'pre_tool_hooks', 'completion_guard']}
+  codex-basic: {'score': 32, 'missing': ['loop_intercept', 'eval_split', 'post_edit_hooks', 'completion_guard']}
+  aider-minimal: {'score': 16, 'missing': ['loop_intercept', 'planning_step', 'eval_split', 'pre_tool_hooks', 'completion_guard']}
+  rolled-our-own: {'score': 80, 'missing': ['post_edit_hooks']}
+  ```
+starter: |
+  harnesses = [
+      {"name": "claude-code-plus", "loop_intercept": True,  "planning_step": True,  "eval_split": True,  "pre_tool_hooks": True,  "post_edit_hooks": True,  "completion_guard": True},
+      {"name": "cursor-default",   "loop_intercept": False, "planning_step": True,  "eval_split": False, "pre_tool_hooks": False, "post_edit_hooks": True,  "completion_guard": False},
+      {"name": "codex-basic",      "loop_intercept": False, "planning_step": True,  "eval_split": False, "pre_tool_hooks": True,  "post_edit_hooks": False, "completion_guard": False},
+      {"name": "aider-minimal",    "loop_intercept": False, "planning_step": False, "eval_split": False, "pre_tool_hooks": False, "post_edit_hooks": True,  "completion_guard": False},
+      {"name": "rolled-our-own",   "loop_intercept": True,  "planning_step": True,  "eval_split": True,  "pre_tool_hooks": True,  "post_edit_hooks": False, "completion_guard": True},
+  ]
+
+  # define audit_long_horizon(harness) below
+
+  for h in harnesses:
+      print(f"{h['name']}: {audit_long_horizon(h)}")
+grader:
+  kind: stdout-equality
+  expected: |
+    claude-code-plus: {'score': 100, 'missing': []}
+    cursor-default: {'score': 32, 'missing': ['loop_intercept', 'eval_split', 'pre_tool_hooks', 'completion_guard']}
+    codex-basic: {'score': 32, 'missing': ['loop_intercept', 'eval_split', 'post_edit_hooks', 'completion_guard']}
+    aider-minimal: {'score': 16, 'missing': ['loop_intercept', 'planning_step', 'eval_split', 'pre_tool_hooks', 'completion_guard']}
+    rolled-our-own: {'score': 80, 'missing': ['post_edit_hooks']}
+  normalize: collapse-trailing-newline
+solution: |
+  harnesses = [
+      {"name": "claude-code-plus", "loop_intercept": True,  "planning_step": True,  "eval_split": True,  "pre_tool_hooks": True,  "post_edit_hooks": True,  "completion_guard": True},
+      {"name": "cursor-default",   "loop_intercept": False, "planning_step": True,  "eval_split": False, "pre_tool_hooks": False, "post_edit_hooks": True,  "completion_guard": False},
+      {"name": "codex-basic",      "loop_intercept": False, "planning_step": True,  "eval_split": False, "pre_tool_hooks": True,  "post_edit_hooks": False, "completion_guard": False},
+      {"name": "aider-minimal",    "loop_intercept": False, "planning_step": False, "eval_split": False, "pre_tool_hooks": False, "post_edit_hooks": True,  "completion_guard": False},
+      {"name": "rolled-our-own",   "loop_intercept": True,  "planning_step": True,  "eval_split": True,  "pre_tool_hooks": True,  "post_edit_hooks": False, "completion_guard": True},
+  ]
+
+  CAPABILITIES = [
+      "loop_intercept",
+      "planning_step",
+      "eval_split",
+      "pre_tool_hooks",
+      "post_edit_hooks",
+      "completion_guard",
+  ]
+
+  def audit_long_horizon(harness):
+      score = 0
+      missing = []
+      for cap in CAPABILITIES:
+          if harness.get(cap, False):
+              score += 16
+          else:
+              missing.append(cap)
+      if not missing:
+          score = 100
+      return {"score": score, "missing": missing}
+
+  for h in harnesses:
+      print(f"{h['name']}: {audit_long_horizon(h)}")
+passThreshold: 0.66

@@ -1,0 +1,34 @@
+xp: 2
+estSeconds: 70
+concept: tier-the-data
+code: |
+  # four data types from a real harness. which tier does each belong in?
+  data = {
+      "A": "The team's coding style guide (200 lines, applies to every task in this repo).",
+      "B": "The user's natural-language description of the current task ('refactor the auth module to use JWT').",
+      "C": "The internal engineering wiki (1,400 markdown files, model needs maybe 1-2 of them per task).",
+      "D": "The list of currently-open Linear issues (changes hour-to-hour).",
+  }
+  for k, v in data.items():
+      print(f"{k}: {v}")
+prompt: |
+  Match each data type to the right memory tier. Pick the tier that
+  matches both the access pattern (how often) and the freshness
+  requirement (how stale tolerable).
+options:
+  - id: project_session_rag_mcp
+    label: "A=project memory, B=session, C=RAG, D=MCP"
+  - id: project_project_project_project
+    label: "All four go in project memory (CLAUDE.md)"
+    explain: "Project memory is for always-on rules. B is task-specific (belongs in session). C is too large for project memory (belongs in RAG). D needs to be fresh (belongs in MCP). Loading all four into CLAUDE.md would be ~25k tokens of attention tax every turn."
+  - id: session_session_session_session
+    label: "All four go in session memory"
+    explain: "Session memory grows during the conversation. A is project-wide and should be in tier 1. C is too large for any per-session loading. D needs live fetch on demand."
+  - id: rag_rag_rag_rag
+    label: "All four go in RAG"
+    explain: "RAG is for static knowledge retrieved on demand. A applies to every turn (should be tier 1). B is the user's current input (should be tier 2). D is live state (RAG would serve stale data)."
+answerIds:
+  - project_session_rag_mcp
+hint:
+  - level: 1
+    body: "A applies to every task (always-on → project memory). B is this turn's input (session). C is huge but only sometimes needed (RAG). D changes hour-to-hour (live → MCP, not RAG)."

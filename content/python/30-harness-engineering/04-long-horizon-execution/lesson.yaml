@@ -1,0 +1,16 @@
+slug: long-horizon-execution
+title: "Long-horizon execution — loops, planning, splits, hooks"
+estMinutes: 24
+prerequisites:
+  - context-engineering
+order:
+  - 01-the-40-step-problem.read.md
+  - 02-loops-intercepting-early-stops.read.md
+  - 03-planning-as-a-separate-step.read.md
+  - 04-splits-generation-vs-evaluation.read.md
+  - 05-which-pattern-fixes-the-failure.mc.yaml
+  - 06-hooks-as-the-enforcement-layer.read.md
+  - 07-the-type-check-backpressure-pattern.read.md
+  - 08-write-the-hook-router.write.yaml
+  - 09-write-the-completion-guard.write.yaml
+  - 10-checkpoint.checkpoint.yaml

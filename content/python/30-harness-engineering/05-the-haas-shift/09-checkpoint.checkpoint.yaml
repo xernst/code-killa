@@ -1,0 +1,92 @@
+xp: 8
+estSeconds: 240
+concept: portfolio-routing
+prompt: |
+  Final checkpoint for the chapter. Write `portfolio_route(projects)`
+  that takes a list of project profiles and returns a routing
+  decision plus a per-runtime count.
+
+  Each project has: `name`, `team_size`, `latency_critical` (bool),
+  `vertical_constraints` (bool), `language`.
+
+  Use the same decision rules as the previous drill:
+
+  1. tiny solo + no vertical constraints → `"build-your-own"`
+  2. TypeScript + no vertical constraints → `"vercel-ai-sdk"`
+  3. Python + (latency_critical OR vertical) → `"build-your-own"`
+  4. Python (otherwise) → `"claude-agents-sdk"`
+  5. anything else + latency_critical → `"build-your-own"`
+  6. anything else → `"openai-agents-sdk"`
+
+  Return a dict with two fields:
+
+  - `routes`: dict mapping project name → recommended runtime
+    (insertion order preserved)
+  - `counts`: dict mapping runtime → count of projects using it
+    (insertion order = first-seen order)
+
+  Five projects run. Expected output:
+
+  ```
+  routes: {'frontend-agent': 'vercel-ai-sdk', 'support-bot': 'claude-agents-sdk', 'side-project': 'build-your-own', 'trading-helper': 'build-your-own', 'data-pipeline': 'claude-agents-sdk'}
+  counts: {'vercel-ai-sdk': 1, 'claude-agents-sdk': 2, 'build-your-own': 2}
+  ```
+starter: |
+  projects = [
+      {"name": "frontend-agent",  "team_size": 5,  "latency_critical": False, "vertical_constraints": False, "language": "typescript"},
+      {"name": "support-bot",     "team_size": 3,  "latency_critical": False, "vertical_constraints": False, "language": "python"},
+      {"name": "side-project",    "team_size": 1,  "latency_critical": False, "vertical_constraints": False, "language": "python"},
+      {"name": "trading-helper",  "team_size": 12, "latency_critical": True,  "vertical_constraints": True,  "language": "python"},
+      {"name": "data-pipeline",   "team_size": 6,  "latency_critical": False, "vertical_constraints": False, "language": "python"},
+  ]
+
+  # define portfolio_route(projects) below
+
+  result = portfolio_route(projects)
+  print(f"routes: {result['routes']}")
+  print(f"counts: {result['counts']}")
+grader:
+  kind: stdout-equality
+  expected: |
+    routes: {'frontend-agent': 'vercel-ai-sdk', 'support-bot': 'claude-agents-sdk', 'side-project': 'build-your-own', 'trading-helper': 'build-your-own', 'data-pipeline': 'claude-agents-sdk'}
+    counts: {'vercel-ai-sdk': 1, 'claude-agents-sdk': 2, 'build-your-own': 2}
+  normalize: collapse-trailing-newline
+solution: |
+  projects = [
+      {"name": "frontend-agent",  "team_size": 5,  "latency_critical": False, "vertical_constraints": False, "language": "typescript"},
+      {"name": "support-bot",     "team_size": 3,  "latency_critical": False, "vertical_constraints": False, "language": "python"},
+      {"name": "side-project",    "team_size": 1,  "latency_critical": False, "vertical_constraints": False, "language": "python"},
+      {"name": "trading-helper",  "team_size": 12, "latency_critical": True,  "vertical_constraints": True,  "language": "python"},
+      {"name": "data-pipeline",   "team_size": 6,  "latency_critical": False, "vertical_constraints": False, "language": "python"},
+  ]
+
+  def recommend_harness(team):
+      size = team.get("team_size", 1)
+      latency_critical = team.get("latency_critical", False)
+      vertical = team.get("vertical_constraints", False)
+      language = team.get("language", "").lower()
+      if size <= 1 and not vertical:
+          return "build-your-own"
+      if language == "typescript" and not vertical:
+          return "vercel-ai-sdk"
+      if language == "python":
+          if latency_critical or vertical:
+              return "build-your-own"
+          return "claude-agents-sdk"
+      if latency_critical:
+          return "build-your-own"
+      return "openai-agents-sdk"
+
+  def portfolio_route(projects):
+      routes = {}
+      counts = {}
+      for p in projects:
+          choice = recommend_harness(p)
+          routes[p["name"]] = choice
+          counts[choice] = counts.get(choice, 0) + 1
+      return {"routes": routes, "counts": counts}
+
+  result = portfolio_route(projects)
+  print(f"routes: {result['routes']}")
+  print(f"counts: {result['counts']}")
+passThreshold: 0.66

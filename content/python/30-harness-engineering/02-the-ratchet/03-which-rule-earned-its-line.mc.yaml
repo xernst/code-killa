@@ -1,0 +1,35 @@
+xp: 2
+estSeconds: 70
+concept: which-rule-earned-its-place
+code: |
+  # four candidate AGENTS.md lines. one of them earned its place via the
+  # two-sentence test. the other three are cargo-culted from blog posts.
+  rules = {
+      "A": '"Always think step by step before responding."',
+      "B": '"Be helpful, harmless, and honest."',
+      "C": '"# 2026-04-02 — never run `git push --force` to main; agent did this in incident #341 and bypassed CI on prod."',
+      "D": '"Avoid using outdated libraries when newer ones exist."',
+  }
+  for k, v in rules.items():
+      print(f"{k}: {v}")
+prompt: |
+  Four candidate lines. The ratchet test: every line in AGENTS.md
+  should trace to a SPECIFIC, historical failure AND have explicit
+  removal criteria. Which one of these has actually earned its line?
+options:
+  - id: a
+    label: "A — 'think step by step'"
+    explain: "Cargo-cult from 2023-era prompt engineering. Modern models reason without being told. Doesn't trace to any specific failure your team observed; doesn't have removal criteria (when would it ever be 'safe' to delete? nobody knows)."
+  - id: b
+    label: "B — 'be helpful, harmless, and honest'"
+    explain: "Anthropic's HHH framing is great for model post-training. As a project-level rule, it's pure vibes — too abstract to act on, traces to no specific failure, and the model is already post-trained on it."
+  - id: c
+    label: "C — date-stamped force-push rule citing incident #341"
+  - id: d
+    label: "D — 'avoid outdated libraries'"
+    explain: "Vague to the point of useless. Outdated by what standard? Avoid how? No date, no citation, no specific command to refuse. The model can't act on this; it just adds attention tax."
+answerIds:
+  - c
+hint:
+  - level: 1
+    body: "The test has two parts: (1) name the specific failure the rule guards against, and (2) name what would have to be true for the rule to become unnecessary. Only one of these four passes part (1) — the date-stamped, incident-cited one."

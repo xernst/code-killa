@@ -1,0 +1,32 @@
+xp: 2
+estSeconds: 70
+concept: pick-the-mitigation
+code: |
+  # four context-bloat scenarios. match each to the right mitigation.
+  scenarios = {
+      "A": "After turn 35 of a long refactor, the conversation has accumulated 40k tokens of back-and-forth. The agent has started forgetting the test framework you told it about at turn 4.",
+      "B": "Every session starts with 26k tokens of system prompt because the harness eagerly loads all 28 skill files, even on simple tasks.",
+      "C": "Agent ran `pytest -v` on the test suite. Output was 1,800 lines of dotted progress and one actual failure on line 1,742. Context now half-full.",
+      "D": "User just asked about deploying a Rust service for the first time in this session. The deploy-rust skill (1,200 tokens) is sitting in a directory unloaded.",
+  }
+  for k, v in scenarios.items():
+      print(f"{k}: {v}")
+prompt: |
+  Three mitigations, four scenarios. Match each to the right technique.
+options:
+  - id: comp_progdis_offload_progdis
+    label: "A=compaction, B=progressive disclosure, C=offloading, D=progressive disclosure"
+  - id: comp_comp_comp_comp
+    label: "All four — just compact more aggressively"
+    explain: "Compaction only addresses A (long history). B is a load-time problem (eager skill loading), C is a tool-output problem (large stdout), D is a load-on-demand opportunity. Compaction is one tool of three."
+  - id: offload_offload_offload_offload
+    label: "All four — offload everything to disk"
+    explain: "Offloading addresses C (large tool output) cleanly. It can't help with A (history is in the model's turns, not a tool output) or B (skills are configuration, not output) or D (you want LOAD, not offload)."
+  - id: progdis_progdis_progdis_progdis
+    label: "All four — progressive disclosure"
+    explain: "Progressive disclosure addresses B and D (lazy-load capabilities). It doesn't help A (the bloat is in conversation history, not in skills) or C (the bloat is in a tool's stdout, not in skill loading)."
+answerIds:
+  - comp_progdis_offload_progdis
+hint:
+  - level: 1
+    body: "A is history bloat → compaction. B is eager-loading-skills bloat → progressive disclosure (and audit which skills are even earning their place). C is one tool's huge stdout → offload to filesystem with summary. D is the exact use case progressive disclosure was designed for — load the skill *because* the user just triggered it."

@@ -1,0 +1,90 @@
+xp: 5
+estSeconds: 220
+concept: recommend-a-harness
+prompt: |
+  Write `recommend_harness(team)` that takes a team profile and
+  returns the recommended runtime as a string. The team dict has:
+
+  - `team_size` (int)
+  - `latency_critical` (bool)
+  - `vertical_constraints` (bool) — strict domain/regulatory needs
+  - `language` (str — e.g. "typescript", "python")
+
+  Decision rules (apply in order):
+
+  1. **Tiny solo dev with no vertical constraints**
+     (`team_size <= 1 and not vertical_constraints`) →
+     `"build-your-own"` — no runtime needed at this scale.
+  2. **TypeScript shop with no vertical constraints**
+     (`language == "typescript" and not vertical_constraints`) →
+     `"vercel-ai-sdk"`.
+  3. **Python team, latency-critical or vertical-constrained** →
+     `"build-your-own"` (need full control).
+  4. **Python team, otherwise** →
+     `"claude-agents-sdk"` (default for Anthropic-aligned Python work).
+  5. **Anything else with latency-critical** →
+     `"build-your-own"`.
+  6. **Anything else** →
+     `"openai-agents-sdk"`.
+
+  Four teams run for you. Expected output:
+
+  ```
+  ts-startup: vercel-ai-sdk
+  py-mid: claude-agents-sdk
+  solo: build-your-own
+  regulated-fin: build-your-own
+  ```
+starter: |
+  teams = [
+      ("ts-startup",    {"team_size": 5,  "latency_critical": False, "vertical_constraints": False, "language": "typescript"}),
+      ("py-mid",        {"team_size": 8,  "latency_critical": False, "vertical_constraints": False, "language": "python"}),
+      ("solo",          {"team_size": 1,  "latency_critical": False, "vertical_constraints": False, "language": "python"}),
+      ("regulated-fin", {"team_size": 20, "latency_critical": True,  "vertical_constraints": True,  "language": "python"}),
+  ]
+
+  # define recommend_harness(team) below
+
+  for name, t in teams:
+      print(f"{name}: {recommend_harness(t)}")
+grader:
+  kind: stdout-equality
+  expected: |
+    ts-startup: vercel-ai-sdk
+    py-mid: claude-agents-sdk
+    solo: build-your-own
+    regulated-fin: build-your-own
+  normalize: collapse-trailing-newline
+solution: |
+  teams = [
+      ("ts-startup",    {"team_size": 5,  "latency_critical": False, "vertical_constraints": False, "language": "typescript"}),
+      ("py-mid",        {"team_size": 8,  "latency_critical": False, "vertical_constraints": False, "language": "python"}),
+      ("solo",          {"team_size": 1,  "latency_critical": False, "vertical_constraints": False, "language": "python"}),
+      ("regulated-fin", {"team_size": 20, "latency_critical": True,  "vertical_constraints": True,  "language": "python"}),
+  ]
+
+  def recommend_harness(team):
+      size = team.get("team_size", 1)
+      latency_critical = team.get("latency_critical", False)
+      vertical = team.get("vertical_constraints", False)
+      language = team.get("language", "").lower()
+
+      if size <= 1 and not vertical:
+          return "build-your-own"
+      if language == "typescript" and not vertical:
+          return "vercel-ai-sdk"
+      if language == "python":
+          if latency_critical or vertical:
+              return "build-your-own"
+          return "claude-agents-sdk"
+      if latency_critical:
+          return "build-your-own"
+      return "openai-agents-sdk"
+
+  for name, t in teams:
+      print(f"{name}: {recommend_harness(t)}")
+hint:
+  - level: 1
+    body: "Apply the six rules in the order listed. Each is a simple if-check; first match returns. The rules are exclusive, so order matters."
+  - level: 2
+    body: "Tiny solo → build-your-own (no runtime needed). TS → vercel. Python → claude-agents-sdk default, unless latency-critical or vertical (then build-your-own). Everything else → openai-agents-sdk unless latency-critical."

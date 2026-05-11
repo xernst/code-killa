@@ -1,0 +1,34 @@
+xp: 2
+estSeconds: 70
+concept: pick-the-runtime
+code: |
+  # four product scenarios. which HaaS runtime fits each best?
+  products = {
+      "A": "TypeScript SaaS startup (5 engineers) building a Next.js customer-support agent. Wants to ship in 2 weeks. Will be deployed on Vercel.",
+      "B": "Anthropic-aligned team building a CLI coding tool that mirrors Claude Code's UX but for a niche language (Elixir). Wants the same post-trained harness shape Claude was trained on.",
+      "C": "Python team at a regulated financial-services firm. Workflow has 6 distinct stages with explicit handoffs, retry logic, and approval gates. Auditability is critical.",
+      "D": "Solo developer building an experimental agent for parsing local government PDFs. ~50 lines of code, no team, no production deployment. Just exploring.",
+  }
+  for k, v in products.items():
+      print(f"{k}: {v}")
+prompt: |
+  Four products, four runtime decisions. Match each to the best fit.
+  Options: Vercel AI SDK, Claude Agent SDK, LangGraph, or
+  framework-free (just raw API calls).
+options:
+  - id: vercel_claude_langgraph_raw
+    label: "A=Vercel AI SDK, B=Claude Agent SDK, C=LangGraph, D=framework-free"
+  - id: claude_for_all
+    label: "Claude Agent SDK for all four"
+    explain: "Claude Agent SDK fits B beautifully (Anthropic-aligned, mirrors Claude Code). It's an awkward fit for A (TypeScript + Vercel hosting → Vercel AI SDK is the native choice). LangGraph's graph semantics fit C's 6-stage explicit-handoff workflow better. D is too small to justify any runtime — just call the API."
+  - id: vercel_for_all
+    label: "Vercel AI SDK for all four"
+    explain: "Vercel AI SDK is the right answer for A. B benefits from Claude Agent SDK's post-training-aligned tools. C's regulated-finance audit + graph workflow is exactly what LangGraph was built for. D doesn't need any runtime overhead."
+  - id: langgraph_for_all
+    label: "LangGraph for all four"
+    explain: "LangGraph is the heaviest of the four. It fits C cleanly (graph semantics + auditability) but is overkill for A (Vercel + Next.js native runtime wins on speed-to-ship) and overkill for B (Claude Agent SDK is specifically designed for the use case). For D it's massive overengineering."
+answerIds:
+  - vercel_claude_langgraph_raw
+hint:
+  - level: 1
+    body: "Match the SHAPE of the project to the SHAPE of the runtime. A is TS + Vercel hosting → Vercel AI SDK. B explicitly wants Anthropic's harness shape → Claude Agent SDK. C is a 6-stage graph with handoffs and audit → LangGraph. D is 50 lines, no production → framework-free is the right answer; adopting a runtime would be pure overhead."

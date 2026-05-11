@@ -1,0 +1,93 @@
+xp: 8
+estSeconds: 240
+concept: full-session-manager
+prompt: |
+  Final context-engineering drill. Write `manage_session(items, budget, threshold_pct)`
+  that combines budget-planning with a compaction trigger.
+
+  Returns a dict with FOUR fields:
+
+  - `loaded`: list of item names that fit in the budget
+    (priority-desc, then name-asc; greedy fill)
+  - `offloaded`: list of item names that didn't fit (same sort order)
+  - `load_pct`: int 0-100, percentage of budget used
+    (rounded to nearest, `round(100 * used / budget)`)
+  - `compact_targets`: list of up to TWO item names — the LOWEST
+    priority items currently in `loaded`. Only populated if
+    `load_pct > threshold_pct`; otherwise empty list. Order: priority
+    ascending, then name ascending.
+
+  Five items, 4000-token budget, 75% threshold. Expected output:
+
+  ```
+  loaded: ['claude_md', 'current_task', 'recent_tool_results', 'session_history']
+  offloaded: ['deploy_skill']
+  load_pct: 92
+  compact_targets: ['session_history', 'recent_tool_results']
+  ```
+starter: |
+  items = [
+      {"name": "claude_md",            "tokens": 800,  "priority": 10},
+      {"name": "current_task",         "tokens": 200,  "priority": 10},
+      {"name": "recent_tool_results",  "tokens": 1500, "priority": 8},
+      {"name": "session_history",      "tokens": 1200, "priority": 6},
+      {"name": "deploy_skill",         "tokens": 500,  "priority": 4},
+  ]
+
+  # define manage_session(items, budget, threshold_pct) below
+
+  result = manage_session(items, 4000, 75)
+  print(f"loaded: {result['loaded']}")
+  print(f"offloaded: {result['offloaded']}")
+  print(f"load_pct: {result['load_pct']}")
+  print(f"compact_targets: {result['compact_targets']}")
+grader:
+  kind: stdout-equality
+  expected: |
+    loaded: ['claude_md', 'current_task', 'recent_tool_results', 'session_history']
+    offloaded: ['deploy_skill']
+    load_pct: 92
+    compact_targets: ['session_history', 'recent_tool_results']
+  normalize: collapse-trailing-newline
+solution: |
+  items = [
+      {"name": "claude_md",            "tokens": 800,  "priority": 10},
+      {"name": "current_task",         "tokens": 200,  "priority": 10},
+      {"name": "recent_tool_results",  "tokens": 1500, "priority": 8},
+      {"name": "session_history",      "tokens": 1200, "priority": 6},
+      {"name": "deploy_skill",         "tokens": 500,  "priority": 4},
+  ]
+
+  def manage_session(items, budget, threshold_pct):
+      sorted_items = sorted(items, key=lambda x: (-x["priority"], x["name"]))
+      loaded_names = []
+      offloaded_names = []
+      used = 0
+      for item in sorted_items:
+          if used + item["tokens"] <= budget:
+              loaded_names.append(item["name"])
+              used += item["tokens"]
+          else:
+              offloaded_names.append(item["name"])
+
+      load_pct = round(100 * used / budget) if budget else 0
+
+      compact_targets = []
+      if load_pct > threshold_pct:
+          loaded_full = [it for it in items if it["name"] in loaded_names]
+          loaded_full.sort(key=lambda x: (x["priority"], x["name"]))
+          compact_targets = [it["name"] for it in loaded_full[:2]]
+
+      return {
+          "loaded": loaded_names,
+          "offloaded": offloaded_names,
+          "load_pct": load_pct,
+          "compact_targets": compact_targets,
+      }
+
+  result = manage_session(items, 4000, 75)
+  print(f"loaded: {result['loaded']}")
+  print(f"offloaded: {result['offloaded']}")
+  print(f"load_pct: {result['load_pct']}")
+  print(f"compact_targets: {result['compact_targets']}")
+passThreshold: 0.66

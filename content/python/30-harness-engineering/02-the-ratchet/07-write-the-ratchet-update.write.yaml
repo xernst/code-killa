@@ -1,0 +1,112 @@
+xp: 5
+estSeconds: 220
+concept: append-to-ratchet-log
+prompt: |
+  Write `add_to_ratchet(log, failure)` that appends a new entry to a
+  ratchet log and returns a NEW list (don't mutate the input).
+
+  Rules:
+
+  - `log` is a list of dicts, each with keys: `date` (YYYY-MM-DD),
+    `failure`, `rule`, `remove_when`.
+  - `failure` is a dict with the same four keys.
+  - Return a new list with the new entry inserted, sorted by `date`
+    ascending.
+  - Do NOT mutate the original `log`.
+
+  Two failures appended in sequence. Expected output:
+
+  ```
+  After first add:
+  2026-02-20: use Tailwind, never inline styles
+  2026-03-15: never skip failing tests
+  2026-04-02: no force push to main
+  After second add:
+  2026-02-20: use Tailwind, never inline styles
+  2026-03-15: never skip failing tests
+  2026-04-02: no force push to main
+  2026-05-01: use structlog, not stdlib logging
+  ```
+starter: |
+  log = [
+      {"date": "2026-02-20", "failure": "Cursor agent kept using inline styles in PR #1893",
+       "rule": "use Tailwind, never inline styles",
+       "remove_when": "ESLint catches 100% over 30 days"},
+      {"date": "2026-04-02", "failure": "Agent ran `git push --force` to main bypassing CI",
+       "rule": "no force push to main",
+       "remove_when": "SDK ships native force-push protection"},
+  ]
+
+  f1 = {"date": "2026-03-15",
+        "failure": "Agent commented out failing CartTest in PR #842",
+        "rule": "never skip failing tests",
+        "remove_when": "30 consecutive sessions with no skip-pattern"}
+
+  f2 = {"date": "2026-05-01",
+        "failure": "Agent imported stdlib `logging` instead of project's structlog setup",
+        "rule": "use structlog, not stdlib logging",
+        "remove_when": "lint rule blocks stdlib logging imports"}
+
+  # define add_to_ratchet(log, failure) below
+
+  print("After first add:")
+  after_one = add_to_ratchet(log, f1)
+  for e in after_one:
+      print(f"{e['date']}: {e['rule']}")
+
+  print("After second add:")
+  after_two = add_to_ratchet(after_one, f2)
+  for e in after_two:
+      print(f"{e['date']}: {e['rule']}")
+grader:
+  kind: stdout-equality
+  expected: |
+    After first add:
+    2026-02-20: use Tailwind, never inline styles
+    2026-03-15: never skip failing tests
+    2026-04-02: no force push to main
+    After second add:
+    2026-02-20: use Tailwind, never inline styles
+    2026-03-15: never skip failing tests
+    2026-04-02: no force push to main
+    2026-05-01: use structlog, not stdlib logging
+  normalize: collapse-trailing-newline
+solution: |
+  log = [
+      {"date": "2026-02-20", "failure": "Cursor agent kept using inline styles in PR #1893",
+       "rule": "use Tailwind, never inline styles",
+       "remove_when": "ESLint catches 100% over 30 days"},
+      {"date": "2026-04-02", "failure": "Agent ran `git push --force` to main bypassing CI",
+       "rule": "no force push to main",
+       "remove_when": "SDK ships native force-push protection"},
+  ]
+
+  f1 = {"date": "2026-03-15",
+        "failure": "Agent commented out failing CartTest in PR #842",
+        "rule": "never skip failing tests",
+        "remove_when": "30 consecutive sessions with no skip-pattern"}
+
+  f2 = {"date": "2026-05-01",
+        "failure": "Agent imported stdlib `logging` instead of project's structlog setup",
+        "rule": "use structlog, not stdlib logging",
+        "remove_when": "lint rule blocks stdlib logging imports"}
+
+  def add_to_ratchet(log, failure):
+      new_log = list(log) + [dict(failure)]
+      new_log.sort(key=lambda e: e["date"])
+      return new_log
+
+  print("After first add:")
+  after_one = add_to_ratchet(log, f1)
+  for e in after_one:
+      print(f"{e['date']}: {e['rule']}")
+
+  print("After second add:")
+  after_two = add_to_ratchet(after_one, f2)
+  for e in after_two:
+      print(f"{e['date']}: {e['rule']}")
+hint:
+  - level: 1
+    body: "Three steps: (1) copy the existing list (`list(log)`), (2) append the new entry as a fresh dict (`dict(failure)` to avoid aliasing), (3) sort the new list by `date`. Return the sorted new list."
+  - level: 2
+    body: "`list(log)` gives a shallow copy. Sort with `key=lambda e: e['date']`. Dates in ISO format (YYYY-MM-DD) sort correctly as strings."

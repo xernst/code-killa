@@ -1,0 +1,32 @@
+xp: 2
+estSeconds: 70
+concept: locate-the-missing-piece
+code: |
+  failures = {
+      "A": "Agent ran `rm -rf /` on a real machine because the model interpreted a comment as an instruction. No confirmation was asked.",
+      "B": "After 32 turns, the agent declared 'task complete' even though the failing test was never made to pass. It moved on confidently.",
+      "C": "Engineer asked 'why did the agent take this approach two days ago?' — nobody could answer. The session log was never written to disk.",
+      "D": "Agent kept ignoring the team convention 'always use Tailwind, never inline styles.' Every PR had to be manually corrected.",
+  }
+  for k, v in failures.items():
+      print(f"{k}: {v}")
+prompt: |
+  Four agent failures. Each one points at one weakest piece of the
+  six-piece harness model. Which piece is missing in each case?
+options:
+  - id: hooks_orch_obs_config
+    label: "A=hooks, B=orchestration, C=observability, D=config"
+  - id: tools_tools_tools_tools
+    label: "A=tools, B=tools, C=tools, D=tools"
+    explain: "All four are tools-related in some loose sense, but the discipline is to name the SPECIFIC piece. A is hooks (pre-tool guard missing), B is orchestration (no completion guard), C is observability (no trace), D is config (no rule in AGENTS.md)."
+  - id: config_config_config_config
+    label: "A=config, B=config, C=config, D=config"
+    explain: "Config alone can't stop a destructive command at runtime (that's a hook), can't catch a premature stop (that's orchestration), and can't replay history (that's observability). Only D is a config failure."
+  - id: hooks_hooks_hooks_hooks
+    label: "A=hooks, B=hooks, C=hooks, D=hooks"
+    explain: "Hooks would fix A and maybe B, but C is a logging/trace problem (observability) and D is a system-prompt problem (config). The point of having six categories is to use all six."
+answerIds:
+  - hooks_orch_obs_config
+hint:
+  - level: 1
+    body: "A is about a guard that should have stopped a tool BEFORE it ran (pre-tool lifecycle). B is about a missing 'are we actually done?' check across many steps. C is about replay/audit. D is about a team rule the model never read."

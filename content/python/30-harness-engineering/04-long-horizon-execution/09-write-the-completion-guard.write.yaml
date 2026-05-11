@@ -1,0 +1,72 @@
+xp: 5
+estSeconds: 220
+concept: completion-guard-decision
+prompt: |
+  Write `should_continue(state)` — the completion-guard decision
+  function. Returns `True` if the harness loop should re-enter,
+  `False` if it should stop.
+
+  The `state` dict has four fields:
+
+  - `goal_met` (bool): did the deterministic goal check pass?
+  - `steps_taken` (int): how many turns has the agent used?
+  - `max_steps` (int): the iteration budget.
+  - `errors_in_last_turn` (int): how many critical errors fired in the
+    most recent turn (e.g., hook blocks, exception count).
+
+  Return `True` iff:
+
+  - goal is NOT yet met, AND
+  - steps_taken < max_steps (budget not exhausted), AND
+  - errors_in_last_turn == 0 (last turn didn't produce critical errors)
+
+  Four scenarios run. Expected output:
+
+  ```
+  early loop: True
+  goal met: False
+  budget exhausted: False
+  critical errors: False
+  ```
+starter: |
+  scenarios = [
+      ("early loop",        {"goal_met": False, "steps_taken": 10,  "max_steps": 100, "errors_in_last_turn": 0}),
+      ("goal met",          {"goal_met": True,  "steps_taken": 10,  "max_steps": 100, "errors_in_last_turn": 0}),
+      ("budget exhausted",  {"goal_met": False, "steps_taken": 100, "max_steps": 100, "errors_in_last_turn": 0}),
+      ("critical errors",   {"goal_met": False, "steps_taken": 10,  "max_steps": 100, "errors_in_last_turn": 2}),
+  ]
+
+  # define should_continue(state) below
+
+  for label, s in scenarios:
+      print(f"{label}: {should_continue(s)}")
+grader:
+  kind: stdout-equality
+  expected: |
+    early loop: True
+    goal met: False
+    budget exhausted: False
+    critical errors: False
+  normalize: collapse-trailing-newline
+solution: |
+  scenarios = [
+      ("early loop",        {"goal_met": False, "steps_taken": 10,  "max_steps": 100, "errors_in_last_turn": 0}),
+      ("goal met",          {"goal_met": True,  "steps_taken": 10,  "max_steps": 100, "errors_in_last_turn": 0}),
+      ("budget exhausted",  {"goal_met": False, "steps_taken": 100, "max_steps": 100, "errors_in_last_turn": 0}),
+      ("critical errors",   {"goal_met": False, "steps_taken": 10,  "max_steps": 100, "errors_in_last_turn": 2}),
+  ]
+
+  def should_continue(state):
+      return (
+          not state.get("goal_met", False)
+          and state.get("steps_taken", 0) < state.get("max_steps", 0)
+          and state.get("errors_in_last_turn", 0) == 0
+      )
+
+  for label, s in scenarios:
+      print(f"{label}: {should_continue(s)}")
+hint:
+  - level: 1
+    body: "Three conditions chained with `and`: NOT goal_met, AND steps_taken < max_steps, AND errors_in_last_turn == 0. All three have to hold for the loop to keep going."
+  - level: 2
+    body: "Use `.get()` with defaults so missing fields fail safely. Note that critical errors halt the loop — the assumption is that errors should escalate to a human, not keep being retried automatically."

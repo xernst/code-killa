@@ -1,0 +1,32 @@
+xp: 2
+estSeconds: 70
+concept: four-reflex-triage
+code: |
+  failures = [
+      "1. Agent merged a PR by running `gh pr merge --admin` even though the repo policy is reviewer-approved merges only. First time it happened.",
+      "2. Agent has been told three times across three sessions: 'use pnpm, not npm, in this repo.' Each new session it reaches for npm.",
+      "3. Agent rewrote half a React component, ran the test suite, all green. You ran tsc by hand: 14 type errors. Agent had no idea.",
+      "4. Agent started a 30-step migration. By step 18 it 'finished' without touching the last 12 steps. Confidence-declared done.",
+  ]
+  for f in failures:
+      print(f)
+prompt: |
+  Four agent failures, one each from the four-reflex menu. Match each
+  to its canonical fix.
+options:
+  - id: hook_agentsmd_backpressure_split
+    label: "1=pre-tool hook, 2=AGENTS.md rule, 3=post-edit backpressure, 4=planner/executor split"
+  - id: agentsmd_all_four
+    label: "Add all four to AGENTS.md — one file, one place"
+    explain: "AGENTS.md is great for #2 (a convention the model keeps ignoring). It cannot stop a destructive command at runtime (#1 — that's a hook). It cannot catch type errors the test suite missed (#3 — that's a hook). It cannot prevent premature exits across 30 steps (#4 — that's orchestration)."
+  - id: split_all_four
+    label: "Subagent split for all four — let smaller agents handle each piece"
+    explain: "Splits help with #4 (long task drift) and arguably #3 (separate review agent). They don't help with #1 (you need an action-time guard) or #2 (you need a static rule the model reads on every turn)."
+  - id: hook_hook_hook_hook
+    label: "All four are hooks failures"
+    explain: "Hooks fix #1 (pre-tool block) and #3 (post-edit type-check), but #2 is a config failure (the rule isn't in AGENTS.md) and #4 is an orchestration failure (no planner/executor split with completion guard)."
+answerIds:
+  - hook_agentsmd_backpressure_split
+hint:
+  - level: 1
+    body: "The four reflexes are: ignored convention → AGENTS.md, destructive command → pre-tool hook, broken code shipped → post-edit backpressure, lost on long task → planner/executor split. Match the failure SHAPE to the reflex."

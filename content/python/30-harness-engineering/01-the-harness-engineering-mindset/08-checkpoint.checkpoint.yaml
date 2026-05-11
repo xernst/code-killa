@@ -1,0 +1,76 @@
+xp: 8
+estSeconds: 240
+concept: triage-five-harnesses
+prompt: |
+  Final drill for the mindset lesson. Write `triage_harnesses(harnesses)`
+  that scores five harness configurations and returns a dict:
+
+  - `scores`: dict mapping each harness `name` → its 0-100 score
+    (insertion order preserved)
+  - `weakest`: the name of the harness MOST likely to fail first
+    (lowest score). On a tie, return the FIRST one in input order.
+
+  Reuse the six-piece scoring from the previous drill:
+
+  - Each present piece (`config`, `tools`, `infra`, `orchestration`,
+    `hooks`, `observability`) adds 16.
+  - All six present → 100.
+
+  Five harnesses run for you. Expected output:
+
+  ```
+  scores: {'claude-code-pro': 100, 'cursor-default': 64, 'aider-basic': 32, 'raw-anthropic': 16, 'inhouse-wrapper': 64}
+  weakest: raw-anthropic
+  ```
+starter: |
+  harnesses = [
+      {"name": "claude-code-pro",  "config": True,  "tools": True, "infra": True,  "orchestration": True,  "hooks": True,  "observability": True},
+      {"name": "cursor-default",   "config": True,  "tools": True, "infra": True,  "orchestration": False, "hooks": False, "observability": True},
+      {"name": "aider-basic",      "config": True,  "tools": True, "infra": False, "orchestration": False, "hooks": False, "observability": False},
+      {"name": "raw-anthropic",    "config": False, "tools": True, "infra": False, "orchestration": False, "hooks": False, "observability": False},
+      {"name": "inhouse-wrapper",  "config": True,  "tools": True, "infra": True,  "orchestration": True,  "hooks": False, "observability": False},
+  ]
+
+  # define triage_harnesses(harnesses) below
+
+  result = triage_harnesses(harnesses)
+  print(f"scores: {result['scores']}")
+  print(f"weakest: {result['weakest']}")
+grader:
+  kind: stdout-equality
+  expected: |
+    scores: {'claude-code-pro': 100, 'cursor-default': 64, 'aider-basic': 32, 'raw-anthropic': 16, 'inhouse-wrapper': 64}
+    weakest: raw-anthropic
+  normalize: collapse-trailing-newline
+solution: |
+  harnesses = [
+      {"name": "claude-code-pro",  "config": True,  "tools": True, "infra": True,  "orchestration": True,  "hooks": True,  "observability": True},
+      {"name": "cursor-default",   "config": True,  "tools": True, "infra": True,  "orchestration": False, "hooks": False, "observability": True},
+      {"name": "aider-basic",      "config": True,  "tools": True, "infra": False, "orchestration": False, "hooks": False, "observability": False},
+      {"name": "raw-anthropic",    "config": False, "tools": True, "infra": False, "orchestration": False, "hooks": False, "observability": False},
+      {"name": "inhouse-wrapper",  "config": True,  "tools": True, "infra": True,  "orchestration": True,  "hooks": False, "observability": False},
+  ]
+
+  PIECES = ["config", "tools", "infra", "orchestration", "hooks", "observability"]
+
+  def score_one(h):
+      score = 0
+      gaps = 0
+      for piece in PIECES:
+          if h.get(piece, False):
+              score += 16
+          else:
+              gaps += 1
+      if gaps == 0:
+          score = 100
+      return score
+
+  def triage_harnesses(harnesses):
+      scores = {h["name"]: score_one(h) for h in harnesses}
+      weakest = min(harnesses, key=lambda h: score_one(h))["name"]
+      return {"scores": scores, "weakest": weakest}
+
+  result = triage_harnesses(harnesses)
+  print(f"scores: {result['scores']}")
+  print(f"weakest: {result['weakest']}")
+passThreshold: 0.66

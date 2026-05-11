@@ -1,0 +1,15 @@
+slug: context-engineering
+title: "Context engineering — fighting the rot"
+estMinutes: 22
+prerequisites:
+  - the-ratchet
+order:
+  - 01-the-context-rot.read.md
+  - 02-compaction.read.md
+  - 03-tool-call-offloading.read.md
+  - 04-progressive-disclosure.read.md
+  - 05-which-technique-fits.mc.yaml
+  - 06-the-memory-hierarchy.read.md
+  - 07-classify-the-data.mc.yaml
+  - 08-write-the-context-budget.write.yaml
+  - 09-checkpoint.checkpoint.yaml
