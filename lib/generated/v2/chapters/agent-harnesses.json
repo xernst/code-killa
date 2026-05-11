@@ -257,7 +257,265 @@
         }
       ],
       "xpTotal": 32
+    },
+    {
+      "slug": "architecting-an-ai-native-workflow",
+      "title": "Architecting an AI-native workflow — Greg Isenberg's 5-step playbook in code",
+      "estMinutes": 15,
+      "prerequisites": [
+        "what-a-harness-is"
+      ],
+      "steps": [
+        {
+          "type": "read",
+          "id": "agent-harnesses/architecting-an-ai-native-workflow/s01-01-intro",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "warmup",
+          "estSeconds": 160,
+          "concept": "ai-assisted-vs-ai-native",
+          "body": "# AI-assisted is not AI-native. The difference is the question you ask.\n\nGreg Isenberg wrote a thing on X in May 2026 that landed harder than\nmost \"AI strategy\" posts. The whole essay is at\n`x.com/gregisenberg/status/2053843542020063489`. The short version:\n\n> An AI-native company is not a company that uses AI. It is a company\n> that has been rebuilt so AI can actually operate inside it. The\n> business is structured, documented, permissioned, and instrumented\n> in a way that agents can understand.\n\nThat second sentence is the lesson. Run the editor. The two dicts\nshow the difference as DATA, not vibes. The AI-assisted company asks\n\"where can we add AI to save time?\" The AI-native company asks \"how\nshould this workflow exist if agents are doing the first 80%?\"\n\nThat second question changes everything.\n\n## The thesis: \"AI cannot run on vibes\"\n\nMost \"AI-native\" companies are, per Isenberg, \"someone on the team\nhas a ChatGPT tab open and the head of marketing made a custom GPT\ncalled Brand Voice Assistant.\" Cute. Useful even. Not AI-native.\n\nThe real bottleneck is not the model. The model is great. The\nbottleneck is that most companies are **illegible to machines** —\nthe CRM says one thing, the Slack thread says another, the real\ncustomer history lives in someone's inbox, the pricing logic is in\na spreadsheet called `Final_v7_NEW.xlsx`, the refund policy is in a\nNotion doc nobody trusts, the sales process is \"talk to Sarah, she\nknows how we do enterprise.\"\n\nAn agent walking into that company doesn't fail because the model\nis dumb. It fails because there is no source of truth to ground in,\nno rule to follow, no boundary to respect. Garbage-in, vibes-out.\n\n## What this lesson is about\n\nYou wrote a harness in lesson 1. The harness is the technical\nlayer. This lesson is the ORGANIZATIONAL layer: the work you do\nBEFORE the harness runs to make the workflow machine-readable.\n\nWe'll encode Isenberg's 5-step playbook as code:\n\n1. **Pick a narrow workflow** with high volume, existing rules, and\n   too much human coordination.\n2. **Map the workflow like a machine.** Triggers, data, decisions,\n   reversibility, approvals, success criteria, error sites, tacit\n   knowledge.\n3. **Structure the knowledge.** Write the policy. Make pricing\n   rules explicit. Define tone. Create examples. \"It feels like\n   documentation. It is not documentation. It is infrastructure.\"\n4. **Put agents in with boundaries.** Let them draft, classify,\n   recommend, enrich, summarize, prepare. Actions only where risk\n   is understood. Approval where judgment matters.\n5. **Measure business impact.** Not \"hours saved.\" Resolution time.\n   Conversion rate. Gross margin. Revenue per employee.\n\nBy the end, you'll have `is_ai_native_ready(spec)` that takes a\nworkflow definition and returns the same structural critique\nIsenberg's essay applies in prose. The framework, in code.",
+          "cta": "Got it",
+          "code": "# the difference between \"ai-assisted\" and \"ai-native\" as a data shape.\nai_assisted_company = {\n    \"question\": \"Where can we add AI to save time?\",\n    \"ai_lives\": \"at the edges (chatgpt tab, marketing copilot)\",\n    \"workflow_design\": \"human-driven, AI sprinkled on top\",\n    \"human_role\": \"search engine, router, copywriter\",\n    \"metric\": \"hours saved\",\n}\n\nai_native_company = {\n    \"question\": \"How should this workflow exist if agents do the first 80%?\",\n    \"ai_lives\": \"at the center (agents in the operating fabric)\",\n    \"workflow_design\": \"structured, documented, permissioned, instrumented\",\n    \"human_role\": \"reviewer of ambiguity, supervisor of judgment\",\n    \"metric\": \"resolution_time, conversion_rate, revenue_per_employee\",\n}\n\nfor k in ai_assisted_company:\n    a = ai_assisted_company[k]\n    n = ai_native_company[k]\n    print(f\"{k:18} assisted: {a}\")\n    print(f\"{k:18} native:   {n}\")\n    print()\n",
+          "runnable": true
+        },
+        {
+          "type": "mc",
+          "id": "agent-harnesses/architecting-an-ai-native-workflow/s02-02-which-workflow-fits",
+          "xp": 2,
+          "hint": [
+            {
+              "level": 1,
+              "body": "Three signals you want: high volume, rules already exist (even informally), and humans currently doing more coordination than judgment. One workflow hits all three.",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "warmup",
+          "estSeconds": 60,
+          "concept": "pick-the-right-workflow",
+          "prompt": "Step 1 of Isenberg's playbook: pick a narrow workflow with\nobvious economic value. The criteria: **volume is high, rules\nexist, humans are doing too much coordination.**\n\nFour candidate workflows. Which ONE is the strongest fit?\n",
+          "options": [
+            {
+              "id": "a",
+              "label": "A — founder vision setting (vol=1, no rules, 5h coord)",
+              "explain": "Low volume + no rules + tacit knowledge. This is exactly the work Isenberg says you DON'T automate. Strategy is judgment, not workflow."
+            },
+            {
+              "id": "b",
+              "label": "B — support ticket triage (vol=4200, rules exist, 80h coord)"
+            },
+            {
+              "id": "c",
+              "label": "C — acquiring a competitor (vol=0, no rules)",
+              "explain": "Zero volume = not a workflow, it's a project. Agents pay off on repetition; one-off deals don't compound."
+            },
+            {
+              "id": "d",
+              "label": "D — quarterly board prep (vol=1, rules exist, 12h coord)",
+              "explain": "Rules exist but volume is one per quarter. Cost of structuring exceeds savings. Wait until you have something that runs daily."
+            }
+          ],
+          "answerIds": [
+            "b"
+          ],
+          "shuffle": false,
+          "code": "workflows = {\n    \"A\": {\"name\": \"Founder vision setting\", \"volume_per_week\": 1,    \"rules_exist\": False, \"human_coord_hours\": 5},\n    \"B\": {\"name\": \"Support ticket triage\",  \"volume_per_week\": 4200, \"rules_exist\": True,  \"human_coord_hours\": 80},\n    \"C\": {\"name\": \"Acquiring a competitor\",  \"volume_per_week\": 0,    \"rules_exist\": False, \"human_coord_hours\": 0},\n    \"D\": {\"name\": \"Quarterly board prep\",    \"volume_per_week\": 1,    \"rules_exist\": True,  \"human_coord_hours\": 12},\n}\nfor k, v in workflows.items():\n    print(f\"{k}: {v['name']:30} vol={v['volume_per_week']:4} rules={v['rules_exist']} coord_h={v['human_coord_hours']}\")\n",
+          "runnable": true
+        },
+        {
+          "type": "read",
+          "id": "agent-harnesses/architecting-an-ai-native-workflow/s03-03-mapping-the-workflow",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 140,
+          "concept": "workflow-spec-as-data",
+          "body": "# Mapping the workflow like a machine\n\nIsenberg's step 2 is the most important and the one teams skip:\n\n> What triggers it? What data is needed? What decisions happen?\n> Which decisions are reversible? Which require approval? What\n> does success look like? Where do errors happen? What does a\n> human know that the system does not?\n\nThose eight questions are the workflow spec. Answer them in prose\nand you have a Notion doc nobody reads. Answer them in code and you\nhave something an agent can ground its behavior in.\n\nRun the editor. The `support_triage_spec` is a triage workflow\ndistilled into one dict. Every field a future agent would need to\ndo the job is here. The script prints the missing fields (none),\nthe count of decisions (four), and the ones that need approval\n(refund, the only irreversible action).\n\nThat dict is the unit of work. Once it exists, the rest of\nIsenberg's playbook follows mechanically.\n\n## The four decision categories\n\nFor every decision the workflow makes, two attributes determine\nwhether the agent gets to act or needs to ask:\n\n|                 | Reversible | Irreversible |\n|-----------------|-----------|--------------|\n| Cheap to redo   | Auto-act  | Auto-act     |\n| Expensive       | Auto-act  | **APPROVAL** |\n\nThe only quadrant where you ALWAYS gate on a human is\n\"irreversible + expensive.\" Refunding money. Sending an email to\nthe whole list. Deleting a customer record. Closing a deal.\nEverything else can be drafted, recommended, classified, and shown\nto a human for review — but executed by the agent.\n\n## Why this works\n\nIsenberg's claim: \"The pattern repeats everywhere: agents do the\nstructured work, humans handle taste, trust, judgment,\nrelationships, and exceptions.\" The spec is how you draw the line.\nAnything you wrote down is structured work. Anything you couldn't\nwrite down (the tacit_knowledge field) is the human's job.\n\nIf the `tacit_knowledge` field of your spec is empty, your workflow\nis purely mechanical and the agent runs unsupervised. If it's a\nparagraph long, the agent drafts and a human reviews. If it's a\npage long, you're not ready to ship — start by writing the tacit\nknowledge down.\n\n## What this lesson builds\n\nThe next five steps walk through:\n- Predicting how complete a spec is (step 4)\n- Filling in missing required fields (step 5)\n- Fixing a spec that references an \"implicit\" policy like \"ask\n  Sarah\" (step 6)\n- Fixing a spec whose metric is \"hours saved\" instead of business\n  impact (step 7)\n- Writing `is_ai_native_ready(spec)` end-to-end (step 8)\n- Triaging three real workflow specs against the validator (step 9)\n\nBy the end, you'll be able to look at a workflow at your company\nand grade it for AI-readiness in under a minute. Isenberg's prose,\nin code, in your browser.",
+          "cta": "Got it",
+          "code": "# step 2 of the playbook: map the workflow like a machine.\n# encode answers to isenberg's 8 questions as a python dict.\nsupport_triage_spec = {\n    \"name\": \"Support ticket triage\",\n    \"trigger\": \"ticket created in Zendesk\",\n    \"inputs\": [\"ticket.body\", \"customer.history\", \"plan.limits\", \"policy.refund\"],\n    \"decisions\": {\n        \"classify_type\":    {\"reversible\": True,  \"needs_approval\": False},\n        \"draft_response\":   {\"reversible\": True,  \"needs_approval\": False},\n        \"issue_refund\":     {\"reversible\": False, \"needs_approval\": True},\n        \"escalate_to_eng\":  {\"reversible\": False, \"needs_approval\": False},\n    },\n    \"success_criteria\": \"first-response under 10min AND CSAT >= 4\",\n    \"error_sites\": [\"wrong-account retrieval\", \"policy gap\", \"tone mismatch\"],\n    \"tacit_knowledge\": \"when 'angry but right' looks different from 'angry and wrong'\",\n}\n\ndef required_fields():\n    return [\"name\", \"trigger\", \"inputs\", \"decisions\", \"success_criteria\", \"error_sites\", \"tacit_knowledge\"]\n\nmissing = [f for f in required_fields() if f not in support_triage_spec]\nprint(f\"missing fields: {missing}\")\nprint(f\"decision count: {len(support_triage_spec['decisions'])}\")\nprint(f\"high-risk decisions (need approval): \"\n      f\"{[d for d, r in support_triage_spec['decisions'].items() if r['needs_approval']]}\")\n",
+          "runnable": true
+        },
+        {
+          "type": "predict",
+          "id": "agent-harnesses/architecting-an-ai-native-workflow/s04-04-predict-the-readiness-score",
+          "xp": 3,
+          "hint": [
+            {
+              "level": 1,
+              "body": "Count `name`, `trigger`, `inputs`, `decisions`. That's 4 present out of 7 required. `4/7 = 0.5714...`, rounded to 2 decimals is `0.57`.",
+              "cost": 0
+            },
+            {
+              "level": 2,
+              "body": "Output is two lines: `present: 4/7` and `score:   0.57` (three spaces after `score:` because the format string aligns columns).",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 75,
+          "concept": "readiness-score-from-fields",
+          "code": "REQUIRED = [\"name\", \"trigger\", \"inputs\", \"decisions\", \"success_criteria\", \"error_sites\", \"tacit_knowledge\"]\n\npartial_spec = {\n    \"name\": \"Outbound prospecting\",\n    \"trigger\": \"new lead in CRM\",\n    \"inputs\": [\"lead.company\", \"lead.role\", \"lead.intent_signals\"],\n    \"decisions\": {\"classify_segment\": {\"reversible\": True, \"needs_approval\": False}},\n    # success_criteria: missing\n    # error_sites: missing\n    # tacit_knowledge: missing\n}\n\npresent = [f for f in REQUIRED if f in partial_spec]\nscore = round(len(present) / len(REQUIRED), 2)\n\nprint(f\"present: {len(present)}/{len(REQUIRED)}\")\nprint(f\"score:   {score}\")\n",
+          "prompt": "The spec has 4 of the 7 required fields. The validator computes\na readiness score as `present / required`, rounded to 2 decimals.\n\nWhat does the script print?\n",
+          "grader": {
+            "kind": "stdout-equality",
+            "expected": "present: 4/7\nscore:   0.57\n",
+            "normalize": "collapse-trailing-newline"
+          }
+        },
+        {
+          "type": "fill",
+          "id": "agent-harnesses/architecting-an-ai-native-workflow/s05-05-fill-the-required-fields",
+          "xp": 3,
+          "hint": [
+            {
+              "level": 1,
+              "body": "Seven strings in a list, in the order: name, trigger, inputs, decisions, success_criteria, error_sites, tacit_knowledge.",
+              "cost": 0
+            },
+            {
+              "level": 2,
+              "body": "`['name', 'trigger', 'inputs', 'decisions', 'success_criteria', 'error_sites', 'tacit_knowledge']` — single quotes match the expected output.",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 70,
+          "concept": "required-spec-fields",
+          "prompt": "Fill the list of the SEVEN required spec fields a workflow needs\nto be machine-readable. Order matches the lesson: name, trigger,\ninputs, decisions, success_criteria, error_sites, tacit_knowledge.\n\nExpected output:\n```\n['name', 'trigger', 'inputs', 'decisions', 'success_criteria', 'error_sites', 'tacit_knowledge']\n```\n",
+          "code": "REQUIRED = ___\nprint(REQUIRED)\n",
+          "blanks": [
+            {
+              "id": "required_list",
+              "accept": [
+                "['name', 'trigger', 'inputs', 'decisions', 'success_criteria', 'error_sites', 'tacit_knowledge']",
+                "[\"name\", \"trigger\", \"inputs\", \"decisions\", \"success_criteria\", \"error_sites\", \"tacit_knowledge\"]"
+              ],
+              "caseSensitive": true,
+              "normalize": "trim"
+            }
+          ]
+        },
+        {
+          "type": "fix",
+          "id": "agent-harnesses/architecting-an-ai-native-workflow/s06-06-fix-the-implicit-policy",
+          "xp": 4,
+          "hint": [
+            {
+              "level": 1,
+              "body": "Replace the string with a dict. Two keys: `auto_approve_under` and `requires_human_above`, both pointing at the same number (100). The agent now has a rule to follow.",
+              "cost": 0
+            },
+            {
+              "level": 2,
+              "body": "`workflow[\"refund_policy\"] = {\"auto_approve_under\": 100, \"requires_human_above\": 100}`. Print prints the dict in insertion order (Python 3.7+).",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 100,
+          "concept": "implicit-to-explicit-rule",
+          "brokenCode": "workflow = {\n    \"name\": \"Refund processing\",\n    # bug: \"ask the support lead\" is not a policy. an agent cannot\n    # ground in tribal knowledge. encode the rule explicitly.\n    \"refund_policy\": \"ask the support lead\",\n}\n\nprint(workflow[\"refund_policy\"])\n",
+          "prompt": "Isenberg's line: \"the sales process is 'talk to Sarah, she knows\nhow we do enterprise.'\" That's an implicit policy. An agent can't\nask Sarah. The fix is to make Sarah's knowledge explicit as a\ndata rule.\n\nThe spec below has `refund_policy = \"ask the support lead\"`. An\nagent reading this has nothing to ground in. Replace it with an\nexplicit rule dict containing `auto_approve_under` (dollar\nthreshold below which the agent can refund without human review)\nand `requires_human_above` (the same threshold). Use $100.\n\nExpected output:\n```\n{'auto_approve_under': 100, 'requires_human_above': 100}\n```\n",
+          "grader": {
+            "kind": "stdout-equality",
+            "expected": "{'auto_approve_under': 100, 'requires_human_above': 100}",
+            "normalize": "collapse-trailing-newline"
+          },
+          "bugLines": [
+            5
+          ],
+          "revealAfter": 4
+        },
+        {
+          "type": "fix",
+          "id": "agent-harnesses/architecting-an-ai-native-workflow/s07-07-fix-the-wrong-metric",
+          "xp": 4,
+          "hint": [
+            {
+              "level": 1,
+              "body": "Replace the list with `['resolution_time_minutes', 'csat']`. Both show up in the customer's experience and on the company's dashboard.",
+              "cost": 0
+            },
+            {
+              "level": 2,
+              "body": "`workflow[\"metrics\"] = [\"resolution_time_minutes\", \"csat\"]`. Hours saved is what you tell investors before they ask for revenue numbers; resolution_time and csat are what they ask for next.",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 95,
+          "concept": "business-metric-not-hours-saved",
+          "brokenCode": "workflow = {\n    \"name\": \"Support triage\",\n    # bug: \"hours saved\" is a fake metric. business impact is\n    # resolution_time, conversion_rate, csat, revenue_per_employee.\n    \"metrics\": [\"hours_saved_per_week\"],\n}\n\nprint(workflow[\"metrics\"])\n",
+          "prompt": "Isenberg's step 5 is the one most teams botch: measure business\nimpact, NOT \"hours saved.\" Hours saved is a vanity metric a PM\ninvents to justify a project; it doesn't show up on the income\nstatement.\n\nThe spec below tracks `hours_saved_per_week`. Replace it with two\nbusiness metrics from Isenberg's list: `resolution_time_minutes`\n(median time to resolve a ticket) and `csat` (customer\nsatisfaction, 1-5).\n\nExpected output (the two business metrics):\n```\n['resolution_time_minutes', 'csat']\n```\n",
+          "grader": {
+            "kind": "stdout-equality",
+            "expected": "['resolution_time_minutes', 'csat']",
+            "normalize": "collapse-trailing-newline"
+          },
+          "bugLines": [
+            5
+          ],
+          "revealAfter": 4
+        },
+        {
+          "type": "write",
+          "id": "agent-harnesses/architecting-an-ai-native-workflow/s08-08-write-the-workflow-validator",
+          "xp": 5,
+          "hint": [
+            {
+              "level": 1,
+              "body": "Five returned keys. Build `missing` as a sorted list so output is deterministic. `has_explicit_policies` defaults to True when there are no policies (empty dict).",
+              "cost": 0
+            },
+            {
+              "level": 2,
+              "body": "`has_explicit_policies = all(isinstance(v, dict) for v in policies.values())` if policies else True. `business_metrics_only = not any(m in VANITY for m in metrics)`. `ready` is the AND of three signals.",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 200,
+          "concept": "workflow-spec-validator",
+          "prompt": "Write `is_ai_native_ready(spec)` that returns a dict with:\n\n- `score`: float, fraction of REQUIRED fields present (rounded to 2)\n- `missing`: list of required field names not in the spec\n- `has_explicit_policies`: True iff EVERY value in\n  `spec.get(\"policies\", {})` is a dict (not a string — \"ask Sarah\"\n  is a string and disqualifies)\n- `business_metrics_only`: True iff `spec.get(\"metrics\", [])` contains\n  NONE of these vanity strings: `\"hours_saved\"`, `\"hours_saved_per_week\"`,\n  `\"engagement\"`, `\"vibes\"`\n- `ready`: True iff score >= 0.85 AND has_explicit_policies AND\n  business_metrics_only\n\nTwo specs run. Expected output:\n```\n{'score': 1.0, 'missing': [], 'has_explicit_policies': True, 'business_metrics_only': True, 'ready': True}\n{'score': 0.43, 'missing': ['decisions', 'error_sites', 'success_criteria', 'tacit_knowledge'], 'has_explicit_policies': False, 'business_metrics_only': False, 'ready': False}\n```\n",
+          "starter": "REQUIRED = [\"name\", \"trigger\", \"inputs\", \"decisions\", \"success_criteria\", \"error_sites\", \"tacit_knowledge\"]\nVANITY = {\"hours_saved\", \"hours_saved_per_week\", \"engagement\", \"vibes\"}\n\ngood_spec = {\n    \"name\": \"Support triage\",\n    \"trigger\": \"ticket.created\",\n    \"inputs\": [\"ticket.body\", \"customer.history\"],\n    \"decisions\": {\"classify\": {\"reversible\": True, \"needs_approval\": False}},\n    \"success_criteria\": \"first-response < 10min\",\n    \"error_sites\": [\"wrong-account retrieval\"],\n    \"tacit_knowledge\": \"tone with angry-but-right customers\",\n    \"policies\": {\"refund\": {\"auto_approve_under\": 100}},\n    \"metrics\": [\"resolution_time_minutes\", \"csat\"],\n}\n\nvibe_spec = {\n    \"name\": \"Sales outreach\",\n    \"trigger\": \"lead.created\",\n    \"inputs\": [\"lead.company\"],\n    \"policies\": {\"who_to_contact\": \"ask Sarah, she knows\"},\n    \"metrics\": [\"hours_saved_per_week\"],\n}\n\n# define is_ai_native_ready(spec) below\n\nprint(is_ai_native_ready(good_spec))\nprint(is_ai_native_ready(vibe_spec))\n",
+          "grader": {
+            "kind": "stdout-equality",
+            "expected": "{'score': 1.0, 'missing': [], 'has_explicit_policies': True, 'business_metrics_only': True, 'ready': True}\n{'score': 0.43, 'missing': ['decisions', 'error_sites', 'success_criteria', 'tacit_knowledge'], 'has_explicit_policies': False, 'business_metrics_only': False, 'ready': False}\n",
+            "normalize": "collapse-trailing-newline"
+          },
+          "solution": "REQUIRED = [\"name\", \"trigger\", \"inputs\", \"decisions\", \"success_criteria\", \"error_sites\", \"tacit_knowledge\"]\nVANITY = {\"hours_saved\", \"hours_saved_per_week\", \"engagement\", \"vibes\"}\n\ngood_spec = {\n    \"name\": \"Support triage\",\n    \"trigger\": \"ticket.created\",\n    \"inputs\": [\"ticket.body\", \"customer.history\"],\n    \"decisions\": {\"classify\": {\"reversible\": True, \"needs_approval\": False}},\n    \"success_criteria\": \"first-response < 10min\",\n    \"error_sites\": [\"wrong-account retrieval\"],\n    \"tacit_knowledge\": \"tone with angry-but-right customers\",\n    \"policies\": {\"refund\": {\"auto_approve_under\": 100}},\n    \"metrics\": [\"resolution_time_minutes\", \"csat\"],\n}\n\nvibe_spec = {\n    \"name\": \"Sales outreach\",\n    \"trigger\": \"lead.created\",\n    \"inputs\": [\"lead.company\"],\n    \"policies\": {\"who_to_contact\": \"ask Sarah, she knows\"},\n    \"metrics\": [\"hours_saved_per_week\"],\n}\n\ndef is_ai_native_ready(spec):\n    present = [f for f in REQUIRED if f in spec]\n    missing = sorted(f for f in REQUIRED if f not in spec)\n    score = round(len(present) / len(REQUIRED), 2)\n    policies = spec.get(\"policies\", {})\n    has_explicit_policies = all(isinstance(v, dict) for v in policies.values()) if policies else True\n    metrics = spec.get(\"metrics\", [])\n    business_metrics_only = not any(m in VANITY for m in metrics)\n    ready = score >= 0.85 and has_explicit_policies and business_metrics_only\n    return {\n        \"score\": score,\n        \"missing\": missing,\n        \"has_explicit_policies\": has_explicit_policies,\n        \"business_metrics_only\": business_metrics_only,\n        \"ready\": ready,\n    }\n\nprint(is_ai_native_ready(good_spec))\nprint(is_ai_native_ready(vibe_spec))\n",
+          "hiddenTests": []
+        },
+        {
+          "type": "checkpoint",
+          "id": "agent-harnesses/architecting-an-ai-native-workflow/s09-09-checkpoint",
+          "xp": 8,
+          "hint": [],
+          "personalize": false,
+          "phase": "check",
+          "estSeconds": 220,
+          "concept": "triage-three-workflow-specs",
+          "prompt": "Final drill. Three workflow specs from three teams who want to\ngo AI-native. Score each one with `is_ai_native_ready` from step\n08. Print a one-line verdict per spec: `READY` or\n`NOT READY: <reason>`.\n\nReason is the FIRST failing check, in this priority order:\n1. score < 0.85  -> `\"incomplete spec (score=X)\"`\n2. not has_explicit_policies -> `\"implicit policy\"`\n3. not business_metrics_only -> `\"vanity metric\"`\n\nThree specs run. Expected output:\n```\nSupport: READY\nSales:   NOT READY: implicit policy\nOnboard: NOT READY: incomplete spec (score=0.57)\n```\n",
+          "starter": "REQUIRED = [\"name\", \"trigger\", \"inputs\", \"decisions\", \"success_criteria\", \"error_sites\", \"tacit_knowledge\"]\nVANITY = {\"hours_saved\", \"hours_saved_per_week\", \"engagement\", \"vibes\"}\n\nsupport_spec = {\n    \"name\": \"Support triage\",\n    \"trigger\": \"ticket.created\",\n    \"inputs\": [\"ticket.body\", \"customer.history\"],\n    \"decisions\": {\"classify\": {\"reversible\": True, \"needs_approval\": False}},\n    \"success_criteria\": \"first-response < 10min\",\n    \"error_sites\": [\"wrong-account retrieval\"],\n    \"tacit_knowledge\": \"tone with angry-but-right customers\",\n    \"policies\": {\"refund\": {\"auto_approve_under\": 100}},\n    \"metrics\": [\"resolution_time_minutes\", \"csat\"],\n}\n\nsales_spec = {\n    \"name\": \"Sales outreach\",\n    \"trigger\": \"lead.created\",\n    \"inputs\": [\"lead.company\", \"lead.role\"],\n    \"decisions\": {\"draft_email\": {\"reversible\": True, \"needs_approval\": False}},\n    \"success_criteria\": \"reply rate > 8%\",\n    \"error_sites\": [\"bad enrichment\"],\n    \"tacit_knowledge\": \"when to break the script\",\n    \"policies\": {\"who_to_contact\": \"ask Sarah, she knows\"},  # implicit\n    \"metrics\": [\"reply_rate\", \"qualified_meetings_per_week\"],\n}\n\nonboard_spec = {\n    \"name\": \"Customer onboarding\",\n    \"trigger\": \"deal.closed_won\",\n    \"inputs\": [\"account.plan\"],\n    \"decisions\": {\"send_welcome\": {\"reversible\": True, \"needs_approval\": False}},\n    \"policies\": {\"escalation\": {\"after_days\": 3}},\n    \"metrics\": [\"time_to_value_days\"],\n    # missing: success_criteria, error_sites, tacit_knowledge\n}\n\ndef is_ai_native_ready(spec):\n    present = [f for f in REQUIRED if f in spec]\n    missing = sorted(f for f in REQUIRED if f not in spec)\n    score = round(len(present) / len(REQUIRED), 2)\n    policies = spec.get(\"policies\", {})\n    has_explicit_policies = all(isinstance(v, dict) for v in policies.values()) if policies else True\n    metrics = spec.get(\"metrics\", [])\n    business_metrics_only = not any(m in VANITY for m in metrics)\n    ready = score >= 0.85 and has_explicit_policies and business_metrics_only\n    return {\n        \"score\": score, \"missing\": missing,\n        \"has_explicit_policies\": has_explicit_policies,\n        \"business_metrics_only\": business_metrics_only,\n        \"ready\": ready,\n    }\n\n# define verdict(spec) returning a string \"READY\" or \"NOT READY: <reason>\"\n\nprint(f\"Support: {verdict(support_spec)}\")\nprint(f\"Sales:   {verdict(sales_spec)}\")\nprint(f\"Onboard: {verdict(onboard_spec)}\")\n",
+          "grader": {
+            "kind": "stdout-equality",
+            "expected": "Support: READY\nSales:   NOT READY: implicit policy\nOnboard: NOT READY: incomplete spec (score=0.57)\n",
+            "normalize": "collapse-trailing-newline"
+          },
+          "solution": "REQUIRED = [\"name\", \"trigger\", \"inputs\", \"decisions\", \"success_criteria\", \"error_sites\", \"tacit_knowledge\"]\nVANITY = {\"hours_saved\", \"hours_saved_per_week\", \"engagement\", \"vibes\"}\n\nsupport_spec = {\n    \"name\": \"Support triage\",\n    \"trigger\": \"ticket.created\",\n    \"inputs\": [\"ticket.body\", \"customer.history\"],\n    \"decisions\": {\"classify\": {\"reversible\": True, \"needs_approval\": False}},\n    \"success_criteria\": \"first-response < 10min\",\n    \"error_sites\": [\"wrong-account retrieval\"],\n    \"tacit_knowledge\": \"tone with angry-but-right customers\",\n    \"policies\": {\"refund\": {\"auto_approve_under\": 100}},\n    \"metrics\": [\"resolution_time_minutes\", \"csat\"],\n}\n\nsales_spec = {\n    \"name\": \"Sales outreach\",\n    \"trigger\": \"lead.created\",\n    \"inputs\": [\"lead.company\", \"lead.role\"],\n    \"decisions\": {\"draft_email\": {\"reversible\": True, \"needs_approval\": False}},\n    \"success_criteria\": \"reply rate > 8%\",\n    \"error_sites\": [\"bad enrichment\"],\n    \"tacit_knowledge\": \"when to break the script\",\n    \"policies\": {\"who_to_contact\": \"ask Sarah, she knows\"},\n    \"metrics\": [\"reply_rate\", \"qualified_meetings_per_week\"],\n}\n\nonboard_spec = {\n    \"name\": \"Customer onboarding\",\n    \"trigger\": \"deal.closed_won\",\n    \"inputs\": [\"account.plan\"],\n    \"decisions\": {\"send_welcome\": {\"reversible\": True, \"needs_approval\": False}},\n    \"policies\": {\"escalation\": {\"after_days\": 3}},\n    \"metrics\": [\"time_to_value_days\"],\n}\n\ndef is_ai_native_ready(spec):\n    present = [f for f in REQUIRED if f in spec]\n    missing = sorted(f for f in REQUIRED if f not in spec)\n    score = round(len(present) / len(REQUIRED), 2)\n    policies = spec.get(\"policies\", {})\n    has_explicit_policies = all(isinstance(v, dict) for v in policies.values()) if policies else True\n    metrics = spec.get(\"metrics\", [])\n    business_metrics_only = not any(m in VANITY for m in metrics)\n    ready = score >= 0.85 and has_explicit_policies and business_metrics_only\n    return {\n        \"score\": score, \"missing\": missing,\n        \"has_explicit_policies\": has_explicit_policies,\n        \"business_metrics_only\": business_metrics_only,\n        \"ready\": ready,\n    }\n\ndef verdict(spec):\n    r = is_ai_native_ready(spec)\n    if r[\"score\"] < 0.85:\n        return f\"NOT READY: incomplete spec (score={r['score']})\"\n    if not r[\"has_explicit_policies\"]:\n        return \"NOT READY: implicit policy\"\n    if not r[\"business_metrics_only\"]:\n        return \"NOT READY: vanity metric\"\n    return \"READY\"\n\nprint(f\"Support: {verdict(support_spec)}\")\nprint(f\"Sales:   {verdict(sales_spec)}\")\nprint(f\"Onboard: {verdict(onboard_spec)}\")\n",
+          "passThreshold": 0.66
+        }
+      ],
+      "xpTotal": 31
     }
   ],
-  "xpTotal": 32
+  "xpTotal": 63
 }

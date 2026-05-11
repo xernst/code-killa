@@ -1,6 +1,6 @@
 {
   "version": "0.1.0",
-  "generatedAt": "2026-05-11T20:53:25.456Z",
+  "generatedAt": "2026-05-11T21:41:34.232Z",
   "chapters": [
     {
       "number": 1,
@@ -257,10 +257,10 @@
       "slug": "agent-harnesses",
       "title": "agent harnesses — the layer between you and the raw api",
       "blurb": "claude code, cursor, aider, codex cli — they're all the same four layers wrapped around the same model api. learn what those layers are, what each adds, and what you'd build yourself if you had to.",
-      "lessonCount": 1,
-      "stepCount": 9,
-      "estMinutes": 12,
-      "xpTotal": 32
+      "lessonCount": 2,
+      "stepCount": 18,
+      "estMinutes": 27,
+      "xpTotal": 63
     }
   ]
 }

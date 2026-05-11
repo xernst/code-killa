@@ -1,0 +1,153 @@
+xp: 8
+estSeconds: 220
+concept: triage-three-workflow-specs
+prompt: |
+  Final drill. Three workflow specs from three teams who want to
+  go AI-native. Score each one with `is_ai_native_ready` from step
+  08. Print a one-line verdict per spec: `READY` or
+  `NOT READY: <reason>`.
+
+  Reason is the FIRST failing check, in this priority order:
+  1. score < 0.85  -> `"incomplete spec (score=X)"`
+  2. not has_explicit_policies -> `"implicit policy"`
+  3. not business_metrics_only -> `"vanity metric"`
+
+  Three specs run. Expected output:
+  ```
+  Support: READY
+  Sales:   NOT READY: implicit policy
+  Onboard: NOT READY: incomplete spec (score=0.57)
+  ```
+starter: |
+  REQUIRED = ["name", "trigger", "inputs", "decisions", "success_criteria", "error_sites", "tacit_knowledge"]
+  VANITY = {"hours_saved", "hours_saved_per_week", "engagement", "vibes"}
+
+  support_spec = {
+      "name": "Support triage",
+      "trigger": "ticket.created",
+      "inputs": ["ticket.body", "customer.history"],
+      "decisions": {"classify": {"reversible": True, "needs_approval": False}},
+      "success_criteria": "first-response < 10min",
+      "error_sites": ["wrong-account retrieval"],
+      "tacit_knowledge": "tone with angry-but-right customers",
+      "policies": {"refund": {"auto_approve_under": 100}},
+      "metrics": ["resolution_time_minutes", "csat"],
+  }
+
+  sales_spec = {
+      "name": "Sales outreach",
+      "trigger": "lead.created",
+      "inputs": ["lead.company", "lead.role"],
+      "decisions": {"draft_email": {"reversible": True, "needs_approval": False}},
+      "success_criteria": "reply rate > 8%",
+      "error_sites": ["bad enrichment"],
+      "tacit_knowledge": "when to break the script",
+      "policies": {"who_to_contact": "ask Sarah, she knows"},  # implicit
+      "metrics": ["reply_rate", "qualified_meetings_per_week"],
+  }
+
+  onboard_spec = {
+      "name": "Customer onboarding",
+      "trigger": "deal.closed_won",
+      "inputs": ["account.plan"],
+      "decisions": {"send_welcome": {"reversible": True, "needs_approval": False}},
+      "policies": {"escalation": {"after_days": 3}},
+      "metrics": ["time_to_value_days"],
+      # missing: success_criteria, error_sites, tacit_knowledge
+  }
+
+  def is_ai_native_ready(spec):
+      present = [f for f in REQUIRED if f in spec]
+      missing = sorted(f for f in REQUIRED if f not in spec)
+      score = round(len(present) / len(REQUIRED), 2)
+      policies = spec.get("policies", {})
+      has_explicit_policies = all(isinstance(v, dict) for v in policies.values()) if policies else True
+      metrics = spec.get("metrics", [])
+      business_metrics_only = not any(m in VANITY for m in metrics)
+      ready = score >= 0.85 and has_explicit_policies and business_metrics_only
+      return {
+          "score": score, "missing": missing,
+          "has_explicit_policies": has_explicit_policies,
+          "business_metrics_only": business_metrics_only,
+          "ready": ready,
+      }
+
+  # define verdict(spec) returning a string "READY" or "NOT READY: <reason>"
+
+  print(f"Support: {verdict(support_spec)}")
+  print(f"Sales:   {verdict(sales_spec)}")
+  print(f"Onboard: {verdict(onboard_spec)}")
+grader:
+  kind: stdout-equality
+  expected: |
+    Support: READY
+    Sales:   NOT READY: implicit policy
+    Onboard: NOT READY: incomplete spec (score=0.57)
+  normalize: collapse-trailing-newline
+solution: |
+  REQUIRED = ["name", "trigger", "inputs", "decisions", "success_criteria", "error_sites", "tacit_knowledge"]
+  VANITY = {"hours_saved", "hours_saved_per_week", "engagement", "vibes"}
+
+  support_spec = {
+      "name": "Support triage",
+      "trigger": "ticket.created",
+      "inputs": ["ticket.body", "customer.history"],
+      "decisions": {"classify": {"reversible": True, "needs_approval": False}},
+      "success_criteria": "first-response < 10min",
+      "error_sites": ["wrong-account retrieval"],
+      "tacit_knowledge": "tone with angry-but-right customers",
+      "policies": {"refund": {"auto_approve_under": 100}},
+      "metrics": ["resolution_time_minutes", "csat"],
+  }
+
+  sales_spec = {
+      "name": "Sales outreach",
+      "trigger": "lead.created",
+      "inputs": ["lead.company", "lead.role"],
+      "decisions": {"draft_email": {"reversible": True, "needs_approval": False}},
+      "success_criteria": "reply rate > 8%",
+      "error_sites": ["bad enrichment"],
+      "tacit_knowledge": "when to break the script",
+      "policies": {"who_to_contact": "ask Sarah, she knows"},
+      "metrics": ["reply_rate", "qualified_meetings_per_week"],
+  }
+
+  onboard_spec = {
+      "name": "Customer onboarding",
+      "trigger": "deal.closed_won",
+      "inputs": ["account.plan"],
+      "decisions": {"send_welcome": {"reversible": True, "needs_approval": False}},
+      "policies": {"escalation": {"after_days": 3}},
+      "metrics": ["time_to_value_days"],
+  }
+
+  def is_ai_native_ready(spec):
+      present = [f for f in REQUIRED if f in spec]
+      missing = sorted(f for f in REQUIRED if f not in spec)
+      score = round(len(present) / len(REQUIRED), 2)
+      policies = spec.get("policies", {})
+      has_explicit_policies = all(isinstance(v, dict) for v in policies.values()) if policies else True
+      metrics = spec.get("metrics", [])
+      business_metrics_only = not any(m in VANITY for m in metrics)
+      ready = score >= 0.85 and has_explicit_policies and business_metrics_only
+      return {
+          "score": score, "missing": missing,
+          "has_explicit_policies": has_explicit_policies,
+          "business_metrics_only": business_metrics_only,
+          "ready": ready,
+      }
+
+  def verdict(spec):
+      r = is_ai_native_ready(spec)
+      if r["score"] < 0.85:
+          return f"NOT READY: incomplete spec (score={r['score']})"
+      if not r["has_explicit_policies"]:
+          return "NOT READY: implicit policy"
+      if not r["business_metrics_only"]:
+          return "NOT READY: vanity metric"
+      return "READY"
+
+  print(f"Support: {verdict(support_spec)}")
+  print(f"Sales:   {verdict(sales_spec)}")
+  print(f"Onboard: {verdict(onboard_spec)}")
+passThreshold: 0.66

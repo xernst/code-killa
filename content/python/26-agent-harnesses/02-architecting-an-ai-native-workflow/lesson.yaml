@@ -1,0 +1,15 @@
+slug: architecting-an-ai-native-workflow
+title: "Architecting an AI-native workflow — Greg Isenberg's 5-step playbook in code"
+estMinutes: 15
+prerequisites:
+  - what-a-harness-is
+order:
+  - 01-intro.read.md
+  - 02-which-workflow-fits.mc.yaml
+  - 03-mapping-the-workflow.read.md
+  - 04-predict-the-readiness-score.predict.yaml
+  - 05-fill-the-required-fields.fill.yaml
+  - 06-fix-the-implicit-policy.fix.yaml
+  - 07-fix-the-wrong-metric.fix.yaml
+  - 08-write-the-workflow-validator.write.yaml
+  - 09-checkpoint.checkpoint.yaml

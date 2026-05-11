@@ -1,0 +1,40 @@
+xp: 4
+estSeconds: 100
+concept: implicit-to-explicit-rule
+prompt: |
+  Isenberg's line: "the sales process is 'talk to Sarah, she knows
+  how we do enterprise.'" That's an implicit policy. An agent can't
+  ask Sarah. The fix is to make Sarah's knowledge explicit as a
+  data rule.
+
+  The spec below has `refund_policy = "ask the support lead"`. An
+  agent reading this has nothing to ground in. Replace it with an
+  explicit rule dict containing `auto_approve_under` (dollar
+  threshold below which the agent can refund without human review)
+  and `requires_human_above` (the same threshold). Use $100.
+
+  Expected output:
+  ```
+  {'auto_approve_under': 100, 'requires_human_above': 100}
+  ```
+brokenCode: |
+  workflow = {
+      "name": "Refund processing",
+      # bug: "ask the support lead" is not a policy. an agent cannot
+      # ground in tribal knowledge. encode the rule explicitly.
+      "refund_policy": "ask the support lead",
+  }
+
+  print(workflow["refund_policy"])
+bugLines:
+  - 5
+grader:
+  kind: stdout-equality
+  expected: "{'auto_approve_under': 100, 'requires_human_above': 100}"
+  normalize: collapse-trailing-newline
+hint:
+  - level: 1
+    body: "Replace the string with a dict. Two keys: `auto_approve_under` and `requires_human_above`, both pointing at the same number (100). The agent now has a rule to follow."
+  - level: 2
+    body: "`workflow[\"refund_policy\"] = {\"auto_approve_under\": 100, \"requires_human_above\": 100}`. Print prints the dict in insertion order (Python 3.7+)."
+revealAfter: 4

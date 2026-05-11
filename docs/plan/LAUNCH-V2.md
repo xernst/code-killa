@@ -397,4 +397,310 @@ Avoid: "AI Literacy Lab," "BuildersAcademy," anything with "for everyone." Wedge
 
 ---
 
-**End of plan.** Next step: resolve the six open questions in section 15. Then start Week 1 plumbing on Monday 2026-05-13.
+## 18. /autoplan Review Report (May 11, 2026) — APPROVED
+
+**Status**: APPROVED by Josh on 2026-05-11. All 4 gate decisions locked at recommendation:
+- D1 (viral arch): category-slug + ?n= name. Ships in Week 2 on Cloudflare Pages free tier.
+- D2 (capstone gate): ship full schema + runtime + UI in Week 1 (2-3 days).
+- D3 (Day 3 gate): included. <200 followers in 72h → pause bot, pivot to beta-first 30 days.
+- D4: all 23 auto-decisions + 3 minor taste calls accepted.
+
+Plan is locked. Week 0 starts tomorrow (lock follower count, decide /caught arch implementation details).
+
+This section is the output of gstack /autoplan run against this plan. Four independent reviewers (CEO, Design, Eng, DX) read the plan + codebase blind. Codex was unavailable — every phase is single-voice. The 6 decision principles (completeness, boil-lakes, pragmatic, DRY, explicit-over-clever, bias-to-action) auto-decided 23 fixes. Six taste decisions go to Josh's gate. Two confirmed errors in this plan's technical claims need correction before Week 1 starts.
+
+### 18.1 Plan claims that turned out to be wrong
+
+Eng review verified each technical claim against the actual code. These are the misstatements:
+
+| Claim in plan | Reality | Correction |
+|---|---|---|
+| "557 runnable steps" (section 3) | `manifest.toc.json` reduced = **575** steps | Update plan + drop the number from headline copy regardless |
+| "26 chapters + 1 bonus ch26" (section 3) | `manifest.toc.json` chapters.length = 26 total. There is no "+1" — ch26 IS chapter 26 | Stop calling ch26 a bonus. It's chapter 26. |
+| "Capstone JSON `prerequisites: []` empty" (sections 3, 7) | Schema is YAML, not JSON. Field doesn't exist at all — not empty, absent. Verified at `content/python/25-capstone/01-build-a-cli-agent/lesson.yaml:4` | Need schema extension in lesson loader + runtime gate component + UI surface. **2-3 days of work, not "populate the field"** |
+| "Playwright already a repo dep" (section 7 Week 2) | `package.json` has zero Playwright entries | Playwright install adds ~300MB. Cloudflare Pages build OOM risk |
+| "Existing GitHub Actions in .github/workflows/" (section 7) | `.github/` has only ISSUE_TEMPLATE. No workflows dir | GitHub Action is greenfield, not a port |
+| "Twitter API v2 free tier, 17 posts/day" (section 7 scrappy hack) | POST /tweets requires OAuth 1.0a User Context (4 secrets: API key, API secret, access token, access secret) — not Bearer. Monthly cap is 500 posts | Update secret count + monthly cap awareness |
+| "Pattern exists at /og/launch/wedge, 4-6h build for /caught/[slug]" (section 7) | `app/og/launch/[name]/route.tsx` uses `dynamic = "force-static"` + hardcoded `generateStaticParams` to 6 names. `next.config.ts:7` is `output: "export"` (static export to Cloudflare Pages). **Dynamic per-learner-name OG generation is architecturally impossible on this config.** | Either ship category-level slugs with learner name as `?n=` query rendered client-side, OR move off static export (breaks current hosting model). Decide before Week 2. |
+
+### 18.2 Decision Audit Trail (auto-decided fixes)
+
+Each row was auto-decided using the 6 /autoplan principles. P1=completeness, P2=boil-lakes, P3=pragmatic, P4=DRY, P5=explicit, P6=bias-to-action.
+
+| # | Phase | Decision | Class | Principle | Rationale |
+|---|---|---|---|---|---|
+| 1 | Design | Add `app/page.tsx:27, 32, 40, 120, 223` to em-dash sweep | Mechanical | P2 boil-lakes | Plan's appendix missed homepage metadata. OG title + Twitter card title ship em-dashes on every link unfurl. 50x blast radius of about-page violations |
+| 2 | Design | Add 301 redirect `/pro` → `/founding-members` to Week 1 plumbing | Mechanical | P5 explicit | Plan renames without redirect; 3 internal links break (homepage:144, about:284, 336) |
+| 3 | Design | Strip homepage `/pro` link at `app/page.tsx:144-150` + footer pricing line 223 ("$9.99/mo in the app") | Mechanical | P3 pragmatic | Tension A locked at founders-only makes the footer a lie. Inline pricing block at line 120 contradicts the strip-pricing decision |
+| 4 | Design | Cut "Read the Bug" warm-up from 3-5 steps to exactly 3 | Mechanical | P5 explicit | Plan's own "live demo in 90 seconds" framing argues against 5 steps. 3 steps is the hook; 5 is a chapter |
+| 5 | Design | Spec the `/caught/[slug]` *landing page* explicitly, not just the OG image | Mechanical | P1 completeness | Plan describes the image; viral loop has no second hop without the landing page design |
+| 6 | Design | Add "mobile pass" checkbox to Week 3 final checks (375px width on `HeroBugSnippet`) | Mechanical | P2 boil-lakes | Plan never says "mobile" — wedge audience reads LinkedIn on phones |
+| 7 | Design | Write `design-kit/DESIGN.md` index pointing at VOICE.md, BRAND.md, TYPOGRAPHY.md, tokens.css | Mechanical | P1 completeness | 20-min task, future-agent leverage |
+| 8 | Eng | Capstone prerequisites = (a) zod schema extension + (b) runtime gate reader + (c) UI component, not "populate field" | Mechanical | P1 completeness | Plan misdiagnoses scope; field doesn't exist in the schema |
+| 9 | Eng | Decide `/caught/[slug]` architecture model BEFORE Week 2: category-slug + client-side name OR move off static export | **TASTE** (surfaced at gate) | P5 explicit | Plan claims 4-6h; reality is architecturally constrained by output:"export" |
+| 10 | Eng | Append micropip interstitial at END of ch12 (or as "ch12.5"), NOT inside ch13 | Mechanical | P5 explicit | Inserting steps inside ch13 shifts step indices and silently breaks PROGRESS_KV for returning learners (F6 — Eng review's most-missed risk) |
+| 11 | Eng | Add `vitest` + 3 minimum tests (subscribe happy path / rate-limit / 503; OG generateStaticParams snapshot; bugs schema validator) | Mechanical | P2 boil-lakes | Repo has zero test runner. Half-day of work catches 4 critical failure modes deterministically |
+| 12 | Eng | Update Twitter OAuth model in plan: 4 secrets (OAuth 1.0a User Context), not 1 (Bearer) | Mechanical | Correctness | Bearer doesn't work for POST /tweets |
+| 13 | Eng | Add monitor-ping step to daily auto-tweet workflow + 36h-no-ping alert | Mechanical | P1 completeness | X tokens expire silently in 2024+; bot dies with no alarm without this |
+| 14 | Eng | Fix `subscribe.ts:121-128` to return 502, not 200, on Beehiiv 5xx | Mechanical | P5 explicit | Monitors can't distinguish failure from success today |
+| 15 | Eng | Validate `content/bugs/*.md` frontmatter via zod before workflow render | Mechanical | P1 completeness | Treats `content/bugs/` as CMS, prevents typo-cascade |
+| 16 | DX | Resolve pnpm vs bun ambiguity. Sweep all `bun` references, add `packageManager: "pnpm@x"` to package.json + `.nvmrc` | Mechanical | P4 DRY | README + CONTRIBUTING say pnpm; some task scripts say bun. Every contributor hits this. 15 min fix |
+| 17 | DX | Ship Pyodide warming indicator on first lesson load | Mechanical | P2 boil-lakes | 5-12s of silent cold boot = wedge audience bouncing. 1-2h fix |
+| 18 | DX | Upgrade grader stdout-mismatch message with case/whitespace cause detection at `_grader.ts:52` | Mechanical | P3 pragmatic | Single biggest empathy upgrade. 2h |
+| 19 | DX | Expand `AGENTS.md` from 5 lines to ~40: schema path, step lifecycle, grader kinds, prebuild gate, chapter-add path | Mechanical | P1 completeness | The file AI contributors read first; currently cryptic |
+| 20 | DX | Add `pnpm doctor` script validating Node 20+, pnpm 8+, python3 on PATH | Mechanical | P2 boil-lakes | Catches silent prereq miss for new contributors. 30 min |
+| 21 | CEO | Lock current @TFisPython follower count Week 0 (before sprint starts) | Mechanical | P5 explicit | Plan's audience-first thesis depends on the starting base; needs to be measured, not assumed |
+| 22 | CEO | Add Day 3 decision gate: <200 new followers → pause bot, switch to beta-first for 30 days | **TASTE** (surfaced at gate) | P1 completeness | Plan has no recovery branch; CEO's #1 failure mode is "empty-room launch" |
+| 23 | CEO | Add native iOS app trigger: ship at 100 founding members paid OR M9, whichever first | Mechanical | P5 explicit | Plan says "Q4 polish" without a trigger condition |
+
+### 18.3 Consensus Tables (single-voice; Codex unavailable)
+
+**CEO Consensus** (verdict 8/10 overall):
+
+| Dimension | Claude | Codex | Consensus |
+|---|---|---|---|
+| Premises valid? | Partial (audience-base premise unvalidated) | N/A | Partial |
+| Right problem to solve? | Yes | N/A | Confirmed |
+| Scope calibration correct? | Yes | N/A | Confirmed |
+| Alternatives sufficiently explored? | No (no recovery branch) | N/A | Gap |
+| Competitive risks covered? | Yes | N/A | Confirmed |
+| 6-month trajectory sound? | Yes IF launch lands | N/A | Conditional |
+
+**Design Consensus** (Design Litmus Scorecard average 4.6/10):
+
+| Dimension | Claude | Codex | Consensus |
+|---|---|---|---|
+| Information hierarchy | 6/10 | N/A | Partial |
+| Missing states | 3/10 | N/A | Failing |
+| User journey | 5/10 | N/A | Partial |
+| Specificity | 4/10 | N/A | Failing |
+| Mobile-first | 3/10 | N/A | Failing |
+| Accessibility | 4/10 | N/A | Aspirational |
+| Design system alignment | 7/10 | N/A | Passing |
+
+**Eng Consensus**:
+
+| Dimension | Claude | Codex | Consensus |
+|---|---|---|---|
+| Architecture sound? | NO | N/A | Failing (caught/[slug] vs output:"export") |
+| Tests sufficient? | NO | N/A | Failing (no test runner installed) |
+| Perf addressed? | Partial | N/A | OG-at-build-scale ignored |
+| Security covered? | Partial | N/A | Twitter OAuth model wrong in plan |
+| Errors handled? | Partial | N/A | No alerting on cron; prereq gate has no implementation |
+| Deploy risk manageable? | Yes with discipline | N/A | Confirmed |
+
+**DX Consensus** (DX Scorecard average 5.6/10):
+
+| Dimension | Claude | Codex | Consensus |
+|---|---|---|---|
+| TTHW learner | 7/10 (Pyodide cold boot drag) | N/A | Partial |
+| TTHW contributor | 4/10 (pnpm/bun ambiguity) | N/A | Failing |
+| API/CLI ergonomics | 6/10 | N/A | Partial |
+| Error message quality | 4/10 | N/A | Failing |
+| Doc findability | 5/10 | N/A | Partial |
+| Upgrade path safety | 5/10 | N/A | Partial |
+| Dev env friction | 6/10 | N/A | Partial |
+| Escape hatches | 5/10 | N/A | Partial |
+
+### 18.4 Cross-Phase Themes (concerns flagged independently by 2+ reviewers)
+
+These are the high-confidence signals where multiple independent reviewers landed on the same finding:
+
+- **Theme 1 — Capstone prerequisites is a 2-3 day fix, not a one-liner.** Flagged by CEO (highest-leverage code fix), Eng (schema + runtime + UI), DX (confirmed at lesson.yaml:4). Plan understated scope by ~10x.
+- **Theme 2 — OG metadata em-dashes are the highest-blast-radius single fix in the launch.** Flagged by CEO (Week 1 sweep), Design (homepage `app/page.tsx:27,32,40` missed from plan list). Every Day 0 link unfurl ships brand contradiction.
+- **Theme 3 — Launch has no recovery branch / silent-failure shield.** Flagged by CEO (no Day 3 gate, no follower count lock), DX (Resend failure looks silent, grader errors no empathy, Pyodide cold boot silent). Plan optimizes for happy path.
+- **Theme 4 — `/caught/[slug]` is design-thin AND architecturally undefined.** Flagged by Design (no landing page spec, only OG) + Eng (`output: "export"` blocks dynamic name in URL). Plan's "4-6h" budget is wrong on both counts.
+- **Theme 5 — Mobile is unspecified throughout.** Flagged by Design (word "mobile" never appears) + DX (Pyodide warming UI must work on touch). Wedge audience is LinkedIn-on-phone.
+
+### 18.5 Taste Decisions (Josh's gate)
+
+These are the 6 decisions where reasonable people could disagree. All others auto-decided above.
+
+1. **`/caught/[slug]` architecture**: category-level slugs with name in `?n=` query (works with static export, ships in 4-6h) versus full per-learner-name route (requires moving off static export, breaks current Cloudflare Pages free hosting + 1-2 days of refactor). Recommendation: category-slug + query name. Reason: P3 pragmatic, ships on schedule, OG image still works.
+2. **Day 3 decision gate**: hard cutover to beta-first if <200 new followers (CEO recommends) versus ride out the launch and bank-content the bot to bridge. Recommendation: include the gate. Reason: cheap optionality, costs nothing if launch hits.
+3. **Read the Bug warm-up step count**: lock at 3 (Design recommends, fits 90-sec frame) versus 3-5 (plan as written, more breathing room). Recommendation: 3 steps. Reason: P5 explicit; plan's own framing contradicts 5 steps.
+4. **Capstone prereq scope**: ship the gate before launch (Eng + CEO + DX all recommend) versus ship as v1.1 hotfix Week 2. Recommendation: ship before launch. Reason: 2-3 days = fits in 3-week sprint; visible failure post-launch hurts credibility.
+5. **Ch26 (agent-harnesses) treatment**: include in launch as "chapter 26" (Eng review confirms it IS ch26, not a bonus) versus hold as v1.1. Recommendation: include. Reason: it's done. Plan's "26+" framing was based on misread of manifest.
+6. **Native iOS app trigger**: 100 founding members paid OR M9, whichever first (CEO recommends explicit trigger) versus "polish in Q4, watch the signal". Recommendation: explicit trigger. Reason: P5 explicit; "polish" with no trigger = drift.
+
+### 18.6 New Risks Added to the Register
+
+These are net-new risks the original §12 register didn't have:
+
+| Risk | Likelihood | Impact | Mitigation |
+|---|---|---|---|
+| `/caught/[slug]` ships with hardcoded names (devs read existing pattern literally), share button posts to dead URL | High if Week 2 doesn't pre-decide arch | Viral surface broken | Pre-decide architecture before Week 2 starts. Test the share flow with 3 fake learner names |
+| Step-index shift inside ch13 silently breaks PROGRESS_KV for returning learners | High until plan fixes | Returning learners lose progress | Append micropip interstitial at end of ch12 or version PROGRESS_KV keys |
+| Twitter OAuth 1.0a token expires (X has been aggressively rotating since 2024) | Medium by M6 | Bot dies silent, daily cadence stops | Workflow pings monitor URL on success; 36h-no-ping alert |
+| Cloudflare Pages build OOMs on Playwright install (~300MB browsers) | Medium if Playwright added | Production deploy breaks | Use headless screenshot service or render server-side without Playwright |
+| Empty-room launch (Day 0 lands at <100 likes, bot tweets into silence) | Medium until follower count locked | Kills the year | Day 3 decision gate; switch to beta-first for 30 days |
+| Pyodide cold boot looks like a dead page (5-12s silent) | High on first visit | Wedge audience bounces before lesson 1 | "warming sandbox" indicator on first lesson load |
+| Contributor confusion at pnpm vs bun ambiguity | High | New contributors quit before first PR | Sweep `bun` → `pnpm`; add `packageManager` field; 15 min fix |
+| Resend secret unpasted by Day 0 (still missing per `/api/health`) | Medium if not done Week 1 | Welcome emails silently fail | Paste before launch (already on plan); add fallback "saved your spot, email coming" |
+| Beehiiv subscribe returns 200 on failure (subscribe.ts:121) | High | Monitors can't tell signups from drops | Return 502 with safe public message |
+| Per-IP rate limit (subscribe.ts:31) trips on Day 0 launch when office WiFi NATs share one IP | Medium during traffic spike | Real signups rejected | Raise limit for launch week or move to Cloudflare WAF |
+
+### 18.7 Revised Week 1-3 Sprint (autoplan additions)
+
+**Week 0 (this week, before sprint starts):**
+- Lock current @TFisPython follower count. Decision: if <300, restructure to beta-first per CEO Alt B.
+- Decide `/caught/[slug]` architecture (taste decision #1 above).
+
+**Week 1 additions to plumbing list:**
+- Em-dash sweep: ADD `app/page.tsx:27, 32, 40, 120, 223` to existing list (highest blast radius)
+- Add 301 redirect `/pro` → `/founding-members` (3 internal links break otherwise)
+- Strip homepage `/pro` link at `app/page.tsx:144-150` + kill footer pricing at line 223
+- Build capstone prerequisites SYSTEM (schema + runtime gate + UI), not just "populate field"
+- Add `vitest` devDep + write 3 minimum tests (subscribe, OG snapshot, bugs schema)
+- Append micropip interstitial at end of ch12, NOT inside ch13 (preserves PROGRESS_KV)
+- Fix subscribe.ts:121-128 to return 502 on Beehiiv 5xx
+- Sweep `bun` → `pnpm` everywhere; add `packageManager` field + `.nvmrc`
+- Add `pnpm doctor` script (Node 20+, pnpm 8+, python3)
+
+**Week 2 additions:**
+- Pyodide warming indicator on first lesson load
+- Upgrade grader empathy message at `_grader.ts:52` (case/whitespace detection)
+- `/caught/[slug]` landing page design (HTML page that recipients click into), not just OG image
+- Cut "Read the Bug" to exactly 3 steps with explicit state spec (loading, wrong, partial, right, share)
+- Expand `AGENTS.md` to 40 lines
+- Write `design-kit/DESIGN.md` index
+- Twitter OAuth 1.0a setup (4 secrets, not 1) + monitor-ping step in workflow
+- Zod schema for `content/bugs/*.md` frontmatter
+
+**Week 3 additions:**
+- Mobile pass: verify `HeroBugSnippet` at 375px (iPhone SE) doesn't clip the punchline
+- About-page comparison table mobile render audit
+- Day 0 night-before: confirm 5 reply-guys ready by 9:05am ET (60-min algo window)
+- Day 3 decision gate (if Josh accepts taste decision #2): document the "<200 followers → pivot" trigger
+
+### 18.8 Overall Verdict
+
+| Reviewer | Score | One-line take |
+|---|---|---|
+| CEO | 8/10 | Strategically tight, three blocking additions needed (follower count lock, Day 3 gate, capstone prereqs) |
+| Design | 4.6/10 avg | Strategic skeleton right, implementation design-thin; cheap to fix in one pass |
+| Eng | NO on arch + tests | Plan made 5 technical claims that are wrong; critical fix on caught/[slug] arch |
+| DX | 5.6/10 avg | Strong learner wedge; contributor TTHW is the soft underbelly. Fixable in <1 day |
+
+**Net**: Plan is strategically correct but technically wrong in three load-bearing places. Fix those before Week 1 starts and the plan is launch-ready. Don't fix them and Day 0 ships with broken viral surface, broken capstone gate, broken bot.
+
+---
+
+---
+
+## 19. Premortem Hardening (May 11, 2026, post-/autoplan)
+
+Ran a fresh premortem against this APPROVED plan. 8 deep-dive investigators surfaced 8 distinct failure modes. The full report lives at `/Users/joshernst/Obsidian/v01/20-Projects/promptdojo/premortem-report-20260511-1709.html`. This section layers the premortem's revisions on top of §18.
+
+### 19.1 The single most-likely failure: F1 — Sprint slips 5 weeks late
+
+Probability ~60%. Week 1 has 23 fixes with zero buffer. First XWELL CDC escalation eats the float that doesn't exist. Day 0 ships into a decayed post-grad window. Reply-guys cooled. Two competing Python-for-PM accounts have launched threads. Day 3 gate trips at 140 followers, not 200.
+
+### 19.2 The single most-dangerous failure: F5 — Audience composition wrong
+
+Probability ~50%, severity multi-year. @TFisPython's existing followers are senior devs; the wedge is non-engineer PMs. Follower count reaches 847 — looks healthy, wrong shape. Year 2 corporate L&D pitch fails because the social proof is dev-Twitter shitposting, not PM testimonials. **Multi-year setback dressed as a near-miss.**
+
+### 19.3 The hidden assumption (across all 8 stories)
+
+**Engineering hours and distribution hours are not fungible.** The plan treats "ship the capstone gate" and "post the Tuesday thread" as same-currency "launch work." Engineering pays instant dopamine (visible commit, green CI). Distribution pays slow, statistical, dignity-bruising feedback. Without an explicit hours-ratio guardrail, engineering wins every Saturday morning.
+
+**Sub-assumption (unvalidated)**: "@TFisPython's existing audience IS the wedge audience." 30 minutes of bio-scanning would test it. The plan deferred this check to Day 3. The premortem moves it to TODAY.
+
+### 19.4 Week 0 — moved up before sprint, 2 new pre-sprint tasks
+
+**Two tasks block sprint start. Do them today, 2026-05-11.**
+
+- [ ] **Follower composition audit.** Scan top 200 @TFisPython follower bios. Decision rule: if <15% contain "PM," "product," "marketing," "ops," "growth," or non-engineer titles, beta-first track activates immediately. Don't run the 3-week sprint into the wrong audience. (~30 min) [F5]
+- [ ] **Decide /caught/[slug] implementation details.** Per autoplan D1, architecture is category-slug + ?n=. Pre-decide: slug naming convention (one per bug, ~60 max), OG image layout sketch (1600×900, bug code centered, "promptdojo.dev" footer), landing page wireframe with anonymous-fallback + name-overflow truncation. (~1 hour)
+
+### 19.5 Week 1 — capped at 5 deliverables, not 23
+
+The premortem found that compressing 23 fixes into Week 1 is the load-bearing failure. **New rule: ship 5 deliverables in Week 1, slide everything else to Week 2-3.** Better to ship a smaller sprint than slip a fuller one.
+
+1. **Paste 3 Cloudflare secrets + verify `/api/health` all green.** RESEND_API_KEY, BEEHIIV_API_KEY, SESSION_SECRET rotation (existing sessions invalidate, expected).
+2. **Em-dash sweep — full list.** `design-kit/VOICE.md:48` strike permission first. Then `app/page.tsx:27, 32, 40, 120, 223` (homepage metadata — highest blast radius, ships on every link unfurl). Then `app/about/page.tsx:72, 88, 96, 120, 307, 315`. Then `app/pro/page.tsx:63, 120-121, 142, 253, 257, 261, 282`. Then `app/og/launch/[name]/route.tsx:193`. Then `components/v2/*`. (~3 hours grep + manual)
+3. **Capstone gate Stage 1 of 3 only**: schema field in `lib/content/schema.ts` extension + vitest test asserting `schema.parse({prerequisites: [...]})` round-trips. Runtime + UI gate slide to Week 2-3. (~4 hours)
+4. **Append micropip interstitial at END of ch12** (NOT inside ch13 — prevents PROGRESS_KV step-index breakage). (~2 hours)
+5. **Vitest scaffold + 1 test on `/api/subscribe`** happy path + bun→pnpm sweep (`packageManager` field, `.nvmrc`). (~3 hours)
+
+Everything else (capstone runtime, capstone UI, Pyodide warming, grader empathy, /caught/[slug] build, AGENTS.md, DESIGN.md, doctor script) moves to Week 2-3 below.
+
+### 19.6 Week 2 — capstone runtime + viral surface + pivot runbook
+
+**New: docs/pivot-runbook.md is a Week 2 deliverable.** Must exist BEFORE Day 0. The pivot becomes execution, not invention.
+
+1. **Capstone gate Stage 2 of 3**: runtime PROGRESS_KV reader. Vitest mocks PROGRESS_KV and asserts redirect when cold-jump from sidebar to ch25 happens without ch13-16 complete.
+2. **/caught/[slug] viral surface**: category-slug + ?n= per autoplan D1. INCLUDING the landing page (not just OG image), per Design review. Pattern from `/og/launch/wedge` for the OG image. Anonymous-fallback when no `?n=`. Truncate names >24 chars.
+3. **Pre-stage Day 3 pivot — `docs/pivot-runbook.md`**:
+   - 50-PM target list (X following bio-scrape + Maven AI PM Bootcamp alumni from public cohort pages + LinkedIn manual scrape)
+   - 3 DM templates, tested with 3 people from Josh's network
+   - "We paused, here's why" email draft for existing signups
+   - Definition of "successful beta" = 30 finished + 10 testimonials
+   - Target: <24h from gate-trip to first beta DM sent
+4. **Pyodide warming indicator** on first lesson load. Tailwind toast "warming your python sandbox... (first load only)" + localStorage-cache the warmed flag.
+5. **Grader empathy upgrade at `_grader.ts:52`**: case/whitespace cause detection. "Got 'hello', expected 'Hello, model.'. (case difference — python's strict about caps.)"
+6. **GitHub Action auto-tweet bot** with OAuth 1.0a (4 secrets, not Bearer). **Bot observability routes to Telegram Errors topic** (not `josh@promptdojo.dev`). `last_successful_post` surfaces on Josh's morning brief. Token-age check warns at day 55.
+7. **Closed beta: DM 10 PMs** from existing following → harvest 3 screenshot-quote tweets for Day 0 social proof.
+8. **Discord launch** (or GitHub Discussions fallback if Discord moderation feels like too much).
+9. **AGENTS.md expanded to 40 lines** (schema path, step lifecycle, grader kinds, prebuild gate, chapter-add path).
+10. **`design-kit/DESIGN.md` index** pointing at VOICE.md, BRAND.md, TYPOGRAPHY.md, tokens.css.
+11. **`pnpm doctor` script** (Node 20+, pnpm 8+, python3 on PATH).
+
+### 19.7 Week 3 — capstone UI + thread prep + mobile pass
+
+1. **Capstone gate Stage 3 of 3**: UI as pre-entry redirect (NOT post-completion banner). Manual QA must include sidebar-cold-jump-from-ch3 path, not just happy path.
+2. **Pre-write all Day 0-3 distribution** (per §8): X thread (10-12 posts), LinkedIn personal post (operator-stat hook), HN Show HN submission, r/learnpython post, r/ProductManagement cross-post.
+3. **Line up 5 reply-guys** from existing network. DM the night before with thread link, confirm they're ready by 9:05am ET (60-min algo window).
+4. **Mobile pass**: verify `HeroBugSnippet.tsx:37` doesn't clip the punchline at 375px (iPhone SE). Audit about-page comparison table mobile render at `app/about/page.tsx:213-238`.
+5. **Strip `/pro` link from homepage hero** at `app/page.tsx:144-150` + kill pricing line 120 + footer pricing line 223 ("$9.99/mo in the app" — Tension A makes this a lie).
+6. **Add 301 redirect `/pro` → `/founding-members`** (3 internal links would otherwise break).
+7. **Fix `subscribe.ts:121-128`** to return 502 (not 200) on Beehiiv 5xx.
+8. **Pre-commit podcast pitches** to calendar slots in weeks 4, 6, 8, 10, 12. 5 pitches per slot.
+9. **Calendar-block Saturday 8am-12pm "promptdojo distribution only"** through 2026-08-11. Defend like an XWELL meeting.
+
+### 19.8 The behavioral guardrail (most important addition)
+
+The premortem's hidden assumption was that engineering and distribution hours are fungible. They aren't. **New operating rule for the 90-day window:**
+
+- **Saturday 8am-12pm is distribution-only.** No code commits in this block. Output: 5 X posts queued + 1 LinkedIn long-form drafted + reply to inbound DMs + podcast pitch sent if it's a pitch week.
+- **Log distribution-hours BEFORE engineering-hours each Saturday.** Distribution gets the morning, engineering gets the afternoon. If distribution didn't happen, engineering doesn't happen.
+- **Hours ratio target: 1:1 distribution:engineering through 1,000 followers.** If engineering exceeds distribution in any week, the NEXT week is distribution-only.
+- **Cap engineering at 2 shippable items per week** until 1K followers crossed.
+- **Drafted-but-unpublished post sitting >48 hours = the codebase is winning.** Force ship or kill.
+
+### 19.9 Year 1 metric additions
+
+Add to the §10 Year 1 metrics table:
+
+| Metric | Why | Target by Month 12 |
+|---|---|---|
+| % new followers with non-engineer bios | Audience composition (F5 prevention) | ≥20% weekly |
+| `last_successful_post` age (auto-tweet bot) | Bot dies silently risk (F6) | <48h always |
+| Weekly distribution:engineering hours ratio | The hidden assumption guardrail (F8) | ≥1:1 until 1K followers |
+| Days from Day 3 gate trip to first beta DM (if triggered) | Pivot execution speed (F4) | <24h |
+
+### 19.10 Year 2 / Year 3 corrections
+
+- **Kill iOS app polish from Q3 entirely.** Either it ships Q4 as a single 2-week build, or it doesn't ship. No "polish in Q4 when ready" — that's the F8 dopamine sink in disguise. The founding-member capture works without an app for 12 months.
+- **Corporate L&D outreach pre-condition**: in addition to ≥25K X followers, ≥40% of audience must be non-engineer (verified via bio scan). Otherwise the social proof is the wrong shape.
+
+### 19.11 Revised Pre-Launch Checklist (replaces §14)
+
+Five items, each prevents a specific premortem failure mode. All must be green before Day 0 ships:
+
+1. **Follower composition audit done** — top 200 @TFisPython bios scanned, ≥15% wedge match (or beta-first activated). Done 2026-05-11. [F5]
+2. **`docs/pivot-runbook.md` committed before Day 0** — 50-PM target list, 3 DM templates, signup-pause email, success definition. Time-to-first-DM target <24h. [F4]
+3. **Capstone gate has 3 passing vitest tests before Day 0** — schema round-trip + runtime cold-jump block + UI pre-entry redirect. Manual QA explicitly tested sidebar-jump-from-ch3 path. [F2]
+4. **Bot alerts route to Telegram Errors topic** + token-age check at day 55 + `last_successful_post` surfaced on morning brief. Webhook tested with intentional bot failure. [F6]
+5. **Saturday 8am-12pm calendar-blocked through 2026-08-11.** First-block deliverable: distribution-hours log + week's 5 X posts queued + 1 LinkedIn long-form drafted. Distribution before engineering. [F1, F7, F8]
+
+---
+
+**End of plan v3** (V2 + /autoplan + premortem hardening). 8 sections of analysis layered onto the original 17-section strategic skeleton.
+
+**Next step (right now, 2026-05-11)**:
+1. Run the follower composition audit (30 minutes, blocks everything downstream).
+2. If wedge match ≥15%: start Week 0 tomorrow with the 2 pre-sprint tasks (§19.4).
+3. If wedge match <15%: activate beta-first track immediately. Week 0 becomes "build pivot runbook" instead of "decide /caught arch."
+
+**Week 1 starts Monday 2026-05-13** assuming follower audit clears. 5 deliverables only.

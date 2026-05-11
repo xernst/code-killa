@@ -1,0 +1,39 @@
+xp: 4
+estSeconds: 95
+concept: business-metric-not-hours-saved
+prompt: |
+  Isenberg's step 5 is the one most teams botch: measure business
+  impact, NOT "hours saved." Hours saved is a vanity metric a PM
+  invents to justify a project; it doesn't show up on the income
+  statement.
+
+  The spec below tracks `hours_saved_per_week`. Replace it with two
+  business metrics from Isenberg's list: `resolution_time_minutes`
+  (median time to resolve a ticket) and `csat` (customer
+  satisfaction, 1-5).
+
+  Expected output (the two business metrics):
+  ```
+  ['resolution_time_minutes', 'csat']
+  ```
+brokenCode: |
+  workflow = {
+      "name": "Support triage",
+      # bug: "hours saved" is a fake metric. business impact is
+      # resolution_time, conversion_rate, csat, revenue_per_employee.
+      "metrics": ["hours_saved_per_week"],
+  }
+
+  print(workflow["metrics"])
+bugLines:
+  - 5
+grader:
+  kind: stdout-equality
+  expected: "['resolution_time_minutes', 'csat']"
+  normalize: collapse-trailing-newline
+hint:
+  - level: 1
+    body: "Replace the list with `['resolution_time_minutes', 'csat']`. Both show up in the customer's experience and on the company's dashboard."
+  - level: 2
+    body: "`workflow[\"metrics\"] = [\"resolution_time_minutes\", \"csat\"]`. Hours saved is what you tell investors before they ask for revenue numbers; resolution_time and csat are what they ask for next."
+revealAfter: 4

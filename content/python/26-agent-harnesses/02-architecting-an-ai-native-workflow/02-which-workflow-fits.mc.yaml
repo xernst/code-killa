@@ -1,0 +1,35 @@
+xp: 2
+estSeconds: 60
+concept: pick-the-right-workflow
+code: |
+  workflows = {
+      "A": {"name": "Founder vision setting", "volume_per_week": 1,    "rules_exist": False, "human_coord_hours": 5},
+      "B": {"name": "Support ticket triage",  "volume_per_week": 4200, "rules_exist": True,  "human_coord_hours": 80},
+      "C": {"name": "Acquiring a competitor",  "volume_per_week": 0,    "rules_exist": False, "human_coord_hours": 0},
+      "D": {"name": "Quarterly board prep",    "volume_per_week": 1,    "rules_exist": True,  "human_coord_hours": 12},
+  }
+  for k, v in workflows.items():
+      print(f"{k}: {v['name']:30} vol={v['volume_per_week']:4} rules={v['rules_exist']} coord_h={v['human_coord_hours']}")
+prompt: |
+  Step 1 of Isenberg's playbook: pick a narrow workflow with
+  obvious economic value. The criteria: **volume is high, rules
+  exist, humans are doing too much coordination.**
+
+  Four candidate workflows. Which ONE is the strongest fit?
+options:
+  - id: a
+    label: "A — founder vision setting (vol=1, no rules, 5h coord)"
+    explain: "Low volume + no rules + tacit knowledge. This is exactly the work Isenberg says you DON'T automate. Strategy is judgment, not workflow."
+  - id: b
+    label: "B — support ticket triage (vol=4200, rules exist, 80h coord)"
+  - id: c
+    label: "C — acquiring a competitor (vol=0, no rules)"
+    explain: "Zero volume = not a workflow, it's a project. Agents pay off on repetition; one-off deals don't compound."
+  - id: d
+    label: "D — quarterly board prep (vol=1, rules exist, 12h coord)"
+    explain: "Rules exist but volume is one per quarter. Cost of structuring exceeds savings. Wait until you have something that runs daily."
+answerIds:
+  - b
+hint:
+  - level: 1
+    body: "Three signals you want: high volume, rules already exist (even informally), and humans currently doing more coordination than judgment. One workflow hits all three."

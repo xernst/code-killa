@@ -1,0 +1,37 @@
+xp: 3
+estSeconds: 75
+concept: readiness-score-from-fields
+code: |
+  REQUIRED = ["name", "trigger", "inputs", "decisions", "success_criteria", "error_sites", "tacit_knowledge"]
+
+  partial_spec = {
+      "name": "Outbound prospecting",
+      "trigger": "new lead in CRM",
+      "inputs": ["lead.company", "lead.role", "lead.intent_signals"],
+      "decisions": {"classify_segment": {"reversible": True, "needs_approval": False}},
+      # success_criteria: missing
+      # error_sites: missing
+      # tacit_knowledge: missing
+  }
+
+  present = [f for f in REQUIRED if f in partial_spec]
+  score = round(len(present) / len(REQUIRED), 2)
+
+  print(f"present: {len(present)}/{len(REQUIRED)}")
+  print(f"score:   {score}")
+prompt: |
+  The spec has 4 of the 7 required fields. The validator computes
+  a readiness score as `present / required`, rounded to 2 decimals.
+
+  What does the script print?
+grader:
+  kind: stdout-equality
+  expected: |
+    present: 4/7
+    score:   0.57
+  normalize: collapse-trailing-newline
+hint:
+  - level: 1
+    body: "Count `name`, `trigger`, `inputs`, `decisions`. That's 4 present out of 7 required. `4/7 = 0.5714...`, rounded to 2 decimals is `0.57`."
+  - level: 2
+    body: "Output is two lines: `present: 4/7` and `score:   0.57` (three spaces after `score:` because the format string aligns columns)."

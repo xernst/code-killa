@@ -1,0 +1,104 @@
+xp: 5
+estSeconds: 200
+concept: workflow-spec-validator
+prompt: |
+  Write `is_ai_native_ready(spec)` that returns a dict with:
+
+  - `score`: float, fraction of REQUIRED fields present (rounded to 2)
+  - `missing`: list of required field names not in the spec
+  - `has_explicit_policies`: True iff EVERY value in
+    `spec.get("policies", {})` is a dict (not a string — "ask Sarah"
+    is a string and disqualifies)
+  - `business_metrics_only`: True iff `spec.get("metrics", [])` contains
+    NONE of these vanity strings: `"hours_saved"`, `"hours_saved_per_week"`,
+    `"engagement"`, `"vibes"`
+  - `ready`: True iff score >= 0.85 AND has_explicit_policies AND
+    business_metrics_only
+
+  Two specs run. Expected output:
+  ```
+  {'score': 1.0, 'missing': [], 'has_explicit_policies': True, 'business_metrics_only': True, 'ready': True}
+  {'score': 0.43, 'missing': ['decisions', 'error_sites', 'success_criteria', 'tacit_knowledge'], 'has_explicit_policies': False, 'business_metrics_only': False, 'ready': False}
+  ```
+starter: |
+  REQUIRED = ["name", "trigger", "inputs", "decisions", "success_criteria", "error_sites", "tacit_knowledge"]
+  VANITY = {"hours_saved", "hours_saved_per_week", "engagement", "vibes"}
+
+  good_spec = {
+      "name": "Support triage",
+      "trigger": "ticket.created",
+      "inputs": ["ticket.body", "customer.history"],
+      "decisions": {"classify": {"reversible": True, "needs_approval": False}},
+      "success_criteria": "first-response < 10min",
+      "error_sites": ["wrong-account retrieval"],
+      "tacit_knowledge": "tone with angry-but-right customers",
+      "policies": {"refund": {"auto_approve_under": 100}},
+      "metrics": ["resolution_time_minutes", "csat"],
+  }
+
+  vibe_spec = {
+      "name": "Sales outreach",
+      "trigger": "lead.created",
+      "inputs": ["lead.company"],
+      "policies": {"who_to_contact": "ask Sarah, she knows"},
+      "metrics": ["hours_saved_per_week"],
+  }
+
+  # define is_ai_native_ready(spec) below
+
+  print(is_ai_native_ready(good_spec))
+  print(is_ai_native_ready(vibe_spec))
+grader:
+  kind: stdout-equality
+  expected: |
+    {'score': 1.0, 'missing': [], 'has_explicit_policies': True, 'business_metrics_only': True, 'ready': True}
+    {'score': 0.43, 'missing': ['decisions', 'error_sites', 'success_criteria', 'tacit_knowledge'], 'has_explicit_policies': False, 'business_metrics_only': False, 'ready': False}
+  normalize: collapse-trailing-newline
+solution: |
+  REQUIRED = ["name", "trigger", "inputs", "decisions", "success_criteria", "error_sites", "tacit_knowledge"]
+  VANITY = {"hours_saved", "hours_saved_per_week", "engagement", "vibes"}
+
+  good_spec = {
+      "name": "Support triage",
+      "trigger": "ticket.created",
+      "inputs": ["ticket.body", "customer.history"],
+      "decisions": {"classify": {"reversible": True, "needs_approval": False}},
+      "success_criteria": "first-response < 10min",
+      "error_sites": ["wrong-account retrieval"],
+      "tacit_knowledge": "tone with angry-but-right customers",
+      "policies": {"refund": {"auto_approve_under": 100}},
+      "metrics": ["resolution_time_minutes", "csat"],
+  }
+
+  vibe_spec = {
+      "name": "Sales outreach",
+      "trigger": "lead.created",
+      "inputs": ["lead.company"],
+      "policies": {"who_to_contact": "ask Sarah, she knows"},
+      "metrics": ["hours_saved_per_week"],
+  }
+
+  def is_ai_native_ready(spec):
+      present = [f for f in REQUIRED if f in spec]
+      missing = sorted(f for f in REQUIRED if f not in spec)
+      score = round(len(present) / len(REQUIRED), 2)
+      policies = spec.get("policies", {})
+      has_explicit_policies = all(isinstance(v, dict) for v in policies.values()) if policies else True
+      metrics = spec.get("metrics", [])
+      business_metrics_only = not any(m in VANITY for m in metrics)
+      ready = score >= 0.85 and has_explicit_policies and business_metrics_only
+      return {
+          "score": score,
+          "missing": missing,
+          "has_explicit_policies": has_explicit_policies,
+          "business_metrics_only": business_metrics_only,
+          "ready": ready,
+      }
+
+  print(is_ai_native_ready(good_spec))
+  print(is_ai_native_ready(vibe_spec))
+hint:
+  - level: 1
+    body: "Five returned keys. Build `missing` as a sorted list so output is deterministic. `has_explicit_policies` defaults to True when there are no policies (empty dict)."
+  - level: 2
+    body: "`has_explicit_policies = all(isinstance(v, dict) for v in policies.values())` if policies else True. `business_metrics_only = not any(m in VANITY for m in metrics)`. `ready` is the AND of three signals."

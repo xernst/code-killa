@@ -1,0 +1,26 @@
+xp: 3
+estSeconds: 70
+concept: required-spec-fields
+prompt: |
+  Fill the list of the SEVEN required spec fields a workflow needs
+  to be machine-readable. Order matches the lesson: name, trigger,
+  inputs, decisions, success_criteria, error_sites, tacit_knowledge.
+
+  Expected output:
+  ```
+  ['name', 'trigger', 'inputs', 'decisions', 'success_criteria', 'error_sites', 'tacit_knowledge']
+  ```
+code: |
+  REQUIRED = ___
+  print(REQUIRED)
+blanks:
+  - id: required_list
+    accept:
+      - "['name', 'trigger', 'inputs', 'decisions', 'success_criteria', 'error_sites', 'tacit_knowledge']"
+      - "[\"name\", \"trigger\", \"inputs\", \"decisions\", \"success_criteria\", \"error_sites\", \"tacit_knowledge\"]"
+    caseSensitive: true
+hint:
+  - level: 1
+    body: "Seven strings in a list, in the order: name, trigger, inputs, decisions, success_criteria, error_sites, tacit_knowledge."
+  - level: 2
+    body: "`['name', 'trigger', 'inputs', 'decisions', 'success_criteria', 'error_sites', 'tacit_knowledge']` — single quotes match the expected output."
