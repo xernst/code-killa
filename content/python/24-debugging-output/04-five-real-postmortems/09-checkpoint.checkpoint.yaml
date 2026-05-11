@@ -1,0 +1,56 @@
+xp: 8
+estSeconds: 240
+concept: triage-five-postmortems
+prompt: |
+  Final drill. You have five postmortem records from the inbox. Each
+  one already carries a `class` field (1-4) and a `severity` field
+  (1-10, where 10 is "front-page lawsuit").
+
+  Write `triage_failures(cases)` that returns a dict with two keys,
+  in this exact order:
+
+  - `counts`: a dict mapping class number (int) to count (int), with
+    keys inserted in ascending class order (1, 2, 3, 4). Classes
+    with zero count are omitted.
+  - `urgent`: the `name` (str) of the case with the highest severity.
+    On a tie, return the FIRST one encountered (stable order).
+
+  Five cases run for you. Expected output:
+  ```
+  {'counts': {1: 1, 2: 1, 3: 2, 4: 1}, 'urgent': 'air_canada'}
+  ```
+starter: |
+  cases = [
+      {"name": "air_canada",       "class": 3, "severity": 10},
+      {"name": "dpd",              "class": 3, "severity": 7},
+      {"name": "nyc_mycity",       "class": 2, "severity": 9},
+      {"name": "recruiter_json",   "class": 4, "severity": 6},
+      {"name": "enterprise_rag",   "class": 1, "severity": 8},
+  ]
+
+  # define triage_failures(cases) below
+
+  print(triage_failures(cases))
+grader:
+  kind: stdout-equality
+  expected: "{'counts': {1: 1, 2: 1, 3: 2, 4: 1}, 'urgent': 'air_canada'}"
+  normalize: collapse-trailing-newline
+solution: |
+  cases = [
+      {"name": "air_canada",       "class": 3, "severity": 10},
+      {"name": "dpd",              "class": 3, "severity": 7},
+      {"name": "nyc_mycity",       "class": 2, "severity": 9},
+      {"name": "recruiter_json",   "class": 4, "severity": 6},
+      {"name": "enterprise_rag",   "class": 1, "severity": 8},
+  ]
+
+  def triage_failures(cases):
+      counts = {}
+      for c in cases:
+          counts[c["class"]] = counts.get(c["class"], 0) + 1
+      ordered_counts = {k: counts[k] for k in sorted(counts)}
+      urgent = max(cases, key=lambda c: c["severity"])["name"]
+      return {"counts": ordered_counts, "urgent": urgent}
+
+  print(triage_failures(cases))
+passThreshold: 0.66

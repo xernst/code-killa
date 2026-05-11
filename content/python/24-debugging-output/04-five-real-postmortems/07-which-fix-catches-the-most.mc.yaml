@@ -1,0 +1,32 @@
+xp: 2
+estSeconds: 70
+concept: meta-fix-eval-suite
+prompt: |
+  Look back at the five cases:
+
+  1. Air Canada — invented a bereavement-refund policy
+  2. DPD — chatbot swore at customers, generated insults of own company
+  3. NYC MyCity — gave illegal small-business advice
+  4. Recruiter agent — swapped email into phone-number slot
+  5. Enterprise RAG — cited a superseded 2022 policy as current
+
+  You can pick exactly one fix to apply across all five teams. Which
+  fix would have caught the MOST of these cases before they reached a
+  customer?
+options:
+  - id: better_prompt
+    label: "A better-engineered system prompt with stricter rules"
+    explain: "A better prompt helps Air Canada and arguably DPD. It does nothing for the recruiter's JSON-slot swap (the prompt was clear), nothing for the enterprise RAG staleness (retrieval problem), and only weakly addresses MyCity (the bot needed retrieval grounding, not a stricter tone). One or two cases at best."
+  - id: eval_suite
+    label: "A regression eval suite run in CI on every model/prompt/retriever change"
+  - id: schema_validation
+    label: "Pydantic-style schema validation at every agent output boundary"
+    explain: "Schema validation catches the recruiter case cleanly. It would not have caught Air Canada (the output was a fluent string, schema-valid by any measure), DPD (no schema), MyCity (no schema), or the enterprise RAG stale-citation (the cited URL was valid). One case caught."
+  - id: retrieval_citations
+    label: "Mandatory retrieval-with-citations on every response"
+    explain: "Retrieval with citations catches DPD, MyCity, and the enterprise RAG case (citation-with-date is a sub-fix of citation discipline). It does not catch Air Canada cleanly (the bot was making up policy whether or not it had retrieval) and does nothing for the recruiter's JSON-slot swap. Three cases caught — strong, but not the strongest."
+answerIds:
+  - eval_suite
+hint:
+  - level: 1
+    body: "Notice that every other answer is downstream of 'did we test for this?' A better prompt only helps if you have a way to verify it helped. Schema validation only helps if you have tests that prove it catches the bug. Retrieval-with-citations only helps if you have evals that confirm the citation is current. The eval suite is the meta-fix — every other fix is one of the *outcomes* of having one. The five teams that shipped these failures all had teams who could have written the fixes. None of them had the eval that would have shown them they needed to."

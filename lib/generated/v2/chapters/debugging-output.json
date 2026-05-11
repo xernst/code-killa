@@ -519,7 +519,219 @@
         }
       ],
       "xpTotal": 32
+    },
+    {
+      "slug": "five-real-postmortems",
+      "title": "Five customer-visible AI failures, walked through — and the one fix that would have caught all of them",
+      "estMinutes": 22,
+      "prerequisites": [
+        "the-four-breakage-classes"
+      ],
+      "steps": [
+        {
+          "type": "read",
+          "id": "debugging-output/five-real-postmortems/s01-01-the-postmortem-template",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "warmup",
+          "estSeconds": 200,
+          "concept": "postmortem-template",
+          "body": "# Blame the system, not the model\n\nThe previous lesson gave you a four-class taxonomy. This lesson is\nfive real cases, each a customer-visible AI failure that made it to\nthe press, the courts, or both. You will walk through them with the\ntaxonomy in hand and notice the same shape every time: the model did\nwhat it was told, and the system around it failed.\n\nThis is the discipline that keeps you out of the news. Teams that\ndebug AI features well do not say \"the model hallucinated\" and ship a\npatch to the prompt. They write a structured post-mortem, find the\nseam in the system, and add an eval so the next instance of that class\ngets caught by CI instead of a customer.\n\n## The template\n\nEvery customer-visible AI failure deserves the same six-section\nwrite-up. It takes about 20 minutes once you have the trace in hand.\n\n1. **What shipped.** The feature, the model, the date it went live,\n   the volume of traffic it sees. One paragraph. No vague language.\n   \"Our customer-facing refund-status chatbot, GPT-4o behind a RAG\n   layer, went live November 12, handles ~4,000 sessions a day.\"\n\n2. **What users saw.** The complaint, the screenshot, the\n   reproduction steps. Quote the user. Do not paraphrase. Customer\n   language often contains the seam: \"told me my refund was\n   processed\" is class 1 or class 3 depending on the trace, never\n   both.\n\n3. **The trace.** The rendered prompt, the tools called, the chunks\n   retrieved, the raw model output, the output after post-processing.\n   Chapter 20 taught you to read these. This is where you read it.\n   Paste the relevant fields. Do not summarize — the bug is usually\n   in a field you would have summarized away.\n\n4. **The root cause.** Which of the four breakage classes\n   (1: retrieval gave wrong context, 2: prompt was ambiguous, 3: true\n   hallucination, 4: downstream code mangled the output). Cite the\n   field in the trace that proves it.\n\n5. **The fix.** The change to the system that addresses the root\n   cause at its layer. A class 1 fix is in the retriever. A class 4\n   fix is in the post-processing code. **Never patch the prompt for a\n   non-prompt bug.** This is the most common mistake teams make and\n   it is why the same class of bug ships twice.\n\n6. **The eval that catches it now.** This is the only section that\n   matters six months from now. Every customer-visible failure is an\n   eval gap — if your eval suite had caught it, the user wouldn't\n   have. Write the test case. Add it to CI. The post-mortem is not\n   closed until the eval runs green on the fix and red on the\n   original bug.\n\n## Why the template is rigid\n\nBecause the bias under pressure is to skip steps 3 and 6. Step 3\ntakes work — you have to actually read the trace, and traces are\nugly. Step 6 feels like overhead when the customer is already angry\nand the prompt patch already shipped to staging.\n\nBoth shortcuts cost you the next bug. Without step 3, you\nmisclassify. Without step 6, you ship the same class of bug again.\nTeams that do both — every time — get to the point where AI failures\nshrink quarter over quarter. Teams that skip them get to the point\nwhere the same complaint shows up three times in six months from\nthree different users.\n\n## The five cases that follow\n\nAll five are real. Four are public — they made the news, the\ncourts, or both. The fifth is a composite of several internal\nenterprise failures the industry has seen variants of repeatedly in\n2024-2025. Names are changed on that one; the failure mode is\nverbatim.\n\nThe point of walking through them is not to feel superior to the\nengineers who shipped them. Those engineers were senior. The systems\nwere not naive. The failures shipped because the post-mortem template\nabove either did not exist at those companies, or it was treated as\noptional. By the end of this lesson you will be able to look at any\nof them and name the class, the fix, and the eval — fast, and without\ndefending the model.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "read",
+          "id": "debugging-output/five-real-postmortems/s02-02-air-canada-refund-lawsuit",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "warmup",
+          "estSeconds": 220,
+          "concept": "case-air-canada",
+          "body": "# Case 1: Air Canada's chatbot invented a bereavement-refund policy\n\nFebruary 2024. The British Columbia Civil Resolution Tribunal ordered\nAir Canada to pay damages to a passenger named Jake Moffatt. The\nruling is short and worth reading in full. The relevant facts:\n\nMoffatt's grandmother died. He went to Air Canada's website to book a\nlast-minute flight to the funeral. The site had a customer-service\nchatbot. He asked the chatbot whether the airline had a bereavement-\nfare program and how to apply for the refund afterwards. The chatbot\nanswered, with confidence, that he could book the flight at the\nregular price and apply for a partial bereavement refund within 90\ndays of travel.\n\nThat policy does not exist at Air Canada. The actual policy is that\nbereavement fares must be booked in advance — they cannot be claimed\nretroactively. Moffatt booked the flight, flew to the funeral, and\nfiled for the refund. Air Canada refused.\n\nHe filed in tribunal. Air Canada's defense, in writing: the chatbot\n\"is a separate legal entity\" responsible for its own actions. The\ntribunal rejected this. The ruling held that a company is liable for\ninformation on its website regardless of whether the information came\nfrom a human-written page or a chatbot. Air Canada was ordered to pay\nthe difference, plus tribunal fees, plus interest.\n\n## Reading the trace\n\nWe don't have Air Canada's internal trace. But the public facts are\nenough to reconstruct it.\n\n- `rendered_prompt`: some variant of \"you are an Air Canada customer\n  service assistant. Help the user with their question.\"\n- `tools_called`: unclear, possibly none. The chatbot may have had\n  RAG over the public policy site, or it may have been pure LLM.\n- `retrieved_chunks`: if RAG existed, it either pulled nothing\n  relevant or pulled the general bereavement policy page (which says\n  the program exists but requires advance booking) and the model\n  invented the \"apply within 90 days after travel\" detail.\n- `raw_output`: the chatbot's confident, fabricated policy.\n- `output_after_postprocess`: identical to raw_output, since nothing\n  in the response was structurally malformed.\n\nThe bug is not a parse bug (the output rendered fine). It is not a\nretrieval miss in the sense that retrieval pulled the *wrong*\ndocument — there was no document with that policy in it. The model\ngenerated it.\n\n## The class\n\nThis is **class 2 — prompt was ambiguous.** A naive read calls it\nclass 3 (true hallucination), and you'll see writers in the press do\nexactly that. But the deeper failure is upstream: the system prompt\ndid not constrain the model to refuse policy claims that are not\nverbatim in retrieved content. With no rule telling it \"if you cannot\nquote the policy directly, say you don't know and offer a phone\nnumber,\" the model defaulted to fluent helpfulness. The system\n*allowed* the model to make a policy promise it had not retrieved.\nThat is a prompt-layer failure, not a model failure.\n\nIf you reframe class 3 as \"the model invented something with no\nupstream signal that should have stopped it,\" then yes — class 3.\nThe two classifications point at the same fix, which is the point.\n\n## The fix that would have caught it\n\nTwo layers, in order:\n\n1. **A hard-coded policy refusal layer.** Any question that\n   pattern-matches as \"what is your policy on X\" routes to a\n   constrained prompt that includes the verbatim policy text and\n   instructs the model to refuse if the policy is not present in the\n   context. If retrieval returns nothing on a policy question, the\n   chatbot says \"I don't have that information — please call our\n   bereavement desk at...\" It does not generate a guess.\n\n2. **An eval that asks \"did the bot make a promise?\"** Run every\n   model response through a second LLM call (or a regex on commitment\n   verbs: \"will,\" \"can,\" \"apply,\" \"refund,\" \"within N days\") and\n   flag any response that makes a refund-related commitment without a\n   cited policy chunk. The flagged ones never reach the customer\n   without human review.\n\n## What this case teaches\n\nA customer-facing chatbot that can make commitments without\nconstraints is legally indistinguishable from a customer service rep\nwho can make commitments without training. Courts have now\nestablished that the company owns those commitments. The post-mortem\ntemplate's step 5 — \"the fix is at the layer of the root cause\" —\napplies here at the prompt-and-system-architecture layer, not at the\nmodel layer. There is no version of GPT-4 you can swap in that fixes\nthis. The fix is the constraint around it.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "read",
+          "id": "debugging-output/five-real-postmortems/s03-03-dpd-and-nyc-mycity",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 220,
+          "concept": "case-dpd-mycity",
+          "body": "# Cases 2 and 3: DPD swore at customers, and NYC told business owners to break the law\n\nTwo failures from early 2024. Different domains, identical class.\n\n## DPD — January 2024\n\nDPD is a UK parcel-delivery company. In January 2024 a frustrated\ncustomer, Ashley Beauchamp, was trying to get help locating a missing\nparcel from the DPD support chatbot. The chatbot was unable to find\nthe parcel. Beauchamp, in a moment of curiosity, asked the chatbot\nto write him a poem about how useless DPD's customer service was.\nThe chatbot complied. It wrote a haiku-format insult of its own\ncompany. Beauchamp escalated and asked the bot to swear in its next\nresponse. It did — calling itself \"the worst delivery firm in the\nworld.\" He screenshotted the exchange and posted it. The story went\nglobal within 48 hours. DPD pulled the chatbot.\n\nPublic statement from DPD: an \"error occurred after a system update.\"\nThe actual cause, per industry reporting, was that a recent update\nhad removed or weakened the system prompt's content-filtering rules.\nThe underlying LLM was happy to comply with any user request because\nnothing in the prompt told it not to.\n\n## NYC MyCity — March 2024\n\nThe Markup and the Associated Press jointly reported in March 2024\nthat New York City's MyCity small-business chatbot — built on\nMicrosoft's Azure AI services and launched October 2023 — was\nconfidently telling business owners they could do things that were\nillegal under city law. Examples from the published reporting:\n\n- Asked whether a landlord can refuse tenants based on source of\n  income (i.e., refuse Section 8 vouchers), the chatbot said yes.\n  Under NYC law, this is illegal.\n- Asked whether a restaurant can take a cut of an employee's tips,\n  the chatbot said yes. Under NYC and federal law, employers cannot.\n- Asked about firing employees who report sexual harassment, the\n  chatbot's answers were inconsistent and in some sessions implied it\n  was permissible.\n\nEach answer was generated, plausible-sounding, and wrong. Reporters\nverified the failures with the city's own legal staff. The city kept\nthe chatbot live with a disclaimer added rather than taking it down.\n\n## Reading the trace\n\nBoth failures share the same trace shape. Different surface, same\nseam:\n\n- `rendered_prompt`: a general \"you are a helpful assistant for X\"\n  system prompt with no hard-coded constraints on the domain.\n- `tools_called`: none, or minimal. Neither bot was wired to a\n  citation-required retrieval pipeline. They generated from training\n  knowledge.\n- `retrieved_chunks`: empty in DPD's case (it was a generative\n  chatbot, no RAG). For NYC MyCity, retrieval existed but was\n  shallow — the underlying policy documents were not consistently\n  retrieved, and the model was not required to cite them.\n- `raw_output`: the swear, the bad legal advice.\n- `output_after_postprocess`: identical to raw_output. The bug is\n  not in post-processing.\n\n## The class\n\nBoth are **class 3 — true hallucination.** The model invented an\nanswer in a domain where the right answer was not retrieved and the\nmodel was not forced to refuse on uncertainty. The DPD case has a\nclass-2 flavor (system prompt missing constraints) but the deeper\nfailure is \"the model answered without grounding.\" Same for MyCity.\n\nThe shared pattern: **open-ended generative chat over a domain that\nrequires citations**. Delivery policy is a domain that requires\ncitations. Municipal small-business law is a domain that requires\ncitations. Both companies shipped chat interfaces that produced\nfluent text without ever telling the model \"you may only answer with\ntext you can quote from a retrieved source.\"\n\n## The fix that would have caught both\n\nThe fix is the same fix in both cases, and it is not \"tighten the\nsystem prompt to be polite\" or \"add a profanity filter.\" Those fixes\ntreat the surface. The root cause is the absence of retrieval\ngrounding plus citation-required output.\n\n1. **Retrieval-with-citations as a hard requirement.** Every answer\n   the chatbot generates must include a citation to a retrieved\n   chunk. If retrieval returns nothing, the chatbot refuses and\n   offers a human-handoff path. No exceptions, enforced in code\n   (not in the prompt).\n\n2. **An out-of-domain detector.** Before generation, classify the\n   user's question into \"in-scope topics the chatbot is allowed to\n   discuss\" versus \"everything else.\" DPD: parcel tracking, address\n   updates, returns. Everything else routes to a refusal template.\n   NYC: a finite list of business-license-and-compliance topics with\n   curated policy sources. Asking for a poem? Out of domain. Asking\n   about employee firing? In-domain but routes to a constrained\n   policy-citation prompt.\n\n## What these cases teach\n\nThe same architectural mistake, in two industries, in the same\nquarter. Both companies treated \"the model has a system prompt\" as\nsufficient safety. Both discovered that a system prompt is a\nsuggestion the model may comply with, not an enforced contract. The\ncontract has to live in code: retrieval gating, citation requirements,\nout-of-domain refusal. The model's instructions are downstream of\nthe architecture, not a substitute for it.\n\nDPD and NYC MyCity are the same post-mortem written twice. Step 6\n— the eval — would have caught both: a regression test that asks the\nchatbot ten out-of-domain or out-of-policy questions and verifies it\nrefuses every one. Neither company had that test. The journalists\nran it for them.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "mc",
+          "id": "debugging-output/five-real-postmortems/s04-04-classify-the-five",
+          "xp": 2,
+          "hint": [
+            {
+              "level": 1,
+              "body": "A: 'pulled a stale doc' = wrong context retrieved = class 1. B: 'generated a policy that does not exist' = class 3. C: 'raw output right, post-processing dropped the symbol' = class 4. D: 'vague instruction, model picked a reasonable interpretation' = class 2. E: 'no retrieval, generated from training' = class 3.",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 80,
+          "concept": "classify-five-failures",
+          "prompt": "Five short failure descriptions from real (or real-shaped) AI\nincidents. Apply the four-class taxonomy from the previous lesson.\n\nWhich mapping is correct?\n",
+          "options": [
+            {
+              "id": "a1_b3_c4_d2_e3",
+              "label": "A=1, B=3, C=4, D=2, E=3"
+            },
+            {
+              "id": "a3_b1_c4_d2_e1",
+              "label": "A=3, B=1, C=4, D=2, E=1",
+              "explain": "A is retrieval pulling the wrong doc (stale = wrong context, class 1), not a hallucination. B is the Air Canada shape — invented policy with no source, class 3 (or class 2 if you frame it as missing prompt constraint; either way it is not class 1)."
+            },
+            {
+              "id": "a1_b2_c4_d3_e3",
+              "label": "A=1, B=2, C=4, D=3, E=3",
+              "explain": "Close but D is wrong. The summarizer got correct context and a vague instruction; that is the textbook class 2 ambiguity case, not a hallucination."
+            },
+            {
+              "id": "a1_b3_c2_d2_e4",
+              "label": "A=1, B=3, C=2, D=2, E=4",
+              "explain": "C and E are swapped. JSON mangled by downstream code is class 4 (parse). A bot generating from training data with no retrieval is class 3 (hallucination)."
+            }
+          ],
+          "answerIds": [
+            "a1_b3_c4_d2_e3"
+          ],
+          "shuffle": false,
+          "code": "# five real-ish failure descriptions. apply the chapter 3 taxonomy:\n# 1 = retrieval gave wrong context\n# 2 = prompt was ambiguous\n# 3 = true hallucination (no grounding)\n# 4 = downstream code mangled the output\nfailures = [\n    \"A: RAG bot pulled a 2021 policy doc when the 2024 update existed; answered from the stale doc.\",\n    \"B: Chatbot generated a confident bereavement-refund policy that does not exist anywhere in the company's docs.\",\n    \"C: Model returned valid JSON with the right field names; downstream parser dropped the currency symbol from the value.\",\n    \"D: Summarizer was told 'give me the highlights'; returned 14 bullets when the UI had room for 5.\",\n    \"E: Support bot answered a municipal-law question by generating from training data with no retrieval grounding.\",\n]\nfor f in failures:\n    print(f)\n",
+          "runnable": true
+        },
+        {
+          "type": "read",
+          "id": "debugging-output/five-real-postmortems/s05-05-recruiter-json-mangle",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 200,
+          "concept": "case-recruiter-json",
+          "body": "# Case 4: The recruiter agent that texted email addresses\n\nComposite case, drawn from a class of failures we have seen variants\nof repeatedly in 2024 and 2025 across internal agent rollouts.\nNames are changed; the failure mode is verbatim.\n\nA mid-sized recruiting firm rolled out an internal candidate-outreach\nagent. The agent reads a candidate dossier (resume, prior contact\nhistory, role they're being sourced for) and produces a structured\nrecord for the downstream automation stack: a CRM update, a templated\nSMS, and a templated email. The schema the model is asked to produce\nlooks roughly like this:\n\n```\n{\n  \"candidate_name\": str,\n  \"candidate_email\": str,\n  \"phone_number\": str,\n  \"role_id\": str,\n  \"sms_body\": str,\n  \"email_body\": str\n}\n```\n\nA queue worker picks up the model's output, parses the JSON, and\nfires two downstream sends: an SMS to `phone_number` and an email\nto `candidate_email`.\n\n## The incident\n\nFor about six hours one Tuesday, the recruiting team watched their\nSMS deliverability dashboard plummet. The carrier was rejecting\nroughly 40% of outbound texts. The on-call engineer pulled a sample\nof failed sends and saw the destinations were strings like\n`jane.doe@gmail.com` — being sent to an SMS endpoint. The carrier\ncorrectly rejected them.\n\nThe candidates whose phone numbers *were* valid received their SMS,\nbut the message read: \"Hi jane.doe@gmail.com, we have a role that\nmatches your background...\"\n\nThe model had silently swapped the `candidate_email` value into the\n`phone_number` slot. The JSON parsed cleanly — both fields had the\ncorrect type (string) — and the downstream system, having no\nvalidation beyond \"is this a string,\" fired the sends.\n\n## Reading the trace\n\n- `rendered_prompt`: a detailed instruction asking for the structured\n  record, with a JSON example showing the schema. No type\n  constraints, no format constraints on phone vs email.\n- `tools_called`: none. Pure LLM call.\n- `retrieved_chunks`: the candidate's dossier, correctly retrieved.\n- `raw_output`: a JSON object where the model had, on a subset of\n  candidates whose dossiers had unusual phone-field formatting,\n  flipped `candidate_email` and `phone_number`. The raw output was\n  internally consistent — the email field also contained the phone\n  number on those records.\n- `output_after_postprocess`: the parser saw two strings, assigned\n  them to the fields the JSON declared, and passed them through.\n\nThe interesting thing: the model was not making things up. The\ncandidate-email value in the phone-number slot was a real email\naddress — it just belonged in the *other* field. The model lost\ntrack of which slot was which on a subset of malformed inputs.\n\n## The class\n\nThis is **class 4 — downstream consumer assumes schema**. The model\nproduced JSON that parsed. The downstream code accepted any string\nas a phone number. The contract between the agent and the consumer\nwas \"the keys will be there\" — but the consumer assumed something\nstronger: \"the values will match what the keys say they are.\"\n\nA naive read calls this class 2 (the prompt didn't constrain the\noutput format enough). Reasonable. But the *fix* lives at the\nboundary between the agent and the consumer, not in the prompt. A\nbetter prompt reduces the rate of the bug; validation at the\nboundary makes the bug structurally impossible to reach production.\nThat is the class-4 framing: trust no model output past a structural\ncheck.\n\n## The fix that would have caught it\n\n**Pydantic (or equivalent) validation at the boundary.** The queue\nworker should not accept the model's output as a `dict`. It should\nparse it into a typed model with format constraints:\n\n- `candidate_email` validated against an email regex (or a\n  full-featured email-validator library).\n- `phone_number` validated against an E.164 or local phone format.\n- Validation failures route the record to a dead-letter queue with a\n  human-review flag. They do *not* fire downstream sends.\n\nThe eval that catches this in CI is a property-style test: generate\n200 candidate dossiers with adversarial phone/email formatting\n(emails with digits, phones with letters, missing country codes,\ninternational formats, unicode characters), run the agent over them,\nand assert that no record exits with an email in a phone field or\nvice versa. The records that fail validation are fine — they're\ncaught. The records that *pass* validation with the wrong values in\nthe wrong slots are the regression.\n\n## What this case teaches\n\nThe model writing JSON is not a contract. It is a hopeful suggestion\nthat, on most inputs, matches your schema. Real systems treat agent\noutput as untrusted at the boundary — same as you would any user\ninput, any third-party API response, any external data. Pydantic\nexists because Python systems have learned this lesson for every\nother source of data. AI output is no different.\n\nThis is also the case where the post-mortem template's step 5 is\nhardest to follow. The instinct is to \"make the prompt clearer.\"\nThe class-4 fix moves the constraint into code, where the model can't\nviolate it. That move — from prompt to schema — is the single\nbiggest reliability improvement most teams can make in their first\nquarter of running an agent in production.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "read",
+          "id": "debugging-output/five-real-postmortems/s06-06-glean-style-retrieval-miss",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 200,
+          "concept": "case-retrieval-staleness",
+          "body": "# Case 5: Enterprise RAG returned the wrong policy with full confidence\n\nComposite case from the enterprise-RAG space — the category that\nincludes Glean, Hebbia, Notion AI, and the long tail of internal\nConfluence-on-top-of-RAG deployments. We have seen this exact\nfailure mode at multiple Fortune-500 deployments in 2024-2025. The\nshape is durable enough to teach from.\n\nA 4,000-person company rolls out an internal knowledge-search agent.\nEmployees ask questions in natural language; the agent retrieves from\nthe company's Confluence, SharePoint, and Notion workspaces, then\ngenerates an answer with cited sources. Adoption is high. People\nstart trusting it for HR questions, IT-policy questions, and\ncompliance questions.\n\nSix weeks in, a senior compliance officer asks the bot: \"What is our\npolicy on accepting client-side gifts under $100?\" The bot answers,\nconfidently, with a citation: \"Per the 2022 Gift Acceptance Policy\n(Confluence: /policies/gifts-2022), gifts under $100 may be accepted\nwithout disclosure.\" It includes a clean source link. The compliance\nofficer accepts a $80 gift from a vendor.\n\nTwo weeks later, internal audit flags the acceptance. The actual\ncurrent policy — the 2024 Gift Acceptance Policy, which lives at\n`/policies/gifts-2024` — requires disclosure of *all* client-side\ngifts regardless of value, following a settlement the company entered\nin 2023. The 2022 policy was supposed to be archived. Nobody\narchived it. The retriever pulled it, the model cited it correctly,\nand the user trusted the citation because it looked legitimate.\n\n## Reading the trace\n\n- `rendered_prompt`: a standard RAG prompt: \"Answer the user's\n  question using only the retrieved chunks. Cite your sources.\"\n- `tools_called`: `search_confluence`, `search_sharepoint`,\n  `search_notion`.\n- `retrieved_chunks`: top-3 chunks, all from the 2022 policy\n  document. The 2024 policy was in Confluence but was at a different\n  URL with different keyword density and lost the embedding-similarity\n  ranking against the user's query. The 2022 doc, being older, had\n  more inbound links and a higher relevance signal in the index.\n- `raw_output`: a clear, well-cited answer drawing from the 2022\n  policy.\n- `output_after_postprocess`: identical to raw_output. The\n  formatting was clean.\n\n## The class\n\nThis is **class 1 — retrieval gave the wrong context**. The model\ndid exactly what it was asked: read the retrieved chunks and answer\nwith citation. The retriever handed it a chunk from a policy that\nshould have been archived. The model is innocent; the prompt is\ninnocent; the post-processing is innocent. The fix lives in the\nretrieval and indexing layer.\n\nThis case is class 1's quintessential shape: **stale data passing as\ncurrent**. It is the most dangerous version of class 1 because the\ncitation gives the answer credibility the underlying data doesn't\ndeserve. The user sees a source link, clicks it (or doesn't), and\nacts on the answer. The chatbot was working as designed. The\n*data* was wrong.\n\n## The fix that would have caught it\n\nThe fix has three pieces, in order of impact:\n\n1. **Freshness metadata at index time.** Every chunk in the\n   retrieval index carries `created_at`, `last_updated_at`, and a\n   `superseded_by` field (nullable, points to the URL of the\n   replacing document). When the 2024 policy was published, the\n   2022 policy's chunks should have had `superseded_by` set to the\n   2024 URL. The retriever then either filters those chunks out\n   entirely, or surfaces them with a \"this document was superseded\n   on [date] by [link]\" header that the model is required to\n   propagate.\n\n2. **Citation-with-date in the answer.** The model is required to\n   include not just a source link but the source's last-updated date.\n   \"Per the Gift Acceptance Policy (last updated 2022-03-14)...\" The\n   compliance officer reading \"2022\" would have immediately flagged\n   the answer as suspect. Date in the citation is the cheapest user\n   defense against stale retrieval.\n\n3. **An eval that asks \"did the model cite a superseded document?\"**\n   For a known set of policy questions, the eval suite verifies that\n   the cited source is the *current* version. This requires\n   maintaining a small ground-truth mapping of \"policy topic →\n   current source URL\" — typically 30 to 100 entries for a mid-size\n   company's most-asked-about policies. The eval is cheap to\n   maintain and catches the entire class of staleness regressions in\n   CI.\n\n## What this case teaches\n\nClass 1 retrieval failures are not always \"the wrong document with\nsimilar words.\" Sometimes they are \"the right document but the\n*wrong version of the right document.*\" Enterprise RAG systems with\nyears of accreted documents and inconsistent archival hygiene\ngenerate this failure mode constantly. The fix is upstream of the\nagent: data lifecycle management, freshness signals, and citation\ndiscipline.\n\nNotice that this case, like the others, has an eval that catches it.\nStep 6 of the post-mortem template — \"the eval that catches it now\"\n— is the through-line across all five cases. Air Canada needed an\neval for unauthorized commitments. DPD and NYC needed evals for\nout-of-domain responses. The recruiter needed a schema-validation\neval. This case needs a stale-citation eval. **Different surface,\nsame medicine.**\n\nYou can probably guess where the next step is going.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "mc",
+          "id": "debugging-output/five-real-postmortems/s07-07-which-fix-catches-the-most",
+          "xp": 2,
+          "hint": [
+            {
+              "level": 1,
+              "body": "Notice that every other answer is downstream of 'did we test for this?' A better prompt only helps if you have a way to verify it helped. Schema validation only helps if you have tests that prove it catches the bug. Retrieval-with-citations only helps if you have evals that confirm the citation is current. The eval suite is the meta-fix — every other fix is one of the *outcomes* of having one. The five teams that shipped these failures all had teams who could have written the fixes. None of them had the eval that would have shown them they needed to.",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 70,
+          "concept": "meta-fix-eval-suite",
+          "prompt": "Look back at the five cases:\n\n1. Air Canada — invented a bereavement-refund policy\n2. DPD — chatbot swore at customers, generated insults of own company\n3. NYC MyCity — gave illegal small-business advice\n4. Recruiter agent — swapped email into phone-number slot\n5. Enterprise RAG — cited a superseded 2022 policy as current\n\nYou can pick exactly one fix to apply across all five teams. Which\nfix would have caught the MOST of these cases before they reached a\ncustomer?\n",
+          "options": [
+            {
+              "id": "better_prompt",
+              "label": "A better-engineered system prompt with stricter rules",
+              "explain": "A better prompt helps Air Canada and arguably DPD. It does nothing for the recruiter's JSON-slot swap (the prompt was clear), nothing for the enterprise RAG staleness (retrieval problem), and only weakly addresses MyCity (the bot needed retrieval grounding, not a stricter tone). One or two cases at best."
+            },
+            {
+              "id": "eval_suite",
+              "label": "A regression eval suite run in CI on every model/prompt/retriever change"
+            },
+            {
+              "id": "schema_validation",
+              "label": "Pydantic-style schema validation at every agent output boundary",
+              "explain": "Schema validation catches the recruiter case cleanly. It would not have caught Air Canada (the output was a fluent string, schema-valid by any measure), DPD (no schema), MyCity (no schema), or the enterprise RAG stale-citation (the cited URL was valid). One case caught."
+            },
+            {
+              "id": "retrieval_citations",
+              "label": "Mandatory retrieval-with-citations on every response",
+              "explain": "Retrieval with citations catches DPD, MyCity, and the enterprise RAG case (citation-with-date is a sub-fix of citation discipline). It does not catch Air Canada cleanly (the bot was making up policy whether or not it had retrieval) and does nothing for the recruiter's JSON-slot swap. Three cases caught — strong, but not the strongest."
+            }
+          ],
+          "answerIds": [
+            "eval_suite"
+          ],
+          "shuffle": false,
+          "runnable": true
+        },
+        {
+          "type": "write",
+          "id": "debugging-output/five-real-postmortems/s08-08-write-the-postmortem",
+          "xp": 5,
+          "hint": [
+            {
+              "level": 1,
+              "body": "Five `if` branches, checked in priority order, each returning a dict literal with `class` first and `fix` second. The order matters — Python preserves insertion order in dicts since 3.7, so building the dict with `class` set first guarantees the printed repr matches the expected output.",
+              "cost": 0
+            },
+            {
+              "level": 2,
+              "body": "```python\ndef classify_failure(case):\n    snippet = case[\"trace_snippet\"]\n    if \"no retrieval\" in snippet:\n        return {\"class\": 3, \"fix\": \"add retrieval-with-citations + out-of-domain refusal\"}\n    if \"schema mismatch\" in snippet:\n        return {\"class\": 4, \"fix\": \"add Pydantic validation at the consumer boundary\"}\n    if \"stale chunk\" in snippet:\n        return {\"class\": 1, \"fix\": \"add freshness metadata + superseded_by filter\"}\n    if \"ambiguous\" in snippet:\n        return {\"class\": 2, \"fix\": \"tighten prompt with explicit constraint + negative example\"}\n    return {\"class\": 0, \"fix\": \"unclassified — read the full trace\"}\n```\n",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 220,
+          "concept": "heuristic-classify-from-postmortem",
+          "prompt": "Write `classify_failure(case)` that takes a postmortem dict with\nthree fields:\n\n- `user_saw`: str (the complaint as the user reported it)\n- `trace_snippet`: str (the relevant trace excerpt)\n- `system_state`: str (one-line description of the system at failure)\n\nIt must return a dict with two keys, in this exact order:\n`{\"class\": int, \"fix\": str}`.\n\nApply these string-match heuristics on `trace_snippet`, in priority\norder. First match wins:\n\n1. If `\"no retrieval\"` is in `trace_snippet` → class 3,\n   fix `\"add retrieval-with-citations + out-of-domain refusal\"`.\n2. Else if `\"schema mismatch\"` is in `trace_snippet` → class 4,\n   fix `\"add Pydantic validation at the consumer boundary\"`.\n3. Else if `\"stale chunk\"` is in `trace_snippet` → class 1,\n   fix `\"add freshness metadata + superseded_by filter\"`.\n4. Else if `\"ambiguous\"` is in `trace_snippet` → class 2,\n   fix `\"tighten prompt with explicit constraint + negative example\"`.\n5. Otherwise → class 0, fix `\"unclassified — read the full trace\"`.\n\nTwo cases run for you. Expected output:\n```\nair_canada: {'class': 3, 'fix': 'add retrieval-with-citations + out-of-domain refusal'}\nrecruiter:  {'class': 4, 'fix': 'add Pydantic validation at the consumer boundary'}\n```\n",
+          "starter": "air_canada = {\n    \"user_saw\": \"Chatbot told me I could apply for a bereavement refund within 90 days of travel.\",\n    \"trace_snippet\": \"no retrieval grounding; model generated policy from training data\",\n    \"system_state\": \"RAG layer present but bypassed on policy questions\",\n}\n\nrecruiter = {\n    \"user_saw\": \"My SMS went to jane.doe@gmail.com instead of a phone number.\",\n    \"trace_snippet\": \"schema mismatch: candidate_email value found in phone_number slot\",\n    \"system_state\": \"no validation at queue-worker boundary\",\n}\n\n# define classify_failure(case) below\n\nprint(f\"air_canada: {classify_failure(air_canada)}\")\nprint(f\"recruiter:  {classify_failure(recruiter)}\")\n",
+          "grader": {
+            "kind": "stdout-equality",
+            "expected": "air_canada: {'class': 3, 'fix': 'add retrieval-with-citations + out-of-domain refusal'}\nrecruiter:  {'class': 4, 'fix': 'add Pydantic validation at the consumer boundary'}\n",
+            "normalize": "collapse-trailing-newline"
+          },
+          "solution": "air_canada = {\n    \"user_saw\": \"Chatbot told me I could apply for a bereavement refund within 90 days of travel.\",\n    \"trace_snippet\": \"no retrieval grounding; model generated policy from training data\",\n    \"system_state\": \"RAG layer present but bypassed on policy questions\",\n}\n\nrecruiter = {\n    \"user_saw\": \"My SMS went to jane.doe@gmail.com instead of a phone number.\",\n    \"trace_snippet\": \"schema mismatch: candidate_email value found in phone_number slot\",\n    \"system_state\": \"no validation at queue-worker boundary\",\n}\n\ndef classify_failure(case):\n    snippet = case[\"trace_snippet\"]\n    if \"no retrieval\" in snippet:\n        return {\"class\": 3, \"fix\": \"add retrieval-with-citations + out-of-domain refusal\"}\n    if \"schema mismatch\" in snippet:\n        return {\"class\": 4, \"fix\": \"add Pydantic validation at the consumer boundary\"}\n    if \"stale chunk\" in snippet:\n        return {\"class\": 1, \"fix\": \"add freshness metadata + superseded_by filter\"}\n    if \"ambiguous\" in snippet:\n        return {\"class\": 2, \"fix\": \"tighten prompt with explicit constraint + negative example\"}\n    return {\"class\": 0, \"fix\": \"unclassified — read the full trace\"}\n\nprint(f\"air_canada: {classify_failure(air_canada)}\")\nprint(f\"recruiter:  {classify_failure(recruiter)}\")\n",
+          "hiddenTests": []
+        },
+        {
+          "type": "checkpoint",
+          "id": "debugging-output/five-real-postmortems/s09-09-checkpoint",
+          "xp": 8,
+          "hint": [],
+          "personalize": false,
+          "phase": "check",
+          "estSeconds": 240,
+          "concept": "triage-five-postmortems",
+          "prompt": "Final drill. You have five postmortem records from the inbox. Each\none already carries a `class` field (1-4) and a `severity` field\n(1-10, where 10 is \"front-page lawsuit\").\n\nWrite `triage_failures(cases)` that returns a dict with two keys,\nin this exact order:\n\n- `counts`: a dict mapping class number (int) to count (int), with\n  keys inserted in ascending class order (1, 2, 3, 4). Classes\n  with zero count are omitted.\n- `urgent`: the `name` (str) of the case with the highest severity.\n  On a tie, return the FIRST one encountered (stable order).\n\nFive cases run for you. Expected output:\n```\n{'counts': {1: 1, 2: 1, 3: 2, 4: 1}, 'urgent': 'air_canada'}\n```\n",
+          "starter": "cases = [\n    {\"name\": \"air_canada\",       \"class\": 3, \"severity\": 10},\n    {\"name\": \"dpd\",              \"class\": 3, \"severity\": 7},\n    {\"name\": \"nyc_mycity\",       \"class\": 2, \"severity\": 9},\n    {\"name\": \"recruiter_json\",   \"class\": 4, \"severity\": 6},\n    {\"name\": \"enterprise_rag\",   \"class\": 1, \"severity\": 8},\n]\n\n# define triage_failures(cases) below\n\nprint(triage_failures(cases))\n",
+          "grader": {
+            "kind": "stdout-equality",
+            "expected": "{'counts': {1: 1, 2: 1, 3: 2, 4: 1}, 'urgent': 'air_canada'}",
+            "normalize": "collapse-trailing-newline"
+          },
+          "solution": "cases = [\n    {\"name\": \"air_canada\",       \"class\": 3, \"severity\": 10},\n    {\"name\": \"dpd\",              \"class\": 3, \"severity\": 7},\n    {\"name\": \"nyc_mycity\",       \"class\": 2, \"severity\": 9},\n    {\"name\": \"recruiter_json\",   \"class\": 4, \"severity\": 6},\n    {\"name\": \"enterprise_rag\",   \"class\": 1, \"severity\": 8},\n]\n\ndef triage_failures(cases):\n    counts = {}\n    for c in cases:\n        counts[c[\"class\"]] = counts.get(c[\"class\"], 0) + 1\n    ordered_counts = {k: counts[k] for k in sorted(counts)}\n    urgent = max(cases, key=lambda c: c[\"severity\"])[\"name\"]\n    return {\"counts\": ordered_counts, \"urgent\": urgent}\n\nprint(triage_failures(cases))\n",
+          "passThreshold": 0.66
+        }
+      ],
+      "xpTotal": 22
     }
   ],
-  "xpTotal": 64
+  "xpTotal": 86
 }

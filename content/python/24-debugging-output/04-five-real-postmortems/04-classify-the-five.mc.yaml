@@ -1,0 +1,40 @@
+xp: 2
+estSeconds: 80
+concept: classify-five-failures
+code: |
+  # five real-ish failure descriptions. apply the chapter 3 taxonomy:
+  # 1 = retrieval gave wrong context
+  # 2 = prompt was ambiguous
+  # 3 = true hallucination (no grounding)
+  # 4 = downstream code mangled the output
+  failures = [
+      "A: RAG bot pulled a 2021 policy doc when the 2024 update existed; answered from the stale doc.",
+      "B: Chatbot generated a confident bereavement-refund policy that does not exist anywhere in the company's docs.",
+      "C: Model returned valid JSON with the right field names; downstream parser dropped the currency symbol from the value.",
+      "D: Summarizer was told 'give me the highlights'; returned 14 bullets when the UI had room for 5.",
+      "E: Support bot answered a municipal-law question by generating from training data with no retrieval grounding.",
+  ]
+  for f in failures:
+      print(f)
+prompt: |
+  Five short failure descriptions from real (or real-shaped) AI
+  incidents. Apply the four-class taxonomy from the previous lesson.
+
+  Which mapping is correct?
+options:
+  - id: a1_b3_c4_d2_e3
+    label: "A=1, B=3, C=4, D=2, E=3"
+  - id: a3_b1_c4_d2_e1
+    label: "A=3, B=1, C=4, D=2, E=1"
+    explain: "A is retrieval pulling the wrong doc (stale = wrong context, class 1), not a hallucination. B is the Air Canada shape — invented policy with no source, class 3 (or class 2 if you frame it as missing prompt constraint; either way it is not class 1)."
+  - id: a1_b2_c4_d3_e3
+    label: "A=1, B=2, C=4, D=3, E=3"
+    explain: "Close but D is wrong. The summarizer got correct context and a vague instruction; that is the textbook class 2 ambiguity case, not a hallucination."
+  - id: a1_b3_c2_d2_e4
+    label: "A=1, B=3, C=2, D=2, E=4"
+    explain: "C and E are swapped. JSON mangled by downstream code is class 4 (parse). A bot generating from training data with no retrieval is class 3 (hallucination)."
+answerIds:
+  - a1_b3_c4_d2_e3
+hint:
+  - level: 1
+    body: "A: 'pulled a stale doc' = wrong context retrieved = class 1. B: 'generated a policy that does not exist' = class 3. C: 'raw output right, post-processing dropped the symbol' = class 4. D: 'vague instruction, model picked a reasonable interpretation' = class 2. E: 'no retrieval, generated from training' = class 3."

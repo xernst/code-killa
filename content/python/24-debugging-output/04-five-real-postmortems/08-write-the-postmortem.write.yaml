@@ -1,0 +1,100 @@
+xp: 5
+estSeconds: 220
+concept: heuristic-classify-from-postmortem
+prompt: |
+  Write `classify_failure(case)` that takes a postmortem dict with
+  three fields:
+
+  - `user_saw`: str (the complaint as the user reported it)
+  - `trace_snippet`: str (the relevant trace excerpt)
+  - `system_state`: str (one-line description of the system at failure)
+
+  It must return a dict with two keys, in this exact order:
+  `{"class": int, "fix": str}`.
+
+  Apply these string-match heuristics on `trace_snippet`, in priority
+  order. First match wins:
+
+  1. If `"no retrieval"` is in `trace_snippet` → class 3,
+     fix `"add retrieval-with-citations + out-of-domain refusal"`.
+  2. Else if `"schema mismatch"` is in `trace_snippet` → class 4,
+     fix `"add Pydantic validation at the consumer boundary"`.
+  3. Else if `"stale chunk"` is in `trace_snippet` → class 1,
+     fix `"add freshness metadata + superseded_by filter"`.
+  4. Else if `"ambiguous"` is in `trace_snippet` → class 2,
+     fix `"tighten prompt with explicit constraint + negative example"`.
+  5. Otherwise → class 0, fix `"unclassified — read the full trace"`.
+
+  Two cases run for you. Expected output:
+  ```
+  air_canada: {'class': 3, 'fix': 'add retrieval-with-citations + out-of-domain refusal'}
+  recruiter:  {'class': 4, 'fix': 'add Pydantic validation at the consumer boundary'}
+  ```
+starter: |
+  air_canada = {
+      "user_saw": "Chatbot told me I could apply for a bereavement refund within 90 days of travel.",
+      "trace_snippet": "no retrieval grounding; model generated policy from training data",
+      "system_state": "RAG layer present but bypassed on policy questions",
+  }
+
+  recruiter = {
+      "user_saw": "My SMS went to jane.doe@gmail.com instead of a phone number.",
+      "trace_snippet": "schema mismatch: candidate_email value found in phone_number slot",
+      "system_state": "no validation at queue-worker boundary",
+  }
+
+  # define classify_failure(case) below
+
+  print(f"air_canada: {classify_failure(air_canada)}")
+  print(f"recruiter:  {classify_failure(recruiter)}")
+grader:
+  kind: stdout-equality
+  expected: |
+    air_canada: {'class': 3, 'fix': 'add retrieval-with-citations + out-of-domain refusal'}
+    recruiter:  {'class': 4, 'fix': 'add Pydantic validation at the consumer boundary'}
+  normalize: collapse-trailing-newline
+solution: |
+  air_canada = {
+      "user_saw": "Chatbot told me I could apply for a bereavement refund within 90 days of travel.",
+      "trace_snippet": "no retrieval grounding; model generated policy from training data",
+      "system_state": "RAG layer present but bypassed on policy questions",
+  }
+
+  recruiter = {
+      "user_saw": "My SMS went to jane.doe@gmail.com instead of a phone number.",
+      "trace_snippet": "schema mismatch: candidate_email value found in phone_number slot",
+      "system_state": "no validation at queue-worker boundary",
+  }
+
+  def classify_failure(case):
+      snippet = case["trace_snippet"]
+      if "no retrieval" in snippet:
+          return {"class": 3, "fix": "add retrieval-with-citations + out-of-domain refusal"}
+      if "schema mismatch" in snippet:
+          return {"class": 4, "fix": "add Pydantic validation at the consumer boundary"}
+      if "stale chunk" in snippet:
+          return {"class": 1, "fix": "add freshness metadata + superseded_by filter"}
+      if "ambiguous" in snippet:
+          return {"class": 2, "fix": "tighten prompt with explicit constraint + negative example"}
+      return {"class": 0, "fix": "unclassified — read the full trace"}
+
+  print(f"air_canada: {classify_failure(air_canada)}")
+  print(f"recruiter:  {classify_failure(recruiter)}")
+hint:
+  - level: 1
+    body: "Five `if` branches, checked in priority order, each returning a dict literal with `class` first and `fix` second. The order matters — Python preserves insertion order in dicts since 3.7, so building the dict with `class` set first guarantees the printed repr matches the expected output."
+  - level: 2
+    body: |
+      ```python
+      def classify_failure(case):
+          snippet = case["trace_snippet"]
+          if "no retrieval" in snippet:
+              return {"class": 3, "fix": "add retrieval-with-citations + out-of-domain refusal"}
+          if "schema mismatch" in snippet:
+              return {"class": 4, "fix": "add Pydantic validation at the consumer boundary"}
+          if "stale chunk" in snippet:
+              return {"class": 1, "fix": "add freshness metadata + superseded_by filter"}
+          if "ambiguous" in snippet:
+              return {"class": 2, "fix": "tighten prompt with explicit constraint + negative example"}
+          return {"class": 0, "fix": "unclassified — read the full trace"}
+      ```

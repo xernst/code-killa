@@ -1,0 +1,15 @@
+slug: five-real-postmortems
+title: "Five customer-visible AI failures, walked through — and the one fix that would have caught all of them"
+estMinutes: 22
+prerequisites:
+  - the-four-breakage-classes
+order:
+  - 01-the-postmortem-template.read.md
+  - 02-air-canada-refund-lawsuit.read.md
+  - 03-dpd-and-nyc-mycity.read.md
+  - 04-classify-the-five.mc.yaml
+  - 05-recruiter-json-mangle.read.md
+  - 06-glean-style-retrieval-miss.read.md
+  - 07-which-fix-catches-the-most.mc.yaml
+  - 08-write-the-postmortem.write.yaml
+  - 09-checkpoint.checkpoint.yaml
