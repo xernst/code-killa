@@ -433,3 +433,15 @@ a:focus-visible {
 @media (prefers-reduced-motion: reduce) {
   .skeleton { animation: none; }
 }
+
+/* Checkpoint pass — a one-shot deadbolt click. Matches "locked in" copy.
+   No overshoot, no bounce; a confirmation, not a celebration. */
+@keyframes checkpoint-latch {
+  0%   { transform: scale(0.82); opacity: 0; }
+  60%  { transform: scale(1);    opacity: 1; }
+  100% { transform: scale(1);    opacity: 1; }
+}
+.checkpoint-latch { animation: checkpoint-latch 220ms ease-out both; }
+@media (prefers-reduced-motion: reduce) {
+  .checkpoint-latch { animation: none; }
+}

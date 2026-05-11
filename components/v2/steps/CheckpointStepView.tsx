@@ -94,7 +94,7 @@ export default function CheckpointStepView({
           )}
         >
           {submitted.passed ? (
-            <CheckCircle2 size={16} className="mt-0.5" />
+            <CheckCircle2 size={16} className="checkpoint-latch mt-0.5" />
           ) : (
             <XCircle size={16} className="mt-0.5" />
           )}
