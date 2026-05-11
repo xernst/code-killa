@@ -253,7 +253,207 @@
         }
       ],
       "xpTotal": 32
+    },
+    {
+      "slug": "three-git-disasters-ai-shipped",
+      "title": "Three git disasters AI shipped — and what got rotated",
+      "estMinutes": 20,
+      "prerequisites": [
+        "the-three-states"
+      ],
+      "steps": [
+        {
+          "type": "read",
+          "id": "git-and-github/three-git-disasters-ai-shipped/s01-01-why-postmortems-teach-better",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "warmup",
+          "estSeconds": 200,
+          "concept": "fear-based-learning-for-git",
+          "body": "# Drills teach the keystrokes. Postmortems teach the why.\n\nThe previous lesson taught you the three-state model and `git add -p`.\nYou can run the commands. You probably can't yet feel them in your\ngut. That's the difference between a 200-hour engineer and a 2,000-hour\none — not more commands, but a stronger sense of *what goes wrong if\nI get this slightly off*.\n\nThere's exactly one efficient way to build that sense: read the\nbreaches. Look at the actual incident reports. Watch what got\nrotated, who got fired, how the public found out. Then go back to\nyour terminal and you will type `git add` differently for the rest\nof your career.\n\n## Why postmortems beat drills for this material\n\nDrills teach you the **mechanics** of a tool. Postmortems teach you\n**why the tool exists**.\n\nYou can drill `git add -p` for an hour and walk away thinking it's\na slightly more selective version of `git add .`. Read one\npostmortem about a public repo with a developer's AWS access keys\nin the third commit, and `git add -p` becomes the only sane way\nto stage changes for the rest of your life. The drill teaches you\nHOW. The postmortem teaches you WHY YOU WOULD BOTHER.\n\nThis is the same reason aviation training is built around incident\nreports. Pilots don't drill landing gear extension on a checklist\nand call it done. They read the NTSB writeups of crashes where\nlanding gear wasn't extended. The mechanics are 5% of the\ntraining. The mental model — *this is how careers and lives\nactually end* — is the other 95%.\n\n## The three disasters we'll walk through\n\nThree real incidents, all from the AI era (2022 onward), all\ninvolving git or AI-assisted commits in some way:\n\n1. **Uber 2022 — credentials committed to a private repo.** A\n   contractor's AWS access keys ended up in a repository.\n   Attackers got into the repo via a separate breach and looted\n   the keys. Not an AI mistake, but the canonical example of\n   \"secret in version control\" — the failure mode every AI\n   coding assistant is one careless `git add .` away from\n   reproducing.\n\n2. **Samsung 2023 — engineers pasting source into ChatGPT.** Three\n   incidents inside a few weeks where Samsung Semiconductor\n   engineers pasted proprietary source code and meeting notes\n   into ChatGPT to get help. The data left the company\n   perimeter the moment the paste happened. Samsung banned\n   internal ChatGPT use and accelerated its own internal tool.\n\n3. **The 2024-onward `git add .` agent default.** Cursor, Claude\n   Code, and other AI coding agents default to staging everything\n   and committing without showing you the diff first. Multiple\n   public OSS repos have shipped `.env` files, AWS keys, and API\n   tokens this way. GitGuardian's 2024 secrets report counted\n   over 23 million leaked credentials on public GitHub — a chunk\n   of them attributable to agent-driven commits.\n\n## What you'll do with these\n\nAfter reading each one, you'll answer one question: **which\ncontrol would have caught this earliest in the chain?** Not \"what\nshould have happened in some ideal world\" — what specific\nmechanical control (a pre-commit hook, an env-var-only rule,\nmandatory review, a config flag) would have stopped the leak\nbefore it left your laptop.\n\nThe point isn't to memorize the breaches. The point is to build a\nmental checklist you run silently every time an AI agent says\n\"committed and pushed.\"",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "read",
+          "id": "git-and-github/three-git-disasters-ai-shipped/s02-02-uber-2022-token-leak",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "warmup",
+          "estSeconds": 220,
+          "concept": "uber-2022-credentials-in-repo",
+          "body": "# Disaster 1: Uber, September 2022 — AWS credentials in a private repo\n\nSeptember 15, 2022. Uber's internal Slack lights up with a\nmessage that opens with \"I announce I am a hacker and Uber has\nsuffered a data breach.\" The poster, an 18-year-old later\nattributed to the Lapsus$-adjacent crew, had pivoted from a\nsingle contractor's compromised credentials all the way into\nUber's internal admin tools, AWS console, GCP console, financial\ndashboards, and the company HackerOne account.\n\nThe pivot path is the part this lesson cares about. After getting\npast MFA via push-fatigue on the contractor, the attacker browsed\nUber's internal network and found a **PowerShell script on a\nnetwork share**. Inside that script: hardcoded admin credentials\nfor Thycotic, Uber's privileged access management tool. From\nThycotic the attacker grabbed secrets for AWS, GCP, Duo,\nOneLogin, and the SentinelOne management console.\n\nThe script with the hardcoded credentials was in a repository.\n\n## What actually failed\n\nThis wasn't one mistake. It was a chain of them, but the chain\n*started* with a single Class-1 control failure: **a secret was\nin version control at all.** Every other control downstream had\nto compensate for that fact. None of them did, completely.\n\nWalk the chain:\n\n1. **The script was committed with the secret in it.** No\n   pre-commit hook scanned for credentials. No reviewer flagged\n   the hardcoded value. The script worked, so it shipped.\n2. **The script lived in a repo accessible from the corporate\n   network.** No isolation. Anyone who got onto the network got\n   the script.\n3. **The credential it hardcoded was a privileged-access-manager\n   admin account.** One leaked credential cascaded into every\n   other system in the company.\n4. **The credential was not rotated on any schedule.** Once\n   committed, it stayed valid indefinitely. Git history is\n   forever — even if someone had deleted the line later, the\n   secret was still recoverable from the commit log.\n\n## The control chain that would have caught it\n\nWorking backward from \"attacker downloads all of Uber's cloud\ncredentials\" to the earliest point a control could have broken\nthe chain:\n\n- **Mandatory rotation on a 30-day cadence.** Would have made the\n  committed credential stale by the time it was used. Backstop,\n  not prevention.\n- **Privileged-access-manager scoped to specific machines, not\n  network-wide.** Would have limited blast radius. Backstop, not\n  prevention.\n- **Code review by a human who knew \"we don't hardcode creds.\"**\n  Would have caught it IF the reviewer noticed. Reviewers miss\n  these constantly. Weak.\n- **`.gitignore` entries for `*.config`, `*.ps1.local`, etc.**\n  Only helps if the developer put the secret in a separate file.\n  This script had it inline. Useless here.\n- **Pre-commit hook that scans staged content for credential-\n  shaped strings.** Would have failed the commit before it left\n  the developer's laptop. This is the earliest mechanical\n  control in the chain.\n- **Architectural rule: secrets read from environment variables\n  or a vault at runtime, never present in source.** If the\n  script literally cannot work with an inline credential, the\n  developer can't commit one even if they want to.\n\nThe last two are the wedge. Everything else is compensating\ncontrols.\n\n## What got rotated\n\nUber's incident response, per their public writeup and the FTC\ncase that followed: all credentials in the compromised PAM\nrotated, AWS and GCP access keys rotated, OneLogin SSO\nrotated, internal certificates reissued, employees forced to\nreauthenticate on every device, the contractor's account\ndestroyed and rebuilt, and a multi-month audit of every repo\nin the org for additional embedded secrets.\n\nThat audit found more. It always does. Companies that run a\nreal secret-scan against their full git history for the first\ntime always find embedded credentials they didn't know about.\nGitGuardian's annual reports put the rate at roughly one in\nten developers committing at least one secret per year.\n\n## What you should take from this\n\nThe cost of the breach to Uber: 8-figure regulatory and legal\nexposure, an FTC consent order, executive turnover, months of\nremediation, and the brand damage of being the rideshare\ncompany that got popped by a teenager.\n\nThe cost of preventing it: a pre-commit hook (`gitleaks`,\n`trufflehog`, GitHub's built-in push protection — all free) and\nan architectural decision to never read secrets from anywhere\nbut the environment or a vault. Engineering effort: maybe four\nhours.\n\nThe asymmetry is brutal. The cheapest possible control prevents\nthe most expensive possible outcome. Every breach you read about\nwill have this shape.\n\nWhen Cursor or Claude Code runs `git add .` in your repo, your\nbrain should reflexively pattern-match to \"Uber 2022.\" Then you\nshould check the diff.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "mc",
+          "id": "git-and-github/three-git-disasters-ai-shipped/s03-03-which-control-would-have-caught-it",
+          "xp": 2,
+          "hint": [
+            {
+              "level": 1,
+              "body": "'Earliest in the chain' means the control runs at the moment of the mistake, not after. Which option blocks the bad commit from even being created locally?",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 70,
+          "concept": "earliest-control-in-the-chain",
+          "prompt": "Four candidate controls. The Uber 2022 leak chain was: developer\nhardcodes secret in a script → commits it → secret sits in repo →\nattacker pivots in and grabs it.\n\nWhich control would have caught the leak EARLIEST in the chain\n(i.e., closest to the moment the developer's mistake happened)?\n",
+          "options": [
+            {
+              "id": "gitignore",
+              "label": "1 — stricter .gitignore",
+              "explain": ".gitignore only helps if the secret is in a separate file the developer thought to exclude. The Uber script had the credential inline in source code. .gitignore is irrelevant when the secret is in the file you actually want to commit."
+            },
+            {
+              "id": "precommit",
+              "label": "2 — pre-commit hook that scans for credentials"
+            },
+            {
+              "id": "review",
+              "label": "3 — mandatory code review",
+              "explain": "Review is a control, but it's downstream — the secret is already in a commit on the developer's laptop by the time the reviewer sees it. Reviewers also miss credentials constantly. Useful as a backstop, not as the earliest control."
+            },
+            {
+              "id": "vault",
+              "label": "4 — architectural rule: secrets from env or vault only",
+              "explain": "Strongest control long-term, but it's a culture and architecture rule, not a mechanical one. It depends on every developer following it. The pre-commit hook fails the commit even if the developer forgets the rule."
+            }
+          ],
+          "answerIds": [
+            "precommit"
+          ],
+          "shuffle": false,
+          "code": "# four controls Uber could have had in place.\n# which one would have caught the breach EARLIEST in the chain?\ncontrols = [\n    \"1. A stricter .gitignore listing common secret file patterns\",\n    \"2. A pre-commit hook that scans staged content for credentials\",\n    \"3. Mandatory code review on every merge to main\",\n    \"4. An architectural rule: secrets only ever loaded from env vars or a vault\",\n]\nfor c in controls:\n    print(c)\n",
+          "runnable": true
+        },
+        {
+          "type": "read",
+          "id": "git-and-github/three-git-disasters-ai-shipped/s04-04-the-samsung-paste",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 220,
+          "concept": "samsung-2023-chatgpt-paste",
+          "body": "# Disaster 2: Samsung, early 2023 — engineers pasting source into ChatGPT\n\nSpring 2023. Three weeks after Samsung Semiconductor lifted an\ninternal ban on ChatGPT, three separate engineers leaked\nproprietary information by pasting it into the chat window:\n\n1. An engineer pasted source code for a confidential\n   semiconductor program into ChatGPT to ask for help debugging\n   it.\n2. A second engineer pasted internal test sequence code, asking\n   ChatGPT to optimize it.\n3. A third engineer pasted a recorded meeting transcript and\n   asked ChatGPT to summarize it into minutes.\n\nEach paste was a polite, well-intentioned use of a productivity\ntool. Each paste sent confidential corporate IP through OpenAI's\nAPI to be processed on their servers. At the time, OpenAI's\ndefault terms allowed conversation data to be used for model\ntraining. The engineers had read no policy that told them not\nto. ChatGPT felt like a private notebook. It wasn't.\n\n## What actually failed\n\nThe pre-2023 model of corporate security was built around a\nboundary: data is \"inside\" the company or \"outside.\" Email\nattachments going outside got scanned. File-share access got\naudited. USB ports got locked. ChatGPT broke this model in a\nsingle keystroke: paste → submit → outside. The paste happened\ninside the browser, on the corporate laptop, on the corporate\nnetwork. Every existing DLP control assumed the threat was\n*deliberate exfiltration*. Pasting into a help tool is the\nopposite — it's an engineer trying to do their job faster, with\nzero adversarial intent.\n\nThe chain that failed:\n\n1. **No policy explicitly named ChatGPT as out-of-bounds.** The\n   ban had been lifted three weeks prior. Engineers assumed lift\n   = approved.\n2. **No DLP rule flagged \"this paste contains code from an\n   internal repo.\"** The corporate DLP suite knew what was in\n   email, in Box, in Salesforce. It had no hook into a browser\n   paste event.\n3. **No enterprise plan with opt-out from training.** The free\n   ChatGPT consumer plan defaulted to using conversations for\n   training. Enterprise plans (with data-use opt-outs) existed\n   but Samsung hadn't bought one.\n4. **No internal AI tool engineers could use instead.** Samsung\n   had not yet built or licensed a private LLM. The engineers\n   had no sanctioned way to do the same task.\n\nThe third failure is the load-bearing one. If you tell engineers\n\"don't use AI for help\" but give them no sanctioned alternative,\nthey will use AI for help. The policy is theater.\n\n## How this connects to git\n\nYou're in a git lesson, so why this incident? Because the\nSamsung paste is the same failure mode as committing a secret\nto a repo, expressed through a different surface:\n\n| Surface | Disaster pattern |\n|---|---|\n| `git add` + `git commit` + `git push` | Secret in version control. Public if repo is public; recoverable if repo gets breached. |\n| Paste into ChatGPT consumer plan | Source / data leaves your perimeter, may be retained, may train the next public model. |\n| Paste into a Slack channel | Source / data archived in Slack indefinitely, accessible to anyone with channel access. |\n\nIn every case, **the developer trusted a tool to be a private\nnotebook when it was actually a publishing surface.** The git\nversion of this is the one you'll hit first as a builder, but\nthe pattern repeats everywhere AI tools sit in the workflow.\n\nThis becomes the dominant pattern in chapter 18 (secrets and\nenv management), which is why this lesson sits right before\nit. The git workflow is one of many places the same mistake\ncan land.\n\n## The control chain that would have caught it\n\nIn order from earliest to latest:\n\n- **An enterprise plan with training opt-out, configured by\n  default in the corporate Chrome profile.** If the paste\n  happens but the data doesn't train the model, the long-tail\n  exposure shrinks dramatically. Doesn't prevent the paste; it\n  caps the blast radius.\n- **A browser-extension DLP rule that intercepts pastes\n  containing patterns matching internal source (proprietary\n  class names, internal package prefixes, the literal phrase\n  \"Samsung Confidential\").** Catches the paste at the moment of\n  attempt. Annoying for engineers; the cost of the annoyance is\n  measured against the cost of the breach.\n- **An internal AI assistant trained on internal docs, available\n  via an internal URL, with a clear \"use this, not ChatGPT\"\n  policy.** Removes the engineer's motivation to reach for the\n  consumer tool in the first place.\n\nThe third is the most expensive but the most effective. Samsung\naccelerated their internal tool program after this incident.\n\n## What got rotated\n\nLess \"rotated\" and more \"policy-and-process changed\":\n\n- ChatGPT use was re-banned internally, this time with monitoring.\n- An internal LLM project was put on a six-month delivery clock.\n- The three engineers were disciplined (no public detail on how).\n- A broader DLP review was opened across the semiconductor unit.\n\nThe leaked source code itself is, in principle, in OpenAI's\ntraining data. Or it isn't. Nobody outside OpenAI can prove\neither way. That's the part of this breach you can't undo and\ncan't audit. The most damaging consequences are the ones you\ncan't see.\n\n## What you should take from this\n\nWhen an AI tool is in your workflow, the question is never \"do I\ntrust this tool?\" — it's \"**where does this data go after I hit\nenter?**\" For ChatGPT consumer plan, the answer was \"OpenAI's\ntraining set.\" For Cursor, the answer is whatever's in their\ndata-use policy this quarter. For Claude Code, the answer is\nAnthropic's policy. For your company's internal tool, the answer\nis \"the same place as our other internal data.\"\n\nDon't paste anything into anything until you can answer that\nquestion. That's a habit. Build it now.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "read",
+          "id": "git-and-github/three-git-disasters-ai-shipped/s05-05-the-cursor-git-add-dot-default",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 220,
+          "concept": "agent-commits-without-review",
+          "body": "# Disaster 3: The \"git add .\" era — AI agents committing without a human in the loop\n\nFrom mid-2024 onward, AI coding assistants started doing\nsomething genuinely new in the git workflow: they began\n**committing on your behalf**. Cursor's Composer would make a\nmulti-file edit and offer to commit. Claude Code would finish a\ntask and run `git add .` followed by `git commit -m \"Done.\"`\nwithout pausing. Codex CLI scripts ran end-to-end pipelines that\nincluded pushes.\n\nThe training data for these agents is full of `git add .`. It's\nthe most common pattern in tutorials, in StackOverflow answers,\nin beginner courses. So the agents reach for it. And `git add\n.` stages everything in the working tree — your source changes,\nyour scratch files, your `.env`, your `secrets.json`, your IDE\nconfig, your virtualenv if your `.gitignore` is incomplete.\n\nGitGuardian's 2024 and 2025 secret-sprawl reports counted **more\nthan 23 million credentials leaked to public GitHub in 2024\nalone**, with year-over-year growth specifically attributed to\n\"developer use of generative-AI tools that commit and push\nwithout human review.\" Their published top-ten leak types in\n2024 included OpenAI API keys (which became valuable enough to\nscript-scan for the moment GitHub indexed a new commit), AWS\nkeys, Stripe keys, and database connection strings.\n\n## What actually failed\n\nFor thirty years, the customs officer at the border between your\nlaptop and the public internet was *you*. You ran `git status`.\nYou ran `git diff`. You looked at what was about to ship and you\neither added it or you didn't. The agent era removed the customs\nofficer.\n\nThe chain that fails in the agent commit:\n\n1. **The agent runs `git add .`** without filtering. Every\n   modified file gets staged. If you generated a `.env` while\n   debugging, it's now staged.\n2. **The agent commits without showing you the diff.** The\n   default UX is \"I made these changes, do you want me to\n   commit them?\" — phrased as a yes/no, not as \"here's the\n   diff, scroll through it.\"\n3. **The agent pushes.** Often in the same breath as the\n   commit. Once pushed to a public repo, the secret is gone —\n   force-pushing over it doesn't erase git history from\n   GitHub's reflog, and credential-scraping bots index new\n   commits within seconds.\n4. **The human reviews after the fact, if ever.** By the time\n   you notice, your key is already being used to spin up\n   mining instances on your AWS account.\n\nThe load-bearing failure is step 2. The diff isn't being shown.\nEven attentive humans get into the habit of typing \"y\" on the\nagent's prompts without reading them.\n\n## A specific recurring failure pattern\n\nHere's the exact form this takes in the wild. A developer asks\nCursor to \"set up the env file and add the database connection\nstring.\" Cursor creates `.env`, writes the connection string\ninto it, and runs `git add .` to stage the new files. The\ndeveloper's `.gitignore` *should* have `.env` in it. Frequently\nit doesn't, because they're working in a fresh repo or one\nwhere someone forgot to add the line. The agent's auto-commit\nruns. The push lands on a public GitHub repo. A scraping bot\nsees it within 30 seconds. By morning, somebody else is querying\nthe database.\n\nThis isn't hypothetical. There are dozens of public OSS\nprojects whose commit history shows exactly this pattern,\nfollowed by a `git filter-branch` cleanup commit hours later\n(which doesn't actually remove the secret from GitHub's\nservers). The right move at that point is rotation, not\nrewriting history. You can't un-publish.\n\n## The control chain that would have caught it\n\n- **Configure the agent's gitignore behavior**. Both Cursor and\n  Claude Code support project-level config that restricts what\n  the agent can stage. Setting \"never stage files matching\n  `.env*`, `*.pem`, `*.key`, `id_rsa*`, or anything in\n  `secrets/`\" is the cheapest, earliest, most reliable control.\n  This is the one you should have set yesterday.\n- **Require an explicit human approval step on every commit\n  that includes new files.** Modify the agent prompt so it\n  always pauses with `git diff --cached` shown before running\n  `git commit`.\n- **Enable GitHub's push protection** at the org and repo\n  level. It scans every push for known secret patterns and\n  rejects the push if one is detected. Free, on by default for\n  new repos in many orgs as of 2024.\n- **A pre-commit hook on your machine** that runs `gitleaks` or\n  `trufflehog` against staged content. Same control as in the\n  Uber case — the secret-scanning hook is doing 80% of the work\n  in every disaster in this lesson.\n\nThese compound. If you have all four, the only way a secret\nships is if all four fail at once.\n\n## What got rotated\n\nThere's no single big-name incident here. The \"rotation\" is\nongoing: developers individually rotating keys after they push\nthem, GitHub scaling up its secret-scanning service to handle\nthe increased rate, AWS and Stripe and OpenAI building automatic\nkey-revocation pipelines for secrets they detect in public\ncommits (yes, OpenAI auto-revokes keys it finds in public\nrepos — they've been doing this since 2023, and you'll get an\nemail).\n\nThe collective annual cost: nobody knows precisely. GitGuardian's\nestimate puts it in the hundreds of millions of dollars in\ncombined remediation, cloud-bill abuse, and incident response,\njust from agent-committed secrets, just in 2024.\n\n## What you should take from this\n\nYou are now in an era where the agent will commit on your\nbehalf. The agent does not know what is in your `.env`. It\ndoes not understand the legal consequences of a leaked Stripe\nsecret. It cannot tell that the file it just staged contains a\ncustomer database password. **You are the only thing in the\nloop that can.**\n\nThe reflex you need to build is one keystroke long: every time\nthe agent says \"I committed,\" type `git show HEAD` before you\ntype anything else. If you don't recognize a file, you have a\nproblem. Fix it before the agent pushes.\n\nThe next steps drill this reflex.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "mc",
+          "id": "git-and-github/three-git-disasters-ai-shipped/s06-06-spot-the-failure-mode",
+          "xp": 2,
+          "hint": [
+            {
+              "level": 1,
+              "body": "The agent-commits-without-review disaster has three ingredients: (1) AI agent runs the git commands, (2) the diff is never shown to the human, (3) a secret or sensitive file gets pushed. Find the option with all three.",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 70,
+          "concept": "match-incident-to-failure-pattern",
+          "prompt": "Four incidents. Each one matches ONE of the failure patterns from\nthe three disasters we walked through.\n\nWhich incident is the **agent-commits-without-review** failure\npattern in its purest form (i.e., the AI agent staged + committed\n+ pushed without a human seeing the diff)?\n",
+          "options": [
+            {
+              "id": "a",
+              "label": "A — Cursor session committed .env with a Stripe key"
+            },
+            {
+              "id": "b",
+              "label": "B — staff engineer committed prod.yaml six months ago",
+              "explain": "This is the secret-in-VCS pattern (Uber 2022). The human committed the secret deliberately. The agent isn't in the story."
+            },
+            {
+              "id": "c",
+              "label": "C — marketing analyst pasted revenue data into ChatGPT",
+              "explain": "This is the paste-to-public-AI pattern (Samsung 2023). No git, no agent commit. The data left the perimeter through a browser paste."
+            },
+            {
+              "id": "d",
+              "label": "D — engineer force-pushed a bundled 'fix' commit",
+              "explain": "This is bad agent behavior, but the failure mode is bad commit hygiene plus force-push, not a leaked secret. Close to the agent-commits pattern but missing the load-bearing element — there's no leaked-data-shaped output here."
+            }
+          ],
+          "answerIds": [
+            "a"
+          ],
+          "shuffle": false,
+          "code": "# four hypothetical incidents pulled from a security team's\n# weekly review. each one maps to ONE of the three disasters\n# from this lesson.\nincidents = {\n    \"A\": \"An indie dev's Cursor session ran `git add .` after creating a `.env` with a Stripe live key. The push landed on a public repo. A bot pulled the key within two minutes and racked up $4k of API charges before the dev rotated.\",\n    \"B\": \"A staff engineer at a fintech committed a `config/prod.yaml` containing a database password to a private monorepo six months ago. An attacker phished a junior dev's credentials and cloned the repo. The password was still valid.\",\n    \"C\": \"A marketing analyst pasted the company's full Q3 revenue spreadsheet into ChatGPT (free tier) asking for a chart suggestion. The spreadsheet contained customer-level revenue data and unannounced renewal pricing.\",\n    \"D\": \"A backend engineer at a startup ran `git push origin main --force` from a Claude Code session, overwriting two reviewed commits with a single auto-generated commit message of 'fix' that had bundled in unrelated changes.\",\n}\nfor k, v in incidents.items():\n    print(f\"{k}: {v}\")\n",
+          "runnable": true
+        },
+        {
+          "type": "write",
+          "id": "git-and-github/three-git-disasters-ai-shipped/s07-07-write-your-pre-commit-checklist",
+          "xp": 5,
+          "hint": [
+            {
+              "level": 1,
+              "body": "Five `if/else` checks, each adding 20 to score or appending a specific string to `risks`. The tricky one is `agent_can_auto_commit` — `False` is the safe value, so the condition is inverted.",
+              "cost": 0
+            },
+            {
+              "level": 2,
+              "body": "Watch the order: risks must be appended in the order the fields are listed. For `ai-startup-repo`, the only False protections are `has_secret_scanning_hook` and the inverted `agent_can_auto_commit`, so score = 60 and risks has exactly those two strings in that order.",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 200,
+          "concept": "repo-pre-commit-audit",
+          "prompt": "Build your pre-commit checklist as a function. Write\n`audit_repo(repo)` that takes a dict describing a repo's defenses\nand returns a dict with two fields:\n\n- `score`: integer 0-100, **higher is safer**\n- `risks`: a list of specific risk strings for every protection\n  that is missing\n\nThe repo dict has five boolean fields. Each TRUE field adds 20 to\nthe score (so a fully-protected repo scores 100). Each FALSE field\nappends a specific risk string to `risks`, in the order the fields\nare listed below:\n\n| Field | Risk string when False |\n|---|---|\n| `has_gitignore_for_env` | `\"no .gitignore for .env — Uber-style leak possible\"` |\n| `has_secret_scanning_hook` | `\"no pre-commit secret scanner — credentials can ship\"` |\n| `reviewer_required_for_main` | `\"no required reviewer on main — agent pushes land unchecked\"` |\n| `agent_can_auto_commit` (False is SAFE) | inverted: this field being TRUE means risky; risk = `\"agent can auto-commit without diff review\"` |\n| `secrets_in_env_vars_only` | `\"secrets not enforced env-only — inline creds are still possible\"` |\n\nNote the inversion on `agent_can_auto_commit`: it's the only field\nwhere `True` is the unsafe value. Score 20 when it's False; add the\nrisk when it's True.\n\nTwo repos run. Expected output:\n```\nai-startup-repo: {'score': 60, 'risks': ['no pre-commit secret scanner — credentials can ship', 'agent can auto-commit without diff review']}\nlegacy-monorepo: {'score': 0, 'risks': ['no .gitignore for .env — Uber-style leak possible', 'no pre-commit secret scanner — credentials can ship', 'no required reviewer on main — agent pushes land unchecked', 'agent can auto-commit without diff review', 'secrets not enforced env-only — inline creds are still possible']}\n```\n",
+          "starter": "ai_startup_repo = {\n    \"name\": \"ai-startup-repo\",\n    \"has_gitignore_for_env\": True,\n    \"has_secret_scanning_hook\": False,\n    \"reviewer_required_for_main\": True,\n    \"agent_can_auto_commit\": True,\n    \"secrets_in_env_vars_only\": True,\n}\n\nlegacy_monorepo = {\n    \"name\": \"legacy-monorepo\",\n    \"has_gitignore_for_env\": False,\n    \"has_secret_scanning_hook\": False,\n    \"reviewer_required_for_main\": False,\n    \"agent_can_auto_commit\": True,\n    \"secrets_in_env_vars_only\": False,\n}\n\n# define audit_repo(repo) below\n\nprint(f\"{ai_startup_repo['name']}: {audit_repo(ai_startup_repo)}\")\nprint(f\"{legacy_monorepo['name']}: {audit_repo(legacy_monorepo)}\")\n",
+          "grader": {
+            "kind": "stdout-equality",
+            "expected": "ai-startup-repo: {'score': 60, 'risks': ['no pre-commit secret scanner — credentials can ship', 'agent can auto-commit without diff review']}\nlegacy-monorepo: {'score': 0, 'risks': ['no .gitignore for .env — Uber-style leak possible', 'no pre-commit secret scanner — credentials can ship', 'no required reviewer on main — agent pushes land unchecked', 'agent can auto-commit without diff review', 'secrets not enforced env-only — inline creds are still possible']}\n",
+            "normalize": "collapse-trailing-newline"
+          },
+          "solution": "ai_startup_repo = {\n    \"name\": \"ai-startup-repo\",\n    \"has_gitignore_for_env\": True,\n    \"has_secret_scanning_hook\": False,\n    \"reviewer_required_for_main\": True,\n    \"agent_can_auto_commit\": True,\n    \"secrets_in_env_vars_only\": True,\n}\n\nlegacy_monorepo = {\n    \"name\": \"legacy-monorepo\",\n    \"has_gitignore_for_env\": False,\n    \"has_secret_scanning_hook\": False,\n    \"reviewer_required_for_main\": False,\n    \"agent_can_auto_commit\": True,\n    \"secrets_in_env_vars_only\": False,\n}\n\ndef audit_repo(repo):\n    score = 0\n    risks = []\n    if repo.get(\"has_gitignore_for_env\"):\n        score += 20\n    else:\n        risks.append(\"no .gitignore for .env — Uber-style leak possible\")\n    if repo.get(\"has_secret_scanning_hook\"):\n        score += 20\n    else:\n        risks.append(\"no pre-commit secret scanner — credentials can ship\")\n    if repo.get(\"reviewer_required_for_main\"):\n        score += 20\n    else:\n        risks.append(\"no required reviewer on main — agent pushes land unchecked\")\n    if not repo.get(\"agent_can_auto_commit\"):\n        score += 20\n    else:\n        risks.append(\"agent can auto-commit without diff review\")\n    if repo.get(\"secrets_in_env_vars_only\"):\n        score += 20\n    else:\n        risks.append(\"secrets not enforced env-only — inline creds are still possible\")\n    return {\"score\": score, \"risks\": risks}\n\nprint(f\"{ai_startup_repo['name']}: {audit_repo(ai_startup_repo)}\")\nprint(f\"{legacy_monorepo['name']}: {audit_repo(legacy_monorepo)}\")\n",
+          "hiddenTests": []
+        },
+        {
+          "type": "checkpoint",
+          "id": "git-and-github/three-git-disasters-ai-shipped/s08-08-checkpoint",
+          "xp": 8,
+          "hint": [],
+          "personalize": false,
+          "phase": "check",
+          "estSeconds": 240,
+          "concept": "triage-a-portfolio-of-repos",
+          "prompt": "Final drill. You're the new security lead on a five-repo\nengineering org. Walk through the portfolio and triage.\n\nWrite `triage_repos(repos)` that takes a list of repo dicts (same\nshape as the previous step) and returns a tuple\n`(scores, riskiest)`:\n\n- `scores`: a dict mapping each repo's name → its score (0-100),\n  using the same scoring rules as `audit_repo`:\n  - +20 for `has_gitignore_for_env` True\n  - +20 for `has_secret_scanning_hook` True\n  - +20 for `reviewer_required_for_main` True\n  - +20 for `agent_can_auto_commit` **False** (inverted)\n  - +20 for `secrets_in_env_vars_only` True\n- `riskiest`: the name of the repo with the LOWEST score (most\n  likely to leak next). On a tie, return the FIRST one — use\n  `min` with a `key=` argument and a stable iteration over the\n  input list.\n\nFive repos run. Expected output:\n```\nscores: {'core-api': 100, 'admin-dashboard': 60, 'ml-pipeline': 40, 'legacy-billing': 0, 'docs-site': 80}\nmost likely to leak next: legacy-billing\n```\n",
+          "starter": "repos = [\n    {\n        \"name\": \"core-api\",\n        \"has_gitignore_for_env\": True,\n        \"has_secret_scanning_hook\": True,\n        \"reviewer_required_for_main\": True,\n        \"agent_can_auto_commit\": False,\n        \"secrets_in_env_vars_only\": True,\n    },\n    {\n        \"name\": \"admin-dashboard\",\n        \"has_gitignore_for_env\": True,\n        \"has_secret_scanning_hook\": False,\n        \"reviewer_required_for_main\": True,\n        \"agent_can_auto_commit\": True,\n        \"secrets_in_env_vars_only\": True,\n    },\n    {\n        \"name\": \"ml-pipeline\",\n        \"has_gitignore_for_env\": True,\n        \"has_secret_scanning_hook\": False,\n        \"reviewer_required_for_main\": False,\n        \"agent_can_auto_commit\": True,\n        \"secrets_in_env_vars_only\": True,\n    },\n    {\n        \"name\": \"legacy-billing\",\n        \"has_gitignore_for_env\": False,\n        \"has_secret_scanning_hook\": False,\n        \"reviewer_required_for_main\": False,\n        \"agent_can_auto_commit\": True,\n        \"secrets_in_env_vars_only\": False,\n    },\n    {\n        \"name\": \"docs-site\",\n        \"has_gitignore_for_env\": True,\n        \"has_secret_scanning_hook\": True,\n        \"reviewer_required_for_main\": True,\n        \"agent_can_auto_commit\": True,\n        \"secrets_in_env_vars_only\": True,\n    },\n]\n\n# define triage_repos(repos) below\n\nscores, riskiest = triage_repos(repos)\nprint(f\"scores: {scores}\")\nprint(f\"most likely to leak next: {riskiest}\")\n",
+          "grader": {
+            "kind": "stdout-equality",
+            "expected": "scores: {'core-api': 100, 'admin-dashboard': 60, 'ml-pipeline': 40, 'legacy-billing': 0, 'docs-site': 80}\nmost likely to leak next: legacy-billing\n",
+            "normalize": "collapse-trailing-newline"
+          },
+          "solution": "repos = [\n    {\n        \"name\": \"core-api\",\n        \"has_gitignore_for_env\": True,\n        \"has_secret_scanning_hook\": True,\n        \"reviewer_required_for_main\": True,\n        \"agent_can_auto_commit\": False,\n        \"secrets_in_env_vars_only\": True,\n    },\n    {\n        \"name\": \"admin-dashboard\",\n        \"has_gitignore_for_env\": True,\n        \"has_secret_scanning_hook\": False,\n        \"reviewer_required_for_main\": True,\n        \"agent_can_auto_commit\": True,\n        \"secrets_in_env_vars_only\": True,\n    },\n    {\n        \"name\": \"ml-pipeline\",\n        \"has_gitignore_for_env\": True,\n        \"has_secret_scanning_hook\": False,\n        \"reviewer_required_for_main\": False,\n        \"agent_can_auto_commit\": True,\n        \"secrets_in_env_vars_only\": True,\n    },\n    {\n        \"name\": \"legacy-billing\",\n        \"has_gitignore_for_env\": False,\n        \"has_secret_scanning_hook\": False,\n        \"reviewer_required_for_main\": False,\n        \"agent_can_auto_commit\": True,\n        \"secrets_in_env_vars_only\": False,\n    },\n    {\n        \"name\": \"docs-site\",\n        \"has_gitignore_for_env\": True,\n        \"has_secret_scanning_hook\": True,\n        \"reviewer_required_for_main\": True,\n        \"agent_can_auto_commit\": True,\n        \"secrets_in_env_vars_only\": True,\n    },\n]\n\ndef score_one(repo):\n    s = 0\n    if repo.get(\"has_gitignore_for_env\"):\n        s += 20\n    if repo.get(\"has_secret_scanning_hook\"):\n        s += 20\n    if repo.get(\"reviewer_required_for_main\"):\n        s += 20\n    if not repo.get(\"agent_can_auto_commit\"):\n        s += 20\n    if repo.get(\"secrets_in_env_vars_only\"):\n        s += 20\n    return s\n\ndef triage_repos(repos):\n    scores = {r[\"name\"]: score_one(r) for r in repos}\n    riskiest = min(repos, key=score_one)[\"name\"]\n    return scores, riskiest\n\nscores, riskiest = triage_repos(repos)\nprint(f\"scores: {scores}\")\nprint(f\"most likely to leak next: {riskiest}\")\n",
+          "passThreshold": 0.66
+        }
+      ],
+      "xpTotal": 21
     }
   ],
-  "xpTotal": 32
+  "xpTotal": 53
 }

@@ -1,0 +1,114 @@
+xp: 5
+estSeconds: 200
+concept: repo-pre-commit-audit
+prompt: |
+  Build your pre-commit checklist as a function. Write
+  `audit_repo(repo)` that takes a dict describing a repo's defenses
+  and returns a dict with two fields:
+
+  - `score`: integer 0-100, **higher is safer**
+  - `risks`: a list of specific risk strings for every protection
+    that is missing
+
+  The repo dict has five boolean fields. Each TRUE field adds 20 to
+  the score (so a fully-protected repo scores 100). Each FALSE field
+  appends a specific risk string to `risks`, in the order the fields
+  are listed below:
+
+  | Field | Risk string when False |
+  |---|---|
+  | `has_gitignore_for_env` | `"no .gitignore for .env — Uber-style leak possible"` |
+  | `has_secret_scanning_hook` | `"no pre-commit secret scanner — credentials can ship"` |
+  | `reviewer_required_for_main` | `"no required reviewer on main — agent pushes land unchecked"` |
+  | `agent_can_auto_commit` (False is SAFE) | inverted: this field being TRUE means risky; risk = `"agent can auto-commit without diff review"` |
+  | `secrets_in_env_vars_only` | `"secrets not enforced env-only — inline creds are still possible"` |
+
+  Note the inversion on `agent_can_auto_commit`: it's the only field
+  where `True` is the unsafe value. Score 20 when it's False; add the
+  risk when it's True.
+
+  Two repos run. Expected output:
+  ```
+  ai-startup-repo: {'score': 60, 'risks': ['no pre-commit secret scanner — credentials can ship', 'agent can auto-commit without diff review']}
+  legacy-monorepo: {'score': 0, 'risks': ['no .gitignore for .env — Uber-style leak possible', 'no pre-commit secret scanner — credentials can ship', 'no required reviewer on main — agent pushes land unchecked', 'agent can auto-commit without diff review', 'secrets not enforced env-only — inline creds are still possible']}
+  ```
+starter: |
+  ai_startup_repo = {
+      "name": "ai-startup-repo",
+      "has_gitignore_for_env": True,
+      "has_secret_scanning_hook": False,
+      "reviewer_required_for_main": True,
+      "agent_can_auto_commit": True,
+      "secrets_in_env_vars_only": True,
+  }
+
+  legacy_monorepo = {
+      "name": "legacy-monorepo",
+      "has_gitignore_for_env": False,
+      "has_secret_scanning_hook": False,
+      "reviewer_required_for_main": False,
+      "agent_can_auto_commit": True,
+      "secrets_in_env_vars_only": False,
+  }
+
+  # define audit_repo(repo) below
+
+  print(f"{ai_startup_repo['name']}: {audit_repo(ai_startup_repo)}")
+  print(f"{legacy_monorepo['name']}: {audit_repo(legacy_monorepo)}")
+grader:
+  kind: stdout-equality
+  expected: |
+    ai-startup-repo: {'score': 60, 'risks': ['no pre-commit secret scanner — credentials can ship', 'agent can auto-commit without diff review']}
+    legacy-monorepo: {'score': 0, 'risks': ['no .gitignore for .env — Uber-style leak possible', 'no pre-commit secret scanner — credentials can ship', 'no required reviewer on main — agent pushes land unchecked', 'agent can auto-commit without diff review', 'secrets not enforced env-only — inline creds are still possible']}
+  normalize: collapse-trailing-newline
+solution: |
+  ai_startup_repo = {
+      "name": "ai-startup-repo",
+      "has_gitignore_for_env": True,
+      "has_secret_scanning_hook": False,
+      "reviewer_required_for_main": True,
+      "agent_can_auto_commit": True,
+      "secrets_in_env_vars_only": True,
+  }
+
+  legacy_monorepo = {
+      "name": "legacy-monorepo",
+      "has_gitignore_for_env": False,
+      "has_secret_scanning_hook": False,
+      "reviewer_required_for_main": False,
+      "agent_can_auto_commit": True,
+      "secrets_in_env_vars_only": False,
+  }
+
+  def audit_repo(repo):
+      score = 0
+      risks = []
+      if repo.get("has_gitignore_for_env"):
+          score += 20
+      else:
+          risks.append("no .gitignore for .env — Uber-style leak possible")
+      if repo.get("has_secret_scanning_hook"):
+          score += 20
+      else:
+          risks.append("no pre-commit secret scanner — credentials can ship")
+      if repo.get("reviewer_required_for_main"):
+          score += 20
+      else:
+          risks.append("no required reviewer on main — agent pushes land unchecked")
+      if not repo.get("agent_can_auto_commit"):
+          score += 20
+      else:
+          risks.append("agent can auto-commit without diff review")
+      if repo.get("secrets_in_env_vars_only"):
+          score += 20
+      else:
+          risks.append("secrets not enforced env-only — inline creds are still possible")
+      return {"score": score, "risks": risks}
+
+  print(f"{ai_startup_repo['name']}: {audit_repo(ai_startup_repo)}")
+  print(f"{legacy_monorepo['name']}: {audit_repo(legacy_monorepo)}")
+hint:
+  - level: 1
+    body: "Five `if/else` checks, each adding 20 to score or appending a specific string to `risks`. The tricky one is `agent_can_auto_commit` — `False` is the safe value, so the condition is inverted."
+  - level: 2
+    body: "Watch the order: risks must be appended in the order the fields are listed. For `ai-startup-repo`, the only False protections are `has_secret_scanning_hook` and the inverted `agent_can_auto_commit`, so score = 60 and risks has exactly those two strings in that order."

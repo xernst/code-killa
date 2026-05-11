@@ -1,0 +1,14 @@
+slug: three-git-disasters-ai-shipped
+title: "Three git disasters AI shipped — and what got rotated"
+estMinutes: 20
+prerequisites:
+  - the-three-states
+order:
+  - 01-why-postmortems-teach-better.read.md
+  - 02-uber-2022-token-leak.read.md
+  - 03-which-control-would-have-caught-it.mc.yaml
+  - 04-the-samsung-paste.read.md
+  - 05-the-cursor-git-add-dot-default.read.md
+  - 06-spot-the-failure-mode.mc.yaml
+  - 07-write-your-pre-commit-checklist.write.yaml
+  - 08-checkpoint.checkpoint.yaml

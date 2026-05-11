@@ -4,3 +4,4 @@ title: "git and github cli — the ai builder's actual workflow"
 blurb: "cursor and claude code commit on your behalf. reading those commits — and undoing the bad ones — is your job. learn the four-state model, the commands you'll run every day, and what `gh` does that `git` can't."
 lessons:
   - 01-the-three-states
+  - 02-three-git-disasters-ai-shipped

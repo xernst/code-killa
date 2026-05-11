@@ -1,0 +1,38 @@
+xp: 2
+estSeconds: 70
+concept: earliest-control-in-the-chain
+code: |
+  # four controls Uber could have had in place.
+  # which one would have caught the breach EARLIEST in the chain?
+  controls = [
+      "1. A stricter .gitignore listing common secret file patterns",
+      "2. A pre-commit hook that scans staged content for credentials",
+      "3. Mandatory code review on every merge to main",
+      "4. An architectural rule: secrets only ever loaded from env vars or a vault",
+  ]
+  for c in controls:
+      print(c)
+prompt: |
+  Four candidate controls. The Uber 2022 leak chain was: developer
+  hardcodes secret in a script → commits it → secret sits in repo →
+  attacker pivots in and grabs it.
+
+  Which control would have caught the leak EARLIEST in the chain
+  (i.e., closest to the moment the developer's mistake happened)?
+options:
+  - id: gitignore
+    label: "1 — stricter .gitignore"
+    explain: ".gitignore only helps if the secret is in a separate file the developer thought to exclude. The Uber script had the credential inline in source code. .gitignore is irrelevant when the secret is in the file you actually want to commit."
+  - id: precommit
+    label: "2 — pre-commit hook that scans for credentials"
+  - id: review
+    label: "3 — mandatory code review"
+    explain: "Review is a control, but it's downstream — the secret is already in a commit on the developer's laptop by the time the reviewer sees it. Reviewers also miss credentials constantly. Useful as a backstop, not as the earliest control."
+  - id: vault
+    label: "4 — architectural rule: secrets from env or vault only"
+    explain: "Strongest control long-term, but it's a culture and architecture rule, not a mechanical one. It depends on every developer following it. The pre-commit hook fails the commit even if the developer forgets the rule."
+answerIds:
+  - precommit
+hint:
+  - level: 1
+    body: "'Earliest in the chain' means the control runs at the moment of the mistake, not after. Which option blocks the bad commit from even being created locally?"

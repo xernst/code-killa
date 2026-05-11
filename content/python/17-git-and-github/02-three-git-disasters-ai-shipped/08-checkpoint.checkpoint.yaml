@@ -1,0 +1,150 @@
+xp: 8
+estSeconds: 240
+concept: triage-a-portfolio-of-repos
+prompt: |
+  Final drill. You're the new security lead on a five-repo
+  engineering org. Walk through the portfolio and triage.
+
+  Write `triage_repos(repos)` that takes a list of repo dicts (same
+  shape as the previous step) and returns a tuple
+  `(scores, riskiest)`:
+
+  - `scores`: a dict mapping each repo's name → its score (0-100),
+    using the same scoring rules as `audit_repo`:
+    - +20 for `has_gitignore_for_env` True
+    - +20 for `has_secret_scanning_hook` True
+    - +20 for `reviewer_required_for_main` True
+    - +20 for `agent_can_auto_commit` **False** (inverted)
+    - +20 for `secrets_in_env_vars_only` True
+  - `riskiest`: the name of the repo with the LOWEST score (most
+    likely to leak next). On a tie, return the FIRST one — use
+    `min` with a `key=` argument and a stable iteration over the
+    input list.
+
+  Five repos run. Expected output:
+  ```
+  scores: {'core-api': 100, 'admin-dashboard': 60, 'ml-pipeline': 40, 'legacy-billing': 0, 'docs-site': 80}
+  most likely to leak next: legacy-billing
+  ```
+starter: |
+  repos = [
+      {
+          "name": "core-api",
+          "has_gitignore_for_env": True,
+          "has_secret_scanning_hook": True,
+          "reviewer_required_for_main": True,
+          "agent_can_auto_commit": False,
+          "secrets_in_env_vars_only": True,
+      },
+      {
+          "name": "admin-dashboard",
+          "has_gitignore_for_env": True,
+          "has_secret_scanning_hook": False,
+          "reviewer_required_for_main": True,
+          "agent_can_auto_commit": True,
+          "secrets_in_env_vars_only": True,
+      },
+      {
+          "name": "ml-pipeline",
+          "has_gitignore_for_env": True,
+          "has_secret_scanning_hook": False,
+          "reviewer_required_for_main": False,
+          "agent_can_auto_commit": True,
+          "secrets_in_env_vars_only": True,
+      },
+      {
+          "name": "legacy-billing",
+          "has_gitignore_for_env": False,
+          "has_secret_scanning_hook": False,
+          "reviewer_required_for_main": False,
+          "agent_can_auto_commit": True,
+          "secrets_in_env_vars_only": False,
+      },
+      {
+          "name": "docs-site",
+          "has_gitignore_for_env": True,
+          "has_secret_scanning_hook": True,
+          "reviewer_required_for_main": True,
+          "agent_can_auto_commit": True,
+          "secrets_in_env_vars_only": True,
+      },
+  ]
+
+  # define triage_repos(repos) below
+
+  scores, riskiest = triage_repos(repos)
+  print(f"scores: {scores}")
+  print(f"most likely to leak next: {riskiest}")
+grader:
+  kind: stdout-equality
+  expected: |
+    scores: {'core-api': 100, 'admin-dashboard': 60, 'ml-pipeline': 40, 'legacy-billing': 0, 'docs-site': 80}
+    most likely to leak next: legacy-billing
+  normalize: collapse-trailing-newline
+solution: |
+  repos = [
+      {
+          "name": "core-api",
+          "has_gitignore_for_env": True,
+          "has_secret_scanning_hook": True,
+          "reviewer_required_for_main": True,
+          "agent_can_auto_commit": False,
+          "secrets_in_env_vars_only": True,
+      },
+      {
+          "name": "admin-dashboard",
+          "has_gitignore_for_env": True,
+          "has_secret_scanning_hook": False,
+          "reviewer_required_for_main": True,
+          "agent_can_auto_commit": True,
+          "secrets_in_env_vars_only": True,
+      },
+      {
+          "name": "ml-pipeline",
+          "has_gitignore_for_env": True,
+          "has_secret_scanning_hook": False,
+          "reviewer_required_for_main": False,
+          "agent_can_auto_commit": True,
+          "secrets_in_env_vars_only": True,
+      },
+      {
+          "name": "legacy-billing",
+          "has_gitignore_for_env": False,
+          "has_secret_scanning_hook": False,
+          "reviewer_required_for_main": False,
+          "agent_can_auto_commit": True,
+          "secrets_in_env_vars_only": False,
+      },
+      {
+          "name": "docs-site",
+          "has_gitignore_for_env": True,
+          "has_secret_scanning_hook": True,
+          "reviewer_required_for_main": True,
+          "agent_can_auto_commit": True,
+          "secrets_in_env_vars_only": True,
+      },
+  ]
+
+  def score_one(repo):
+      s = 0
+      if repo.get("has_gitignore_for_env"):
+          s += 20
+      if repo.get("has_secret_scanning_hook"):
+          s += 20
+      if repo.get("reviewer_required_for_main"):
+          s += 20
+      if not repo.get("agent_can_auto_commit"):
+          s += 20
+      if repo.get("secrets_in_env_vars_only"):
+          s += 20
+      return s
+
+  def triage_repos(repos):
+      scores = {r["name"]: score_one(r) for r in repos}
+      riskiest = min(repos, key=score_one)["name"]
+      return scores, riskiest
+
+  scores, riskiest = triage_repos(repos)
+  print(f"scores: {scores}")
+  print(f"most likely to leak next: {riskiest}")
+passThreshold: 0.66

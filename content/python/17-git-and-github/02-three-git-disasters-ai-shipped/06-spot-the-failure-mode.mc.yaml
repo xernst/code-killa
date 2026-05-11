@@ -1,0 +1,39 @@
+xp: 2
+estSeconds: 70
+concept: match-incident-to-failure-pattern
+code: |
+  # four hypothetical incidents pulled from a security team's
+  # weekly review. each one maps to ONE of the three disasters
+  # from this lesson.
+  incidents = {
+      "A": "An indie dev's Cursor session ran `git add .` after creating a `.env` with a Stripe live key. The push landed on a public repo. A bot pulled the key within two minutes and racked up $4k of API charges before the dev rotated.",
+      "B": "A staff engineer at a fintech committed a `config/prod.yaml` containing a database password to a private monorepo six months ago. An attacker phished a junior dev's credentials and cloned the repo. The password was still valid.",
+      "C": "A marketing analyst pasted the company's full Q3 revenue spreadsheet into ChatGPT (free tier) asking for a chart suggestion. The spreadsheet contained customer-level revenue data and unannounced renewal pricing.",
+      "D": "A backend engineer at a startup ran `git push origin main --force` from a Claude Code session, overwriting two reviewed commits with a single auto-generated commit message of 'fix' that had bundled in unrelated changes.",
+  }
+  for k, v in incidents.items():
+      print(f"{k}: {v}")
+prompt: |
+  Four incidents. Each one matches ONE of the failure patterns from
+  the three disasters we walked through.
+
+  Which incident is the **agent-commits-without-review** failure
+  pattern in its purest form (i.e., the AI agent staged + committed
+  + pushed without a human seeing the diff)?
+options:
+  - id: a
+    label: "A — Cursor session committed .env with a Stripe key"
+  - id: b
+    label: "B — staff engineer committed prod.yaml six months ago"
+    explain: "This is the secret-in-VCS pattern (Uber 2022). The human committed the secret deliberately. The agent isn't in the story."
+  - id: c
+    label: "C — marketing analyst pasted revenue data into ChatGPT"
+    explain: "This is the paste-to-public-AI pattern (Samsung 2023). No git, no agent commit. The data left the perimeter through a browser paste."
+  - id: d
+    label: "D — engineer force-pushed a bundled 'fix' commit"
+    explain: "This is bad agent behavior, but the failure mode is bad commit hygiene plus force-push, not a leaked secret. Close to the agent-commits pattern but missing the load-bearing element — there's no leaked-data-shaped output here."
+answerIds:
+  - a
+hint:
+  - level: 1
+    body: "The agent-commits-without-review disaster has three ingredients: (1) AI agent runs the git commands, (2) the diff is never shown to the human, (3) a secret or sensitive file gets pushed. Find the option with all three."

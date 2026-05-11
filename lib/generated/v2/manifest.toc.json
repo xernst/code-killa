@@ -1,6 +1,6 @@
 {
   "version": "0.1.0",
-  "generatedAt": "2026-05-11T21:48:32.983Z",
+  "generatedAt": "2026-05-11T22:28:04.220Z",
   "chapters": [
     {
       "number": 1,
@@ -127,50 +127,50 @@
       "slug": "llm-apis",
       "title": "llm apis — talking to claude and openai",
       "blurb": "every ai feature you ship eventually calls a model api. learn the messages pattern, how to read the response, and the four lines ai writes every single time.",
-      "lessonCount": 2,
-      "stepCount": 18,
-      "estMinutes": 19,
-      "xpTotal": 64
+      "lessonCount": 3,
+      "stepCount": 26,
+      "estMinutes": 37,
+      "xpTotal": 85
     },
     {
       "number": 14,
       "slug": "structured-output",
       "title": "structured output — making the model return json",
       "blurb": "free-form text breaks every pipeline. learn the schema-first pattern ai uses to get reliable json back, validate it with pydantic, and catch the model's lies before they hit prod.",
-      "lessonCount": 1,
-      "stepCount": 9,
-      "estMinutes": 8,
-      "xpTotal": 32
+      "lessonCount": 2,
+      "stepCount": 17,
+      "estMinutes": 26,
+      "xpTotal": 53
     },
     {
       "number": 15,
       "slug": "mcp",
       "title": "mcp — the model context protocol",
       "blurb": "mcp is the new standard for plugging tools and data sources into ai agents. learn what an mcp server actually is, how claude code lists tools, and why this is replacing one-off integrations everywhere.",
-      "lessonCount": 2,
-      "stepCount": 18,
-      "estMinutes": 22,
-      "xpTotal": 64
+      "lessonCount": 3,
+      "stepCount": 26,
+      "estMinutes": 40,
+      "xpTotal": 85
     },
     {
       "number": 16,
       "slug": "agent-loops",
       "title": "agent loops — tool_use and the request/tool/respond cycle",
       "blurb": "an agent isn't a magic. it's a while loop. learn the actual cycle claude code, cursor, and every other agent uses: model returns tool_use, you run the tool, you send the result back, repeat until end_turn.",
-      "lessonCount": 4,
-      "stepCount": 36,
-      "estMinutes": 43,
-      "xpTotal": 128
+      "lessonCount": 5,
+      "stepCount": 44,
+      "estMinutes": 61,
+      "xpTotal": 149
     },
     {
       "number": 17,
       "slug": "git-and-github",
       "title": "git and github cli — the ai builder's actual workflow",
       "blurb": "cursor and claude code commit on your behalf. reading those commits — and undoing the bad ones — is your job. learn the four-state model, the commands you'll run every day, and what `gh` does that `git` can't.",
-      "lessonCount": 1,
-      "stepCount": 9,
-      "estMinutes": 8,
-      "xpTotal": 32
+      "lessonCount": 2,
+      "stepCount": 17,
+      "estMinutes": 28,
+      "xpTotal": 53
     },
     {
       "number": 18,
@@ -187,10 +187,10 @@
       "slug": "prompting",
       "title": "prompting cursor and claude code effectively",
       "blurb": "the difference between a one-shot ai session and a four-hour debugging spiral is almost always the first prompt. learn the structure that gets you usable code.",
-      "lessonCount": 3,
-      "stepCount": 27,
-      "estMinutes": 33,
-      "xpTotal": 95
+      "lessonCount": 4,
+      "stepCount": 35,
+      "estMinutes": 51,
+      "xpTotal": 116
     },
     {
       "number": 20,
@@ -207,50 +207,50 @@
       "slug": "evals",
       "title": "eval-driven ai development",
       "blurb": "if you can't test it, you can't ship it. learn the simple-but-strict eval patterns that separate ai features that work from ones that just feel like they do.",
-      "lessonCount": 2,
-      "stepCount": 18,
-      "estMinutes": 21,
-      "xpTotal": 63
+      "lessonCount": 3,
+      "stepCount": 26,
+      "estMinutes": 41,
+      "xpTotal": 84
     },
     {
       "number": 22,
       "slug": "context-and-retrieval",
       "title": "context and retrieval — feeding the model real data",
       "blurb": "rag without the overengineering. chunking, embeddings, vector search, and the small set of patterns that make a model answer from your data instead of its training set.",
-      "lessonCount": 3,
-      "stepCount": 27,
-      "estMinutes": 38,
-      "xpTotal": 95
+      "lessonCount": 4,
+      "stepCount": 36,
+      "estMinutes": 58,
+      "xpTotal": 117
     },
     {
       "number": 23,
       "slug": "production-tradeoffs",
       "title": "production tradeoffs — cost, latency, quality",
       "blurb": "the three numbers every shipped llm feature lives or dies by. token math, caching, streaming, batching, and the small set of decisions that move the product more than a model swap ever will.",
-      "lessonCount": 2,
-      "stepCount": 18,
-      "estMinutes": 24,
-      "xpTotal": 64
+      "lessonCount": 3,
+      "stepCount": 26,
+      "estMinutes": 42,
+      "xpTotal": 85
     },
     {
       "number": 24,
       "slug": "debugging-output",
       "title": "debugging broken ai output",
       "blurb": "when the model lies to your customer. the methodology for narrowing down what went wrong, the four most-common breakage classes, and the discipline that separates 'we shipped a fix' from 'we blamed the model and shrugged'.",
-      "lessonCount": 2,
-      "stepCount": 18,
-      "estMinutes": 25,
-      "xpTotal": 64
+      "lessonCount": 3,
+      "stepCount": 27,
+      "estMinutes": 47,
+      "xpTotal": 86
     },
     {
       "number": 25,
       "slug": "capstone",
       "title": "capstone — ship the system",
       "blurb": "wire it all together. context, retrieval, the prompt, the call, the trace, the eval, the cost. less a tutorial demo, more the smallest end-to-end llm feature you could ship to a real user.",
-      "lessonCount": 5,
-      "stepCount": 48,
-      "estMinutes": 66,
-      "xpTotal": 173
+      "lessonCount": 6,
+      "stepCount": 55,
+      "estMinutes": 84,
+      "xpTotal": 193
     },
     {
       "number": 26,
