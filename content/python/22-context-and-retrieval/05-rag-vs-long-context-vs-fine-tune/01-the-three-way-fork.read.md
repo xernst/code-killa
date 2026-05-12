@@ -12,26 +12,38 @@ build RAG — chunking, embeddings, retrieval, ranking. This lesson
 zooms out and asks a different question: **should you be building
 RAG at all?**
 
-Because every team building an AI product right now is, knowingly or
-not, picking one of three forks. The fork they pick determines their
+Every team building an AI product right now is, knowingly or not,
+picking some combination of architectural patterns for getting
+knowledge into the model. The combination they pick determines their
 cost curve, their freshness story, their latency budget, and whether
-they're still in business in 18 months. The fork is invisible in the
-demo. It shows up at scale.
+they're still in business in 18 months. The choice is invisible in
+the demo. It shows up at scale.
 
-## The three forks
+## A note on the framing before we start
 
-There are three big buckets for getting knowledge into a model at
-inference time: RAG (retrieve at query), long-context (stuff the
-prompt), and fine-tune (bake into weights). Practitioners argue
-about whether this is the full taxonomy or whether you should also
-count tool-calling-into-live-systems, agentic multi-hop retrieval,
-and knowledge-graph traversal as separate categories. They have a
-point. For most product decisions, though, the three big buckets
-are the useful unit of analysis. We'll teach to those, with a note
-in the rubric on when the cleaner trichotomy falls apart.
+What follows is one practitioner's heuristic, not a canonical taxonomy.
+The field has not settled on a single map of how to get knowledge into
+a language model at inference time, and credible practitioners disagree
+about how many distinct categories there are. You will see at least
+five candidates in serious writing on the topic:
 
-Every product is some combination of these, but the architecture
-pivots on one:
+- RAG (retrieve at query)
+- long-context (stuff the prompt)
+- fine-tune (bake into weights)
+- tool-calling into live systems (retrieval as a tool the agent invokes)
+- knowledge-graph traversal and multi-hop agentic retrieval
+
+We teach the first three as primary buckets because they are the ones
+whose tradeoffs determine the architecture of most products today, and
+we treat hybrid (fine-tune base + RAG augmentation) as a real fourth
+class because the vertical-AI products that combine them are not edge
+cases. Tool-calling and KG traversal show up later in the curriculum
+(ch15 and ch16) as their own concerns. The rubric in step 07 names
+where this simplified map breaks down.
+
+## The four buckets we'll teach to
+
+The architecture pivots on which of these your product depends on:
 
 1. **Pull-from-source (RAG)**. Keep the knowledge in a vector store
    (or a SQL table, or a search index). At query time, retrieve the
@@ -45,10 +57,16 @@ pivots on one:
    corpus so the knowledge lives in the weights. The model doesn't
    need to be told anything at inference time — it already "knows."
    Style, format, and domain language all transfer.
+4. **Hybrid (fine-tune base + RAG augmentation)**. The combination
+   most vertical AI products converge on once they hit scale — a
+   fine-tuned base for style and domain language, plus RAG on top
+   for facts that change. Operationally the most expensive of the
+   four; commercially the most defensible for products where both
+   style AND freshness matter (Harvey, vertical medical AI).
 
 These look like alternatives. They're really tradeoffs along five
-axes, and the right answer is almost always "use the fork whose
-tradeoffs match the product."
+axes, and the right answer is almost always "use the combination
+whose tradeoffs match the product."
 
 ## The five tradeoff axes
 
@@ -112,6 +130,7 @@ into a `pick_fork(product_spec)` function you can paste into your
 own planning docs.
 
 By the end you should be able to read any AI product launch and
-predict which fork they picked, and whether the picked fork matches
-the corpus shape. That intuition is worth more than any specific
-RAG library you'll learn.
+predict which combination they picked, and whether the picked
+combination matches the corpus shape. That intuition is worth more
+than any specific RAG library you'll learn — and worth more than the
+rubric itself, which is a heuristic, not a decision procedure.

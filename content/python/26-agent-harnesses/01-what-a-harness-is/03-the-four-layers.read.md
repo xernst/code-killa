@@ -96,7 +96,8 @@ Common bugs at layer 4:
 - **Missing validation** — tool runs with garbage input, crashes
   deep in the stack.
 - **Errors swallowed silently** — tool throws, harness logs and
-  continues, model thinks the tool succeeded.
+  continues, and the next model call sees only a fabricated success
+  signal in the conversation history.
 
 ## How the layers compose
 
