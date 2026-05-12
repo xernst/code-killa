@@ -6,6 +6,20 @@
 
 The "normal" mechanical fixes from Halverson's review were applied separately. The items below are deferred because each requires structural rewriting, pedagogical re-thinking, or a corpus-wide voice pass — not surgical text edits.
 
+## Status (2026-05-12, after code-review-fixes worktree)
+
+| Item | Status | Closing commit |
+|------|--------|----------------|
+| H-#1 ch00 ship-blocker (write steps) | CLOSED | `4d53666` (Josh, halverson followup #2) |
+| H-#1 ch00 ship-blocker (checkpoint steps in L02/L03/L04) | CLOSED | `4b7e041` |
+| H-#7 anthropomorphism whiplash (ch26/ch30 audit) | CLOSED | `7baa6c5` |
+| H-#9 RAG trichotomy framing | CLOSED | `7baa6c5` (lead reorder + hybrid as 4th class) on top of `4d53666` (Josh's hedge paragraph) |
+| H-#11 Isenberg-as-source | CLOSED | `4d53666` (Josh) |
+| H-#14 reductive personas | CLOSED | `4d53666` (Josh) |
+| H-#16 honest about what we can't give | CLOSED | `4d53666` (Josh) — ch00 lesson 04 06b read step |
+| H-#5 aphorism cull (~70% target) | OPEN | needs editorial taste pass — not LLM-safe to one-shot at 251-blockquote surface |
+| H-#15 one-voice-across-31-chapters | OPEN | per Josh's earlier note: needs a human editor; an LLM rewrite produces flavors of LLM voice |
+
 ---
 
 ## SHIP-BLOCKER for the re-education positioning
