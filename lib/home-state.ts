@@ -45,7 +45,11 @@ export function resolveHomeState(
   stepIdsByChapter: Record<string, string[]>,
 ): HomeState {
   if (progress === null) return { kind: "loading" };
-  if (!progress.profile?.name?.trim()) return { kind: "guest" };
+  // Onboarding sets goal + level on both finish() and skip() paths; name is
+  // never collected. Guest = profile has neither.
+  if (!progress.profile?.goal || !progress.profile?.level) {
+    return { kind: "guest" };
+  }
 
   const lastVisited = progress.lastVisitedV2;
   if (!lastVisited) {

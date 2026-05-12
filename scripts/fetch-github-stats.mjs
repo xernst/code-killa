@@ -23,6 +23,7 @@ const OUT_PATH = resolve(
 async function fetchJson(url) {
   const res = await fetch(url, {
     headers: { "User-Agent": "promptdojo-build", Accept: "application/vnd.github+json" },
+    signal: AbortSignal.timeout(5_000),
   });
   if (!res.ok) {
     throw new Error(`HTTP ${res.status} from ${url}`);
