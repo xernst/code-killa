@@ -8,8 +8,8 @@
 
 This repo now ships in two halves of the same product:
 
-1. **The interactive web app** — a Pyodide-in-the-browser, Codecademy-style step-by-step course at `localhost:3000`. Source lives at the root of this repo (Next.js, React 19, Tailwind 4, CodeMirror 6).
-2. **The 28-chapter book** — a long-form, Codecademy-rhythm Python course as plain folders (`01-getting-started/` through `28-capstone-ai-notes-app/`) you can read in your editor or remix against your own life. The web app's curriculum was sourced from this.
+1. **The interactive web app** — a 31-chapter Pyodide-in-the-browser, Codecademy-style step-by-step course at `localhost:3000`. Source lives at the root of this repo (Next.js, React 19, Tailwind 4, CodeMirror 6). This is the primary product surface.
+2. **The 17-chapter book of foundations** — a long-form, Codecademy-rhythm Python primer as plain folders (`01-getting-started/` through `17-inheritance-and-dunders/`) covering the language-fluency floor. Currently the foundations only; the AI-builder chapters (LLM APIs, MCP, agents, evals, capstone, harness engineering) live in the web app.
 
 Both share the same curriculum spine and the same point of view. Pick whichever surface you prefer; the wedge is identical.
 
@@ -44,9 +44,9 @@ Open `http://localhost:3000`. Five-question onboarding, then your first lesson. 
 
 The web curriculum lives in `content/python/` as YAML+Markdown — one folder per lesson, one file per step. Schema is documented in `lib/content/schema.ts`.
 
-### B. The 28-chapter book
+### B. The 17-chapter book
 
-If you'd rather read it in your editor like a textbook, the original 28-chapter folders are still at the root:
+If you'd rather read the foundations chapters in your editor like a textbook, the 17 chapter folders are at the repo root (`01-getting-started/` through `17-inheritance-and-dunders/`):
 
 ```
 NN-topic/
@@ -64,9 +64,9 @@ brew install python@3.12 uv
 python3 01-getting-started/01_lesson.py
 ```
 
-Some later chapters require extra libraries (`httpx`, `rich`, `pytest`, `anthropic`, `pandas`). Each chapter's README tells you what to install when you get there.
+Some later chapters require extra libraries (`httpx`, `rich`, `pytest`). Each chapter's README tells you what to install when you get there.
 
-The web app currently covers a focused subset (variables → modules + new chapters for error handling, files, classes, HTTP/APIs). The 28-chapter book has the full breadth (control flow, async, pytest, pandas, LLM integration, CLI tooling, capstone). Everything in the web app's `content/python/` is the canonical source for the interactive surface; the root chapter folders are the long-form companion.
+The web app is now the broader of the two surfaces — 31 chapters, covering everything from variables through harness engineering, LLM APIs, MCP, agent loops, evals, retrieval, and the capstone. The 17-chapter book is currently the foundations layer (variables through OOP) in long-form textbook style; the AI-builder material lives in the web app. Everything in the web app's `content/python/` is the canonical source for the interactive surface; the root chapter folders are the long-form companion for the language-fluency floor.
 
 ## Customize it — this is the magic
 
@@ -85,7 +85,9 @@ You're going to use AI to help you code. Great. But the AI will confidently hand
 
 This course makes you the person who catches those. The goal isn't memorizing syntax — it's developing the **judgment** to read, evaluate, and edit what the AI gives back.
 
-## Chapter map (the long-form book)
+## Chapter map (the 17-chapter book of foundations)
+
+This is the long-form textbook companion — currently the language-fluency floor only (variables → OOP). The AI-builder material (LLM APIs, MCP, agents, evals, harness engineering) is in the web app, not the book.
 
 | # | Chapter | You'll be able to |
 |---|---------|-------------------|
@@ -106,48 +108,46 @@ This course makes you the person who catches those. The goal isn't memorizing sy
 | 15 | Error Handling | `try`/`except`, custom exceptions, EAFP style |
 | 16 | Classes & OOP | Objects, `__init__`, instance vs class attrs, `@property` |
 | 17 | Inheritance & Dunders | `super()`, `__repr__`, `__eq__`, container protocol |
-| 18 | Decorators & Generators | `@decorator`, `yield`, context managers |
-| 19 | Type Hints & Dataclasses | `int \| None`, `@dataclass`, when to use which |
-| 20 | Venvs, pip, `uv` | Environment isolation, 2026's package manager |
-| 21 | Standard Library Tour | `datetime`, `json`, `collections`, `itertools`, `random` |
-| 22 | HTTP & APIs | `httpx`, REST, status codes, sessions, retries |
-| 23 | Async Python | `async`/`await`, `asyncio.gather`, when it's worth it |
-| 24 | Testing with `pytest` | `assert`, fixtures, `parametrize`, `tmp_path` |
-| 25 | CSV, JSON, Pandas | Real datasets, cleaning, grouping, pivot tables |
-| 26 | AI & LLM Integration | Anthropic/OpenAI APIs, structured output, multi-turn |
-| 27 | Building a CLI Tool | `argparse`, `rich`, subcommands, exit codes |
-| 28 | Capstone | One working tool that uses every chapter's ideas |
 
-## Web app curriculum (currently shipped)
+## Web app curriculum (31 chapters)
 
-**22 chapters · 44 lessons · ~450 step-typed micro-screens.** The interactive web app covers:
+**31 chapters · 95 lessons · 800+ runnable step-typed micro-screens.** Chapter ordering and lesson counts are generated from `content/python/*/chapter.yaml`; this table is the canonical surface.
 
 | # | Chapter | Lessons | Focus |
 |---|---|---|---|
-| 1 | variables | 3 | naming + rebind, the four types on sight, print/repr/f-strings |
-| 2 | functions | 3 | def/return, args+defaults, closures+decorators |
-| 3 | lists & dicts | 3 | the bones of an API response, comprehensions, nested data |
-| 4 | loops | 3 | predict-the-output, while/break, enumerate+zip |
-| 5 | conditionals | 2 | truthiness traps, elif + match-case |
-| 6 | tracebacks | 3 | reading the stack, the five error classes, debug-by-print |
-| 7 | mutation & state | 2 | why-it-breaks, copy vs reference |
-| 8 | modules & imports | 2 | venv pain, from-imports + aliases |
-| 9 | error handling | 3 | try/except, catching specifics, raising + custom |
+| 00 | before you build | 4 | what an LLM is, where you fit (the re-education on-ramp; zero Python) |
+| 01 | variables | 3 | naming + rebind, the four types on sight, print/repr/f-strings |
+| 02 | functions | 3 | def/return, args+defaults, the most-hallucinated bug AI ships |
+| 03 | lists & dicts | 3 | the bones of every API response, comprehensions, nested data |
+| 04 | loops | 3 | predict-the-output, while/break, enumerate+zip |
+| 05 | conditionals | 2 | truthiness traps, elif + match-case, where AI silently bugs |
+| 06 | tracebacks | 3 | reading the stack, the five error classes, debug-by-print |
+| 07 | mutation & state | 2 | why-it-breaks, copy vs reference |
+| 08 | modules & imports | 2 | venv pain, from-imports + aliases |
+| 09 | error handling | 3 | try/except, catching specifics, raising + custom |
 | 10 | files & I/O | 3 | read/write, pathlib, csv + JSONL |
 | 11 | classes basics | 3 | reading AI's classes, instance vs class, dataclasses |
 | 12 | HTTP & APIs | 3 | making the call, status codes, parsing nested responses |
-| **13** | **LLM APIs** | **1** | **messages, roles, response shape (Claude + OpenAI SDK)** |
-| **14** | **structured output** | **1** | **Pydantic schemas, JSON validation, the missing-field bug** |
-| **15** | **MCP** | **1** | **Model Context Protocol — servers, tools, when MCP > custom** |
-| **16** | **agent loops** | **1** | **stop_reason, tool_use, the request → tool → respond cycle** |
-| **17** | **git + GitHub** | **1** | **the three states, gh CLI, the AI-builder git workflow** |
+| **13** | **LLM APIs** | **3** | **messages, roles, response shape (Claude + OpenAI SDK), the model picker** |
+| **14** | **structured output** | **2** | **Pydantic schemas, JSON validation, the missing-field bug** |
+| **15** | **MCP** | **3** | **Model Context Protocol — servers, tools, when MCP > custom** |
+| **16** | **agent loops** | **5** | **stop_reason, tool_use, the request → tool → respond cycle** |
+| **17** | **git + GitHub** | **2** | **the three states, gh CLI, the AI-builder git workflow** |
 | **18** | **secrets** | **1** | **.env, os.getenv, .gitignore, leaked-key recovery** |
-| **19** | **prompting** | **1** | **the four-part prompt that actually works on Cursor + Claude Code** |
-| **20** | **agent traces** | **1** | **reading what the agent left behind — turns, tool calls, stop reasons** |
-| **21** | **evals** | **1** | **assertions on AI output, not vibes — pytest-style eval suites** |
-| **22** | **capstone** | **1** | **build a small CLI agent end-to-end (12-step walkthrough)** |
+| **19** | **prompting** | **4** | **structuring prompts that work for Cursor + Claude Code** |
+| **20** | **agent traces** | **2** | **reading what the agent left behind — turns, tool calls, stop reasons** |
+| **21** | **evals** | **3** | **assertions on AI output, not vibes — pytest-style eval suites** |
+| **22** | **context & retrieval** | **4** | **feeding the model real data — RAG, long-context, fine-tune (a practitioner's heuristic)** |
+| **23** | **production tradeoffs** | **3** | **cost, latency, quality — picking the right model per call** |
+| **24** | **debugging output** | **3** | **when the model returns confidently wrong stuff and you have to find it** |
+| **25** | **capstone** | **6** | **ship the system — one working tool that uses everything above** |
+| **26** | **agent harnesses** | **3** | **the layer between you and the raw API** |
+| **27** | **AI image generation** | **3** | **from prompt to production asset** |
+| **28** | **AI video generation** | **3** | **Sora, Veo, Higgsfield, and the second wave** |
+| **29** | **programmatic design** | **3** | **code-driven video and the new design pipeline** |
+| **30** | **harness engineering** | **5** | **the discipline behind the model — the moat the rest of the AI-education market doesn't teach** |
 
-Chapters 13–22 are the AI-first-builder wedge — the part of the course no other Python school is teaching in 2026. Each lesson has 9 steps (12 for the capstone) in the canonical sequence: `read → mc → read → predict → fill → fix → fix → write → checkpoint`.
+Chapters 13–30 are the AI-first-builder wedge — the part of the course no other Python school is teaching in 2026. Lessons average 8–10 typed steps in the canonical sequence: `read → mc → read → predict → fill → fix → fix → write → checkpoint` (lesson length varies by topic).
 
 ## Stack
 
@@ -162,7 +162,7 @@ For the book chapters: typo / unclear / dead link → PR. New chapter or structu
 
 The core invariants I'm protecting:
 
-- 28 chapters in the book, no more.
+- 17 chapters in the book (foundations only); 31 chapters in the web app.
 - Each book chapter: narrative lesson → lesson file → 5 exercises → 5 solutions → checkpoint.
 - Each web lesson: 8–10 typed steps, ~5–8 minutes, ending in a checkpoint.
 - Modern Python (3.12+), type hints, `pathlib`, `httpx`, f-strings.

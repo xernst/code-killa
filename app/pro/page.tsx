@@ -126,7 +126,7 @@ function Cell({ v }: { v: boolean | string }) {
 const FAQ_ITEMS = [
   {
     q: "is promptdojo free?",
-    a: "the web preview is free forever. three chapters, runs in your browser via pyodide, no signup. the full 26-chapter school ships in the native app at $9.99/mo, $59/yr, or $129 founders lifetime.",
+    a: "the web preview is free forever. three chapters, runs in your browser via pyodide, no signup. the full 31-chapter school ships in the native app at $9.99/mo, $59/yr, or $129 founders lifetime.",
   },
   {
     q: "do i need to sign up to use the free preview?",
