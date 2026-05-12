@@ -1,0 +1,90 @@
+xp: 8
+estSeconds: 240
+concept: skills-inventory-grouping
+prompt: |
+  Final drill for this lesson. Take the skills inventory from earlier
+  (what got eaten, what survived, what became the new advantage) and
+  turn it into one function.
+
+  Write `inventory(skills)` that takes a list of skill dicts. Each dict
+  has two fields:
+
+  - `name`: string (the skill)
+  - `category`: one of `"eaten_by_ai"`, `"survived_ai"`, `"new_advantage"`
+
+  Return a dict with three keys — `eaten`, `survived`, `advantage` —
+  each mapped to a list of the skill names in that category. Preserve
+  the input order: if "manual document review" appears before
+  "first-draft copywriting" in the input, it should appear before it in
+  the output list too.
+
+  Six skills run, two in each category. Expected output:
+
+  ```
+  {'eaten': ['manual document review', 'first-draft copywriting'], 'survived': ['client relationship management', 'creative direction'], 'advantage': ['verification expertise', 'operational design']}
+  ```
+starter: |
+  skills = [
+      {"name": "manual document review",      "category": "eaten_by_ai"},
+      {"name": "client relationship management", "category": "survived_ai"},
+      {"name": "first-draft copywriting",     "category": "eaten_by_ai"},
+      {"name": "verification expertise",      "category": "new_advantage"},
+      {"name": "creative direction",          "category": "survived_ai"},
+      {"name": "operational design",          "category": "new_advantage"},
+  ]
+
+  # define inventory(skills) below. it should return a dict with three
+  # lists, preserving input order within each list.
+
+
+
+  print(inventory(skills))
+grader:
+  kind: stdout-equality
+  expected: "{'eaten': ['manual document review', 'first-draft copywriting'], 'survived': ['client relationship management', 'creative direction'], 'advantage': ['verification expertise', 'operational design']}"
+  normalize: collapse-trailing-newline
+solution: |
+  skills = [
+      {"name": "manual document review",      "category": "eaten_by_ai"},
+      {"name": "client relationship management", "category": "survived_ai"},
+      {"name": "first-draft copywriting",     "category": "eaten_by_ai"},
+      {"name": "verification expertise",      "category": "new_advantage"},
+      {"name": "creative direction",          "category": "survived_ai"},
+      {"name": "operational design",          "category": "new_advantage"},
+  ]
+
+  def inventory(skills):
+      result = {"eaten": [], "survived": [], "advantage": []}
+      category_to_key = {
+          "eaten_by_ai": "eaten",
+          "survived_ai": "survived",
+          "new_advantage": "advantage",
+      }
+      for skill in skills:
+          key = category_to_key[skill["category"]]
+          result[key].append(skill["name"])
+      return result
+
+  print(inventory(skills))
+hint:
+  - level: 1
+    body: "Start with an empty result dict that already has the three keys (`eaten`, `survived`, `advantage`) mapped to empty lists. Loop through the input. For each skill, look at its `category` field, map it to the right output key, and append the `name` to that list. Because you iterate the input in order and `list.append` keeps order, input order is preserved automatically."
+  - level: 2
+    body: |
+      The category names in the input (`eaten_by_ai`, `survived_ai`, `new_advantage`) are different from the keys in the output (`eaten`, `survived`, `advantage`). You need a small mapping between the two. Either a dict like `{"eaten_by_ai": "eaten", ...}` (clean) or three `if/elif` branches (also fine for six skills).
+
+      Skeleton:
+
+      ```python
+      def inventory(skills):
+          result = {"eaten": [], "survived": [], "advantage": []}
+          mapping = {
+              "eaten_by_ai": "eaten",
+              "survived_ai": "survived",
+              "new_advantage": "advantage",
+          }
+          for skill in skills:
+              result[mapping[skill["category"]]].append(skill["name"])
+          return result
+      ```
+passThreshold: 0.66

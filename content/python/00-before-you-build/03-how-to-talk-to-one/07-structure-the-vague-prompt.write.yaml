@@ -1,0 +1,131 @@
+xp: 5
+estSeconds: 280
+concept: structure-a-vague-prompt
+prompt: |
+  Write `structure_prompt(vague, knobs)` that takes a vague task
+  request (string) and a dict of structuring knobs and returns a
+  structured multi-line prompt as a single string.
+
+  The `knobs` dict has these keys:
+  - `role`: string (the role the model should play)
+  - `context`: string (the background the model needs to do the task)
+  - `format`: string (the output shape)
+  - `examples`: string (one or more example outputs)
+
+  Return a string with exactly this template, joined by `\n`:
+
+  ```
+  Role: <role>
+  Task: <vague>
+  Context: <context>
+  Format: <format>
+  Examples: <examples>
+  ```
+
+  Notice: the vague request goes in the `Task:` slot verbatim. The
+  four knobs fill the other slots. We're not asking the model to be
+  clever — we're putting the brief into the shape the model can
+  actually read. Five knobs, five sections.
+
+  Two calls run. Expected output:
+  ```
+  --- email triage prompt ---
+  Role: customer service lead at a 30-person SaaS company
+  Task: summarize this email
+  Context: inbound queue averages 200 emails/day, most are status checks; refund requests get flagged to finance
+  Format: 3 bullet points, each under 15 words
+  Examples: 1. customer wants refund; 2. customer asking for status; 3. customer escalating
+
+  --- contract review prompt ---
+  Role: startup-side contracts paralegal
+  Task: review this services agreement
+  Context: 12-person startup signing with a Fortune 500 vendor; legal budget is thin and we need the top risks, not a full memo
+  Format: 5 bullets covering payment, termination, IP, liability, renewal
+  Examples: - Payment: Net-30, 2% late fee. - Termination: 30 days notice either side.
+  ```
+starter: |
+  # define structure_prompt(vague, knobs) below
+
+  email_prompt = structure_prompt(
+      "summarize this email",
+      {
+          "role": "customer service lead at a 30-person SaaS company",
+          "context": "inbound queue averages 200 emails/day, most are status checks; refund requests get flagged to finance",
+          "format": "3 bullet points, each under 15 words",
+          "examples": "1. customer wants refund; 2. customer asking for status; 3. customer escalating",
+      },
+  )
+
+  contract_prompt = structure_prompt(
+      "review this services agreement",
+      {
+          "role": "startup-side contracts paralegal",
+          "context": "12-person startup signing with a Fortune 500 vendor; legal budget is thin and we need the top risks, not a full memo",
+          "format": "5 bullets covering payment, termination, IP, liability, renewal",
+          "examples": "- Payment: Net-30, 2% late fee. - Termination: 30 days notice either side.",
+      },
+  )
+
+  print("--- email triage prompt ---")
+  print(email_prompt)
+  print()
+  print("--- contract review prompt ---")
+  print(contract_prompt)
+grader:
+  kind: stdout-equality
+  expected: |
+    --- email triage prompt ---
+    Role: customer service lead at a 30-person SaaS company
+    Task: summarize this email
+    Context: inbound queue averages 200 emails/day, most are status checks; refund requests get flagged to finance
+    Format: 3 bullet points, each under 15 words
+    Examples: 1. customer wants refund; 2. customer asking for status; 3. customer escalating
+
+    --- contract review prompt ---
+    Role: startup-side contracts paralegal
+    Task: review this services agreement
+    Context: 12-person startup signing with a Fortune 500 vendor; legal budget is thin and we need the top risks, not a full memo
+    Format: 5 bullets covering payment, termination, IP, liability, renewal
+    Examples: - Payment: Net-30, 2% late fee. - Termination: 30 days notice either side.
+  normalize: collapse-trailing-newline
+solution: |
+  def structure_prompt(vague, knobs):
+      lines = [
+          f"Role: {knobs['role']}",
+          f"Task: {vague}",
+          f"Context: {knobs['context']}",
+          f"Format: {knobs['format']}",
+          f"Examples: {knobs['examples']}",
+      ]
+      return "\n".join(lines)
+
+  email_prompt = structure_prompt(
+      "summarize this email",
+      {
+          "role": "customer service lead at a 30-person SaaS company",
+          "context": "inbound queue averages 200 emails/day, most are status checks; refund requests get flagged to finance",
+          "format": "3 bullet points, each under 15 words",
+          "examples": "1. customer wants refund; 2. customer asking for status; 3. customer escalating",
+      },
+  )
+
+  contract_prompt = structure_prompt(
+      "review this services agreement",
+      {
+          "role": "startup-side contracts paralegal",
+          "context": "12-person startup signing with a Fortune 500 vendor; legal budget is thin and we need the top risks, not a full memo",
+          "format": "5 bullets covering payment, termination, IP, liability, renewal",
+          "examples": "- Payment: Net-30, 2% late fee. - Termination: 30 days notice either side.",
+      },
+  )
+
+  print("--- email triage prompt ---")
+  print(email_prompt)
+  print()
+  print("--- contract review prompt ---")
+  print(contract_prompt)
+hint:
+  - level: 1
+    body: "Five lines, all f-strings. Read the keys out of the knobs dict for role, context, format, examples. Drop the vague request straight into the Task slot. Join with newlines and return one string."
+  - level: 2
+    body: "Build a list of five strings ['Role: ...', 'Task: ...', 'Context: ...', 'Format: ...', 'Examples: ...'] using f-strings, then return '\\n'.join(lines). The blank line between the two printed prompts comes from the `print()` call in the starter, not from your function."

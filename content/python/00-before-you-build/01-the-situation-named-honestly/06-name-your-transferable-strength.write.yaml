@@ -1,0 +1,61 @@
+xp: 5
+estSeconds: 240
+concept: first-line-of-code
+prompt: |
+  Your first line of Python. Literally one line.
+
+  The point of this step is NOT learning Python. The point is that the
+  first code you write in this course is a sentence about your own
+  value — not a "hello world," not a math exercise.
+
+  The starter sets three variables (`role`, `years`, `top_skill`).
+  Your job is to write ONE line below them: a `print()` call using an
+  f-string that produces the exact sentence below.
+
+  Expected output (with the starter values):
+  ```
+  After 11 years as a paralegal, my edge is verification -- that's now the bottleneck of every AI feature shipping.
+  ```
+
+  Then — and this is the part that matters — change the three values
+  in the starter to match YOUR old job. The grader runs against the
+  template values, so the one line you write has to work with those.
+  But before you hit run, change the inputs to yours and read what
+  comes back. That sentence is the first thing you'll have produced
+  in this course. Make it true.
+starter: |
+  role = "paralegal"
+  years = 11
+  top_skill = "verification"
+
+  # write one line below using print() and an f-string to produce the expected output
+
+grader:
+  kind: stdout-equality
+  expected: "After 11 years as a paralegal, my edge is verification -- that's now the bottleneck of every AI feature shipping."
+  normalize: collapse-trailing-newline
+solution: |
+  role = "paralegal"
+  years = 11
+  top_skill = "verification"
+
+  print(f"After {years} years as a {role}, my edge is {top_skill} -- that's now the bottleneck of every AI feature shipping.")
+hint:
+  - level: 1
+    body: |
+      An f-string is the Python feature for plugging values into a sentence template. It looks like this:
+
+      `f"Hello, {name}!"`
+
+      The `f` in front of the quote turns it into a format-string. Anything in `{curly_braces}` gets replaced with the value of that variable when the string is built.
+
+      Wrap that f-string in `print(...)` and you have your one line. You need `{years}`, `{role}`, and `{top_skill}` in the right spots, with the rest of the sentence as plain text. The dash is two hyphens (`--`), not an em-dash.
+  - level: 2
+    body: |
+      Here is the one line:
+
+      ```python
+      print(f"After {years} years as a {role}, my edge is {top_skill} -- that's now the bottleneck of every AI feature shipping.")
+      ```
+
+      Two things to notice. One: the f-string puts `{years}` first, then `{role}`, then `{top_skill}` — the order of the variables in the sentence is independent of how they were defined above. Two: the dash is `--` (two hyphens), not `—` (em-dash) — hyphens are universal across keyboards, em-dashes are not.

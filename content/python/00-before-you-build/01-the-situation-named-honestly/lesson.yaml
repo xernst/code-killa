@@ -1,0 +1,12 @@
+slug: the-situation-named-honestly
+title: "The situation, named honestly"
+estMinutes: 16
+prerequisites: []
+order:
+  - 01-the-math-changed.read.md
+  - 02-what-got-cut-vs-what-survived.read.md
+  - 03-which-skill-transfers.mc.yaml
+  - 04-the-bridge.read.md
+  - 05-which-of-these-is-the-real-bridge.mc.yaml
+  - 06-name-your-transferable-strength.write.yaml
+  - 07-checkpoint.checkpoint.yaml

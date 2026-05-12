@@ -1,0 +1,34 @@
+xp: 2
+estSeconds: 70
+concept: route-by-existing-skills
+code: |
+  # four learner profiles, all entering the course in week one
+  learners = [
+      {"name": "Maya",  "background": "displaced SWE (8 yrs Python)",        "weekly_hours": 15},
+      {"name": "Devon", "background": "displaced copywriter (12 yrs agency)", "weekly_hours": 10},
+      {"name": "Priya", "background": "displaced CS team lead (managed 12)",  "weekly_hours": 12},
+      {"name": "Jules", "background": "displaced designer (Figma + prompts)", "weekly_hours": 10},
+  ]
+  for l in learners:
+      print(f"- {l['name']:6} | {l['background']:45} | {l['weekly_hours']} hrs/wk")
+prompt: |
+  Maya is one of the four learners above — a displaced senior Python
+  engineer with 8 years of experience. She just started the course.
+  Which chapter ordering makes the most sense for HER specifically?
+options:
+  - id: skip_basics
+    label: "Skip ch01-03 (variables, functions, lists/dicts) and start at ch04. She already knows Python; respect her existing skills and route her toward LLM APIs and evals."
+  - id: straight_through
+    label: "Start at ch01 and read every chapter in order. The curriculum is the curriculum; treat all learners identically."
+    explain: "This is the wrong call for an experienced engineer. Re-reading 'what is a variable' for two weeks is how you lose someone who can already code. Course completion drops hardest for advanced learners forced through beginner material — they assume the whole course is beneath them and quit before reaching the part that's actually new."
+  - id: skip_python_entirely
+    label: "Skip Python entirely. She can just use LLMs to write all her code from now on."
+    explain: "This is wrong for every learner, including this one. You cannot build agents you can't read. When the model ships her 200 lines that almost work, she has to know which 12 are wrong. 'I'll just vibe-code it' is the path that gets you stuck the first time the model is confidently wrong, which is on day three."
+  - id: start_at_capstone
+    label: "Skip everything except ch25 (capstone) and ch30 (harness engineering). She's an engineer — she can figure out the middle on her own."
+    explain: "An experienced engineer can skip syntax, not the substance. The middle chapters (prompting, evals, retrieval, traces) are the part she has never done. Skipping them is how you produce someone who can spin up an LLM call and has no idea why it's hallucinating."
+answerIds:
+  - skip_basics
+hint:
+  - level: 1
+    body: "Different learners have different bottlenecks. The bottleneck for an experienced engineer is NOT 'what is a variable' — it's 'what does an eval actually look like.' Respect what they already know. But don't strip the course down to almost nothing either — the middle chapters are where the new skills live."

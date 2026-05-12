@@ -1,0 +1,9 @@
+number: 0
+slug: before-you-build
+title: "before you build — what an llm is and where you fit"
+blurb: "if you're here because ai took your job, this chapter is the one. names the situation honestly, installs the mental model the rest of the course assumes, and gets you typing your first line of code without pretending the last six months didn't happen."
+lessons:
+  - 01-the-situation-named-honestly
+  - 02-what-an-llm-actually-is
+  - 03-how-to-talk-to-one
+  - 04-where-this-course-goes

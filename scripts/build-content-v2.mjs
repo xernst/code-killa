@@ -215,7 +215,7 @@ const LessonYaml = z.object({
 });
 
 const ChapterYaml = z.object({
-  number: z.number().int().positive(),
+  number: z.number().int().nonnegative(),
   slug: z.string(),
   title: z.string(),
   blurb: z.string().default(""),

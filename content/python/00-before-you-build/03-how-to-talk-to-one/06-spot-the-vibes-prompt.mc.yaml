@@ -1,0 +1,53 @@
+xp: 2
+estSeconds: 70
+concept: spot-the-hallucination-risk
+code: |
+  # four prompts. one of them is most likely to produce a hallucination
+  # or inconsistent output. find it.
+  prompts = {
+      "A": (
+          "You are a paralegal. Summarize the attached deposition transcript "
+          "in 3 bullets under 25 words each. Example bullet: "
+          "- Witness confirmed shifts averaged 11.5 hours."
+      ),
+      "B": (
+          "You are a customer-service lead. Classify the following email as "
+          "LEGAL, REFUND, or GENERAL. LEGAL = threatens litigation or cites "
+          "a regulator. REFUND = asks for money back. GENERAL = everything "
+          "else. Return only the queue name."
+      ),
+      "C": (
+          "tell me everything important about ai safety and what i should "
+          "do about it for my company"
+      ),
+      "D": (
+          "You are a financial analyst. Given the attached Q3 earnings PDF, "
+          "extract revenue, gross margin, and operating income. Return JSON: "
+          "{\"revenue\": <number>, \"gross_margin_pct\": <number>, "
+          "\"operating_income\": <number>}. If a field is missing, return null."
+      ),
+  }
+  for k, v in prompts.items():
+      print(f"{k}: {v[:90]}{'...' if len(v) > 90 else ''}")
+prompt: |
+  Four prompts. Three have most of the 5 knobs filled. One is pure
+  vibes — no role, no real task scope, no context, no format, no
+  examples. Which one is most likely to produce hallucinated or
+  wildly inconsistent output?
+options:
+  - id: a
+    label: "A — paralegal, 3 bullets under 25 words, example included"
+    explain: "Role, task, format, and an example. Very on-shape — about as low-hallucination-risk as a summarization task gets."
+  - id: b
+    label: "B — CS lead, 3-queue classifier with explicit definitions"
+    explain: "Role, task, context (queue definitions), format (queue name only). This is a textbook classifier prompt. Low variance, low hallucination risk."
+  - id: c
+    label: "C — 'tell me everything important about AI safety...'"
+  - id: d
+    label: "D — financial analyst, extract three fields, JSON output, null-on-missing"
+    explain: "Role, task, format (explicit JSON shape), and an edge-case rule. The model has nothing to invent — every field is named. This is the OPPOSITE of a hallucination-prone prompt."
+answerIds:
+  - c
+hint:
+  - level: 1
+    body: "Walk the five knobs (role, task, context, format, examples) and count how many each prompt fills. The vibes-based one has zero. It also has no scope ('everything important') and no format ('what should I do'), which forces the model to invent both the boundaries and the shape of the answer."

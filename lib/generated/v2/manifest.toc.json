@@ -1,7 +1,17 @@
 {
   "version": "0.1.0",
-  "generatedAt": "2026-05-11T23:21:38.371Z",
+  "generatedAt": "2026-05-12T00:19:35.499Z",
   "chapters": [
+    {
+      "number": 0,
+      "slug": "before-you-build",
+      "title": "before you build — what an llm is and where you fit",
+      "blurb": "if you're here because ai took your job, this chapter is the one. names the situation honestly, installs the mental model the rest of the course assumes, and gets you typing your first line of code without pretending the last six months didn't happen.",
+      "lessonCount": 4,
+      "stepCount": 32,
+      "estMinutes": 74,
+      "xpTotal": 84
+    },
     {
       "number": 1,
       "slug": "variables",

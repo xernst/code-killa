@@ -1,0 +1,49 @@
+xp: 2
+estSeconds: 70
+concept: pick-the-five-knob-prompt
+code: |
+  # four versions of the same task: summarize a 14-page services contract
+  # for a non-lawyer founder who has to decide whether to sign.
+  prompts = {
+      "A": "summarize this contract",
+      "B": (
+          "Summarize the attached services contract in clear language for a "
+          "non-lawyer founder. Be very thorough and don't miss anything "
+          "important. Make sure to cover everything that matters and "
+          "explain it well. Use good judgment about what to include."
+      ),
+      "C": (
+          "Summarize the contract. Return 5 bullets under 20 words each."
+      ),
+      "D": (
+          "You are a startup-side contracts paralegal. Summarize the "
+          "attached 14-page services agreement for a non-lawyer founder "
+          "deciding whether to sign. The founder cares about: payment "
+          "terms, termination clauses, IP ownership, and liability caps. "
+          "Return exactly 5 bullets, each under 20 words, in the format: "
+          "- <topic>: <plain-language summary>. Example: "
+          "- Payment terms: Net-30, 2% late fee monthly, no early-pay discount."
+      ),
+  }
+  for k, v in prompts.items():
+      print(f"{k}: {v[:80]}{'...' if len(v) > 80 else ''}")
+prompt: |
+  Four prompts for the same task. Per the 5-knob discipline (role,
+  task, context, format, examples), which version is most likely to
+  produce useful, consistent output on the first try?
+options:
+  - id: a
+    label: "A — 'summarize this contract'"
+    explain: "Task only. No role, no context, no format, no examples. You'll get a generic 6-paragraph summary that buries the things the founder actually needs to decide on."
+  - id: b
+    label: "B — verbose, hedged, no specifics"
+    explain: "Verbose is not the same as structured. This prompt has lots of words ('be thorough,' 'use good judgment') but zero knobs filled — no role, no real context, no format, no examples. The model will produce more text, not better text."
+  - id: c
+    label: "C — task plus format only"
+  - id: d
+    label: "D — role, task, context (what the founder cares about), format (5 bullets under 20 words), example"
+answerIds:
+  - d
+hint:
+  - level: 1
+    body: "Count the knobs filled in each prompt. The winner has all five: role, task, context, format, examples. C has only two (task + format) — clear but incomplete loses to clear and complete."

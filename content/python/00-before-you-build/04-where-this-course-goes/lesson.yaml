@@ -1,0 +1,14 @@
+slug: where-this-course-goes
+title: "Where this course goes (and where you fit)"
+estMinutes: 18
+prerequisites:
+  - how-to-talk-to-one
+order:
+  - 01-the-course-in-five-levels.read.md
+  - 02-the-new-scarce-profile.read.md
+  - 03-pick-your-path.mc.yaml
+  - 04-what-week-four-looks-like.read.md
+  - 05-the-limits-what-not-to-trust.read.md
+  - 06-would-you-ship-this.mc.yaml
+  - 07-write-your-30-day-plan.write.yaml
+  - 08-checkpoint.checkpoint.yaml

@@ -1,0 +1,27 @@
+xp: 2
+estSeconds: 60
+concept: real-bridge-vs-distractors
+prompt: |
+  Four statements about "becoming a builder with AI." Three of them are
+  the kind of toxic-positivity or wrong-framing slogans that show up on
+  LinkedIn every week. One of them accurately describes the move from
+  user to builder.
+
+  Pick the accurate one.
+options:
+  - id: prompt_to_code
+    label: "The move is from typing prompts into a chat window for a human to read, to writing prompts as code that runs against many inputs without you present."
+  - id: anyone_can_code
+    label: "Anyone can code now — AI makes it easy, and you don't really need to understand the syntax."
+    explain: "Hallucinated by people selling courses. The model writes code, but you have to read it, know when it's wrong, fix it when it breaks, and design the system around it. 'You don't need to understand' is the same lie that got the 2024 no-code crowd stranded. You need to understand enough to verify. That's the whole job."
+  - id: forgive_ai
+    label: "Builders are the people who got excited about AI early and made peace with what it means for jobs."
+    explain: "Emotional posture is not a skill. Plenty of people who 'got excited about AI early' built nothing. The transition is about typing different keys on the keyboard, not about adjusting your feelings. The course doesn't require you to forgive AI; it requires you to out-skill people who think excitement is the qualifier."
+  - id: senior_engineers
+    label: "Becoming a builder means becoming a senior software engineer first, then learning prompts as a specialty."
+    explain: "This is the engineer-centric framing the rest of the industry assumes, and it's why so many displaced workers wash out of generic CS bootcamps. You don't start by spending two years on data structures and algorithms. You start by writing prompts as code, and you learn the engineering scaffolding around them in the order the work actually requires."
+answerIds:
+  - prompt_to_code
+hint:
+  - level: 1
+    body: "The bridge is mechanical, not emotional. It's a change in what you do with the keyboard: stop typing prompts for a human to read, start writing prompts in code that runs against thousands of inputs without you. Everything else is decoration."

@@ -1,0 +1,825 @@
+{
+  "number": 0,
+  "slug": "before-you-build",
+  "title": "before you build — what an llm is and where you fit",
+  "blurb": "if you're here because ai took your job, this chapter is the one. names the situation honestly, installs the mental model the rest of the course assumes, and gets you typing your first line of code without pretending the last six months didn't happen.",
+  "overview": "## You didn't get replaced because you weren't good\n\nYou got replaced because the math changed. A model that costs a fraction\nof a cent per call now does the parts of your job that scale — reading,\nsummarizing, classifying, drafting, routing. The parts that don't scale —\ntaste, judgment, verification, accountability, owning the relationship —\ngot cheaper too, because the model offloaded the bulk and made the\nremaining work look small.\n\nIf you're here because you got cut, you're not behind. You're early. Most\nof the workers who'll be cut in the next 18 months haven't been cut yet.\nThis chapter is for you.\n\n## What this chapter is, and what it isn't\n\nThis is not a \"gentle intro to coding.\" It's not a TED talk about how\nexciting AI is. It's not a pep rally. The course this chapter introduces\nruns 30 chapters and ends with you engineering production agent\nharnesses. Ch00 is what makes ch01 possible: identity repair, mental\nmodel installation, and the honest naming of where this is all going.\n\nYou'll learn:\n\n- **What an LLM actually is** — not a search engine, not a brain, not a\n  database. A next-token probability function over text, with frozen\n  weights and no memory between sessions. Every later chapter assumes\n  you know this. Most people don't.\n- **How to talk to one** — prompting is briefing. If you've ever\n  written a creative brief, a customer-service script, a contract\n  clause, or an SOP, you've already done 80% of this. Ch03 names the\n  other 20%.\n- **Where this course goes** — and which path through it fits your\n  background. The displaced engineer skips different chapters than\n  the displaced copywriter. We'll map both.\n\n## What AI specifically gets wrong about teaching this\n\n- **Treats ch00 as a softer ch01.** Engineers instinctively frontload\n  syntax. For displaced mid-career adults, syntax-first is\n  catastrophic — it confirms the fear (\"I'm too old / too dumb\") in\n  five minutes. Ch00 ends with code, but doesn't open with it.\n- **Calls you \"non-technical.\"** You wrote brand voice for a national\n  ad agency. You ran a 12-person support team. You did doc review for\n  a top-50 law firm. You are not non-technical. You are differently\n  technical, and your existing skills are exactly the scarce ones.\n- **Sells a hallucination as the fix.** \"Anyone can code now! AI makes\n  it easy!\" casually celebrates the mechanism that ended your career\n  and assumes your pain point was difficulty rather than displacement.\n  We're going to do this honestly or not at all.\n\n## What you'll be able to do at the end\n\nBy the end of ch00 you'll have:\n\n- Said out loud, in writing, what skills from your old work transfer\n  into this one. (Spoiler: more than you think.)\n- A correct enough mental model of what an LLM is that ch01-30 stops\n  feeling like magic.\n- Written your first prompt with the structure professional prompt\n  engineers use, and seen why structure beats vibes.\n- A 30-day plan for which chapters to read in what order, calibrated\n  to where you came from.\n\nAfter this chapter, you stop being \"someone who lost their job to AI\"\nand become \"someone who builds with it.\" The grief is real and the\ncourse will not pretend otherwise. But the leverage is also real, and\nthat's what we're here for.\n",
+  "lessons": [
+    {
+      "slug": "the-situation-named-honestly",
+      "title": "The situation, named honestly",
+      "estMinutes": 16,
+      "prerequisites": [],
+      "steps": [
+        {
+          "type": "read",
+          "id": "before-you-build/the-situation-named-honestly/s01-01-the-math-changed",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "warmup",
+          "estSeconds": 240,
+          "concept": "the-math-changed",
+          "body": "# You didn't get replaced because you weren't good\n\nYou got replaced because the math changed.\n\nA junior copywriter cost $58,000 a year plus benefits, took two weeks to\nonboard, and produced a draft in three hours. A model that costs a\nfraction of a cent per call now produces that same draft in eleven\nseconds, doesn't need PTO, and ships at 3am. The math changed. Not your\ntalent. The math.\n\n> You didn't get replaced because you weren't good. You got replaced\n> because the math changed.\n\nThis is lesson one of chapter zero of a thirty-chapter course on\nbuilding with AI. It's an identity-repair lesson before it's anything\nelse. We will not skip this part. The mid-career adults who don't read\nthis lesson are the ones who quit ch01 in seven days, because they\nwalked into the syntax believing the layoff was their fault and the\nsyntax confirmed it.\n\nThe layoff was not your fault. Let's name what actually happened.\n\n## Five fields, real numbers\n\nBetween 2024 and 2026, the categories that got cut hardest were the\nexact ones where AI was best:\n\n- **Software engineers.** Big-tech headcount peaked in mid-2022 and\n  has fallen every quarter since. The juniors went first — entry-level\n  SWE hiring at FAANG companies dropped 67% from 2022 to 2026. Copilot\n  and Claude Code didn't replace senior engineers. They replaced the\n  pipeline that became senior engineers.\n- **Copywriters and content marketers.** Agencies that ran 40-person\n  copy floors in 2022 now run 6-person ones. The work didn't shrink —\n  the agencies still ship the same volume — but four people with\n  Claude produce what forty people used to.\n- **Customer service reps.** Tier-1 support — the people who read\n  scripts and routed tickets — got hit first and hardest. Klarna cut\n  700 CS roles to one AI agent in 2024 and posted the cost savings in\n  their earnings call. Every CS-heavy SaaS company followed.\n- **Graphic designers and junior creatives.** Stock-asset designers,\n  social-media designers, junior product designers. Midjourney and\n  Figma's AI tools made the \"I need 200 banner variants by Friday\"\n  workflow a 90-second job.\n- **Paralegals and junior analysts.** Doc review, contract\n  summarization, citation checking, first-pass research memos.\n  Anything that was \"read this 400-page document and tell me what's\n  in it\" is now $0.40 worth of model inference.\n\nFive fields. Different headlines, same underlying mechanic. The model\ngot faster at the parts of those jobs that were structured, repetitive,\nand high-volume. The math changed.\n\n## What \"the math changed\" actually means\n\nIt does not mean you were doing the wrong work. It does not mean your\nfield was fake. It does not mean the years you spent getting good were\nwasted. It means a tool got built that is cheaper than you at the parts\nof your job that scale.\n\nThis is not the first time this has happened. The same math change\nhappened to typesetters in the 1980s, to travel agents in the late\n1990s, to film photographers in 2005, to taxi dispatchers in 2012, to\nmall retail in 2018. In every case, the people who landed best were\nthe ones who:\n\n1. **Named the math change quickly.** Spent zero time arguing that\n   it shouldn't have happened.\n2. **Inventoried what survived.** The parts of the job the new tool\n   couldn't do — and aimed for those.\n3. **Got fluent in the new tool fast.** Not as users. As builders or\n   operators.\n\nThat third step is what this course is for. The first two are what\nthis lesson is for.\n\n## \"You're not behind. You're early.\"\n\nIf you're reading this lesson because you got cut in 2025 or 2026,\nhere's the honest read of where you are.\n\n> If you're here because you got cut, you're not behind. You're early.\n\nMost of the workers who will be cut in the next eighteen months haven't\nbeen cut yet. The middle-manager layer in big-co tech has barely\nstarted. Mid-tier law firm associates haven't started. Insurance\nunderwriters haven't started. Pharma medical writers haven't started.\nA second wave is coming, and the people who got cut in the first wave\nare the ones who get the eighteen-month head start on what comes next.\n\nYou're not late to AI. You're early to \"people who used to do X for a\nliving, and now build the tools that do X.\"\n\n## What this chapter does, plainly\n\nChapter 00 has four lessons. This one is identity repair. The next\nthree are mental-model installation:\n\n- Lesson 02 explains what an LLM actually is, so the rest of the\n  course stops being magic.\n- Lesson 03 explains why your old job already taught you 80% of how\n  to talk to one.\n- Lesson 04 maps where this course goes and which path through it\n  matches where you came from.\n\nBy the end of this lesson — in about sixteen minutes — you will have\ntyped your first line of Python. It will be one line. The point is\nnot the Python. The point is the moment you go from \"person who got\ncut\" to \"person who started building.\" That moment is small on\npurpose. We don't need it to be dramatic. We just need it to happen\nonce, so the rest of the course has somewhere to start.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "read",
+          "id": "before-you-build/the-situation-named-honestly/s02-02-what-got-cut-vs-what-survived",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 240,
+          "concept": "skills-inventory",
+          "body": "# What got cut vs. what survived\n\nSame job, two columns. Most of the displacement panic comes from\nlooking at the first column and forgetting the second one exists.\n\n## What got eaten\n\nThe parts of your old job that the model is now faster at:\n\n- **Reading.** Skimming a 60-page document for the three relevant\n  clauses. Triaging an inbox. Reviewing 200 resumes.\n- **Classifying.** Sorting tickets by category, sorting leads by\n  segment, sorting documents by type. Anything where the answer is one\n  of N labels.\n- **Summarizing.** Turning a long thing into a short thing while\n  preserving the load-bearing parts.\n- **Drafting.** First pass on copy, contracts, emails, decks,\n  reports, code, designs. The \"give me something to react to\" step.\n- **Routing.** Deciding which person, queue, or process a piece of\n  work goes to next.\n\nEvery category of layoff in lesson 01 maps to this list. Copywriter:\ndrafting. Customer service: classifying and routing. Paralegal:\nreading and summarizing. Junior designer: drafting (in pixels). Junior\nengineer: drafting (in code).\n\nNotice what's not on the list.\n\n## What survived\n\nThe parts of your old job the model still can't do, or can't be\ntrusted to do alone:\n\n- **Taste.** Knowing when the output is actually good. Knowing when\n  something looks fine but is wrong. Knowing what to ship and what to\n  throw away.\n- **Judgment.** Knowing which of three plausible options is the\n  right one given the context the model can't see. The exception case\n  the rules don't cover.\n- **Verification.** Catching when the model confidently states\n  something false. Spotting the missed citation, the hallucinated\n  case, the off-brand sentence, the wrong color.\n- **Owning the relationship.** The customer, the client, the team,\n  the regulator. The accountability that has to sit with a human\n  because a model can't be held responsible.\n- **Deciding what to ship.** Picking which of the model's ten drafts\n  goes out. Cutting the project. Saying no. Pushing back on the\n  brief.\n\nThese are not soft skills. They are the bottleneck of every AI feature\nshipping today. The reason \"AI projects\" fail at 80% rates inside big\ncompanies is not the model. It's the absence of someone with the taste\nto tell when the model's output is wrong, and the judgment to redirect\nit without restarting the whole project.\n\n> Your taste is the unfair advantage. Most builders can't tell when\n> output is ugly. You can.\n\nThat sentence is a designer talking, but it generalizes. Most builders\ncan't tell when copy is on-brand or off. Can't tell when a contract\nclause is dangerous. Can't tell when a support response is going to\nget the company sued. The model produces. You verify. The verifier is\nthe bottleneck now.\n\n## The transfer, by field\n\nFive fields, five transitions. Read the one that's yours.\n\n**Copywriter → prompt engineer.** You already write briefs. A brief\nis a prompt with a budget attached. The skill of \"tell the creative\nteam what tone, what audience, what constraints, what success looks\nlike\" is the same skill as prompting a model. You've been doing it\nfor a decade. You just called it briefing.\n\n**Customer service rep → eval designer.** You wrote SOPs that an\neight-person team could follow. You knew which edge cases to call out\nin training. You knew which agent could handle the tricky calls.\nThat's eval design — figuring out what a system has to handle, what\nit has to escalate, and how you measure whether it actually works.\nEval design is the highest-paid prompt-engineering skill in 2026.\n\n**Graphic designer → AI-product PM.** Your taste is the asset. PMs\nwho can't tell good design from bad ship bad design. You spent ten\nyears tuning your eye. AI-product teams are starving for people who\ncan sit in a design review and say \"this is great, this is wrong, do\nit again, change this one thing.\" That role pays more than the design\nrole you lost.\n\n**Paralegal / junior analyst → eval and verification lead.**\nVerification is the bottleneck of every AI feature shipping. Your\nentire career was verification. Did this citation actually say that?\nDoes this contract clause actually do what counsel claims? Is this\nfiling actually complete? You can already do this faster than 95% of\nengineers. The new job is doing it across LLM outputs at scale.\n\n**Software engineer → harness engineer.** Your systems thinking\ncompounds in the AI era. The teams winning in 2026 are not \"prompt\nengineers.\" They're engineers who understand how to build the\nscaffolding around models — eval pipelines, retrieval systems, tool\nuse, observability, retries. Your old SWE skills don't get cheaper;\nthey get more leveraged.\n\n## What this means about your years\n\n> You spent 19 years turning messy human problems into repeatable\n> processes. That is the entire skill. The Python is 10%.\n\nRead that twice.\n\nEvery field on the list above runs on the same underlying skill:\ntaking a messy real-world problem and turning it into something\nstructured enough that a process can run against it. Copywriters do\nit with briefs. CS reps do it with SOPs. Paralegals do it with\nchecklists. Designers do it with systems and components. Engineers do\nit with code.\n\nThat underlying skill — \"make the messy thing structured\" — is the\nentire job of building with AI. The Python you'll learn in this\ncourse is the syntax. The skill you already have is the substance.\nThe thirty chapters that follow are mostly about teaching you to wrap\nyour existing skill in code so it can run without you.\n\nYou don't need to become someone new. You need to wrap what you\nalready are in a tool stack you don't yet know. That's a four-month\nproblem, not a four-year one.\n\nThe next page is a single question. Pick the skill that transfers.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "mc",
+          "id": "before-you-build/the-situation-named-honestly/s03-03-which-skill-transfers",
+          "xp": 2,
+          "hint": [
+            {
+              "level": 1,
+              "body": "A prompt is a brief with the model as the freelancer. Same four sections: context, audience, constraints, what success looks like. If you've written a good creative brief, you've already written a good prompt — you just didn't call it that.",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 60,
+          "concept": "which-skill-transfers",
+          "prompt": "Four skills from four different old jobs. Which one transfers MOST\ndirectly to prompt engineering — i.e., to telling an AI model exactly\nwhat you want and getting useful output back the first time?\n",
+          "options": [
+            {
+              "id": "brief",
+              "label": "Writing a creative brief that a freelancer can execute against without three rounds of back-and-forth"
+            },
+            {
+              "id": "typing",
+              "label": "Typing 90 words per minute with high accuracy",
+              "explain": "Fast typing is irrelevant. Prompts are not measured in characters per second. They're measured in whether the model produces useful output. The bottleneck is the thinking that goes into the prompt, not the speed of typing it."
+            },
+            {
+              "id": "memorize",
+              "label": "Memorizing the full Stripe or AWS API documentation",
+              "explain": "Memorization is what the model is best at. The model has already memorized every API doc that existed before its training cutoff. Building skill on top of a model is about telling it what to do, not knowing what it already knows."
+            },
+            {
+              "id": "meetings",
+              "label": "Running a 20-person meeting and keeping everyone aligned",
+              "explain": "Meeting facilitation is a real skill, but it's a synchronous-human skill. Prompting is an asynchronous-to-machine skill. Closer transfer than typing, but the brief is still the more direct match — same structure (context, audience, constraints, success criteria), same output (a deliverable produced against the spec)."
+            }
+          ],
+          "answerIds": [
+            "brief"
+          ],
+          "shuffle": false,
+          "runnable": true
+        },
+        {
+          "type": "read",
+          "id": "before-you-build/the-situation-named-honestly/s04-04-the-bridge",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 220,
+          "concept": "user-to-builder-bridge",
+          "body": "# You've already done step 1. Here's step 2.\n\nIf you've ever:\n\n- Typed a prompt into ChatGPT and read the answer.\n- Asked Claude to rewrite an email.\n- Made an image in Midjourney or DALL-E.\n- Watched a coworker do the above and copied them the next day.\n\n…then you've already done step 1 of building with AI. You are a user.\nHundreds of millions of people made it to this point in the last\neighteen months. Almost none of them made it to step 2.\n\n## Step 2 is the move from user to builder\n\nThe difference, said plainly:\n\n- **A user** types a prompt into a chat window and reads the output\n  on screen. Every prompt is one-off. Every output is consumed by a\n  human in real time. Nothing scales. Nothing runs without the user\n  present.\n- **A builder** writes the prompt as code. The code runs without the\n  builder being there. The output goes to a database, an API, a file,\n  a customer, another model. The same prompt runs 10,000 times against\n  10,000 inputs. The builder isn't typing; the builder is shipping a\n  system that types.\n\nThat's the entire transition this course is about. From person who\nuses a model to person who builds with one.\n\nThe reason this matters is leverage. A user's time scales linearly —\none prompt, one output, one task done. A builder's time scales like\nsoftware — write the prompt once, run it a million times. That gap is\nwhy the people who make this transition get paid like engineers, and\nthe people who don't get paid like users.\n\n## What's actually new to learn\n\n> You already know how to write a brief. That's 80% of prompting.\n> We're going to teach you the other 20%, and then we're going to\n> teach you to build the thing the brief describes — yourself,\n> without an agency, without a dev team, without permission.\n\nThe other 20% is structure. Specifically:\n\n- How to write a prompt that a model can act on consistently across\n  thousands of runs, not just once.\n- How to know when the output is wrong — i.e., how to evaluate the\n  model's work without reading every single response.\n- How to wire the prompt into code that pulls inputs from somewhere\n  real and sends outputs somewhere useful.\n- How to run that code so it keeps running without you babysitting\n  it.\n\nThat's chapters 01-12 of this course in one paragraph. After that, the\nremaining chapters teach you the engineering scaffolding around the\nprompt — retrieval, tool use, agents, harnesses, evals at scale,\nobservability. By chapter 30 you're shipping production systems. But\nthe bridge — the step from user to builder — happens in this chapter.\nToday. In about ten more minutes.\n\n## The honest part\n\nThis course is not going to get you your old job back.\n\nThe job you lost was eliminated because it was structured enough for\nthe model to do it cheaper. Becoming a more talented copywriter,\ndesigner, paralegal, or junior engineer doesn't unwind that. The math\nhasn't reversed and it isn't going to. The economic incentive to\nreplace pipelines of human labor with model calls is permanent.\n\nWhat this course will do is get you the next job. The one that didn't\nexist three years ago. The one that pays more than the one you lost,\nbecause there are 4 million displaced workers and 200,000 people who\ncan actually build with these tools. That ratio is the opportunity.\nIt will not stay 20-to-1 forever, but right now it is, and the people\nwho learn this in 2026 are the ones who will be hired by the people\nwho learn it in 2027.\n\nYou don't need to forgive AI. You don't need to be excited about it.\nYou don't need to write a Medium post about your \"AI journey.\" None\nof those things help.\n\n> You don't have to forgive AI to use it. You just have to out-skill\n> the people who only know how to consume it.\n\nThat's the bargain this course offers. You don't have to be happy\nabout how you got here. You just have to be willing to learn the\nthing that the people who replaced you don't actually know how to do\neither. Most of the engineers shipping AI features today are bad at\nprompts, bad at evals, and bad at thinking about end-users — because\nthey were never users in the first place. You were. That's your\nopening.\n\nThe next page is one question, then you'll write your first line of\ncode. Let's go.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "mc",
+          "id": "before-you-build/the-situation-named-honestly/s05-05-which-of-these-is-the-real-bridge",
+          "xp": 2,
+          "hint": [
+            {
+              "level": 1,
+              "body": "The bridge is mechanical, not emotional. It's a change in what you do with the keyboard: stop typing prompts for a human to read, start writing prompts in code that runs against thousands of inputs without you. Everything else is decoration.",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 60,
+          "concept": "real-bridge-vs-distractors",
+          "prompt": "Four statements about \"becoming a builder with AI.\" Three of them are\nthe kind of toxic-positivity or wrong-framing slogans that show up on\nLinkedIn every week. One of them accurately describes the move from\nuser to builder.\n\nPick the accurate one.\n",
+          "options": [
+            {
+              "id": "prompt_to_code",
+              "label": "The move is from typing prompts into a chat window for a human to read, to writing prompts as code that runs against many inputs without you present."
+            },
+            {
+              "id": "anyone_can_code",
+              "label": "Anyone can code now — AI makes it easy, and you don't really need to understand the syntax.",
+              "explain": "Hallucinated by people selling courses. The model writes code, but you have to read it, know when it's wrong, fix it when it breaks, and design the system around it. 'You don't need to understand' is the same lie that got the 2024 no-code crowd stranded. You need to understand enough to verify. That's the whole job."
+            },
+            {
+              "id": "forgive_ai",
+              "label": "Builders are the people who got excited about AI early and made peace with what it means for jobs.",
+              "explain": "Emotional posture is not a skill. Plenty of people who 'got excited about AI early' built nothing. The transition is about typing different keys on the keyboard, not about adjusting your feelings. The course doesn't require you to forgive AI; it requires you to out-skill people who think excitement is the qualifier."
+            },
+            {
+              "id": "senior_engineers",
+              "label": "Becoming a builder means becoming a senior software engineer first, then learning prompts as a specialty.",
+              "explain": "This is the engineer-centric framing the rest of the industry assumes, and it's why so many displaced workers wash out of generic CS bootcamps. You don't start by spending two years on data structures and algorithms. You start by writing prompts as code, and you learn the engineering scaffolding around them in the order the work actually requires."
+            }
+          ],
+          "answerIds": [
+            "prompt_to_code"
+          ],
+          "shuffle": false,
+          "runnable": true
+        },
+        {
+          "type": "write",
+          "id": "before-you-build/the-situation-named-honestly/s06-06-name-your-transferable-strength",
+          "xp": 5,
+          "hint": [
+            {
+              "level": 1,
+              "body": "An f-string is the Python feature for plugging values into a sentence template. It looks like this:\n\n`f\"Hello, {name}!\"`\n\nThe `f` in front of the quote turns it into a format-string. Anything in `{curly_braces}` gets replaced with the value of that variable when the string is built.\n\nWrap that f-string in `print(...)` and you have your one line. You need `{years}`, `{role}`, and `{top_skill}` in the right spots, with the rest of the sentence as plain text. The dash is two hyphens (`--`), not an em-dash.\n",
+              "cost": 0
+            },
+            {
+              "level": 2,
+              "body": "Here is the one line:\n\n```python\nprint(f\"After {years} years as a {role}, my edge is {top_skill} -- that's now the bottleneck of every AI feature shipping.\")\n```\n\nTwo things to notice. One: the f-string puts `{years}` first, then `{role}`, then `{top_skill}` — the order of the variables in the sentence is independent of how they were defined above. Two: the dash is `--` (two hyphens), not `—` (em-dash) — hyphens are universal across keyboards, em-dashes are not.\n",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 240,
+          "concept": "first-line-of-code",
+          "prompt": "Your first line of Python. Literally one line.\n\nThe point of this step is NOT learning Python. The point is that the\nfirst code you write in this course is a sentence about your own\nvalue — not a \"hello world,\" not a math exercise.\n\nThe starter sets three variables (`role`, `years`, `top_skill`).\nYour job is to write ONE line below them: a `print()` call using an\nf-string that produces the exact sentence below.\n\nExpected output (with the starter values):\n```\nAfter 11 years as a paralegal, my edge is verification -- that's now the bottleneck of every AI feature shipping.\n```\n\nThen — and this is the part that matters — change the three values\nin the starter to match YOUR old job. The grader runs against the\ntemplate values, so the one line you write has to work with those.\nBut before you hit run, change the inputs to yours and read what\ncomes back. That sentence is the first thing you'll have produced\nin this course. Make it true.\n",
+          "starter": "role = \"paralegal\"\nyears = 11\ntop_skill = \"verification\"\n\n# write one line below using print() and an f-string to produce the expected output\n",
+          "grader": {
+            "kind": "stdout-equality",
+            "expected": "After 11 years as a paralegal, my edge is verification -- that's now the bottleneck of every AI feature shipping.",
+            "normalize": "collapse-trailing-newline"
+          },
+          "solution": "role = \"paralegal\"\nyears = 11\ntop_skill = \"verification\"\n\nprint(f\"After {years} years as a {role}, my edge is {top_skill} -- that's now the bottleneck of every AI feature shipping.\")\n",
+          "hiddenTests": []
+        },
+        {
+          "type": "checkpoint",
+          "id": "before-you-build/the-situation-named-honestly/s07-07-checkpoint",
+          "xp": 8,
+          "hint": [
+            {
+              "level": 1,
+              "body": "Start with an empty result dict that already has the three keys (`eaten`, `survived`, `advantage`) mapped to empty lists. Loop through the input. For each skill, look at its `category` field, map it to the right output key, and append the `name` to that list. Because you iterate the input in order and `list.append` keeps order, input order is preserved automatically.",
+              "cost": 0
+            },
+            {
+              "level": 2,
+              "body": "The category names in the input (`eaten_by_ai`, `survived_ai`, `new_advantage`) are different from the keys in the output (`eaten`, `survived`, `advantage`). You need a small mapping between the two. Either a dict like `{\"eaten_by_ai\": \"eaten\", ...}` (clean) or three `if/elif` branches (also fine for six skills).\n\nSkeleton:\n\n```python\ndef inventory(skills):\n    result = {\"eaten\": [], \"survived\": [], \"advantage\": []}\n    mapping = {\n        \"eaten_by_ai\": \"eaten\",\n        \"survived_ai\": \"survived\",\n        \"new_advantage\": \"advantage\",\n    }\n    for skill in skills:\n        result[mapping[skill[\"category\"]]].append(skill[\"name\"])\n    return result\n```\n",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "check",
+          "estSeconds": 240,
+          "concept": "skills-inventory-grouping",
+          "prompt": "Final drill for this lesson. Take the skills inventory from earlier\n(what got eaten, what survived, what became the new advantage) and\nturn it into one function.\n\nWrite `inventory(skills)` that takes a list of skill dicts. Each dict\nhas two fields:\n\n- `name`: string (the skill)\n- `category`: one of `\"eaten_by_ai\"`, `\"survived_ai\"`, `\"new_advantage\"`\n\nReturn a dict with three keys — `eaten`, `survived`, `advantage` —\neach mapped to a list of the skill names in that category. Preserve\nthe input order: if \"manual document review\" appears before\n\"first-draft copywriting\" in the input, it should appear before it in\nthe output list too.\n\nSix skills run, two in each category. Expected output:\n\n```\n{'eaten': ['manual document review', 'first-draft copywriting'], 'survived': ['client relationship management', 'creative direction'], 'advantage': ['verification expertise', 'operational design']}\n```\n",
+          "starter": "skills = [\n    {\"name\": \"manual document review\",      \"category\": \"eaten_by_ai\"},\n    {\"name\": \"client relationship management\", \"category\": \"survived_ai\"},\n    {\"name\": \"first-draft copywriting\",     \"category\": \"eaten_by_ai\"},\n    {\"name\": \"verification expertise\",      \"category\": \"new_advantage\"},\n    {\"name\": \"creative direction\",          \"category\": \"survived_ai\"},\n    {\"name\": \"operational design\",          \"category\": \"new_advantage\"},\n]\n\n# define inventory(skills) below. it should return a dict with three\n# lists, preserving input order within each list.\n\n\n\nprint(inventory(skills))\n",
+          "grader": {
+            "kind": "stdout-equality",
+            "expected": "{'eaten': ['manual document review', 'first-draft copywriting'], 'survived': ['client relationship management', 'creative direction'], 'advantage': ['verification expertise', 'operational design']}",
+            "normalize": "collapse-trailing-newline"
+          },
+          "solution": "skills = [\n    {\"name\": \"manual document review\",      \"category\": \"eaten_by_ai\"},\n    {\"name\": \"client relationship management\", \"category\": \"survived_ai\"},\n    {\"name\": \"first-draft copywriting\",     \"category\": \"eaten_by_ai\"},\n    {\"name\": \"verification expertise\",      \"category\": \"new_advantage\"},\n    {\"name\": \"creative direction\",          \"category\": \"survived_ai\"},\n    {\"name\": \"operational design\",          \"category\": \"new_advantage\"},\n]\n\ndef inventory(skills):\n    result = {\"eaten\": [], \"survived\": [], \"advantage\": []}\n    category_to_key = {\n        \"eaten_by_ai\": \"eaten\",\n        \"survived_ai\": \"survived\",\n        \"new_advantage\": \"advantage\",\n    }\n    for skill in skills:\n        key = category_to_key[skill[\"category\"]]\n        result[key].append(skill[\"name\"])\n    return result\n\nprint(inventory(skills))\n",
+          "passThreshold": 0.66
+        }
+      ],
+      "xpTotal": 20
+    },
+    {
+      "slug": "what-an-llm-actually-is",
+      "title": "What an LLM actually is",
+      "estMinutes": 20,
+      "prerequisites": [
+        "the-situation-named-honestly"
+      ],
+      "steps": [
+        {
+          "type": "read",
+          "id": "before-you-build/what-an-llm-actually-is/s01-01-three-wrong-models",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "warmup",
+          "estSeconds": 240,
+          "concept": "contest-folk-models",
+          "body": "# Three wrong models you probably arrived with\n\nBefore we install the right mental model, we have to take down the\nthree wrong ones you almost certainly walked in carrying. They're not\nyour fault — every consumer-facing AI product has reinforced at least\none of them. But all three will quietly sabotage every chapter that\nfollows if we don't name them and put them down.\n\n## Wrong model #1: \"It's like Google\"\n\nIt isn't. Google retrieves. An LLM **generates**.\n\nWhen you type into Google, a search index looks up pages that exist\nsomewhere on the web and ranks them. The output points at things that\nwere already written. If nothing on the web matches your query, Google\nreturns nothing.\n\nWhen you type into an LLM, no lookup happens. The model produces text\none token at a time by predicting what comes next. It's not finding an\nanswer that exists somewhere. It's **manufacturing one in real time**.\nThat's why two identical prompts can give two different answers, and\nwhy an LLM will cheerfully \"cite\" a paper that doesn't exist. There's\nnothing being retrieved. There's only generation.\n\nThis matters because every time you treat an LLM like a search engine,\nyou import a trust model that doesn't apply. Google is wrong by\nomission. An LLM is wrong by invention. Different failure mode,\ndifferent defenses.\n\n## Wrong model #2: \"It understands me\"\n\nIt doesn't. It pattern-matches token sequences.\n\nThe philosopher Daniel Dennett described the **intentional stance** —\na useful shortcut where you predict a complex system by treating it AS\nIF it has beliefs and desires. You can do this with a thermostat\n(\"it WANTS the room to be 68\"), a chess engine, your dog, or an LLM.\nThe stance is useful. The metaphysics it implies is wrong.\n\nAn LLM has no inner life. No goals. No awareness it's being used. No\npreferences. When you ask it a question and it \"tries to help,\" there\nis nothing in there that is trying. There is a function computing the\nnext most-probable token, given the prompt, given the training, given\nthe sampling parameters. The text that comes out is shaped like\nhelpfulness because the training shaped it that way. The helpfulness\nis the shape, not the source.\n\nPut it plainly:\n\n> It has no inner life, no goals, no awareness it's being used. Treat\n> it like a very fluent text-prediction machine, because that's what\n> it is.\n\nYou can still use the intentional stance as a tool (\"the model\nwants…\", \"the model is trying to…\"). It's a shorthand. Just don't\nforget it's a shorthand.\n\n## Wrong model #3: \"It's lying when it's wrong\"\n\nIt isn't. It has no concept of true or false.\n\nWhen an LLM gives you a wrong answer with full confidence — a fake\ncitation, a hallucinated function, a misremembered date — it isn't\ndeceiving you. **Confident-wrong is the default mode of the system.**\nThe model doesn't track truth. It tracks \"what tokens usually come\nnext given these tokens.\" Sometimes that produces correct facts.\nSometimes it produces plausible-sounding garbage. The model has no\ninternal signal that distinguishes the two cases.\n\nThis is why \"hallucinations\" is a slightly misleading word — it\nsuggests the model is normally seeing reality and occasionally\nslipping. The reverse is closer to the truth: the model is normally\ngenerating plausible-sounding text, and that text happens to be\ncorrect often enough to be useful. Verification is your job, not\nthe model's.\n\nTreating wrong answers as lies leads you to do the wrong thing: get\nangry, ask \"why did you lie to me,\" try to \"catch it.\" None of that\nhelps. Treating wrong answers as **statistical artifacts of a system\nwith no truth-tracking** leads you to the right thing: build the\nverification step into your workflow. Don't trust. Check.\n\n## Anti-pitfall: \"It's just autocomplete\"\n\nThe opposite overcorrection is also wrong. Once people hear \"it\npredicts the next token,\" some of them swing all the way to \"so it's\njust autocomplete, what's the big deal.\" That framing under-predicts\neverything that's about to happen in this course.\n\nAutocomplete trained on a hundred billion tokens of human writing —\nincluding reasoning, code, math, dialogue, argument, instruction —\nwill produce completions that are *shaped like reasoning*. Not because\nit reasons, but because it has seen enough of what reasoning looks\nlike to interpolate it. The patterns it has absorbed include the shape\nof careful thinking. That's why prompt structure matters so much in\nch03: you're not asking the model to think, you're shaping the\ndistribution it samples from so the most-probable continuation is the\nshape of an answer you can use.\n\nHold both at once: **mechanically, it's a next-token predictor.\nIn effect, the predictions are sophisticated enough to be useful for\nwork.** Neither half is the full picture without the other.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "read",
+          "id": "before-you-build/what-an-llm-actually-is/s02-02-the-right-model-next-token-probability",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "warmup",
+          "estSeconds": 240,
+          "concept": "next-token-distribution",
+          "body": "# The right model: a probability distribution over the next token\n\nHere is the correct one-sentence definition of an LLM, the one the\nrest of this course assumes you've internalized:\n\n> An LLM is a function that takes a sequence of tokens and returns a\n> probability distribution over every possible next token.\n\nThat's it. That's the whole thing. Everything else — chat, code,\nreasoning, \"thinking\" — is what happens when you sample from that\ndistribution one token at a time and feed the result back in.\n\nIf you read that sentence and shrugged, read it again. The shape of\nthe function is the entire ballgame. Every chapter that follows\nclicks into place once you can see the model this way.\n\n## Walk through it with a concrete example\n\nTake the prompt:\n\n> \"The capital of France is ___\"\n\nWhen the model processes this sequence, it doesn't decide on \"Paris.\"\nIt produces a probability distribution over every token in its\nvocabulary. Something like this (simplified):\n\n| Token       | Probability |\n|-------------|-------------|\n| `Paris`     | 0.97        |\n| `the`       | 0.01        |\n| `located`   | 0.005       |\n| `France`    | 0.003       |\n| `in`        | 0.002       |\n| ... (50,000+ other tokens, each tiny) ... | ... |\n\nThe model's confidence is **visible** in the shape of that\ndistribution. It's not magic. It's not \"the model knows the answer.\"\nIt's that 97% of the probability mass piled up on a single token. Of\ncourse the next sample is \"Paris.\" The math made it inevitable.\n\n## Now change the prompt to break the spike\n\nTake the prompt:\n\n> \"My favorite color is ___\"\n\nSame model. Same architecture. Same weights. But the distribution\nlooks completely different:\n\n| Token       | Probability |\n|-------------|-------------|\n| `blue`      | 0.18        |\n| `red`       | 0.15        |\n| `green`     | 0.13        |\n| `purple`    | 0.10        |\n| `black`     | 0.08        |\n| `the`       | 0.05        |\n| ... many more, gradually smaller ... | ... |\n\nThere is no spike. The mass is **smeared** across twenty plausible\ncolors. The model isn't \"guessing\" — it's correctly representing that\nthere's no single right next token here. The prompt didn't constrain\nthe answer, so the distribution can't either.\n\nThis is why \"what is your favorite color, model?\" is a weird question.\nSample once, you get \"blue.\" Sample again, you get \"green.\" Sample a\nthousand times, you get a histogram that looks like the distribution\nabove. Neither answer is the \"real\" one. The distribution is the\nreal answer; the single token is just a sample.\n\n## Sampling and temperature\n\nMost of the time you don't see the distribution. You see one token —\nthe one that got sampled. **Temperature** is the dial that controls\nhow the sampling works:\n\n- **Temperature near 0**: the sampler is greedy. Always picks the\n  top token. \"The capital of France is\" → \"Paris\" every single time.\n  Boring, deterministic, predictable.\n- **Temperature around 1**: the sampler is honest to the distribution.\n  Sometimes you get the top token, sometimes a lower one, weighted by\n  their probabilities. \"My favorite color is\" → blue/red/green/purple\n  across runs.\n- **Temperature high (1.5+)**: the sampler flattens the distribution\n  before sampling. Even low-probability tokens get picked sometimes.\n  Output gets weirder. Can be useful for creative work; can produce\n  word salad.\n\nYou will care about temperature later. For now, the point is just\nthis: the model produces a distribution. The system around the model\nsamples from it. Both halves are decisions you can inspect and tune.\n\n## Why this framing is load-bearing\n\nIf you hold this model in your head — \"function from token sequence\nto probability distribution, then sample\" — most LLM behavior stops\nbeing mysterious:\n\n- **\"Why is the model wrong?\"** Because the probability mass piled up\n  on the wrong token. Either the training didn't have the right\n  patterns, or the prompt didn't shape the distribution enough.\n- **\"Why is the output different each time?\"** Because temperature > 0\n  means we're sampling. Run it again, get a different sample.\n- **\"Why does prompt structure matter so much?\"** Because the prompt\n  IS the input to the function. Better-shaped input → better-shaped\n  distribution → better samples.\n- **\"Why does the model 'hallucinate'?\"** Because if the right answer\n  isn't anywhere near the top of the distribution, the sampler will\n  happily return whatever IS at the top, even if it's wrong.\n\nYou haven't seen the math. You haven't trained a model. You haven't\nwritten any code yet. But if you can describe an LLM in one sentence\nas \"a function from token sequence to probability distribution, then\nsample,\" you are ahead of most people who use these systems for a\nliving.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "mc",
+          "id": "before-you-build/what-an-llm-actually-is/s03-03-which-framing-is-correct",
+          "xp": 2,
+          "hint": [
+            {
+              "level": 1,
+              "body": "The reading made a specific point about the OUTPUT shape of the model. It's not a token. It's not 'the most likely token.' It's a distribution. The token you see is what happens AFTER the model finishes its work — the sampler does that part.",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 70,
+          "concept": "identify-correct-llm-framing",
+          "prompt": "Four framings of \"what an LLM does.\" Only one is technically correct\nin the way the rest of this course will treat it. Pick that one.\n",
+          "options": [
+            {
+              "id": "looks_up",
+              "label": "It looks up the most relevant answer from its training data and returns it.",
+              "explain": "This is the 'it's like Google' folk model. LLMs don't retrieve — they generate, one token at a time. There is no index being queried at inference time."
+            },
+            {
+              "id": "thinks_first",
+              "label": "It thinks about the question, decides what the answer is, then writes it out.",
+              "explain": "Anthropomorphizing. There's no separate 'thinking' step that decides on an answer before generation begins. The model produces a distribution over the next token, samples, and repeats. The 'thinking' is the generation."
+            },
+            {
+              "id": "most_likely_word",
+              "label": "It picks the single most likely next word and writes it out, one word at a time.",
+              "explain": "Close but subtly wrong in a way that will trip you up later. The model produces a probability DISTRIBUTION over the next token, not 'the most likely.' What gets output depends on the sampler (temperature, top-p). Greedy decoding picks the top; most real usage samples from the distribution."
+            },
+            {
+              "id": "distribution_then_sample",
+              "label": "It produces a probability distribution over every possible next token, samples one, then repeats."
+            }
+          ],
+          "answerIds": [
+            "distribution_then_sample"
+          ],
+          "shuffle": false,
+          "runnable": true
+        },
+        {
+          "type": "read",
+          "id": "before-you-build/what-an-llm-actually-is/s04-04-training-vs-inference",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 220,
+          "concept": "training-vs-inference",
+          "body": "# Training is over. Inference is what you talk to.\n\nThere are two completely separate phases in the life of a model, and\nmixing them up is one of the most common causes of bad LLM intuition.\nGet this distinction right and a lot of confusion goes away.\n\n## Training: the part that happened months ago\n\nTraining is when the model's **weights** (the billions of numbers\nthat define the function) are set. It happens once, before the model\nis released, on enormous clusters of GPUs over weeks or months at a\ncost of tens to hundreds of millions of dollars.\n\nDuring training, the model sees text — trillions of tokens of it —\nand the weights get nudged, gradient step by gradient step, so that\nthe model gets better at predicting the next token. By the end of\ntraining, you have a single frozen artifact: a set of weights.\n\nAfter training ends, the weights **do not change**. Not when the\nmodel is deployed. Not when a million users start sending prompts.\nNot when you talk to it. The weights from the moment training stopped\nare the weights forever, until somebody trains a new version from\nscratch.\n\n## Inference: the part that happens every time you press send\n\nInference is what happens when you send a prompt and get a response.\nThe frozen weights are loaded onto a GPU somewhere, your prompt is\ntokenized, and the model runs the function once per output token. No\nweights are updated. The model's parameters are exactly the same\nbefore your prompt as after it.\n\nInference is fast and cheap relative to training. It's repeatable —\nsame prompt, same temperature, same seed, same output. It scales\nhorizontally — you can run a million inferences in parallel on\ndifferent copies of the same weights.\n\nThe two phases are not just different in cost. They're different in\n**kind**. Training reshapes the function. Inference uses the function.\n\n## Why this matters for you, today\n\nThree implications of the training-vs-inference distinction that\nbeginners get wrong:\n\n**1. Your prompts do not teach the model.** When you correct the\nmodel — \"no, actually, the answer is X\" — and it agrees and\napologizes, nothing has changed in the weights. The \"correction\"\nexists only in the current conversation, and only because the\nconversation text gets re-sent (see the next lesson). The next user\nwho asks the same question gets the same wrong answer. You did not\nupdate anything. You cannot update anything. The model from yesterday\nand the model from tomorrow have the same weights.\n\n**2. The model has a knowledge cutoff that is not negotiable.** If\nthe model was trained on data up to some date, it has no information\nabout anything that happened after that date — no matter how much\nyou insist. It might hallucinate confidently about post-cutoff events\n(see lesson 1: confident-wrong is the default), but the actual\ninformation isn't in the weights. RAG and tools can route around this\nlater in the course. The base model cannot.\n\n**3. \"Different model behavior over time\" is almost never the model\nchanging.** It's almost always: a new version was deployed (new\nweights, different model), the system prompt changed, the temperature\nchanged, or the sampling parameters changed. The thing you're talking\nto is deterministic given its inputs. If it's behaving differently,\nits inputs changed.\n\n## Pre-training vs post-training: the assistant is a costume\n\nThere's one more wrinkle worth knowing. Modern chat models actually\ngo through TWO training phases:\n\n**Pre-training**: the model learns from a huge dump of internet\ntext — books, papers, code, web pages. The output of pre-training is\na \"base model\" that's very good at next-token prediction over text in\ngeneral. But it acts weird. Ask it a question and it might continue\nyour question instead of answering it. It will reproduce racist\ncontent from its training data. It has no concept of \"being an\nassistant.\"\n\n**Post-training (RLHF, instruction tuning, etc.)**: the base model is\nfine-tuned on a much smaller dataset of curated conversations,\npreference data, and safety examples. The output of this phase is the\n\"assistant\" you actually talk to. The helpful, harmless, honest\nbehavior, the refusals, the markdown formatting, the hedging — all\nof it lives in this layer.\n\nThe implication is subtle but useful: **\"helpful, harmless, honest\"\nis a training objective, not a personality.** The model isn't being\nhelpful because it wants to be. It's being helpful because that's the\nshape that got reinforced during post-training. The assistant\npersona is a thin layer baked into the same weights, not a soul\nhiding behind the math.\n\nWhen you later see a model \"break character\" or get jailbroken or\nbehave inconsistently, this is what's happening: the prompt has\npushed the input distribution far enough off the post-training data\nthat the underlying pre-training behavior leaks through. The costume\nslipped.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "read",
+          "id": "before-you-build/what-an-llm-actually-is/s05-05-statelessness-and-context-window",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 240,
+          "concept": "statelessness-and-context",
+          "body": "# The model has no memory. The harness fakes it.\n\nHere is a fact that surprises almost every new builder: **the model\nhas no memory between calls.** Each API call is a cold start. The\nmodel that responds to your second message has no idea your first\nmessage ever happened — unless the system around it re-sends your\nfirst message as part of the input every single time.\n\nIt does. That's what's happening when you \"have a conversation\" with\nChatGPT or Claude. You think you're talking to something that\nremembers you. You're not. You're sending it the entire transcript,\nover and over, with one new line tacked on at the end.\n\n## The goldfish-with-a-notebook metaphor\n\nOne useful image:\n\n> Goldfish with a notebook — the goldfish (model) forgets every\n> session; the notebook (harness) is what carries state.\n\nThe model is the goldfish. Zero memory. Every interaction is\nencountered fresh. The harness — the code wrapping the model that\nyour chat app is built out of — is the notebook. It keeps the\nhistory. It writes the history into the prompt before each call. The\ngoldfish reads the notebook, generates the next line, and forgets\neverything again.\n\nThis is the single most important fact about LLM systems. Memorize\nit. **The model is stateless. State lives in the harness.**\n\n## What this means concretely\n\nWhen you say \"remember that I prefer Python\" to a chatbot and three\nturns later it correctly uses Python, the model didn't remember\nanything. What happened is:\n\n1. Turn 1: you said \"remember that I prefer Python.\"\n2. Turn 2: the harness sent the model `[turn 1, turn 2]`.\n3. Turn 3: the harness sent the model `[turn 1, turn 2, turn 3]`.\n4. Turn 4: the harness sent `[turn 1, turn 2, turn 3, turn 4]`.\n\nThe model at turn 4 sees your Python preference because it's sitting\nright there in the input, re-sent for the fourth time. The model\nisn't remembering. The model is reading.\n\nWhen the conversation grows past the context window (next section),\nthe early turns get dropped or summarized. At that point your\n\"preference for Python\" can quietly vanish from the prompt, and the\nmodel will helpfully start writing JavaScript again. Not because it\nforgot. Because the harness ran out of room.\n\nThis is also why \"memory\" features (Claude memory, ChatGPT memory)\nare interesting: they're attempts to upgrade the notebook. The\ngoldfish is still a goldfish. What's improved is the harness's\nstrategy for what to write in the notebook before each call.\n\n## The context window: a fixed-size scratchpad\n\nEvery model has a hard upper limit on how many tokens it can see at\nonce. Older models had 4,000-token windows (about 3,000 words).\nModern models have 200,000-token windows (about 150,000 words, the\nlength of a novel) or larger. Either way, the limit is **fixed and\nfinite**.\n\nThat window is everything the model is aware of in this moment. The\nsystem prompt, the conversation history, any retrieved documents,\nany tool outputs, your latest message — all of it has to fit, or it\ndoesn't get seen.\n\nAnother way to see it:\n\n> LLM is a Boggle player who only sees the letters currently on the\n> tray.\n\nThe Boggle player can be brilliant. Can be terrible. Doesn't matter —\nthey can only play the letters currently visible. If the letter you\nneed isn't on the tray, it might as well not exist. Same with the\nmodel. If the document you need isn't in the context window, the\nmodel has no access to it. Doesn't matter that it was discussed\nyesterday, or referenced in turn 4, or sitting in a file on disk.\nNot in the window, not in the game.\n\n## Why this drives so much of the rest of the course\n\nA lot of what you'll spend chapters 10-25 learning is just sophisticated\nways to manage what's in that scratchpad. The whole discipline goes by\na few names:\n\n- **Context engineering** — deciding what gets put into the window,\n  in what order, with what framing\n- **RAG (retrieval-augmented generation)** — pulling the right\n  documents into the window just in time for each query\n- **Conversation summarization** — compressing turn 1-50 into a short\n  summary so turn 51 still has room to be useful\n- **Memory systems** — picking what to write down in the notebook so\n  the goldfish has the right context next time\n\nYou don't need to know any of those yet. You just need to know **why\nthey exist**: because the model is stateless, and the context window\nis finite, and somebody has to decide what goes in.\n\nThat somebody is the harness. By the end of this course, that\nsomebody will be you.\n\n## One last reframe\n\nWhen you start building, every problem you hit will eventually reduce\nto one of these three:\n\n1. **The right information isn't in the context window.** (Fix:\n   retrieve it.)\n2. **The information IS in the window but the model isn't using it\n   well.** (Fix: change the prompt structure or the system prompt.)\n3. **The window is full and important information got pushed out.**\n   (Fix: summarize, trim, or restructure.)\n\nThat's most of the job. Three problems. One stateless goldfish. A\nfinite scratchpad. Welcome to LLM engineering.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "read",
+          "id": "before-you-build/what-an-llm-actually-is/s06-06-same-model-different-personality",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 220,
+          "concept": "system-prompt-defines-persona",
+          "body": "# Same model, different personality\n\nHere's something that sounds obvious in retrospect and surprises\nalmost everybody when they first see it: **the \"personality\" of an\nLLM assistant lives in the prompt, not in the model.**\n\nThe model is the weights. The weights are the same for every user,\nevery product, every conversation. What changes — what makes Claude\nin Cursor feel like a senior engineer and Claude in claude.ai feel\nlike a thoughtful generalist and Claude inside some companion app\nfeel like a chirpy friend — is the **system prompt**: a chunk of text\nthe harness prepends to every conversation that tells the model who\nit's supposed to be.\n\n## The same model wearing two costumes\n\nImagine you call the API with this system prompt:\n\n> You are a terse Linux sysadmin. You answer in fragments. You\n> assume the user knows the basics. You do not use emoji. You do not\n> apologize. If the user is being stupid, you say so.\n\nThen the user says: \"how do I find big files in /var?\"\n\nYou'll get something like:\n\n> `du -ah /var | sort -rh | head -20`. obvious choice.\n\nNow imagine you call the *exact same model* with this system prompt:\n\n> You are a kindergarten teacher. You explain everything as if to a\n> curious five-year-old. You use simple words and gentle metaphors.\n> You always check that the child understood before moving on.\n\nSame user message: \"how do I find big files in /var?\"\n\nYou'll get something like:\n\n> Great question, friend! Let's imagine your computer is like a big\n> toy box, and `/var` is one of the bins inside it… [continues for\n> 400 cheerful words]\n\n**Same weights. Same architecture. Same training. Wildly different\noutput.** Nothing about the model changed. The first sentence of the\ninput changed, and the model's distribution over plausible\ncontinuations shifted accordingly. The kindergarten teacher is not a\ndifferent LLM. It's the same LLM operating in a different region of\nits output space, because the system prompt pushed it there.\n\nThe lesson every working engineer learns the hard way: **the model\nhas no native personality. The personality is something you\nscript.**\n\n## Why Claude in Cursor doesn't feel like Claude on the web\n\nThis is the entire reason different products built on the same model\nfeel different. Pull back the curtain on any of them and you'll find:\n\n- A long, carefully written **system prompt** defining tone, role,\n  refusals, format, and behavior.\n- A set of **tools** the model can call (search, code execution, file\n  read/write).\n- A **harness** that manages conversation history, retrieval, memory,\n  and tool routing.\n\nSame model. Different costume, different toolbelt, different stage.\nDifferent product.\n\nAnthropic publishes Claude's system prompt for claude.ai. Cursor's is\nprivate but inferrable. Cline's is open source. If you read them\nside by side you can see exactly where the \"personality\" you\nexperience is coming from — none of it is in the weights, all of it\nis in the prompt.\n\n## The implication you should write down\n\n> You don't need to \"find the right model.\" You need to write the\n> right system prompt.\n\nFor 95% of work you'll do in the next year, the difference between a\nuseless agent and a great one is not which model you picked. It's\nwhat you wrote in the first 500 tokens of input. That's the layer\nthat has the most leverage and the lowest cost.\n\nThis is also why the rest of this course spends so much time on\nprompts. Ch03 is entirely about prompting. Ch04-05 are about\nstructuring those prompts so they hold up under load. Ch10+ is about\nprompts so big and so structured that they start to look like\nsoftware in their own right.\n\nIf you took nothing else from this lesson, take this: **most of the\njob is writing the system prompt. The model is the runtime. The\nprompt is the program.**\n\n## A small honest caveat\n\nThis isn't 100% true. Different models do have different baseline\nbehaviors, different strengths, different failure modes. A reasoning\nmodel handles long math derivations better than a non-reasoning model\nof similar size. A model post-trained for code will outperform one\nthat wasn't on a coding benchmark. Capability differences are real.\n\nBut within a tier of models that are \"good enough for your task,\"\nthe dominant variable is the prompt. By a lot. Pick a competent\nmodel, then spend your energy on the prompt. That's where the\nreturns live.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "mc",
+          "id": "before-you-build/what-an-llm-actually-is/s07-07-spot-the-mental-model-error",
+          "xp": 2,
+          "hint": [
+            {
+              "level": 1,
+              "body": "The lesson on training vs inference made one point very explicitly: weights do not update at inference time. A correction inside a conversation does not change the model. The 'apology and correction' lives in the conversation transcript, not in the weights. The next user starts from the same weights you started from.",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 70,
+          "concept": "spot-the-wrong-mental-model",
+          "prompt": "Four statements someone might make about how an LLM works. Three\nare correct or correct-with-a-nuance. ONE is actively wrong in a\nway that will mislead them when they start building.\n\nPick the one that's wrong.\n",
+          "options": [
+            {
+              "id": "learns_from_me",
+              "label": "When I correct the model and it apologizes and updates its answer, it has learned from me — the next user who asks the same question will get the corrected answer."
+            },
+            {
+              "id": "stateless_with_notebook",
+              "label": "The model has no memory between calls; my chat app is faking continuity by re-sending the whole conversation each turn.",
+              "explain": "Correct. This is the goldfish-with-a-notebook framing from earlier in this lesson. The model is stateless; the harness carries state."
+            },
+            {
+              "id": "distribution_not_token",
+              "label": "The output of the model is technically a probability distribution; what I see is one token sampled from that distribution.",
+              "explain": "Correct. This is the right one-sentence framing for what an LLM is."
+            },
+            {
+              "id": "personality_in_prompt",
+              "label": "The reason Claude in Cursor feels different from Claude on the web isn't a different model — it's a different system prompt and harness.",
+              "explain": "Correct. Same weights, different costume. The personality lives in the prompt."
+            }
+          ],
+          "answerIds": [
+            "learns_from_me"
+          ],
+          "shuffle": false,
+          "runnable": true
+        },
+        {
+          "type": "write",
+          "id": "before-you-build/what-an-llm-actually-is/s08-08-write-the-next-token-predictor",
+          "xp": 5,
+          "hint": [
+            {
+              "level": 1,
+              "body": "Two lines of real work. `top = max(vocab_probs, key=vocab_probs.get)` gives you the highest-probability token. Then build the return string with an f-string: `f'\"{top}\" ({vocab_probs[top]*100:.1f}%)'`. The `:.1f` format spec rounds to one decimal place.",
+              "cost": 0
+            },
+            {
+              "level": 2,
+              "body": "Watch the quotes. The output needs LITERAL double-quote characters around the token, e.g., `\"Paris\"`. The easiest way is to write the f-string with single quotes on the outside: `f'\"{top}\" (...)'`. That way the doubles inside are just characters.",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 240,
+          "concept": "predict-next-token-by-hand",
+          "prompt": "You're going to write, by hand, the core operation that every LLM\nin the world performs billions of times a day.\n\nWrite `predict_next_token(context, vocab_probs)` that takes:\n\n- `context`: a string — the text \"so far.\" We don't use it inside\n  the function (the real model would condition on it; we're\n  simulating with a precomputed distribution). It's there to make\n  the intent of the function readable.\n- `vocab_probs`: a dict mapping candidate next-token strings to\n  their probabilities (floats summing to <= 1.0).\n\nReturn a single string formatted exactly like this:\n```\n\"Paris\" (97.0%)\n```\n\nThat is: the highest-probability token in double quotes, a space,\nthen the probability as a percentage rounded to one decimal place,\nin parentheses.\n\nTwo runs. Expected output:\n```\n\"Paris\" (97.0%)\n\"blue\" (18.0%)\n```\n\nHint: `max(vocab_probs, key=vocab_probs.get)` gives you the key\nwith the highest value. Then use an f-string with `{p*100:.1f}` to\nformat the percentage.\n",
+          "starter": "france = {\n    \"Paris\": 0.97,\n    \"the\": 0.01,\n    \"located\": 0.005,\n    \"in\": 0.005,\n    \"a\": 0.005,\n}\n\ncolor = {\n    \"blue\": 0.18,\n    \"red\": 0.15,\n    \"green\": 0.13,\n    \"purple\": 0.10,\n    \"the\": 0.05,\n}\n\n# define predict_next_token(context, vocab_probs) below\n\nprint(predict_next_token(\"The capital of France is\", france))\nprint(predict_next_token(\"My favorite color is\", color))\n",
+          "grader": {
+            "kind": "stdout-equality",
+            "expected": "\"Paris\" (97.0%)\n\"blue\" (18.0%)\n",
+            "normalize": "collapse-trailing-newline"
+          },
+          "solution": "france = {\n    \"Paris\": 0.97,\n    \"the\": 0.01,\n    \"located\": 0.005,\n    \"in\": 0.005,\n    \"a\": 0.005,\n}\n\ncolor = {\n    \"blue\": 0.18,\n    \"red\": 0.15,\n    \"green\": 0.13,\n    \"purple\": 0.10,\n    \"the\": 0.05,\n}\n\ndef predict_next_token(context, vocab_probs):\n    top = max(vocab_probs, key=vocab_probs.get)\n    p = vocab_probs[top]\n    return f'\"{top}\" ({p*100:.1f}%)'\n\nprint(predict_next_token(\"The capital of France is\", france))\nprint(predict_next_token(\"My favorite color is\", color))\n",
+          "hiddenTests": []
+        },
+        {
+          "type": "checkpoint",
+          "id": "before-you-build/what-an-llm-actually-is/s09-09-checkpoint",
+          "xp": 8,
+          "hint": [],
+          "personalize": false,
+          "phase": "check",
+          "estSeconds": 240,
+          "concept": "classify-llm-framings",
+          "prompt": "Final drill for this lesson. Write `classify_framings(framings)`\nthat takes a list of dicts shaped like:\n\n```python\n{\"statement\": \"...\", \"correct\": True or False}\n```\n\nand returns a TUPLE of two things:\n\n1. `correct_count` — an integer, how many of the framings are\n   marked `correct: True`.\n2. `wrong_statements` — a list of strings, the `statement` text\n   from every framing marked `correct: False`, in the order they\n   appeared in the input.\n\nFive framings run. Expected output:\n```\ncorrect: 3\nwrong:\n  - When I correct an LLM mid-conversation, the model updates its weights so the next user sees the corrected answer.\n  - LLMs are essentially search engines that retrieve the most relevant answer from their training corpus.\n```\n\nThe point of this drill: you can now read these five statements\nand FEEL which ones are right. That feeling is the mental model\nthis lesson was designed to install. The function just makes the\nclassification explicit.\n",
+          "starter": "framings = [\n    {\n        \"statement\": \"An LLM returns a probability distribution over the next token, and the output is a sample from that distribution.\",\n        \"correct\": True,\n    },\n    {\n        \"statement\": \"When I correct an LLM mid-conversation, the model updates its weights so the next user sees the corrected answer.\",\n        \"correct\": False,\n    },\n    {\n        \"statement\": \"The model has no memory between API calls; the harness re-sends the conversation history every turn.\",\n        \"correct\": True,\n    },\n    {\n        \"statement\": \"Same weights plus different system prompt produces a different assistant personality.\",\n        \"correct\": True,\n    },\n    {\n        \"statement\": \"LLMs are essentially search engines that retrieve the most relevant answer from their training corpus.\",\n        \"correct\": False,\n    },\n]\n\n# define classify_framings(framings) below\n\ncorrect_count, wrong_statements = classify_framings(framings)\nprint(f\"correct: {correct_count}\")\nprint(\"wrong:\")\nfor s in wrong_statements:\n    print(f\"  - {s}\")\n",
+          "grader": {
+            "kind": "stdout-equality",
+            "expected": "correct: 3\nwrong:\n  - When I correct an LLM mid-conversation, the model updates its weights so the next user sees the corrected answer.\n  - LLMs are essentially search engines that retrieve the most relevant answer from their training corpus.\n",
+            "normalize": "collapse-trailing-newline"
+          },
+          "solution": "framings = [\n    {\n        \"statement\": \"An LLM returns a probability distribution over the next token, and the output is a sample from that distribution.\",\n        \"correct\": True,\n    },\n    {\n        \"statement\": \"When I correct an LLM mid-conversation, the model updates its weights so the next user sees the corrected answer.\",\n        \"correct\": False,\n    },\n    {\n        \"statement\": \"The model has no memory between API calls; the harness re-sends the conversation history every turn.\",\n        \"correct\": True,\n    },\n    {\n        \"statement\": \"Same weights plus different system prompt produces a different assistant personality.\",\n        \"correct\": True,\n    },\n    {\n        \"statement\": \"LLMs are essentially search engines that retrieve the most relevant answer from their training corpus.\",\n        \"correct\": False,\n    },\n]\n\ndef classify_framings(framings):\n    correct_count = sum(1 for f in framings if f[\"correct\"])\n    wrong_statements = [f[\"statement\"] for f in framings if not f[\"correct\"]]\n    return (correct_count, wrong_statements)\n\ncorrect_count, wrong_statements = classify_framings(framings)\nprint(f\"correct: {correct_count}\")\nprint(\"wrong:\")\nfor s in wrong_statements:\n    print(f\"  - {s}\")\n",
+          "passThreshold": 0.66
+        }
+      ],
+      "xpTotal": 22
+    },
+    {
+      "slug": "how-to-talk-to-one",
+      "title": "How to talk to one",
+      "estMinutes": 20,
+      "prerequisites": [
+        "what-an-llm-actually-is"
+      ],
+      "steps": [
+        {
+          "type": "read",
+          "id": "before-you-build/how-to-talk-to-one/s01-01-prompts-are-briefs",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "warmup",
+          "estSeconds": 240,
+          "concept": "prompts-as-briefs",
+          "body": "# A prompt is a brief\n\nIf you've ever written a creative brief, a customer-service call\nscript, a contract clause, an SOP, or a casting note — you've already\nwritten prompts. You just didn't know they were called that, and you\ndidn't know the audience would turn out to be a probability\ndistribution over tokens.\n\n> You already know how to write a brief. That's 80% of prompting.\n\nThis lesson exists because most \"intro to prompting\" content treats\nthe skill as new. It isn't new. The deliverable changed; the\ndiscipline didn't. The discipline is the same one that produced every\ngood ad campaign, every clear SOP, every cleanly-drafted contract,\nevery well-run support team. You name a role. You name a task. You\ngive the context. You specify the shape of the output. You provide\nexamples. Then you ship the brief and the work comes back.\n\nWhat changed is who's reading the brief and how literally they\ninterpret it. The model reads it like a junior contractor on their\nfirst day: literal, fast, eager, with no shared history and no\nability to ask clarifying questions. That's it. That's the whole\nadjustment.\n\n## Side by side: a 1995 creative brief and a 2026 LLM prompt\n\nHere is a real-shape creative brief from a 1995 agency. Read it.\n\n> **Client:** Midwest Furniture Co-op\n> **Project:** Spring catalog cover\n> **Audience:** 35-55, suburban, household income $60-120k, owns home\n> **Mood:** Warm, traditional, \"weekend morning\"\n> **Constraints:** Must show three pieces from the new oak line. No\n> children in shot. No fluorescent light. Logo bottom-right.\n> **Reference:** Pottery Barn 1994 fall catalog, pages 12-15\n> **Deliverable:** One 8x10 transparency, suitable for offset print\n> **Deadline:** Tuesday\n\nNow here is a 2026 LLM prompt for the equivalent digital task. Read\nit next to the brief above.\n\n> You are a senior catalog art director. Generate a description of a\n> spring catalog cover photograph for a Midwest furniture co-op.\n> Audience: 35-55 suburban homeowners, household income $60-120k.\n> Mood: warm, traditional, \"weekend morning.\" Must feature three\n> pieces from the new oak line. No children in shot. No fluorescent\n> light. Logo bottom-right. Reference: Pottery Barn 1994 fall\n> catalog, pages 12-15. Output: a single paragraph, 80-100 words,\n> suitable for handoff to a photographer.\n\nThey are the same brief. The 2026 version has the role written\nexplicitly (\"you are a senior catalog art director\") and the output\nshape stated in tokens (\"a single paragraph, 80-100 words\"), but\nevery other field maps one-to-one. Audience, mood, constraints,\nreferences, deliverable. Same.\n\nIf you wrote the first one in 1995, you can write the second one in\n2026. The skill is intact. The skill is portable.\n\n## Two modes of prompting: user vs. builder\n\nThere is a distinction in this course you need to get straight early,\nbecause it will come back in every later chapter:\n\n- **Prompts as artifacts** (user mode). You sit at the ChatGPT or\n  Claude window, you type a request, the model responds, you read\n  the response, you adjust the request, you go again. The prompt is\n  a thing you write once and throw away. This is what most people\n  mean when they say \"prompting.\"\n\n- **Prompts as system components** (builder mode). The prompt lives\n  inside a program. The program runs it a thousand times a day,\n  against a thousand different inputs, and ships the output to a\n  customer who never sees the prompt. The prompt is a piece of\n  infrastructure. It has tests, version control, and a change log.\n  This is what the rest of this course is about.\n\nThe 5 knobs you'll learn next apply to both modes. The discipline is\nidentical. What changes is the cost of getting the prompt wrong.\nA bad user-mode prompt wastes thirty seconds of your time. A bad\nbuilder-mode prompt that ships into production wastes an Air Canada\nrefund lawsuit, a NYC government scandal, a swearing-bot PR cycle.\n(We'll cover all three in ch24. They each started with a prompt\nnobody treated as infrastructure.)\n\nFor ch00, you're going to learn the discipline in user mode, because\nthat's the mode you can practice today without writing any code. By\nch19, you'll be writing builder-mode prompts. By ch24, you'll be\ntesting them. By ch26, you'll be deploying them into agent\nharnesses that run them at scale.\n\nBut it all starts here: a prompt is a brief. You already know how to\nwrite a brief. Let's name the parts.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "read",
+          "id": "before-you-build/how-to-talk-to-one/s02-02-the-five-knobs",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "warmup",
+          "estSeconds": 260,
+          "concept": "five-knobs-of-a-prompt",
+          "body": "# The five knobs every working prompt has\n\nA prompt that consistently produces useful output has five parts. Not\nfour, not seven. Five. You can write a prompt with fewer, and you'll\nsometimes get lucky. You can write one with more, and you'll\nsometimes pay for the extra tokens. But five is the shape that, in\npractice, produces the most reliable output across the most tasks.\n\nMemorize the names. The rest of the course will keep coming back to\nthem.\n\n## Knob 1: Role\n\n*Who is the model, in the context of this task?*\n\n```\nYou are a meticulous paralegal at a corporate law firm.\n```\n\nThe role is the costume the model puts on before it answers. It\nconstrains tone, vocabulary, default assumptions, and the kind of\noutput the model believes is appropriate. A \"paralegal\" produces a\ndifferent summary than a \"marketing director\" of the same document,\neven with the same task. The role isn't optional. If you don't set\nit, the model picks one for you, and the default is usually\n\"helpful generic assistant,\" which is what makes most output sound\nlike a Wikipedia intro.\n\n## Knob 2: Task\n\n*What specifically should it do?*\n\n```\nSummarize the following deposition transcript.\n```\n\nOne verb, one object, one outcome. If you find yourself writing \"and\nalso\" or \"while you're at it,\" you're describing two tasks. Send them\nin two separate prompts. The model does one well-scoped job per turn\nmuch better than two half-scoped ones jammed together.\n\n## Knob 3: Context\n\n*What does it need to know to do the task well?*\n\n```\nThe deposition is from a wage-and-hour class action. The plaintiff\nis a former warehouse manager. We're evaluating whether to settle\nor proceed to trial. Prior partner notes call this witness \"shaky on\nspecifics but sympathetic on tone.\"\n```\n\nContext is the background. The constraints. The prior decisions. The\ninternal politics. The things a new contractor on their first day\nwould not know but absolutely needs to know to do the job well. This\nis the field most people skip. It is the field that produces the\nbiggest quality lift when you stop skipping it.\n\n## Knob 4: Format\n\n*What shape should the output take?*\n\n```\nReturn:\n- A 3-bullet summary of the testimony (each bullet under 25 words)\n- A 1-sentence settlement recommendation\n- A list of follow-up depositions to schedule (max 5)\n```\n\nFormat is the contract for the output. It's what tells the model \"I\nwant bullets, not prose\" or \"JSON with these exact fields\" or \"two\nsentences max.\" Without it, the model defaults to verbose,\nexplanatory, hedge-padded paragraphs. With it, the model gives you\nthe shape you can actually use.\n\n## Knob 5: Examples\n\n*What does good output look like? (Few-shot.)*\n\n```\nExample of a good 3-bullet summary:\n- Witness confirmed shifts averaged 11.5 hours, 4 days a week.\n- Testified that overtime was paid only on weeks exceeding 60 hours.\n- Could not produce written policy; said it was \"told verbally.\"\n```\n\nThis is the most underused knob and the highest-leverage one. One\nor two examples of the exact output you want, in the exact shape you\nwant, do more for output quality than three paragraphs of\ninstructions. The model is very good at pattern matching; show it\nthe pattern.\n\n## All five, on one prompt\n\nHere is a working prompt with every knob filled. Read it once,\nthen read it again and label each sentence with the knob it\nsatisfies. (Roles in bold isn't standard — we're highlighting it for\nthe lesson.)\n\n```\nYou are an experienced support-ops lead at a 200-person SaaS company.\n\nReview the following 50 customer-support emails and route each one to\nexactly one of three queues: LEGAL, REFUND, or GENERAL.\n\nThe company sells project-management software to mid-market teams.\nLEGAL means the customer is threatening litigation, mentions a\nregulator, or has cc'd outside counsel. REFUND means the customer\nexplicitly asks for money back or cancels with a charge dispute.\nGENERAL is everything else, including angry-but-non-legal complaints.\n\nReturn a JSON list. Each element is an object with two fields:\n{\"id\": <email_id>, \"queue\": <queue_name>}. Do not include\nexplanations.\n\nExample:\n[\n  {\"id\": 1, \"queue\": \"REFUND\"},\n  {\"id\": 2, \"queue\": \"GENERAL\"}\n]\n```\n\nNow annotate:\n\n- Line 1 (**\"You are an experienced support-ops lead...\"**) — **Role**.\n- Line 2 (**\"Review the following 50 customer-support emails...\"**) — **Task**.\n- Lines 3-6 (**\"The company sells... LEGAL means... REFUND means...\"**) — **Context**.\n- Lines 7-8 (**\"Return a JSON list... two fields...\"**) — **Format**.\n- Lines 9-12 (**\"Example: [...]\"**) — **Examples**.\n\nFive knobs, five sections, one prompt. This shape works across\ndomains. Swap \"support-ops lead\" for \"paralegal\" and the legal\nexample fits. Swap it for \"art director\" and the catalog example\nfrom the previous lesson fits. The discipline is the same.\n\n## What knobs do and don't do\n\nThe five knobs do not guarantee the output is correct. They\nguarantee the output is **on-shape**: the model is doing the job you\nasked, with the inputs you gave it, in the format you wanted.\nCorrectness is a separate concern, and we'll handle it in the next\ntwo readings (temperature, hallucination).\n\nBut on-shape comes first. You cannot debug correctness on output\nthat's the wrong shape. So you fill all five knobs, and then you\nwork on whether the result is right.\n\nIn the next two steps you'll see why even a perfectly-tuned 5-knob\nprompt still produces different answers on different runs, and what\nto do about it.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "mc",
+          "id": "before-you-build/how-to-talk-to-one/s03-03-which-prompt-is-better",
+          "xp": 2,
+          "hint": [
+            {
+              "level": 1,
+              "body": "Count the knobs filled in each prompt. The winner has all five: role, task, context, format, examples. C has only two (task + format) — clear but incomplete loses to clear and complete.",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 70,
+          "concept": "pick-the-five-knob-prompt",
+          "prompt": "Four prompts for the same task. Per the 5-knob discipline (role,\ntask, context, format, examples), which version is most likely to\nproduce useful, consistent output on the first try?\n",
+          "options": [
+            {
+              "id": "a",
+              "label": "A — 'summarize this contract'",
+              "explain": "Task only. No role, no context, no format, no examples. You'll get a generic 6-paragraph summary that buries the things the founder actually needs to decide on."
+            },
+            {
+              "id": "b",
+              "label": "B — verbose, hedged, no specifics",
+              "explain": "Verbose is not the same as structured. This prompt has lots of words ('be thorough,' 'use good judgment') but zero knobs filled — no role, no real context, no format, no examples. The model will produce more text, not better text."
+            },
+            {
+              "id": "c",
+              "label": "C — task plus format only"
+            },
+            {
+              "id": "d",
+              "label": "D — role, task, context (what the founder cares about), format (5 bullets under 20 words), example"
+            }
+          ],
+          "answerIds": [
+            "d"
+          ],
+          "shuffle": false,
+          "code": "# four versions of the same task: summarize a 14-page services contract\n# for a non-lawyer founder who has to decide whether to sign.\nprompts = {\n    \"A\": \"summarize this contract\",\n    \"B\": (\n        \"Summarize the attached services contract in clear language for a \"\n        \"non-lawyer founder. Be very thorough and don't miss anything \"\n        \"important. Make sure to cover everything that matters and \"\n        \"explain it well. Use good judgment about what to include.\"\n    ),\n    \"C\": (\n        \"Summarize the contract. Return 5 bullets under 20 words each.\"\n    ),\n    \"D\": (\n        \"You are a startup-side contracts paralegal. Summarize the \"\n        \"attached 14-page services agreement for a non-lawyer founder \"\n        \"deciding whether to sign. The founder cares about: payment \"\n        \"terms, termination clauses, IP ownership, and liability caps. \"\n        \"Return exactly 5 bullets, each under 20 words, in the format: \"\n        \"- <topic>: <plain-language summary>. Example: \"\n        \"- Payment terms: Net-30, 2% late fee monthly, no early-pay discount.\"\n    ),\n}\nfor k, v in prompts.items():\n    print(f\"{k}: {v[:80]}{'...' if len(v) > 80 else ''}\")\n",
+          "runnable": true
+        },
+        {
+          "type": "read",
+          "id": "before-you-build/how-to-talk-to-one/s04-04-why-the-same-prompt-gives-different-answers",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 220,
+          "concept": "temperature-and-sampling",
+          "body": "# Why the same prompt gives different answers\n\nYou wrote a clean 5-knob prompt. You sent it twice. You got two\ndifferent answers back. The model is broken, right?\n\nIt isn't. It's working exactly the way lesson 02 said it works.\n\nRecall the one-sentence definition from the previous lesson: an LLM\nis a function that takes a sequence of tokens and returns a\n**probability distribution** over every possible next token. What\ncomes back to you on the screen is not the distribution. It's a\n**sample** drawn from it. Run the prompt again, draw a different\nsample, get a different answer.\n\nThat's the mechanism. There is no magic and there is no bug. Now\nlet's talk about the dial that controls how the sample gets drawn.\n\n## Temperature is the dial\n\nEvery modern LLM exposes a parameter called **temperature**, usually\na number between 0 and 2. Temperature controls how sharp or flat the\nsampling is.\n\n> The thermostat metaphor — temperature 0 = repetitive, 1 = varied,\n> 2 = chaos.\n\nWalk it through:\n\n- **Temperature 0.** The sampler is greedy. Whatever token has the\n  highest probability in the distribution, that's the one that gets\n  picked. Every time. Same prompt, same output, no variance. Useful\n  when you want deterministic behavior — say, a classifier that\n  always returns the same label for the same input.\n\n- **Temperature 1.** The sampler is honest to the distribution. If\n  \"Paris\" has 97% of the probability mass, you'll get \"Paris\" 97% of\n  the time. If five different colors each have ~15%, you'll see all\n  five over enough runs. The model behaves the way the underlying\n  probabilities say it should.\n\n- **Temperature 2.** The sampler flattens the distribution before\n  drawing. Low-probability tokens get picked more often. Output\n  gets weirder, more surprising, sometimes more creative,\n  occasionally word salad. Useful for brainstorm-style work, bad\n  for anything that has to be correct.\n\nMost chat products — ChatGPT, Claude, Gemini — ship with a default\ntemperature around 0.7 to 1.0. That's why the same question gives\nyou variety. The default is tuned for \"feels like a conversation,\"\nnot for \"produces the same answer every time.\"\n\n## What this means for you, today\n\nIf you've ever asked a chatbot the same question twice and gotten\ntwo different answers, you didn't catch the model lying. You caught\nit sampling. The information is the same. The token it landed on\nthis time is different.\n\nA few practical implications, because we'll come back to all of\nthem in later chapters:\n\n- **In production, lower the temperature.** When you're building\n  something — say, an email classifier — you want the same input to\n  produce the same output. Crank temperature down toward 0. The\n  output gets more boring, which is what you want.\n- **In chat, leave it where it is.** When you're using ChatGPT\n  yourself as a user, the default temperature is fine. Variety is\n  what makes the conversation feel like a conversation.\n- **Don't try to coach away the variance with prompt wording.** You\n  can't write \"be consistent\" hard enough to undo a high temperature.\n  Temperature is upstream of the prompt. If you need consistent\n  output, change the temperature, don't argue with it.\n- **Temperature is a knob, not a personality.** \"The model is being\n  creative today\" is just temperature > 0. Choose it deliberately\n  per task. Classification: low. Brainstorm: high. Drafting: middle.\n\nYou don't need to set temperature in this course until ch08, when\nyou start writing your own API calls. But you need to know the dial\nexists, because it explains 80% of \"why did it answer differently\nthis time?\" without you having to invoke any spookier theories.\n\nThe next reading is about the other 20% — the answers that are\ndifferent and also wrong.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "read",
+          "id": "before-you-build/how-to-talk-to-one/s05-05-hallucination-at-the-right-grain",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 240,
+          "concept": "hallucination-as-fluent-fiction",
+          "body": "# \"Hallucination\" is misleading shorthand\n\nThe industry settled on the word \"hallucination\" early, and we're\nstuck with it now, but it's wrong in a way that matters. The model\nisn't dreaming. It isn't tripping. It isn't confused. It is doing\nthe one thing it has ever done: producing fluent text, one token at\na time, weighted by what's likely.\n\nSometimes that text is true. Sometimes that text is plausible-shaped\nfiction. From the inside of the model, those two cases look\nidentical. There is no internal \"I'm not sure\" lamp. There is no\nhesitation mark. There is one mechanism — sample from the\ndistribution — and it runs at the same temperature on a true answer\nas on a made-up case citation.\n\n> The model is always guessing the next token; sometimes the guess\n> is true, sometimes it's plausible-shaped fiction. Confidence is a\n> style, not a signal.\n\nThat second sentence is the one to hold onto. **Confidence is a\nstyle, not a signal.** When the model writes \"The Air Canada\nchatbot policy was upheld in *Moffatt v. Air Canada*, 2024\" with\nthe same tone it writes \"Paris is the capital of France,\" it is not\ntelling you which one it's sure about. It is, in both cases, just\nwriting the most likely next token. One of those facts happens to\nbe real. (The lawsuit was real and Air Canada lost. The citation\nformatting is illustrative.) The model wrote both sentences with\nthe same confidence because the model has only one confidence\nsetting: whatever the temperature is set to.\n\n## Why this matters more for builders than for users\n\nWhen you're using ChatGPT yourself as a user, a hallucination is\nannoying but recoverable. You read the answer, you notice something\nfeels off, you check it, you move on.\n\nWhen you're **building** with the model — say, you've put it on a\nwebsite to answer customer questions, or you've wired it into an\ninternal tool that lawyers depend on, or you've made it the front\nend of a government program — a hallucination is not annoying. It\nis a lawsuit, a regulatory violation, a customer-facing scandal, or\nall three.\n\nThis course will spend an entire lesson (ch24, lesson 04) walking\nthrough real incidents. As a preview:\n\n- **Air Canada** shipped a customer-service chatbot in 2022 that\n  invented a bereavement-refund policy that didn't exist. A\n  bereaved customer relied on it, was denied the refund, and sued.\n  Canada's civil-resolution tribunal ruled in 2024 that Air Canada\n  was responsible for what its chatbot said. The airline paid out\n  and the policy made the front page of every \"AI risk\" piece in\n  2024-25.\n- **NYC's MyCity chatbot**, launched 2024, told small-business\n  owners they could fire workers for reporting sexual harassment,\n  steal employees' tips, and serve food rats had nibbled on. All\n  illegal. The chatbot was confident. The errors made the *New York\n  Times*. The Mayor's office defended it for weeks before quietly\n  scoping it back.\n- **DPD's customer-service chatbot** in early 2024 was prompt-injected\n  into swearing at a customer, writing a poem about how terrible\n  DPD was, and recommending alternative couriers. The customer\n  posted screenshots. The chatbot was pulled the same day.\n\nThree different companies. Three different industries. Three\ndifferent prompts. One shared mechanism: the model produced fluent\ntext, the team shipped it without verification, the fluent text\nturned out to be either fiction or hijacked.\n\nYou are going to spend the rest of this course building the muscle\nto **not be that team**. The muscle is: a fluent answer is not a\nverified answer. The model's confidence is a style. The model's\ncorrectness is something you have to engineer for, separately,\nusing ground-truth retrieval (ch15), evals (ch24), and human review\nat the right points (ch22).\n\n## The right mental model\n\nHold these three sentences:\n\n1. The model produces a probability distribution over next tokens.\n2. The output you see is a sample from that distribution, the\n   shape of which is set by the temperature.\n3. The model does not know which samples are true. You do.\n\nLesson 02 gave you the first two. This reading is the third. Once\nyou can hold all three at once, \"hallucination\" stops being a\nmysterious failure mode and starts being a predictable consequence\nof the same mechanism that produces every other output the model\nmakes.\n\nThe model is always doing the same thing. Your job — and the job of\nevery chapter after this one — is to engineer the system around the\nmodel so the parts that have to be true actually are.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "mc",
+          "id": "before-you-build/how-to-talk-to-one/s06-06-spot-the-vibes-prompt",
+          "xp": 2,
+          "hint": [
+            {
+              "level": 1,
+              "body": "Walk the five knobs (role, task, context, format, examples) and count how many each prompt fills. The vibes-based one has zero. It also has no scope ('everything important') and no format ('what should I do'), which forces the model to invent both the boundaries and the shape of the answer.",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 70,
+          "concept": "spot-the-hallucination-risk",
+          "prompt": "Four prompts. Three have most of the 5 knobs filled. One is pure\nvibes — no role, no real task scope, no context, no format, no\nexamples. Which one is most likely to produce hallucinated or\nwildly inconsistent output?\n",
+          "options": [
+            {
+              "id": "a",
+              "label": "A — paralegal, 3 bullets under 25 words, example included",
+              "explain": "Role, task, format, and an example. Very on-shape — about as low-hallucination-risk as a summarization task gets."
+            },
+            {
+              "id": "b",
+              "label": "B — CS lead, 3-queue classifier with explicit definitions",
+              "explain": "Role, task, context (queue definitions), format (queue name only). This is a textbook classifier prompt. Low variance, low hallucination risk."
+            },
+            {
+              "id": "c",
+              "label": "C — 'tell me everything important about AI safety...'"
+            },
+            {
+              "id": "d",
+              "label": "D — financial analyst, extract three fields, JSON output, null-on-missing",
+              "explain": "Role, task, format (explicit JSON shape), and an edge-case rule. The model has nothing to invent — every field is named. This is the OPPOSITE of a hallucination-prone prompt."
+            }
+          ],
+          "answerIds": [
+            "c"
+          ],
+          "shuffle": false,
+          "code": "# four prompts. one of them is most likely to produce a hallucination\n# or inconsistent output. find it.\nprompts = {\n    \"A\": (\n        \"You are a paralegal. Summarize the attached deposition transcript \"\n        \"in 3 bullets under 25 words each. Example bullet: \"\n        \"- Witness confirmed shifts averaged 11.5 hours.\"\n    ),\n    \"B\": (\n        \"You are a customer-service lead. Classify the following email as \"\n        \"LEGAL, REFUND, or GENERAL. LEGAL = threatens litigation or cites \"\n        \"a regulator. REFUND = asks for money back. GENERAL = everything \"\n        \"else. Return only the queue name.\"\n    ),\n    \"C\": (\n        \"tell me everything important about ai safety and what i should \"\n        \"do about it for my company\"\n    ),\n    \"D\": (\n        \"You are a financial analyst. Given the attached Q3 earnings PDF, \"\n        \"extract revenue, gross margin, and operating income. Return JSON: \"\n        \"{\\\"revenue\\\": <number>, \\\"gross_margin_pct\\\": <number>, \"\n        \"\\\"operating_income\\\": <number>}. If a field is missing, return null.\"\n    ),\n}\nfor k, v in prompts.items():\n    print(f\"{k}: {v[:90]}{'...' if len(v) > 90 else ''}\")\n",
+          "runnable": true
+        },
+        {
+          "type": "write",
+          "id": "before-you-build/how-to-talk-to-one/s07-07-structure-the-vague-prompt",
+          "xp": 5,
+          "hint": [
+            {
+              "level": 1,
+              "body": "Five lines, all f-strings. Read the keys out of the knobs dict for role, context, format, examples. Drop the vague request straight into the Task slot. Join with newlines and return one string.",
+              "cost": 0
+            },
+            {
+              "level": 2,
+              "body": "Build a list of five strings ['Role: ...', 'Task: ...', 'Context: ...', 'Format: ...', 'Examples: ...'] using f-strings, then return '\\n'.join(lines). The blank line between the two printed prompts comes from the `print()` call in the starter, not from your function.",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 280,
+          "concept": "structure-a-vague-prompt",
+          "prompt": "Write `structure_prompt(vague, knobs)` that takes a vague task\nrequest (string) and a dict of structuring knobs and returns a\nstructured multi-line prompt as a single string.\n\nThe `knobs` dict has these keys:\n- `role`: string (the role the model should play)\n- `context`: string (the background the model needs to do the task)\n- `format`: string (the output shape)\n- `examples`: string (one or more example outputs)\n\nReturn a string with exactly this template, joined by `\\n`:\n\n```\nRole: <role>\nTask: <vague>\nContext: <context>\nFormat: <format>\nExamples: <examples>\n```\n\nNotice: the vague request goes in the `Task:` slot verbatim. The\nfour knobs fill the other slots. We're not asking the model to be\nclever — we're putting the brief into the shape the model can\nactually read. Five knobs, five sections.\n\nTwo calls run. Expected output:\n```\n--- email triage prompt ---\nRole: customer service lead at a 30-person SaaS company\nTask: summarize this email\nContext: inbound queue averages 200 emails/day, most are status checks; refund requests get flagged to finance\nFormat: 3 bullet points, each under 15 words\nExamples: 1. customer wants refund; 2. customer asking for status; 3. customer escalating\n\n--- contract review prompt ---\nRole: startup-side contracts paralegal\nTask: review this services agreement\nContext: 12-person startup signing with a Fortune 500 vendor; legal budget is thin and we need the top risks, not a full memo\nFormat: 5 bullets covering payment, termination, IP, liability, renewal\nExamples: - Payment: Net-30, 2% late fee. - Termination: 30 days notice either side.\n```\n",
+          "starter": "# define structure_prompt(vague, knobs) below\n\nemail_prompt = structure_prompt(\n    \"summarize this email\",\n    {\n        \"role\": \"customer service lead at a 30-person SaaS company\",\n        \"context\": \"inbound queue averages 200 emails/day, most are status checks; refund requests get flagged to finance\",\n        \"format\": \"3 bullet points, each under 15 words\",\n        \"examples\": \"1. customer wants refund; 2. customer asking for status; 3. customer escalating\",\n    },\n)\n\ncontract_prompt = structure_prompt(\n    \"review this services agreement\",\n    {\n        \"role\": \"startup-side contracts paralegal\",\n        \"context\": \"12-person startup signing with a Fortune 500 vendor; legal budget is thin and we need the top risks, not a full memo\",\n        \"format\": \"5 bullets covering payment, termination, IP, liability, renewal\",\n        \"examples\": \"- Payment: Net-30, 2% late fee. - Termination: 30 days notice either side.\",\n    },\n)\n\nprint(\"--- email triage prompt ---\")\nprint(email_prompt)\nprint()\nprint(\"--- contract review prompt ---\")\nprint(contract_prompt)\n",
+          "grader": {
+            "kind": "stdout-equality",
+            "expected": "--- email triage prompt ---\nRole: customer service lead at a 30-person SaaS company\nTask: summarize this email\nContext: inbound queue averages 200 emails/day, most are status checks; refund requests get flagged to finance\nFormat: 3 bullet points, each under 15 words\nExamples: 1. customer wants refund; 2. customer asking for status; 3. customer escalating\n\n--- contract review prompt ---\nRole: startup-side contracts paralegal\nTask: review this services agreement\nContext: 12-person startup signing with a Fortune 500 vendor; legal budget is thin and we need the top risks, not a full memo\nFormat: 5 bullets covering payment, termination, IP, liability, renewal\nExamples: - Payment: Net-30, 2% late fee. - Termination: 30 days notice either side.\n",
+            "normalize": "collapse-trailing-newline"
+          },
+          "solution": "def structure_prompt(vague, knobs):\n    lines = [\n        f\"Role: {knobs['role']}\",\n        f\"Task: {vague}\",\n        f\"Context: {knobs['context']}\",\n        f\"Format: {knobs['format']}\",\n        f\"Examples: {knobs['examples']}\",\n    ]\n    return \"\\n\".join(lines)\n\nemail_prompt = structure_prompt(\n    \"summarize this email\",\n    {\n        \"role\": \"customer service lead at a 30-person SaaS company\",\n        \"context\": \"inbound queue averages 200 emails/day, most are status checks; refund requests get flagged to finance\",\n        \"format\": \"3 bullet points, each under 15 words\",\n        \"examples\": \"1. customer wants refund; 2. customer asking for status; 3. customer escalating\",\n    },\n)\n\ncontract_prompt = structure_prompt(\n    \"review this services agreement\",\n    {\n        \"role\": \"startup-side contracts paralegal\",\n        \"context\": \"12-person startup signing with a Fortune 500 vendor; legal budget is thin and we need the top risks, not a full memo\",\n        \"format\": \"5 bullets covering payment, termination, IP, liability, renewal\",\n        \"examples\": \"- Payment: Net-30, 2% late fee. - Termination: 30 days notice either side.\",\n    },\n)\n\nprint(\"--- email triage prompt ---\")\nprint(email_prompt)\nprint()\nprint(\"--- contract review prompt ---\")\nprint(contract_prompt)\n",
+          "hiddenTests": []
+        },
+        {
+          "type": "checkpoint",
+          "id": "before-you-build/how-to-talk-to-one/s08-08-checkpoint",
+          "xp": 8,
+          "hint": [],
+          "personalize": false,
+          "phase": "check",
+          "estSeconds": 240,
+          "concept": "score-prompts-by-knobs",
+          "prompt": "Final drill. Synthesize the 5-knob rubric into one function:\n`score_prompts(prompts)` that takes a list of prompt-audit\ndicts and returns a list of tuples sorted by score descending.\n\nEach input dict has six fields:\n- `name`: string (an identifier for the prompt)\n- `has_role`: bool\n- `has_task`: bool\n- `has_context`: bool\n- `has_format`: bool\n- `has_examples`: bool\n\nScore each prompt: every present knob adds 20 points (max 100).\n\nReturn a list of tuples `(name, score, missing)` where `missing` is\na list of the knob field names that are False, in this exact knob\norder: `has_role`, `has_task`, `has_context`, `has_format`,\n`has_examples`. Sort the returned list by score descending. On a\ntie, preserve the input order (Python's `sort` is stable).\n\nFive prompts run. Expected output:\n```\n('support-triage-v1', 100, [])\n('contract-summary-v2', 80, ['has_examples'])\n('marketing-blurb-draft', 60, ['has_context', 'has_examples'])\n('deposition-summary-v0', 40, ['has_role', 'has_format', 'has_examples'])\n('tell-me-everything', 20, ['has_role', 'has_context', 'has_format', 'has_examples'])\n```\n",
+          "starter": "prompts = [\n    {\"name\": \"support-triage-v1\",     \"has_role\": True,  \"has_task\": True, \"has_context\": True,  \"has_format\": True,  \"has_examples\": True},\n    {\"name\": \"contract-summary-v2\",   \"has_role\": True,  \"has_task\": True, \"has_context\": True,  \"has_format\": True,  \"has_examples\": False},\n    {\"name\": \"marketing-blurb-draft\", \"has_role\": True,  \"has_task\": True, \"has_context\": False, \"has_format\": True,  \"has_examples\": False},\n    {\"name\": \"deposition-summary-v0\", \"has_role\": False, \"has_task\": True, \"has_context\": True,  \"has_format\": False, \"has_examples\": False},\n    {\"name\": \"tell-me-everything\",    \"has_role\": False, \"has_task\": True, \"has_context\": False, \"has_format\": False, \"has_examples\": False},\n]\n\n# define score_prompts(prompts) below\n\nfor row in score_prompts(prompts):\n    print(row)\n",
+          "grader": {
+            "kind": "stdout-equality",
+            "expected": "('support-triage-v1', 100, [])\n('contract-summary-v2', 80, ['has_examples'])\n('marketing-blurb-draft', 60, ['has_context', 'has_examples'])\n('deposition-summary-v0', 40, ['has_role', 'has_format', 'has_examples'])\n('tell-me-everything', 20, ['has_role', 'has_context', 'has_format', 'has_examples'])\n",
+            "normalize": "collapse-trailing-newline"
+          },
+          "solution": "prompts = [\n    {\"name\": \"support-triage-v1\",     \"has_role\": True,  \"has_task\": True, \"has_context\": True,  \"has_format\": True,  \"has_examples\": True},\n    {\"name\": \"contract-summary-v2\",   \"has_role\": True,  \"has_task\": True, \"has_context\": True,  \"has_format\": True,  \"has_examples\": False},\n    {\"name\": \"marketing-blurb-draft\", \"has_role\": True,  \"has_task\": True, \"has_context\": False, \"has_format\": True,  \"has_examples\": False},\n    {\"name\": \"deposition-summary-v0\", \"has_role\": False, \"has_task\": True, \"has_context\": True,  \"has_format\": False, \"has_examples\": False},\n    {\"name\": \"tell-me-everything\",    \"has_role\": False, \"has_task\": True, \"has_context\": False, \"has_format\": False, \"has_examples\": False},\n]\n\nKNOBS = [\"has_role\", \"has_task\", \"has_context\", \"has_format\", \"has_examples\"]\n\ndef score_prompts(prompts):\n    results = []\n    for p in prompts:\n        score = sum(20 for k in KNOBS if p.get(k))\n        missing = [k for k in KNOBS if not p.get(k)]\n        results.append((p[\"name\"], score, missing))\n    results.sort(key=lambda row: -row[1])\n    return results\n\nfor row in score_prompts(prompts):\n    print(row)\n",
+          "passThreshold": 0.66
+        }
+      ],
+      "xpTotal": 21
+    },
+    {
+      "slug": "where-this-course-goes",
+      "title": "Where this course goes (and where you fit)",
+      "estMinutes": 18,
+      "prerequisites": [
+        "how-to-talk-to-one"
+      ],
+      "steps": [
+        {
+          "type": "read",
+          "id": "before-you-build/where-this-course-goes/s01-01-the-course-in-five-levels",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "warmup",
+          "estSeconds": 260,
+          "concept": "course-shape-in-five-levels",
+          "body": "# The course is a ramp, not a journey\n\nThere are 30 chapters after this one. They are not all the same shape.\nSome are pure syntax. Some are pure judgment. A few are deep technical\nsections that will cost you a weekend each. The honest read is that\nthis course gets steeper as it goes, and the steepness is the point —\nby chapter 30 you are doing something that, in 2026, almost nobody\nknows how to do.\n\nHere is the whole map, in five levels.\n\n## Level 1 — Python that doesn't lie to you (ch01-11)\n\nVariables. Functions. Lists, dicts, loops, conditionals. Tracebacks.\nMutation. Modules. Errors. Files. Classes.\n\nThis is the layer most people quit on, because they expect it to be\nexciting and it isn't. It's plumbing. You're learning the language the\nrest of the course is written in. By the end of ch11 you can read a\n30-line Python program and know what it does — including the parts\nthat fail.\n\nThe win at this level: when an LLM ships you code and tells you it\nworks, you can actually check.\n\n## Level 2 — Talking to models (ch12-15)\n\nHTTP and APIs. LLM APIs. Structured output. MCP.\n\nThis is where Python stops being abstract. You make your first real\nAPI call. You see the request, the response, the cost, the latency.\nYou learn the messages pattern that every agent is built on top of.\nBy the end of ch15 you have written code that sent text to a model\nand got text back, on purpose, for a reason.\n\nThe win at this level: you stop using ChatGPT.com and start using the\nunderlying machine.\n\n## Level 3 — Loops, prompting, evals (ch16-21)\n\nAgent loops. Git. Secrets. Prompting. Agent traces. Evals.\n\nThis is the level where you stop using AI and start building WITH AI.\nYou write a loop that asks a model, reads the answer, decides what to\ndo next, asks again. You write prompts as code, version them, test\nthem. You learn to grade the model's outputs — which is the actual\njob in 2026.\n\nThe win at this level: you become someone who can ship an agent and\ntell whether it works.\n\n## Level 4 — Production realities (ch22-25)\n\nRetrieval. Production tradeoffs. Debugging. Capstone.\n\nThis is where the demo dies and the product begins. You learn what\nbreaks when an agent leaves your laptop — cost spikes, hallucinations\nin production, traceback that doesn't reach you because the agent\nswallowed the error. The capstone is a real thing you ship.\n\nThe win at this level: you build something a friend could actually\nuse, and you know its failure modes.\n\n## Level 5 — Harness engineering (ch26-30)\n\nAgent harnesses. AI image gen. AI video gen. Programmatic design.\nHarness engineering.\n\nThis is where you stop competing with displaced juniors and start\nout-shipping them. A \"harness\" is the discipline of turning a model\ninto an agent — the scaffolding around the model that makes it\nreliable, observable, and ownable. By ch30, you are someone who could\nbe hired to build the agent that does the job you used to have.\n\nThe win at this level: you are the scarce person now.\n\n## The honest read\n\nThis is not a journey. It is a ramp. It is not equally steep the whole\nway — ch01 is gentler than ch16 is gentler than ch26. You will\nstruggle in places. You will feel slow. You will hit a chapter and\nthink \"I cannot do this,\" and then you will do it.\n\n> The students who finish are not the smartest ones. They are the ones\n> who kept showing up after the lessons stopped feeling fun.\n\nThis lesson is the map. The next four lessons in this lesson are\nabout which path through the map you should take, what realistic\ntimelines look like, and where to be careful.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "read",
+          "id": "before-you-build/where-this-course-goes/s02-02-the-new-scarce-profile",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "warmup",
+          "estSeconds": 240,
+          "concept": "scarce-profile-at-the-intersection",
+          "body": "# Who's scarce in 2026\n\nThere are two skills that hiring managers are paying for right now.\nOne is **writing prompts that don't waste tokens or produce garbage**.\nThe other is **writing code that doesn't fall over when the model\nhallucinates inside it**. Almost everyone can do one. Almost nobody\ncan do both.\n\nThat intersection — prompt fluent AND code fluent — is the niche this\ncourse is aimed at. It is small. That's why it pays.\n\n> Every AI feature shipping today needs someone who reads outputs like\n> a paralegal reads a contract. That person is rare. That person is\n> you, plus six weeks.\n\n## The role spectrum\n\nThe intersection isn't a single job. It's a spectrum. Different\nchapters of this course serve different end-states on it.\n\n- **Prompt engineer.** The most accessible role. You write, version,\n  and grade prompts. Less code, more language. The chapters that\n  matter most: ch01-04 (basic Python so you can read code), ch13\n  (LLM APIs), ch19 (prompting), ch21 (evals). Salary range in mid-2026:\n  $90k-$140k for in-house, $150k-$250k for senior agency or product\n  roles.\n- **Eval engineer.** The role that grew out of \"the prompts are good\n  but how do we know?\" You write graders, build test sets, run\n  regression tests against new model versions. The chapters that\n  matter most: ch11 (classes), ch14 (structured output), ch20 (agent\n  traces), ch21 (evals). This is the most underrated role in the\n  market right now.\n- **Agent builder.** You wire models into loops, tools, and\n  retrieval. You build the thing that actually runs. The chapters\n  that matter most: all of ch12-25. The bulk of the course aims here.\n- **Harness engineer.** The advanced role. You build the scaffolding\n  that makes agents reliable in production — the retry logic, the\n  observability, the cost guards, the failover. Chapters: ch22-30.\n  Almost nobody has done this for two years yet, because the role\n  didn't exist two years ago. Top of the market.\n\nYou do not need to pick one now. Most people end up sliding along the\nspectrum as they learn what they're good at. The course is built so\nthat finishing ch01-21 puts you in prompt engineer or eval engineer\nrange, ch01-25 puts you in agent builder range, and ch01-30 puts you\nin harness engineer range. Each tier is a real job.\n\n## The \"differently technical\" advantage\n\nIf you came from copywriting, support, paralegal work, or design —\nyou already do something that most engineers can't:\n\n- You can read a paragraph and tell whether it's lying. Engineers\n  often can't. They check syntax, not semantics.\n- You can write a brief that another human can actually execute.\n  Engineers often can't. They write specs for compilers, not people.\n- You have tolerance for ambiguous, judgment-driven, partly-subjective\n  work. Engineers often don't. They want type signatures.\n\nThose three skills are exactly what eval engineering and prompt\nengineering are. You are not catching up to engineers. You are\nadding their layer to a skill set they don't have.\n\n> By chapter 30 you won't be \"using AI.\" You'll be the person other\n> engineers ask how to use it.\n\nIf you came from engineering — you have the inverse advantage. You\ncan already read tracebacks, ship to production, reason about\nconcurrency. The thing you're adding is the language layer: the\ndiscipline of writing prompts that don't waste the model and reading\noutputs like a paralegal reads a contract. That's why your path\nthrough the course skips different chapters than the copywriter's\npath does. We'll map both paths in the next two lessons.\n\n## What this means concretely\n\nThe market does not pay for \"I learned Python.\" It pays for \"I can\nship the thing that does the job you used to pay a junior to do.\"\n\nEvery chapter of this course is calibrated to that bar. By the time\nyou finish, you should be able to point at a workflow at a company\nand say: \"I could rebuild that as an agent. Here's what it would\ncost. Here's how I'd grade whether it works.\"\n\nThat sentence is what the intersection sounds like out loud. We're\ngoing to get you there.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "mc",
+          "id": "before-you-build/where-this-course-goes/s03-03-pick-your-path",
+          "xp": 2,
+          "hint": [
+            {
+              "level": 1,
+              "body": "Different learners have different bottlenecks. The bottleneck for an experienced engineer is NOT 'what is a variable' — it's 'what does an eval actually look like.' Respect what they already know. But don't strip the course down to almost nothing either — the middle chapters are where the new skills live.",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 70,
+          "concept": "route-by-existing-skills",
+          "prompt": "Maya is one of the four learners above — a displaced senior Python\nengineer with 8 years of experience. She just started the course.\nWhich chapter ordering makes the most sense for HER specifically?\n",
+          "options": [
+            {
+              "id": "skip_basics",
+              "label": "Skip ch01-03 (variables, functions, lists/dicts) and start at ch04. She already knows Python; respect her existing skills and route her toward LLM APIs and evals."
+            },
+            {
+              "id": "straight_through",
+              "label": "Start at ch01 and read every chapter in order. The curriculum is the curriculum; treat all learners identically.",
+              "explain": "This is the wrong call for an experienced engineer. Re-reading 'what is a variable' for two weeks is how you lose someone who can already code. Course completion drops hardest for advanced learners forced through beginner material — they assume the whole course is beneath them and quit before reaching the part that's actually new."
+            },
+            {
+              "id": "skip_python_entirely",
+              "label": "Skip Python entirely. She can just use LLMs to write all her code from now on.",
+              "explain": "This is wrong for every learner, including this one. You cannot build agents you can't read. When the model ships her 200 lines that almost work, she has to know which 12 are wrong. 'I'll just vibe-code it' is the path that gets you stuck the first time the model is confidently wrong, which is on day three."
+            },
+            {
+              "id": "start_at_capstone",
+              "label": "Skip everything except ch25 (capstone) and ch30 (harness engineering). She's an engineer — she can figure out the middle on her own.",
+              "explain": "An experienced engineer can skip syntax, not the substance. The middle chapters (prompting, evals, retrieval, traces) are the part she has never done. Skipping them is how you produce someone who can spin up an LLM call and has no idea why it's hallucinating."
+            }
+          ],
+          "answerIds": [
+            "skip_basics"
+          ],
+          "shuffle": false,
+          "code": "# four learner profiles, all entering the course in week one\nlearners = [\n    {\"name\": \"Maya\",  \"background\": \"displaced SWE (8 yrs Python)\",        \"weekly_hours\": 15},\n    {\"name\": \"Devon\", \"background\": \"displaced copywriter (12 yrs agency)\", \"weekly_hours\": 10},\n    {\"name\": \"Priya\", \"background\": \"displaced CS team lead (managed 12)\",  \"weekly_hours\": 12},\n    {\"name\": \"Jules\", \"background\": \"displaced designer (Figma + prompts)\", \"weekly_hours\": 10},\n]\nfor l in learners:\n    print(f\"- {l['name']:6} | {l['background']:45} | {l['weekly_hours']} hrs/wk\")\n",
+          "runnable": true
+        },
+        {
+          "type": "read",
+          "id": "before-you-build/where-this-course-goes/s04-04-what-week-four-looks-like",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 240,
+          "concept": "realistic-time-to-competence",
+          "body": "# This is not a 10-day bootcamp\n\nThe most common lie in AI education in 2026 is the timeline. \"Learn AI\nin a weekend.\" \"Build your first agent in 48 hours.\" \"From zero to AI\nengineer in two weeks.\" None of that is honest. Real competence\ntakes three to six months of consistent work, and the only way to make\nthat shorter is to start from a higher floor.\n\nHere is what actually happens, week by week, for someone starting at\nch01 with no programming background and 10-12 hours a week to give\nthis.\n\n## Week 1 — ch01-04\n\nYou finish variables, functions, lists/dicts, and loops. You can\ntype a 10-line program. You feel slow and awkward and the syntax\ntrips you up constantly. The error messages still feel rude. You\nmake six mistakes per session and only see why on the fourth one.\n\nThis is the hardest week. It is harder than ch26. Push through.\n\n## Week 2-3 — ch05-11\n\nConditionals, tracebacks, mutation, modules, error handling, files,\nclasses. Your programs grow from 10 lines to 30 to 60. You start\nseeing patterns repeat — `for x in y`, `if x is None`, `try/except`.\nTracebacks stop feeling rude and start feeling helpful, which is the\nmoment Python actually flips for most people.\n\nBy the end of week 3 you have written about 400 lines of code in\ntotal. None of it does anything impressive. That's fine — that's not\nwhat this part is for.\n\n## Week 4-6 — ch12-19\n\nYour first LLM API call (ch13). Your first prompt that runs as code\n(ch19). Somewhere in here, usually around ch16 (agent loops), is the\n\"I built something\" moment — when a Python script you wrote calls a\nmodel, gets a response, decides what to do, and calls the model\nagain. That moment matters more than any chapter completion\ncertificate.\n\n> By the end of this chapter you will have graded an LLM's work and\n> been right about something it got wrong. That is the job now.\n\nThis is the phase where you start to feel like a builder. It is also\nthe phase where most people start telling their friends, \"I'm\nlearning to build with AI,\" and the friends say \"oh cool\" and have no\nidea what's happening. Do it anyway.\n\n## Month 2-3 — ch20-25\n\nAgent traces, evals, retrieval, production tradeoffs, debugging, and\nthe capstone. This is the chapter sequence where the demo dies and\nthe product begins. You will write something that breaks in\nproduction. You will spend a Saturday figuring out why. You will fix\nit. That Saturday is the day you become an engineer.\n\nBy the end of the capstone you have shipped something a friend could\nuse. Not great, not polished. Real.\n\n## Month 3-6 — ch26-30\n\nThe harness-engineering ramp. Agent harnesses, image gen, video gen,\nprogrammatic design, and then ch30, which is the chapter that names\nout loud what most of the other chapters were quietly teaching: how\nto design the scaffolding around a model so it stops being a demo\nand starts being a system.\n\nMost people don't get here. The people who do are the ones who\nbecome senior at this from a standing start.\n\n## Two honest calibrations\n\n**If you came in already coding** — strip 4-6 weeks off the front.\nYou will sprint through ch01-11 in a weekend. Your bottleneck is\nnot syntax; it's the prompting / evals / harness side. Aim for\nch12-25 in 6-8 weeks and ch26-30 in another 6-8.\n\n**If you have very limited time** — 5 hours a week or less — the\ntimeline doubles. That is honest. The skill still compounds, but\nyou'll hit the \"I built something\" moment around month 3 instead of\nweek 5. That is not failure. It is a 5-hour-a-week schedule. Plan\nyour life around it instead of pretending you'll suddenly have more\ntime next week.\n\nThe course is not \"AI bootcamp in 10 days.\" It is three to six\nmonths of real work, depending on starting point. Anyone selling\nyou faster is selling you something else.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "read",
+          "id": "before-you-build/where-this-course-goes/s05-05-the-limits-what-not-to-trust",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 240,
+          "concept": "trust-boundaries-and-blast-radius",
+          "body": "# What you do not trust an LLM with\n\nA model is a probability function. It is right most of the time and\ncatastrophically wrong some of the time. The difference between an\namateur and a builder is knowing which decisions you let it make and\nwhich ones you don't.\n\nThis is not a safety lecture. It's a calibration. Five categories\nwhere the answer is \"never as final word, always with a system layer\non top.\"\n\n## 1. Money movement\n\nNever let a model authorize a wire transfer, refund, payment, or\ncharge unprompted. Models will hallucinate amounts. Models will\nhallucinate authorizations. Models will, given the right prompt\ninjection, decide to send your customer's money to a wallet address\nin an email signature. Every dollar moved goes through a deterministic\nverification layer — usually a confirmation flow with a human, always\na hard ceiling that the model cannot exceed.\n\n## 2. Legal, medical, financial advice to specific people\n\nA model can summarize a contract. A model cannot tell your customer\nwhether to sign it. A model can explain what a symptom usually means.\nA model cannot diagnose a person. A model can describe how a 401(k)\nworks. A model cannot tell a 58-year-old whether to roll theirs into\nan IRA next month.\n\nThe distinction is generic explanation (fine) versus specific advice\nto an identified person (not fine without a licensed human in the\nloop). This isn't a vibes line — it's the line that, when crossed,\nbecomes the lawsuit.\n\n## 3. Identity verification\n\nNever use an LLM as the final check on \"is this person who they say\nthey are.\" Models are good at language. They are bad at \"this driver's\nlicense number was issued in 2019 by the state of Ohio.\" Identity\nverification belongs to a system that calls authoritative records,\nnot to a model that pattern-matches on what a license usually looks\nlike.\n\n## 4. Irreversible actions\n\nAnything that can't be undone — sending an email to 50,000 customers,\ndeleting a database, terminating a contract, posting publicly under\nyour brand — goes through a confirmation step, even if the rest of\nthe workflow is automated. The model can DRAFT the email. The model\ncan DRAFT the deletion. A human approves the irreversible part.\n\nThe rule of thumb: blast radius times reversibility. High blast,\nlow reversibility = human-in-the-loop, always.\n\n## 5. Real-time facts (especially after training cutoff)\n\nModels have a training cutoff. Ask one \"who is the CEO of [company]\"\nand you'll often get the CEO from 18 months ago. Ask one \"what's the\ncurrent price of [stock]\" and you'll often get a number from 2024.\nFor anything that changes over time — prices, headcount, news, who\nholds office, current law — the model is not the source of truth.\nThe retrieval layer is. (You'll learn that in ch22.)\n\n## Why this matters: every output crosses a trust boundary\n\nYour job as a builder is to decide, for every output the model\nproduces, whose responsibility the consequences are. If the output\ngoes straight to a customer, the model is the author. If the output\ngoes to a human reviewer first, the human is the author. If the\noutput triggers an action with real-world consequences, the system\nthat wraps the model is the author — and you wrote that system.\n\n> An airline once had to honor a refund policy its chatbot invented.\n> You're about to build chatbots.\n\nThat airline was Air Canada. Their chatbot told a bereaved customer\nabout a bereavement-discount policy that did not exist. The customer\nbooked the flight in reliance on the policy. The tribunal ruled the\nairline was bound by what its chatbot said. The chatbot's invented\npolicy became real policy, retroactively, in a courtroom.\n\nThat story has friends. The NYC MyCity small-business chatbot told\nbusiness owners they could fire workers for reporting harassment.\nThe DPD shipping bot was prompt-injected into swearing at customers\nand writing a poem about how bad DPD was. The Chevrolet dealership\nchatbot agreed to sell a Chevy Tahoe for $1, in writing.\n\nYou will dissect those incidents in detail in **ch24 (debugging\noutput)**, when you have the tools to spot what each team should\nhave caught. For now, the lesson is small: a deployed LLM is a\ndeployed contract author. The author has to be supervised.\n\n## The shape of the rest of the course\n\nEvery chapter after this one assumes you are building something that\nwill eventually be in front of a real user. The chapters on prompting,\nevals, retrieval, and harness engineering are not academic. They are\nthe supervisory layer that keeps your agent from becoming the next\nAir Canada.\n\nThe next two lessons are practical. First, a quick test of whether\nyou'd ship four real-sounding features. Then you write a function\nthat builds your own 30-day plan through the course.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "mc",
+          "id": "before-you-build/where-this-course-goes/s06-06-would-you-ship-this",
+          "xp": 2,
+          "hint": [
+            {
+              "level": 1,
+              "body": "Three of the four have catastrophic failure modes — irreversible money movement, irreversible legal commitment, or direct harm to a person. One of them has a human reviewing every output before it leaves the system. Low blast radius + user-in-the-loop = the one you ship.",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 70,
+          "concept": "ship-safety-by-blast-radius",
+          "prompt": "Four AI features. All four are technically buildable in 2026. Only\nONE is safe to ship to real users as-is, given what you just read\nabout trust boundaries. Which?\n",
+          "options": [
+            {
+              "id": "a",
+              "label": "A — the wire-transfer chatbot",
+              "explain": "Money movement based on email instructions is the textbook unsafe deployment. Email is the easiest prompt-injection surface in the world; the model will execute instructions that arrive in a forwarded message body. This is how companies lose seven figures in a single afternoon."
+            },
+            {
+              "id": "b",
+              "label": "B — the cover-letter drafter (user reviews before sending)"
+            },
+            {
+              "id": "c",
+              "label": "C — the autonomous legal-reply agent",
+              "explain": "Replying to legal demand letters without a human in the loop is the Air Canada failure mode multiplied by every plaintiff's attorney in the country. Anything the model writes becomes admissible. Anything the model concedes becomes binding. Irreversible action + brand risk + legal weight = never autonomous."
+            },
+            {
+              "id": "d",
+              "label": "D — the medication-dosage chatbot",
+              "explain": "Specific medical advice to identified patients is the canonical 'do not ship' category. The downside is harm to a person who took the model's word for it. This is not a courage-of-conviction call — there is a licensed clinician in the loop or there isn't, and 'there isn't' is the wrong answer."
+            }
+          ],
+          "answerIds": [
+            "b"
+          ],
+          "shuffle": false,
+          "code": "# four features. each one is technically buildable today.\n# which one would you actually ship to real users as-is?\nfeatures = {\n    \"A\": \"A chatbot that confirms and executes outbound wire transfers from the company's bank account based on email instructions.\",\n    \"B\": \"A tool that drafts personalized cover letters for job applicants. The applicant reads and edits before sending.\",\n    \"C\": \"An autonomous agent that reads incoming legal demand letters and replies on the company's behalf without human review.\",\n    \"D\": \"A chatbot that quotes specific medication dosages to patients based on their described symptoms.\",\n}\nfor k, v in features.items():\n    print(f\"{k}: {v}\")\n",
+          "runnable": true
+        },
+        {
+          "type": "write",
+          "id": "before-you-build/where-this-course-goes/s07-07-write-your-30-day-plan",
+          "xp": 5,
+          "hint": [
+            {
+              "level": 1,
+              "body": "Branch on profile['background']. Engineer is the only special case for starting_chapter and skip_list. Designer gets the //7 divisor; copywriter / cs_rep / paralegal share the //8 divisor. Target chapter is a single formula, same for everyone.",
+              "cost": 0
+            },
+            {
+              "level": 2,
+              "body": "Engineer math: starting=4, weekly = max(2, 20//5) = max(2, 4) = 4, target = min(30, 4 + 4*4 - 1) = min(30, 19) = 19. Copywriter math: starting=1, weekly = max(1, 10//8) = max(1, 1) = 1, target = min(30, 1 + 4*1 - 1) = min(30, 4) = 4. Watch the integer-division order: hours // 5 evaluates before max().",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 280,
+          "concept": "build-your-own-30-day-plan",
+          "prompt": "Write `make_30_day_plan(profile)` that takes a profile dict and\nreturns a plan dict.\n\nProfile shape:\n```\n{\"background\": \"engineer\" | \"copywriter\" | \"cs_rep\" | \"designer\" | \"paralegal\",\n \"hours_per_week\": int}\n```\n\nReturn shape:\n```\n{\"starting_chapter\": int,\n \"weekly_chapters\": int,\n \"target_chapter_at_30_days\": int,\n \"skip_list\": list[int]}\n```\n\nRules:\n\n- Engineer: starts at ch04 (skip ch01-03 basic syntax),\n  skip_list = [1, 2, 3], weekly_chapters = max(2, hours_per_week // 5).\n- Copywriter, cs_rep, paralegal: start at ch01, skip_list = [],\n  weekly_chapters = max(1, hours_per_week // 8).\n- Designer: start at ch01, skip_list = [], weekly_chapters\n  = max(1, hours_per_week // 7) (slightly faster than copywriter —\n  designers already have prompt-engineering reps from image tools).\n- target_chapter_at_30_days = min(30, starting_chapter + 4 *\n  weekly_chapters - 1) (four weeks of progress, capped at ch30).\n\nTwo profiles to run. Expected output:\n```\nengineer @ 20 hrs/wk: {'starting_chapter': 4, 'weekly_chapters': 4, 'target_chapter_at_30_days': 19, 'skip_list': [1, 2, 3]}\ncopywriter @ 10 hrs/wk: {'starting_chapter': 1, 'weekly_chapters': 1, 'target_chapter_at_30_days': 4, 'skip_list': []}\n```\n",
+          "starter": "engineer = {\"background\": \"engineer\", \"hours_per_week\": 20}\ncopywriter = {\"background\": \"copywriter\", \"hours_per_week\": 10}\n\n# define make_30_day_plan(profile) below\n\nprint(f\"engineer @ 20 hrs/wk: {make_30_day_plan(engineer)}\")\nprint(f\"copywriter @ 10 hrs/wk: {make_30_day_plan(copywriter)}\")\n",
+          "grader": {
+            "kind": "stdout-equality",
+            "expected": "engineer @ 20 hrs/wk: {'starting_chapter': 4, 'weekly_chapters': 4, 'target_chapter_at_30_days': 19, 'skip_list': [1, 2, 3]}\ncopywriter @ 10 hrs/wk: {'starting_chapter': 1, 'weekly_chapters': 1, 'target_chapter_at_30_days': 4, 'skip_list': []}\n",
+            "normalize": "collapse-trailing-newline"
+          },
+          "solution": "engineer = {\"background\": \"engineer\", \"hours_per_week\": 20}\ncopywriter = {\"background\": \"copywriter\", \"hours_per_week\": 10}\n\ndef make_30_day_plan(profile):\n    background = profile[\"background\"]\n    hours = profile[\"hours_per_week\"]\n    if background == \"engineer\":\n        starting_chapter = 4\n        skip_list = [1, 2, 3]\n        weekly_chapters = max(2, hours // 5)\n    elif background == \"designer\":\n        starting_chapter = 1\n        skip_list = []\n        weekly_chapters = max(1, hours // 7)\n    else:\n        # copywriter, cs_rep, paralegal\n        starting_chapter = 1\n        skip_list = []\n        weekly_chapters = max(1, hours // 8)\n    target = min(30, starting_chapter + 4 * weekly_chapters - 1)\n    return {\n        \"starting_chapter\": starting_chapter,\n        \"weekly_chapters\": weekly_chapters,\n        \"target_chapter_at_30_days\": target,\n        \"skip_list\": skip_list,\n    }\n\nprint(f\"engineer @ 20 hrs/wk: {make_30_day_plan(engineer)}\")\nprint(f\"copywriter @ 10 hrs/wk: {make_30_day_plan(copywriter)}\")\n",
+          "hiddenTests": []
+        },
+        {
+          "type": "checkpoint",
+          "id": "before-you-build/where-this-course-goes/s08-08-checkpoint",
+          "xp": 8,
+          "hint": [
+            {
+              "level": 1,
+              "body": "Extract the per-learner planning logic into a helper, then loop the list once. Build `routes` with `(name, start, target)` tuples in input order, and tally `by_background` with `dict.get(bg, 0) + 1`. The aggregate dict preserves insertion order in modern Python, so as long as you iterate learners in order, the by_background key order matches the expected output.",
+              "cost": 0
+            },
+            {
+              "level": 2,
+              "body": "Per-learner math: Maya (engineer, 20h) -> start=4, weekly=max(2,4)=4, target=min(30, 4+16-1)=19. Devon (copywriter, 16h) -> start=1, weekly=max(1,2)=2, target=min(30, 1+8-1)=8. Priya (cs_rep, 8h) -> start=1, weekly=1, target=4. Jules (designer, 14h) -> start=1, weekly=max(1, 14//7)=2, target=8. Sam (paralegal, 10h) -> start=1, weekly=1, target=4.",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "check",
+          "estSeconds": 240,
+          "concept": "route-a-cohort-through-the-course",
+          "prompt": "Final drill of chapter zero. Write `route_learners(learners)` that\ntakes a list of learner profile dicts and returns a dict with two\nkeys:\n\n- `routes`: a list of tuples `(name, starting_chapter,\n  target_chapter_at_30_days)`, in the same order as the input list.\n- `by_background`: a dict mapping background string -> integer\n  count of learners with that background.\n\nReuse the same routing rules from the previous lesson:\n\n- Engineer: starts at ch04, weekly_chapters = max(2, hours // 5).\n- Designer: starts at ch01, weekly_chapters = max(1, hours // 7).\n- Copywriter, cs_rep, paralegal: start at ch01,\n  weekly_chapters = max(1, hours // 8).\n- target_chapter_at_30_days = min(30, starting_chapter + 4\n  * weekly_chapters - 1).\n\nFive learners run, one per background. Expected output:\n```\nroutes:\n('Maya', 4, 19)\n('Devon', 1, 8)\n('Priya', 1, 4)\n('Jules', 1, 8)\n('Sam', 1, 4)\nby_background: {'engineer': 1, 'copywriter': 1, 'cs_rep': 1, 'designer': 1, 'paralegal': 1}\n```\n",
+          "starter": "learners = [\n    {\"name\": \"Maya\",  \"background\": \"engineer\",   \"hours_per_week\": 20},\n    {\"name\": \"Devon\", \"background\": \"copywriter\", \"hours_per_week\": 16},\n    {\"name\": \"Priya\", \"background\": \"cs_rep\",     \"hours_per_week\": 8},\n    {\"name\": \"Jules\", \"background\": \"designer\",   \"hours_per_week\": 14},\n    {\"name\": \"Sam\",   \"background\": \"paralegal\",  \"hours_per_week\": 10},\n]\n\n# define route_learners(learners) below\n\nresult = route_learners(learners)\nprint(\"routes:\")\nfor r in result[\"routes\"]:\n    print(r)\nprint(f\"by_background: {result['by_background']}\")\n",
+          "grader": {
+            "kind": "stdout-equality",
+            "expected": "routes:\n('Maya', 4, 19)\n('Devon', 1, 8)\n('Priya', 1, 4)\n('Jules', 1, 8)\n('Sam', 1, 4)\nby_background: {'engineer': 1, 'copywriter': 1, 'cs_rep': 1, 'designer': 1, 'paralegal': 1}\n",
+            "normalize": "collapse-trailing-newline"
+          },
+          "solution": "learners = [\n    {\"name\": \"Maya\",  \"background\": \"engineer\",   \"hours_per_week\": 20},\n    {\"name\": \"Devon\", \"background\": \"copywriter\", \"hours_per_week\": 16},\n    {\"name\": \"Priya\", \"background\": \"cs_rep\",     \"hours_per_week\": 8},\n    {\"name\": \"Jules\", \"background\": \"designer\",   \"hours_per_week\": 14},\n    {\"name\": \"Sam\",   \"background\": \"paralegal\",  \"hours_per_week\": 10},\n]\n\ndef _plan(background, hours):\n    if background == \"engineer\":\n        starting_chapter = 4\n        weekly_chapters = max(2, hours // 5)\n    elif background == \"designer\":\n        starting_chapter = 1\n        weekly_chapters = max(1, hours // 7)\n    else:\n        starting_chapter = 1\n        weekly_chapters = max(1, hours // 8)\n    target = min(30, starting_chapter + 4 * weekly_chapters - 1)\n    return starting_chapter, target\n\ndef route_learners(learners):\n    routes = []\n    by_background = {}\n    for learner in learners:\n        start, target = _plan(learner[\"background\"], learner[\"hours_per_week\"])\n        routes.append((learner[\"name\"], start, target))\n        by_background[learner[\"background\"]] = by_background.get(learner[\"background\"], 0) + 1\n    return {\"routes\": routes, \"by_background\": by_background}\n\nresult = route_learners(learners)\nprint(\"routes:\")\nfor r in result[\"routes\"]:\n    print(r)\nprint(f\"by_background: {result['by_background']}\")\n",
+          "passThreshold": 0.66
+        }
+      ],
+      "xpTotal": 21
+    }
+  ],
+  "xpTotal": 84
+}

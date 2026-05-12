@@ -1,0 +1,26 @@
+xp: 2
+estSeconds: 70
+concept: spot-the-wrong-mental-model
+prompt: |
+  Four statements someone might make about how an LLM works. Three
+  are correct or correct-with-a-nuance. ONE is actively wrong in a
+  way that will mislead them when they start building.
+
+  Pick the one that's wrong.
+options:
+  - id: learns_from_me
+    label: "When I correct the model and it apologizes and updates its answer, it has learned from me — the next user who asks the same question will get the corrected answer."
+  - id: stateless_with_notebook
+    label: "The model has no memory between calls; my chat app is faking continuity by re-sending the whole conversation each turn."
+    explain: "Correct. This is the goldfish-with-a-notebook framing from earlier in this lesson. The model is stateless; the harness carries state."
+  - id: distribution_not_token
+    label: "The output of the model is technically a probability distribution; what I see is one token sampled from that distribution."
+    explain: "Correct. This is the right one-sentence framing for what an LLM is."
+  - id: personality_in_prompt
+    label: "The reason Claude in Cursor feels different from Claude on the web isn't a different model — it's a different system prompt and harness."
+    explain: "Correct. Same weights, different costume. The personality lives in the prompt."
+answerIds:
+  - learns_from_me
+hint:
+  - level: 1
+    body: "The lesson on training vs inference made one point very explicitly: weights do not update at inference time. A correction inside a conversation does not change the model. The 'apology and correction' lives in the conversation transcript, not in the weights. The next user starts from the same weights you started from."

@@ -1,0 +1,15 @@
+slug: what-an-llm-actually-is
+title: "What an LLM actually is"
+estMinutes: 20
+prerequisites:
+  - the-situation-named-honestly
+order:
+  - 01-three-wrong-models.read.md
+  - 02-the-right-model-next-token-probability.read.md
+  - 03-which-framing-is-correct.mc.yaml
+  - 04-training-vs-inference.read.md
+  - 05-statelessness-and-context-window.read.md
+  - 06-same-model-different-personality.read.md
+  - 07-spot-the-mental-model-error.mc.yaml
+  - 08-write-the-next-token-predictor.write.yaml
+  - 09-checkpoint.checkpoint.yaml

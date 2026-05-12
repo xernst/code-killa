@@ -1,0 +1,24 @@
+xp: 2
+estSeconds: 60
+concept: which-skill-transfers
+prompt: |
+  Four skills from four different old jobs. Which one transfers MOST
+  directly to prompt engineering — i.e., to telling an AI model exactly
+  what you want and getting useful output back the first time?
+options:
+  - id: brief
+    label: "Writing a creative brief that a freelancer can execute against without three rounds of back-and-forth"
+  - id: typing
+    label: "Typing 90 words per minute with high accuracy"
+    explain: "Fast typing is irrelevant. Prompts are not measured in characters per second. They're measured in whether the model produces useful output. The bottleneck is the thinking that goes into the prompt, not the speed of typing it."
+  - id: memorize
+    label: "Memorizing the full Stripe or AWS API documentation"
+    explain: "Memorization is what the model is best at. The model has already memorized every API doc that existed before its training cutoff. Building skill on top of a model is about telling it what to do, not knowing what it already knows."
+  - id: meetings
+    label: "Running a 20-person meeting and keeping everyone aligned"
+    explain: "Meeting facilitation is a real skill, but it's a synchronous-human skill. Prompting is an asynchronous-to-machine skill. Closer transfer than typing, but the brief is still the more direct match — same structure (context, audience, constraints, success criteria), same output (a deliverable produced against the spec)."
+answerIds:
+  - brief
+hint:
+  - level: 1
+    body: "A prompt is a brief with the model as the freelancer. Same four sections: context, audience, constraints, what success looks like. If you've written a good creative brief, you've already written a good prompt — you just didn't call it that."

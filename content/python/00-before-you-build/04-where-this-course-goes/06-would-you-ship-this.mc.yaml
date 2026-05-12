@@ -1,0 +1,35 @@
+xp: 2
+estSeconds: 70
+concept: ship-safety-by-blast-radius
+code: |
+  # four features. each one is technically buildable today.
+  # which one would you actually ship to real users as-is?
+  features = {
+      "A": "A chatbot that confirms and executes outbound wire transfers from the company's bank account based on email instructions.",
+      "B": "A tool that drafts personalized cover letters for job applicants. The applicant reads and edits before sending.",
+      "C": "An autonomous agent that reads incoming legal demand letters and replies on the company's behalf without human review.",
+      "D": "A chatbot that quotes specific medication dosages to patients based on their described symptoms.",
+  }
+  for k, v in features.items():
+      print(f"{k}: {v}")
+prompt: |
+  Four AI features. All four are technically buildable in 2026. Only
+  ONE is safe to ship to real users as-is, given what you just read
+  about trust boundaries. Which?
+options:
+  - id: a
+    label: "A — the wire-transfer chatbot"
+    explain: "Money movement based on email instructions is the textbook unsafe deployment. Email is the easiest prompt-injection surface in the world; the model will execute instructions that arrive in a forwarded message body. This is how companies lose seven figures in a single afternoon."
+  - id: b
+    label: "B — the cover-letter drafter (user reviews before sending)"
+  - id: c
+    label: "C — the autonomous legal-reply agent"
+    explain: "Replying to legal demand letters without a human in the loop is the Air Canada failure mode multiplied by every plaintiff's attorney in the country. Anything the model writes becomes admissible. Anything the model concedes becomes binding. Irreversible action + brand risk + legal weight = never autonomous."
+  - id: d
+    label: "D — the medication-dosage chatbot"
+    explain: "Specific medical advice to identified patients is the canonical 'do not ship' category. The downside is harm to a person who took the model's word for it. This is not a courage-of-conviction call — there is a licensed clinician in the loop or there isn't, and 'there isn't' is the wrong answer."
+answerIds:
+  - b
+hint:
+  - level: 1
+    body: "Three of the four have catastrophic failure modes — irreversible money movement, irreversible legal commitment, or direct harm to a person. One of them has a human reviewing every output before it leaves the system. Low blast radius + user-in-the-loop = the one you ship."

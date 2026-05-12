@@ -1,0 +1,23 @@
+xp: 2
+estSeconds: 70
+concept: identify-correct-llm-framing
+prompt: |
+  Four framings of "what an LLM does." Only one is technically correct
+  in the way the rest of this course will treat it. Pick that one.
+options:
+  - id: looks_up
+    label: "It looks up the most relevant answer from its training data and returns it."
+    explain: "This is the 'it's like Google' folk model. LLMs don't retrieve — they generate, one token at a time. There is no index being queried at inference time."
+  - id: thinks_first
+    label: "It thinks about the question, decides what the answer is, then writes it out."
+    explain: "Anthropomorphizing. There's no separate 'thinking' step that decides on an answer before generation begins. The model produces a distribution over the next token, samples, and repeats. The 'thinking' is the generation."
+  - id: most_likely_word
+    label: "It picks the single most likely next word and writes it out, one word at a time."
+    explain: "Close but subtly wrong in a way that will trip you up later. The model produces a probability DISTRIBUTION over the next token, not 'the most likely.' What gets output depends on the sampler (temperature, top-p). Greedy decoding picks the top; most real usage samples from the distribution."
+  - id: distribution_then_sample
+    label: "It produces a probability distribution over every possible next token, samples one, then repeats."
+answerIds:
+  - distribution_then_sample
+hint:
+  - level: 1
+    body: "The reading made a specific point about the OUTPUT shape of the model. It's not a token. It's not 'the most likely token.' It's a distribution. The token you see is what happens AFTER the model finishes its work — the sampler does that part."
