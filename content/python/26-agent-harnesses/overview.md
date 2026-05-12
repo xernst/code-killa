@@ -2,6 +2,8 @@
 
 Every coding agent you use — Claude Code, Cursor, Aider, Continue, Cline, Codex CLI, OpenCode — is the same shape underneath. A user types something, the harness loads context (config files, recent edits, git state, open buffers), calls the model, parses the response, runs any tools the model asked for, sends results back, repeats. Chapter 16 had you write that loop. This chapter asks: what does Claude Code add on top, and could you build it yourself?
 
+> **A note on the case studies in this chapter**: the HVAC, insurance, recruiting, and other industry scenarios in lesson 03 are **illustrative**, not actual deployments. They're scenarios in the shape of how an agent-native rebuild could go — informed by patterns from real deployments (Klarna's customer service rebuild, Cresta's contact-center augmentation) but not direct case writeups. Treat them as "what if you applied this framework here?" thought experiments, not as documentation of companies that have shipped these systems. The one real anchor we keep returning to is Klarna — discussed in detail in ch00 and ch24 with full receipts (both the gains and the May 2025 walk-back). The five industry walkthroughs below borrow that shape; they do not claim to match it.
+
 The answer to "could you build it yourself" turns out to be yes — minimum viable harnesses are around 200 lines of Python. The interesting questions are which of the *additions* are load-bearing (you need them) versus which are sugar (your particular workflow doesn't).
 
 ## The four layers every harness has

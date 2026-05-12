@@ -1,0 +1,55 @@
+xp: 3
+estSeconds: 90
+concept: predict-next-token-at-temperature-zero
+code: |
+  # The model's output for "The capital of France is ___" — a tiny
+  # probability distribution over the next token. Five candidates, each
+  # with a probability the model assigned.
+  probabilities = {
+      "Paris": 0.97,
+      "the": 0.01,
+      "located": 0.005,
+      "in": 0.005,
+      "a": 0.005,
+  }
+
+  # At temperature 0, the sampler is greedy: it always picks the highest
+  # probability token. The code below prints that token and its
+  # probability as a percentage.
+  top_token = "Paris"
+  top_probability = probabilities[top_token]
+
+  print(f"next token: {top_token}")
+  print(f"probability: {top_probability}")
+prompt: |
+  Read the code on the right. The model just produced a probability
+  distribution over five candidate next tokens. The code looks up the
+  top one and prints it.
+
+  This is the entire core operation an LLM performs, billions of times a
+  day. What does this code print?
+grader:
+  kind: stdout-equality
+  expected: |
+    next token: Paris
+    probability: 0.97
+  normalize: collapse-trailing-newline
+hint:
+  - level: 1
+    body: |
+      Two `print()` lines. The first uses `top_token`, which is set to
+      `"Paris"`. The second uses `top_probability`, which is `probabilities["Paris"]` — i.e., the value stored at the `"Paris"` key.
+  - level: 2
+    body: |
+      `top_token` is `"Paris"`. `top_probability` is `0.97` (the value at
+      `probabilities["Paris"]`). The two printed lines are:
+
+      ```
+      next token: Paris
+      probability: 0.97
+      ```
+
+      That's the entire model output — a token plus the probability the
+      model assigned to it. Everything else an LLM does is this same
+      operation, repeated, with the output fed back in as part of the
+      next input.

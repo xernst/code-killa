@@ -169,35 +169,35 @@
         {
           "type": "checkpoint",
           "id": "before-you-build/the-situation-named-honestly/s07-07-checkpoint",
-          "xp": 8,
+          "xp": 6,
           "hint": [
             {
               "level": 1,
-              "body": "Start with an empty result dict that already has the three keys (`eaten`, `survived`, `advantage`) mapped to empty lists. Loop through the input. For each skill, look at its `category` field, map it to the right output key, and append the `name` to that list. Because you iterate the input in order and `list.append` keeps order, input order is preserved automatically.",
+              "body": "Same shape as the line you wrote in step 6, just three times. Each\nline is `print(f\"label: {variable}\")`. The labels are `Old role`,\n`What survived`, and `AI-era advantage`. The variable names are\nalready defined at the top of the starter.\n",
               "cost": 0
             },
             {
               "level": 2,
-              "body": "The category names in the input (`eaten_by_ai`, `survived_ai`, `new_advantage`) are different from the keys in the output (`eaten`, `survived`, `advantage`). You need a small mapping between the two. Either a dict like `{\"eaten_by_ai\": \"eaten\", ...}` (clean) or three `if/elif` branches (also fine for six skills).\n\nSkeleton:\n\n```python\ndef inventory(skills):\n    result = {\"eaten\": [], \"survived\": [], \"advantage\": []}\n    mapping = {\n        \"eaten_by_ai\": \"eaten\",\n        \"survived_ai\": \"survived\",\n        \"new_advantage\": \"advantage\",\n    }\n    for skill in skills:\n        result[mapping[skill[\"category\"]]].append(skill[\"name\"])\n    return result\n```\n",
+              "body": "Here are the three lines:\n\n```python\nprint(f\"Old role: {old_role}\")\nprint(f\"What survived: {survived}\")\nprint(f\"AI-era advantage: {advantage}\")\n```\n\nNo `def`, no loops, no lists. The skill this drill checks is the\nsame skill from step 6: drop a variable into a sentence using an\nf-string. The skill this drill *teaches* is naming your own\ntransferable strength out loud, in code that runs.\n",
               "cost": 0
             }
           ],
           "personalize": false,
           "phase": "check",
-          "estSeconds": 240,
-          "concept": "skills-inventory-grouping",
-          "prompt": "Final drill for this lesson. Take the skills inventory from earlier\n(what got eaten, what survived, what became the new advantage) and\nturn it into one function.\n\nWrite `inventory(skills)` that takes a list of skill dicts. Each dict\nhas two fields:\n\n- `name`: string (the skill)\n- `category`: one of `\"eaten_by_ai\"`, `\"survived_ai\"`, `\"new_advantage\"`\n\nReturn a dict with three keys — `eaten`, `survived`, `advantage` —\neach mapped to a list of the skill names in that category. Preserve\nthe input order: if \"manual document review\" appears before\n\"first-draft copywriting\" in the input, it should appear before it in\nthe output list too.\n\nSix skills run, two in each category. Expected output:\n\n```\n{'eaten': ['manual document review', 'first-draft copywriting'], 'survived': ['client relationship management', 'creative direction'], 'advantage': ['verification expertise', 'operational design']}\n```\n",
-          "starter": "skills = [\n    {\"name\": \"manual document review\",      \"category\": \"eaten_by_ai\"},\n    {\"name\": \"client relationship management\", \"category\": \"survived_ai\"},\n    {\"name\": \"first-draft copywriting\",     \"category\": \"eaten_by_ai\"},\n    {\"name\": \"verification expertise\",      \"category\": \"new_advantage\"},\n    {\"name\": \"creative direction\",          \"category\": \"survived_ai\"},\n    {\"name\": \"operational design\",          \"category\": \"new_advantage\"},\n]\n\n# define inventory(skills) below. it should return a dict with three\n# lists, preserving input order within each list.\n\n\n\nprint(inventory(skills))\n",
+          "estSeconds": 180,
+          "concept": "name-your-transferable-strength",
+          "prompt": "One last drill before chapter zero moves on. You just used `print()`\nand an f-string once. Now you'll use them three more times — same\nshape, no new syntax.\n\nThe starter declares three variables that summarize where you came\nfrom and what you bring to AI work:\n\n- `old_role` (string) — what you used to do\n- `survived` (string) — the part of that job the model can't do\n- `advantage` (string) — the AI-era role that part transfers to\n\nWrite three `print(f\"...\")` lines below them. The grader expects the\nexact sentences:\n\n```\nOld role: paralegal\nWhat survived: verification\nAI-era advantage: verification expertise on LLM outputs\n```\n\nThen change the three variable values at the top to match YOU. Don't\npick what sounds impressive — pick what's true. The chapter promised\nyou'd write code about your own situation, not someone else's. The\ngrader runs against the template values, but the muscle is in\nrewriting the inputs to your real ones before you move on.\n",
+          "starter": "old_role = \"paralegal\"\nsurvived = \"verification\"\nadvantage = \"verification expertise on LLM outputs\"\n\n# write three print() lines below using f-strings, one per variable.\n# the grader expects the sentences above, exactly.\n",
           "grader": {
             "kind": "stdout-equality",
-            "expected": "{'eaten': ['manual document review', 'first-draft copywriting'], 'survived': ['client relationship management', 'creative direction'], 'advantage': ['verification expertise', 'operational design']}",
+            "expected": "Old role: paralegal\nWhat survived: verification\nAI-era advantage: verification expertise on LLM outputs\n",
             "normalize": "collapse-trailing-newline"
           },
-          "solution": "skills = [\n    {\"name\": \"manual document review\",      \"category\": \"eaten_by_ai\"},\n    {\"name\": \"client relationship management\", \"category\": \"survived_ai\"},\n    {\"name\": \"first-draft copywriting\",     \"category\": \"eaten_by_ai\"},\n    {\"name\": \"verification expertise\",      \"category\": \"new_advantage\"},\n    {\"name\": \"creative direction\",          \"category\": \"survived_ai\"},\n    {\"name\": \"operational design\",          \"category\": \"new_advantage\"},\n]\n\ndef inventory(skills):\n    result = {\"eaten\": [], \"survived\": [], \"advantage\": []}\n    category_to_key = {\n        \"eaten_by_ai\": \"eaten\",\n        \"survived_ai\": \"survived\",\n        \"new_advantage\": \"advantage\",\n    }\n    for skill in skills:\n        key = category_to_key[skill[\"category\"]]\n        result[key].append(skill[\"name\"])\n    return result\n\nprint(inventory(skills))\n",
+          "solution": "old_role = \"paralegal\"\nsurvived = \"verification\"\nadvantage = \"verification expertise on LLM outputs\"\n\nprint(f\"Old role: {old_role}\")\nprint(f\"What survived: {survived}\")\nprint(f\"AI-era advantage: {advantage}\")\n",
           "passThreshold": 0.66
         }
       ],
-      "xpTotal": 20
+      "xpTotal": 18
     },
     {
       "slug": "what-an-llm-actually-is",
@@ -359,34 +359,32 @@
           "runnable": true
         },
         {
-          "type": "write",
-          "id": "before-you-build/what-an-llm-actually-is/s08-08-write-the-next-token-predictor",
-          "xp": 5,
+          "type": "predict",
+          "id": "before-you-build/what-an-llm-actually-is/s08-08-predict-the-next-token",
+          "xp": 3,
           "hint": [
             {
               "level": 1,
-              "body": "Two lines of real work. `top = max(vocab_probs, key=vocab_probs.get)` gives you the highest-probability token. Then build the return string with an f-string: `f'\"{top}\" ({vocab_probs[top]*100:.1f}%)'`. The `:.1f` format spec rounds to one decimal place.",
+              "body": "Two `print()` lines. The first uses `top_token`, which is set to\n`\"Paris\"`. The second uses `top_probability`, which is `probabilities[\"Paris\"]` — i.e., the value stored at the `\"Paris\"` key.\n",
               "cost": 0
             },
             {
               "level": 2,
-              "body": "Watch the quotes. The output needs LITERAL double-quote characters around the token, e.g., `\"Paris\"`. The easiest way is to write the f-string with single quotes on the outside: `f'\"{top}\" (...)'`. That way the doubles inside are just characters.",
+              "body": "`top_token` is `\"Paris\"`. `top_probability` is `0.97` (the value at\n`probabilities[\"Paris\"]`). The two printed lines are:\n\n```\nnext token: Paris\nprobability: 0.97\n```\n\nThat's the entire model output — a token plus the probability the\nmodel assigned to it. Everything else an LLM does is this same\noperation, repeated, with the output fed back in as part of the\nnext input.\n",
               "cost": 0
             }
           ],
           "personalize": false,
           "phase": "build",
-          "estSeconds": 240,
-          "concept": "predict-next-token-by-hand",
-          "prompt": "You're going to write, by hand, the core operation that every LLM\nin the world performs billions of times a day.\n\nWrite `predict_next_token(context, vocab_probs)` that takes:\n\n- `context`: a string — the text \"so far.\" We don't use it inside\n  the function (the real model would condition on it; we're\n  simulating with a precomputed distribution). It's there to make\n  the intent of the function readable.\n- `vocab_probs`: a dict mapping candidate next-token strings to\n  their probabilities (floats summing to <= 1.0).\n\nReturn a single string formatted exactly like this:\n```\n\"Paris\" (97.0%)\n```\n\nThat is: the highest-probability token in double quotes, a space,\nthen the probability as a percentage rounded to one decimal place,\nin parentheses.\n\nTwo runs. Expected output:\n```\n\"Paris\" (97.0%)\n\"blue\" (18.0%)\n```\n\nHint: `max(vocab_probs, key=vocab_probs.get)` gives you the key\nwith the highest value. Then use an f-string with `{p*100:.1f}` to\nformat the percentage.\n",
-          "starter": "france = {\n    \"Paris\": 0.97,\n    \"the\": 0.01,\n    \"located\": 0.005,\n    \"in\": 0.005,\n    \"a\": 0.005,\n}\n\ncolor = {\n    \"blue\": 0.18,\n    \"red\": 0.15,\n    \"green\": 0.13,\n    \"purple\": 0.10,\n    \"the\": 0.05,\n}\n\n# define predict_next_token(context, vocab_probs) below\n\nprint(predict_next_token(\"The capital of France is\", france))\nprint(predict_next_token(\"My favorite color is\", color))\n",
+          "estSeconds": 90,
+          "concept": "predict-next-token-at-temperature-zero",
+          "code": "# The model's output for \"The capital of France is ___\" — a tiny\n# probability distribution over the next token. Five candidates, each\n# with a probability the model assigned.\nprobabilities = {\n    \"Paris\": 0.97,\n    \"the\": 0.01,\n    \"located\": 0.005,\n    \"in\": 0.005,\n    \"a\": 0.005,\n}\n\n# At temperature 0, the sampler is greedy: it always picks the highest\n# probability token. The code below prints that token and its\n# probability as a percentage.\ntop_token = \"Paris\"\ntop_probability = probabilities[top_token]\n\nprint(f\"next token: {top_token}\")\nprint(f\"probability: {top_probability}\")\n",
+          "prompt": "Read the code on the right. The model just produced a probability\ndistribution over five candidate next tokens. The code looks up the\ntop one and prints it.\n\nThis is the entire core operation an LLM performs, billions of times a\nday. What does this code print?\n",
           "grader": {
             "kind": "stdout-equality",
-            "expected": "\"Paris\" (97.0%)\n\"blue\" (18.0%)\n",
+            "expected": "next token: Paris\nprobability: 0.97\n",
             "normalize": "collapse-trailing-newline"
-          },
-          "solution": "france = {\n    \"Paris\": 0.97,\n    \"the\": 0.01,\n    \"located\": 0.005,\n    \"in\": 0.005,\n    \"a\": 0.005,\n}\n\ncolor = {\n    \"blue\": 0.18,\n    \"red\": 0.15,\n    \"green\": 0.13,\n    \"purple\": 0.10,\n    \"the\": 0.05,\n}\n\ndef predict_next_token(context, vocab_probs):\n    top = max(vocab_probs, key=vocab_probs.get)\n    p = vocab_probs[top]\n    return f'\"{top}\" ({p*100:.1f}%)'\n\nprint(predict_next_token(\"The capital of France is\", france))\nprint(predict_next_token(\"My favorite color is\", color))\n",
-          "hiddenTests": []
+          }
         },
         {
           "type": "checkpoint",
@@ -408,7 +406,7 @@
           "passThreshold": 0.66
         }
       ],
-      "xpTotal": 22
+      "xpTotal": 20
     },
     {
       "slug": "how-to-talk-to-one",
@@ -558,34 +556,70 @@
           "runnable": true
         },
         {
-          "type": "write",
-          "id": "before-you-build/how-to-talk-to-one/s07-07-structure-the-vague-prompt",
-          "xp": 5,
+          "type": "fill",
+          "id": "before-you-build/how-to-talk-to-one/s07-07-label-the-five-knobs",
+          "xp": 4,
           "hint": [
             {
               "level": 1,
-              "body": "Five lines, all f-strings. Read the keys out of the knobs dict for role, context, format, examples. Drop the vague request straight into the Task slot. Join with newlines and return one string.",
+              "body": "Walk down the prompt one section at a time and ask: which of the\nfive knobs is this filling?\n\n- \"You are a...\" — that's the costume the model wears. Knob 1.\n- \"Review the attached...\" — one verb, one object. Knob 2.\n- The startup vs Fortune 500 background — the stuff the model\n  needs to know but wouldn't, by default. Knob 3.\n- \"Return 5 bullets...\" — the shape of the output. Knob 4.\n- The Net-30 bullet — one concrete model of what good looks like.\n  Knob 5.\n",
               "cost": 0
             },
             {
               "level": 2,
-              "body": "Build a list of five strings ['Role: ...', 'Task: ...', 'Context: ...', 'Format: ...', 'Examples: ...'] using f-strings, then return '\\n'.join(lines). The blank line between the two printed prompts comes from the `print()` call in the starter, not from your function.",
+              "body": "In order: `role`, `task`, `context`, `format`, `examples`. The\nwhole point of the five-knob scaffold is that you can read any\nprompt and label every line with the knob it's filling. Prompts\nthat read like one paragraph of vibes are skipping knobs — usually\nrole and examples, which is why they hallucinate.\n",
               "cost": 0
             }
           ],
           "personalize": false,
           "phase": "build",
-          "estSeconds": 280,
-          "concept": "structure-a-vague-prompt",
-          "prompt": "Write `structure_prompt(vague, knobs)` that takes a vague task\nrequest (string) and a dict of structuring knobs and returns a\nstructured multi-line prompt as a single string.\n\nThe `knobs` dict has these keys:\n- `role`: string (the role the model should play)\n- `context`: string (the background the model needs to do the task)\n- `format`: string (the output shape)\n- `examples`: string (one or more example outputs)\n\nReturn a string with exactly this template, joined by `\\n`:\n\n```\nRole: <role>\nTask: <vague>\nContext: <context>\nFormat: <format>\nExamples: <examples>\n```\n\nNotice: the vague request goes in the `Task:` slot verbatim. The\nfour knobs fill the other slots. We're not asking the model to be\nclever — we're putting the brief into the shape the model can\nactually read. Five knobs, five sections.\n\nTwo calls run. Expected output:\n```\n--- email triage prompt ---\nRole: customer service lead at a 30-person SaaS company\nTask: summarize this email\nContext: inbound queue averages 200 emails/day, most are status checks; refund requests get flagged to finance\nFormat: 3 bullet points, each under 15 words\nExamples: 1. customer wants refund; 2. customer asking for status; 3. customer escalating\n\n--- contract review prompt ---\nRole: startup-side contracts paralegal\nTask: review this services agreement\nContext: 12-person startup signing with a Fortune 500 vendor; legal budget is thin and we need the top risks, not a full memo\nFormat: 5 bullets covering payment, termination, IP, liability, renewal\nExamples: - Payment: Net-30, 2% late fee. - Termination: 30 days notice either side.\n```\n",
-          "starter": "# define structure_prompt(vague, knobs) below\n\nemail_prompt = structure_prompt(\n    \"summarize this email\",\n    {\n        \"role\": \"customer service lead at a 30-person SaaS company\",\n        \"context\": \"inbound queue averages 200 emails/day, most are status checks; refund requests get flagged to finance\",\n        \"format\": \"3 bullet points, each under 15 words\",\n        \"examples\": \"1. customer wants refund; 2. customer asking for status; 3. customer escalating\",\n    },\n)\n\ncontract_prompt = structure_prompt(\n    \"review this services agreement\",\n    {\n        \"role\": \"startup-side contracts paralegal\",\n        \"context\": \"12-person startup signing with a Fortune 500 vendor; legal budget is thin and we need the top risks, not a full memo\",\n        \"format\": \"5 bullets covering payment, termination, IP, liability, renewal\",\n        \"examples\": \"- Payment: Net-30, 2% late fee. - Termination: 30 days notice either side.\",\n    },\n)\n\nprint(\"--- email triage prompt ---\")\nprint(email_prompt)\nprint()\nprint(\"--- contract review prompt ---\")\nprint(contract_prompt)\n",
-          "grader": {
-            "kind": "stdout-equality",
-            "expected": "--- email triage prompt ---\nRole: customer service lead at a 30-person SaaS company\nTask: summarize this email\nContext: inbound queue averages 200 emails/day, most are status checks; refund requests get flagged to finance\nFormat: 3 bullet points, each under 15 words\nExamples: 1. customer wants refund; 2. customer asking for status; 3. customer escalating\n\n--- contract review prompt ---\nRole: startup-side contracts paralegal\nTask: review this services agreement\nContext: 12-person startup signing with a Fortune 500 vendor; legal budget is thin and we need the top risks, not a full memo\nFormat: 5 bullets covering payment, termination, IP, liability, renewal\nExamples: - Payment: Net-30, 2% late fee. - Termination: 30 days notice either side.\n",
-            "normalize": "collapse-trailing-newline"
-          },
-          "solution": "def structure_prompt(vague, knobs):\n    lines = [\n        f\"Role: {knobs['role']}\",\n        f\"Task: {vague}\",\n        f\"Context: {knobs['context']}\",\n        f\"Format: {knobs['format']}\",\n        f\"Examples: {knobs['examples']}\",\n    ]\n    return \"\\n\".join(lines)\n\nemail_prompt = structure_prompt(\n    \"summarize this email\",\n    {\n        \"role\": \"customer service lead at a 30-person SaaS company\",\n        \"context\": \"inbound queue averages 200 emails/day, most are status checks; refund requests get flagged to finance\",\n        \"format\": \"3 bullet points, each under 15 words\",\n        \"examples\": \"1. customer wants refund; 2. customer asking for status; 3. customer escalating\",\n    },\n)\n\ncontract_prompt = structure_prompt(\n    \"review this services agreement\",\n    {\n        \"role\": \"startup-side contracts paralegal\",\n        \"context\": \"12-person startup signing with a Fortune 500 vendor; legal budget is thin and we need the top risks, not a full memo\",\n        \"format\": \"5 bullets covering payment, termination, IP, liability, renewal\",\n        \"examples\": \"- Payment: Net-30, 2% late fee. - Termination: 30 days notice either side.\",\n    },\n)\n\nprint(\"--- email triage prompt ---\")\nprint(email_prompt)\nprint()\nprint(\"--- contract review prompt ---\")\nprint(contract_prompt)\n",
-          "hiddenTests": []
+          "estSeconds": 120,
+          "concept": "label-the-five-knobs",
+          "prompt": "A teammate sent over this prompt for a contract-review tool. It works,\nand it works because it fills all five knobs. The code below stores\neach section of the prompt in a variable — but the variable names have\nbeen blanked out.\n\nLabel each section with the correct knob name. The five knobs, in the\norder they appear in this prompt:\n\n- knob 1 (`___`) — who the model is\n- knob 2 (`___`) — what specifically to do\n- knob 3 (`___`) — background the model needs\n- knob 4 (`___`) — shape of the output\n- knob 5 (`___`) — one example of good output\n\nType each knob name in lowercase, singular: `role`, `task`, `context`,\n`format`, `examples`.\n",
+          "code": "___ = \"You are a startup-side contracts paralegal.\"\n\n___ = \"Review the attached services agreement.\"\n\n___ = (\n    \"12-person startup signing with a Fortune 500 vendor. \"\n    \"Legal budget is thin. We need the top risks, not a full memo.\"\n)\n\n___ = (\n    \"Return 5 bullets covering payment, termination, IP, liability, \"\n    \"and renewal. One sentence per bullet.\"\n)\n\n___ = \"- Payment: Net-30, 2% late fee. Risk: vendor can suspend service on day 31.\"\n",
+          "blanks": [
+            {
+              "id": "knob1",
+              "accept": [
+                "role"
+              ],
+              "caseSensitive": false,
+              "normalize": "trim"
+            },
+            {
+              "id": "knob2",
+              "accept": [
+                "task"
+              ],
+              "caseSensitive": false,
+              "normalize": "trim"
+            },
+            {
+              "id": "knob3",
+              "accept": [
+                "context"
+              ],
+              "caseSensitive": false,
+              "normalize": "trim"
+            },
+            {
+              "id": "knob4",
+              "accept": [
+                "format"
+              ],
+              "caseSensitive": false,
+              "normalize": "trim"
+            },
+            {
+              "id": "knob5",
+              "accept": [
+                "examples",
+                "example"
+              ],
+              "caseSensitive": false,
+              "normalize": "trim"
+            }
+          ]
         },
         {
           "type": "checkpoint",
@@ -607,7 +641,7 @@
           "passThreshold": 0.66
         }
       ],
-      "xpTotal": 21
+      "xpTotal": 20
     },
     {
       "slug": "where-this-course-goes",
@@ -639,7 +673,7 @@
           "phase": "warmup",
           "estSeconds": 240,
           "concept": "scarce-profile-at-the-intersection",
-          "body": "# Who's scarce in 2026\n\nThere are two skills that hiring managers are paying for right now.\nOne is **writing prompts that don't waste tokens or produce garbage**.\nThe other is **writing code that doesn't fall over when the model\nhallucinates inside it**. Almost everyone can do one. Almost nobody\ncan do both.\n\nThat intersection — prompt fluent AND code fluent — is the niche this\ncourse is aimed at. It is small. That's why it pays.\n\n> Every AI feature shipping today needs someone who reads outputs like\n> a paralegal reads a contract. That person is rare. That person is\n> you, plus six weeks.\n\n## The role spectrum\n\nThe intersection isn't a single job. It's a spectrum. Different\nchapters of this course serve different end-states on it.\n\n- **Prompt engineer.** The most accessible role. You write, version,\n  and grade prompts. Less code, more language. The chapters that\n  matter most: ch01-04 (basic Python so you can read code), ch13\n  (LLM APIs), ch19 (prompting), ch21 (evals). AI-engineering roles\n  span a wide range: junior in-house roles cluster lower, senior or\n  agency roles cluster higher. We won't quote a specific salary band —\n  the market has been moving every quarter — but most of the public\n  hiring data (LinkedIn Workforce Reports, Levels.fyi) shows the\n  AI-skilled premium is real for senior engineers and unclear at the\n  junior level. Treat any specific dollar number you read from a\n  course or a recruiter as an aspirational data point, not a guarantee.\n- **Eval engineer.** The role that grew out of \"the prompts are good\n  but how do we know?\" You write graders, build test sets, run\n  regression tests against new model versions. The chapters that\n  matter most: ch11 (classes), ch14 (structured output), ch20 (agent\n  traces), ch21 (evals). This is the most underrated role in the\n  market right now.\n- **Agent builder.** You wire models into loops, tools, and\n  retrieval. You build the thing that actually runs. The chapters\n  that matter most: all of ch12-25. The bulk of the course aims here.\n- **Harness engineer.** The advanced role. You build the scaffolding\n  that makes agents reliable in production — the retry logic, the\n  observability, the cost guards, the failover. Chapters: ch22-30.\n  Almost nobody has done this for two years yet, because the role\n  didn't exist two years ago. Top of the market.\n\nYou do not need to pick one now. Most people end up sliding along the\nspectrum as they learn what they're good at. The course is built so\nthat finishing ch01-21 puts you in prompt engineer or eval engineer\nrange, ch01-25 puts you in agent builder range, and ch01-30 puts you\nin harness engineer range. Each tier is a real job.\n\n## The \"differently technical\" advantage\n\nIf you came from copywriting, support, paralegal work, or design —\nyou already do something that most engineers can't:\n\n- You can read a paragraph and tell whether it's lying. Engineers\n  often can't. They check syntax, not semantics.\n- You can write a brief that another human can actually execute.\n  Engineers often can't. They write specs for compilers, not people.\n- You have tolerance for ambiguous, judgment-driven, partly-subjective\n  work. Engineers often don't. They want type signatures.\n\nThose three skills are exactly what eval engineering and prompt\nengineering are. You are not catching up to engineers. You are\nadding their layer to a skill set they don't have.\n\n> By chapter 30 you won't be \"using AI.\" You'll be the person other\n> engineers ask how to use it.\n\nIf you came from engineering — you have the inverse advantage. You\ncan already read tracebacks, ship to production, reason about\nconcurrency. The thing you're adding is the language layer: the\ndiscipline of writing prompts that don't waste the model and reading\noutputs like a paralegal reads a contract. That's why your path\nthrough the course skips different chapters than the copywriter's\npath does. We'll map both paths in the next two lessons.\n\n## What this means concretely\n\nThe market does not pay for \"I learned Python.\" It pays for \"I can\nship the thing that does the job you used to pay a junior to do.\"\n\nEvery chapter of this course is calibrated to that bar. By the time\nyou finish, you should be able to point at a workflow at a company\nand say: \"I could rebuild that as an agent. Here's what it would\ncost. Here's how I'd grade whether it works.\"\n\nThat sentence is what the intersection sounds like out loud. We're\ngoing to get you there.",
+          "body": "# Who's scarce in 2026\n\nThere are two skills that hiring managers are paying for right now.\nOne is **writing prompts that don't waste tokens or produce garbage**.\nThe other is **writing code that doesn't fall over when the model\nhallucinates inside it**. Almost everyone can do one. Almost nobody\ncan do both.\n\nThat intersection — prompt fluent AND code fluent — is the niche this\ncourse is aimed at. It is small. That's why it pays.\n\n> Every AI feature shipping today needs someone who reads outputs like\n> a paralegal reads a contract. That person is rare. That person is\n> you, plus six weeks.\n\n## The role spectrum\n\nThe intersection isn't a single job. It's a spectrum. Different\nchapters of this course serve different end-states on it.\n\n- **Prompt engineer.** The most accessible role. You write, version,\n  and grade prompts. Less code, more language. The chapters that\n  matter most: ch01-04 (basic Python so you can read code), ch13\n  (LLM APIs), ch19 (prompting), ch21 (evals). AI-engineering roles\n  span a wide range: junior in-house roles cluster lower, senior or\n  agency roles cluster higher. We won't quote a specific salary band —\n  the market has been moving every quarter — but most of the public\n  hiring data (LinkedIn Workforce Reports, Levels.fyi) shows the\n  AI-skilled premium is real for senior engineers and unclear at the\n  junior level. Treat any specific dollar number you read from a\n  course or a recruiter as an aspirational data point, not a guarantee.\n- **Eval engineer.** The role that grew out of \"the prompts are good\n  but how do we know?\" You write graders, build test sets, run\n  regression tests against new model versions. The chapters that\n  matter most: ch11 (classes), ch14 (structured output), ch20 (agent\n  traces), ch21 (evals). This is the most underrated role in the\n  market right now.\n- **Agent builder.** You wire models into loops, tools, and\n  retrieval. You build the thing that actually runs. The chapters\n  that matter most: all of ch12-25. The bulk of the course aims here.\n- **Harness engineer.** The advanced role. You build the scaffolding\n  that makes agents reliable in production — the retry logic, the\n  observability, the cost guards, the failover. Chapters: ch22-30.\n  Almost nobody has done this for two years yet, because the role\n  didn't exist two years ago. Top of the market.\n\nYou do not need to pick one now. Most people end up sliding along the\nspectrum as they learn what they're good at. The course is built so\nthat finishing ch01-21 puts you in prompt engineer or eval engineer\nrange, ch01-25 puts you in agent builder range, and ch01-30 puts you\nin harness engineer range. Each tier is a real job.\n\n## The \"differently technical\" advantage\n\nIf you came from copywriting, support, paralegal work, or design —\nyou already do something that most engineers can't:\n\n- You can read a paragraph and tell whether it's lying. Engineers\n  often can't. They check syntax, not semantics.\n- You can write a brief that another human can actually execute.\n  Engineers often can't. They write specs for compilers, not people.\n- You have tolerance for ambiguous, judgment-driven, partly-subjective\n  work. Engineers often don't. They want type signatures.\n\nThose three skills are exactly what eval engineering and prompt\nengineering are. You are not catching up to engineers. You are\nadding their layer to a skill set they don't have.\n\n> By chapter 30 you won't be \"using AI.\" You'll be the person other\n> engineers ask how to use it.\n\nIf you came from engineering — you have the inverse advantage. You\ncan already read tracebacks, ship to production, reason about\nconcurrency. The thing you're adding is the language layer: the\ndiscipline of writing prompts that don't waste the model and reading\noutputs like a paralegal reads a contract. That's why your path\nthrough the course skips different chapters than the copywriter's\npath does. We'll map both paths in the next two lessons.\n\n## What this means concretely\n\nThe market does not pay for \"I learned Python.\" It pays for \"I can\nship the thing that does the job you used to pay a junior to do.\"\n\nEvery chapter of this course is calibrated to that bar. By the time\nyou finish, you should be able to point at a workflow at a company\nand say: \"I could rebuild that as an agent. Here's what it would\ncost. Here's how I'd grade whether it works.\"\n\nThat sentence is what the intersection sounds like out loud. We're\ngoing to get you there.\n\n## What these personas leave out\n\nThe next step asks you to route four learner profiles — Maya, Devon,\nPriya, and Jules — through this course based on their background and\nweekly hours. The personas are deliberately simple. They have to be,\nbecause a multiple-choice question can't model a real life.\n\nReal displaced workers come with more variables than this exercise\ncan model:\n\n- **Childcare and caregiving load.** A 38-year-old single parent\n  retraining at night, after the kids are down, has a different curve\n  than a 28-year-old with no dependents. The \"10 hours a week\" looks\n  the same on paper and is not the same in lived time.\n- **Visa status.** A displaced engineer on H1-B has 60 days to find\n  a sponsoring employer or leave the country. The calculus is not\n  \"reskill at your own pace.\" It is \"ship something employable in\n  eight weeks or leave the life you built.\" This course is too slow\n  to be the entire answer for that worker. It can be part of one.\n- **Non-remote schedules.** A paralegal who works 9-6 in person at\n  a firm and is retraining on the side can't take the \"lunch hour\"\n  study slot the personas implicitly assume. Their study time is\n  evenings, weekends, and the 20 minutes on the train.\n- **Financial runway.** The student who is one missed mortgage\n  payment from foreclosure cannot afford a four-month investment\n  without a credible bridge income. The course gives you a skill\n  in 3-6 months. It does not pay rent. If the runway is shorter\n  than the timeline, the right plan is parallel — take this on the\n  side of whatever pays rent today.\n- **Mental-health load.** Grief over a lost job is not resolved by\n  finishing lesson 02. Anger, shame, fear, and the slow erosion of\n  identity that comes with being laid off are real variables in how\n  much capacity you have on any given week. The plan that ignores\n  this is the plan that breaks in week three.\n\nIf you don't match the personas exactly — and most readers won't —\npick the persona closest to your hours-per-week, then adjust your\nown plan for the variables this course can't model for you. The\ncourse can give you a skill. It cannot give you a different life.\nThe honest version of \"you can do this\" is \"you can do this, on top\nof everything else you are already carrying, if you build the plan\naround what you are actually carrying instead of around the persona\nthis exercise asks you to pick.\"",
           "cta": "Got it",
           "runnable": true
         },
@@ -758,38 +792,69 @@
           "runnable": true
         },
         {
-          "type": "write",
-          "id": "before-you-build/where-this-course-goes/s07-07-write-your-30-day-plan",
-          "xp": 5,
+          "type": "read",
+          "id": "before-you-build/where-this-course-goes/s07-06b-what-this-course-cannot-give",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 240,
+          "concept": "honest-limits-of-the-course",
+          "body": "# What this course cannot give you\n\nThis course can give you a real skill. There are things it cannot give\nyou, and the most honest thing we can do is name them up front so you\ncan decide whether the skill is worth the investment.\n\n## Your old salary back\n\nIf you were laid off from a $180k SWE role and are reading this on\nyour second month of severance, the most likely outcome of finishing\nthis course is NOT a job at $180k doing AI engineering. The market\nfor \"AI engineers\" exists but it does not pay 2023-FAANG-comp at the\njunior end, and the senior end requires experience this course alone\ncannot install. The honest outcome for a serious finisher is more\nlike: a credible AI-adjacent angle on roles you could already get\nwith your prior experience, plus the ability to ship internal AI\nfeatures at your existing employer if you find one. If your floor is\n\"replace my old comp,\" this course is a piece of the answer. It is\nnot the whole answer.\n\n## A guaranteed job\n\nThere is no course in the world that comes with a guaranteed job.\nAnyone who tells you otherwise is selling you the next bootcamp.\nWhat this course can do is give you a real skill, real public\nartifacts (the projects you ship in ch25), and a vocabulary for\nAI-engineering work that you can wear in an interview and demonstrate\nin a takehome. The job is still your work to find. The course writes\nthe skill. You still write the resume, take the calls, and run the\nloops.\n\n## Your network\n\nThe displaced worker's deepest loss is usually not the income — it's\nthe network. The 14 people at your old company who would have hired\nyou at their next place. The recruiter who knew your work. The Slack\nchannel where opportunities surfaced. This course cannot give you\nthose back. Building a new network is its own discipline, parallel\nto the technical skill this course teaches. Plan for both. If you\nspend the next four months only on this course, the skill will be\nreal and the network will still be gone.\n\n## The community connection\n\nWe do not pretend to be a community. There are no live calls, no\nmentorship pairings, no Slack channels staffed by humans. The course\nis a course. If you need community while you reskill, find it\nelsewhere — local meetups, online cohorts, Discord servers focused on\nAI engineering, the people you used to work with who are also in\ntransition. We will not fake it. A fake community is worse than no\ncommunity at all, and the displaced-worker market is full of fake\ncommunities right now.\n\n## A different life\n\nIf your life is hard before you start this course — a job loss you\ndidn't see coming, a partner who is also unemployed, a parent who\nneeds care, a kid in school, a body that won't sleep — finishing\nthis course does not fix any of that. It gives you one new skill.\nThe rest of your life keeps happening. The plan that pretends\notherwise is the plan that breaks in week three, when the model\ntakes a Saturday you didn't have to give it.\n\n## What we can give you\n\nWhat's left, after we name what we can't give:\n\n- A precise mental model of how LLMs work, what they're good at, and\n  where they fail.\n- The ability to write production-grade Python that ships AI features.\n- A vocabulary that lets you read AI-engineering writing without\n  getting hand-waved.\n- A real public portfolio of 1-3 shipped projects by the end of ch25.\n- A study cadence honest enough to survive the third week, when grief\n  and self-doubt usually kill the attempt.\n- The pattern recognition to look at a workflow and see whether an\n  agent could absorb it — which is the skill the next decade of work\n  is going to be measured against.\n\nIf you finish, you'll be a different kind of professional than you\nwere on the day you got cut. That is the offer. The rest is on you.\n\n> This is the most honest lesson in the course. If it is too honest,\n> the course is not for you, and we'd rather you knew that on day one\n> than on day ninety.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "mc",
+          "id": "before-you-build/where-this-course-goes/s08-07-pick-the-honest-30-day-plan",
+          "xp": 3,
           "hint": [
             {
               "level": 1,
-              "body": "Branch on profile['background']. Engineer is the only special case for starting_chapter and skip_list. Designer gets the //7 divisor; copywriter / cs_rep / paralegal share the //8 divisor. Target chapter is a single formula, same for everyone.",
+              "body": "Lesson 04 was explicit about month-1 math for a non-coder at 10-12\nhours/week: ch01-04, the language fluency floor. Anyone promising\nfaster is selling you the bootcamp lie the lesson named out loud.\n",
               "cost": 0
             },
             {
               "level": 2,
-              "body": "Engineer math: starting=4, weekly = max(2, 20//5) = max(2, 4) = 4, target = min(30, 4 + 4*4 - 1) = min(30, 19) = 19. Copywriter math: starting=1, weekly = max(1, 10//8) = max(1, 1) = 1, target = min(30, 1 + 4*1 - 1) = min(30, 4) = 4. Watch the integer-division order: hours // 5 evaluates before max().",
+              "body": "The honest plan: start at ch01, target ch03-04 by day 30, treat\nmonth 1 as language fluency only. The \"build something\" moment\ncomes in month 3, not month 1. The course is calibrated to that\nbar on purpose.\n",
               "cost": 0
             }
           ],
           "personalize": false,
           "phase": "build",
-          "estSeconds": 280,
-          "concept": "build-your-own-30-day-plan",
-          "prompt": "Write `make_30_day_plan(profile)` that takes a profile dict and\nreturns a plan dict.\n\nProfile shape:\n```\n{\"background\": \"engineer\" | \"copywriter\" | \"cs_rep\" | \"designer\" | \"paralegal\",\n \"hours_per_week\": int}\n```\n\nReturn shape:\n```\n{\"starting_chapter\": int,\n \"weekly_chapters\": int,\n \"target_chapter_at_30_days\": int,\n \"skip_list\": list[int]}\n```\n\nRules:\n\n- Engineer: starts at ch04 (skip ch01-03 basic syntax),\n  skip_list = [1, 2, 3], weekly_chapters = max(2, hours_per_week // 5).\n- Copywriter, cs_rep, paralegal: start at ch01, skip_list = [],\n  weekly_chapters = max(1, hours_per_week // 8).\n- Designer: start at ch01, skip_list = [], weekly_chapters\n  = max(1, hours_per_week // 7) (slightly faster than copywriter —\n  designers already have prompt-engineering reps from image tools).\n- target_chapter_at_30_days = min(30, starting_chapter + 4 *\n  weekly_chapters - 1) (four weeks of progress, capped at ch30).\n\nTwo profiles to run. Expected output:\n```\nengineer @ 20 hrs/wk: {'starting_chapter': 4, 'weekly_chapters': 4, 'target_chapter_at_30_days': 19, 'skip_list': [1, 2, 3]}\ncopywriter @ 10 hrs/wk: {'starting_chapter': 1, 'weekly_chapters': 1, 'target_chapter_at_30_days': 4, 'skip_list': []}\n```\n",
-          "starter": "engineer = {\"background\": \"engineer\", \"hours_per_week\": 20}\ncopywriter = {\"background\": \"copywriter\", \"hours_per_week\": 10}\n\n# define make_30_day_plan(profile) below\n\nprint(f\"engineer @ 20 hrs/wk: {make_30_day_plan(engineer)}\")\nprint(f\"copywriter @ 10 hrs/wk: {make_30_day_plan(copywriter)}\")\n",
-          "grader": {
-            "kind": "stdout-equality",
-            "expected": "engineer @ 20 hrs/wk: {'starting_chapter': 4, 'weekly_chapters': 4, 'target_chapter_at_30_days': 19, 'skip_list': [1, 2, 3]}\ncopywriter @ 10 hrs/wk: {'starting_chapter': 1, 'weekly_chapters': 1, 'target_chapter_at_30_days': 4, 'skip_list': []}\n",
-            "normalize": "collapse-trailing-newline"
-          },
-          "solution": "engineer = {\"background\": \"engineer\", \"hours_per_week\": 20}\ncopywriter = {\"background\": \"copywriter\", \"hours_per_week\": 10}\n\ndef make_30_day_plan(profile):\n    background = profile[\"background\"]\n    hours = profile[\"hours_per_week\"]\n    if background == \"engineer\":\n        starting_chapter = 4\n        skip_list = [1, 2, 3]\n        weekly_chapters = max(2, hours // 5)\n    elif background == \"designer\":\n        starting_chapter = 1\n        skip_list = []\n        weekly_chapters = max(1, hours // 7)\n    else:\n        # copywriter, cs_rep, paralegal\n        starting_chapter = 1\n        skip_list = []\n        weekly_chapters = max(1, hours // 8)\n    target = min(30, starting_chapter + 4 * weekly_chapters - 1)\n    return {\n        \"starting_chapter\": starting_chapter,\n        \"weekly_chapters\": weekly_chapters,\n        \"target_chapter_at_30_days\": target,\n        \"skip_list\": skip_list,\n    }\n\nprint(f\"engineer @ 20 hrs/wk: {make_30_day_plan(engineer)}\")\nprint(f\"copywriter @ 10 hrs/wk: {make_30_day_plan(copywriter)}\")\n",
-          "hiddenTests": []
+          "estSeconds": 90,
+          "concept": "realistic-30-day-plan",
+          "prompt": "A former copywriter, no programming background, has 10 hours a week\nto give to this course. She has heard from one bootcamp that she'll\n\"be shipping AI agents in 30 days.\" She has heard from this course's\nch00 lesson 04 that the realistic month-1 target is somewhere in\nch01-04 (variables, functions, lists/dicts, loops) — the language\nfluency floor.\n\nWhich of the four 30-day plans below is honest for her?\n",
+          "options": [
+            {
+              "id": "floor",
+              "label": "Start at ch01. Plan to land somewhere in ch03-ch04 by day 30. Treat month 1 as language fluency, not shipping."
+            },
+            {
+              "id": "bootcamp_lie",
+              "label": "Start at ch01 and finish all 30 chapters in 30 days. 10 hours a week is plenty if you stay disciplined.",
+              "explain": "This is the bootcamp overpromise the lesson called out by name. Real competence is three to six months at 10-12 hours/week. Anyone selling a 30-day course-to-shipping pipeline for a non-coder is selling you something else."
+            },
+            {
+              "id": "skip_to_agents",
+              "label": "Skip ch01-ch11 (the Python basics) and start at ch16 (agent loops). She's a writer; she already knows how to prompt.",
+              "explain": "Skipping to agent loops without the syntax floor means she can't read the code, can't fix it when it breaks, and can't tell when the model wrote something wrong. That's the no-code crowd from 2024 that stranded itself. Prompting fluency does not substitute for code fluency — the chapter map is explicit about this."
+            },
+            {
+              "id": "engineer_path",
+              "label": "Use the engineer path: start at ch04 (skip the basic syntax) so she can sprint through to ch12 by day 30.",
+              "explain": "The engineer path is specifically for people who already code. Lesson 4 calls this out: 'If you came in already coding, strip a month or two off the front.' A copywriter with no programming background gets the no-code-background path, which starts at ch01."
+            }
+          ],
+          "answerIds": [
+            "floor"
+          ],
+          "shuffle": false,
+          "runnable": true
         },
         {
           "type": "checkpoint",
-          "id": "before-you-build/where-this-course-goes/s08-08-checkpoint",
+          "id": "before-you-build/where-this-course-goes/s09-08-checkpoint",
           "xp": 8,
           "hint": [
             {
@@ -818,8 +883,8 @@
           "passThreshold": 0.66
         }
       ],
-      "xpTotal": 21
+      "xpTotal": 20
     }
   ],
-  "xpTotal": 84
+  "xpTotal": 78
 }

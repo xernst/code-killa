@@ -1,0 +1,78 @@
+xp: 4
+estSeconds: 120
+concept: label-the-five-knobs
+prompt: |
+  A teammate sent over this prompt for a contract-review tool. It works,
+  and it works because it fills all five knobs. The code below stores
+  each section of the prompt in a variable — but the variable names have
+  been blanked out.
+
+  Label each section with the correct knob name. The five knobs, in the
+  order they appear in this prompt:
+
+  - knob 1 (`___`) — who the model is
+  - knob 2 (`___`) — what specifically to do
+  - knob 3 (`___`) — background the model needs
+  - knob 4 (`___`) — shape of the output
+  - knob 5 (`___`) — one example of good output
+
+  Type each knob name in lowercase, singular: `role`, `task`, `context`,
+  `format`, `examples`.
+code: |
+  ___ = "You are a startup-side contracts paralegal."
+
+  ___ = "Review the attached services agreement."
+
+  ___ = (
+      "12-person startup signing with a Fortune 500 vendor. "
+      "Legal budget is thin. We need the top risks, not a full memo."
+  )
+
+  ___ = (
+      "Return 5 bullets covering payment, termination, IP, liability, "
+      "and renewal. One sentence per bullet."
+  )
+
+  ___ = "- Payment: Net-30, 2% late fee. Risk: vendor can suspend service on day 31."
+blanks:
+  - id: knob1
+    accept:
+      - role
+    caseSensitive: false
+  - id: knob2
+    accept:
+      - task
+    caseSensitive: false
+  - id: knob3
+    accept:
+      - context
+    caseSensitive: false
+  - id: knob4
+    accept:
+      - format
+    caseSensitive: false
+  - id: knob5
+    accept:
+      - examples
+      - example
+    caseSensitive: false
+hint:
+  - level: 1
+    body: |
+      Walk down the prompt one section at a time and ask: which of the
+      five knobs is this filling?
+
+      - "You are a..." — that's the costume the model wears. Knob 1.
+      - "Review the attached..." — one verb, one object. Knob 2.
+      - The startup vs Fortune 500 background — the stuff the model
+        needs to know but wouldn't, by default. Knob 3.
+      - "Return 5 bullets..." — the shape of the output. Knob 4.
+      - The Net-30 bullet — one concrete model of what good looks like.
+        Knob 5.
+  - level: 2
+    body: |
+      In order: `role`, `task`, `context`, `format`, `examples`. The
+      whole point of the five-knob scaffold is that you can read any
+      prompt and label every line with the knob it's filling. Prompts
+      that read like one paragraph of vibes are skipping knobs — usually
+      role and examples, which is why they hallucinate.

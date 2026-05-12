@@ -1,90 +1,74 @@
-xp: 8
-estSeconds: 240
-concept: skills-inventory-grouping
+xp: 6
+estSeconds: 180
+concept: name-your-transferable-strength
 prompt: |
-  Final drill for this lesson. Take the skills inventory from earlier
-  (what got eaten, what survived, what became the new advantage) and
-  turn it into one function.
+  One last drill before chapter zero moves on. You just used `print()`
+  and an f-string once. Now you'll use them three more times — same
+  shape, no new syntax.
 
-  Write `inventory(skills)` that takes a list of skill dicts. Each dict
-  has two fields:
+  The starter declares three variables that summarize where you came
+  from and what you bring to AI work:
 
-  - `name`: string (the skill)
-  - `category`: one of `"eaten_by_ai"`, `"survived_ai"`, `"new_advantage"`
+  - `old_role` (string) — what you used to do
+  - `survived` (string) — the part of that job the model can't do
+  - `advantage` (string) — the AI-era role that part transfers to
 
-  Return a dict with three keys — `eaten`, `survived`, `advantage` —
-  each mapped to a list of the skill names in that category. Preserve
-  the input order: if "manual document review" appears before
-  "first-draft copywriting" in the input, it should appear before it in
-  the output list too.
-
-  Six skills run, two in each category. Expected output:
+  Write three `print(f"...")` lines below them. The grader expects the
+  exact sentences:
 
   ```
-  {'eaten': ['manual document review', 'first-draft copywriting'], 'survived': ['client relationship management', 'creative direction'], 'advantage': ['verification expertise', 'operational design']}
+  Old role: paralegal
+  What survived: verification
+  AI-era advantage: verification expertise on LLM outputs
   ```
+
+  Then change the three variable values at the top to match YOU. Don't
+  pick what sounds impressive — pick what's true. The chapter promised
+  you'd write code about your own situation, not someone else's. The
+  grader runs against the template values, but the muscle is in
+  rewriting the inputs to your real ones before you move on.
 starter: |
-  skills = [
-      {"name": "manual document review",      "category": "eaten_by_ai"},
-      {"name": "client relationship management", "category": "survived_ai"},
-      {"name": "first-draft copywriting",     "category": "eaten_by_ai"},
-      {"name": "verification expertise",      "category": "new_advantage"},
-      {"name": "creative direction",          "category": "survived_ai"},
-      {"name": "operational design",          "category": "new_advantage"},
-  ]
+  old_role = "paralegal"
+  survived = "verification"
+  advantage = "verification expertise on LLM outputs"
 
-  # define inventory(skills) below. it should return a dict with three
-  # lists, preserving input order within each list.
+  # write three print() lines below using f-strings, one per variable.
+  # the grader expects the sentences above, exactly.
 
-
-
-  print(inventory(skills))
 grader:
   kind: stdout-equality
-  expected: "{'eaten': ['manual document review', 'first-draft copywriting'], 'survived': ['client relationship management', 'creative direction'], 'advantage': ['verification expertise', 'operational design']}"
+  expected: |
+    Old role: paralegal
+    What survived: verification
+    AI-era advantage: verification expertise on LLM outputs
   normalize: collapse-trailing-newline
 solution: |
-  skills = [
-      {"name": "manual document review",      "category": "eaten_by_ai"},
-      {"name": "client relationship management", "category": "survived_ai"},
-      {"name": "first-draft copywriting",     "category": "eaten_by_ai"},
-      {"name": "verification expertise",      "category": "new_advantage"},
-      {"name": "creative direction",          "category": "survived_ai"},
-      {"name": "operational design",          "category": "new_advantage"},
-  ]
+  old_role = "paralegal"
+  survived = "verification"
+  advantage = "verification expertise on LLM outputs"
 
-  def inventory(skills):
-      result = {"eaten": [], "survived": [], "advantage": []}
-      category_to_key = {
-          "eaten_by_ai": "eaten",
-          "survived_ai": "survived",
-          "new_advantage": "advantage",
-      }
-      for skill in skills:
-          key = category_to_key[skill["category"]]
-          result[key].append(skill["name"])
-      return result
-
-  print(inventory(skills))
+  print(f"Old role: {old_role}")
+  print(f"What survived: {survived}")
+  print(f"AI-era advantage: {advantage}")
+passThreshold: 0.66
 hint:
   - level: 1
-    body: "Start with an empty result dict that already has the three keys (`eaten`, `survived`, `advantage`) mapped to empty lists. Loop through the input. For each skill, look at its `category` field, map it to the right output key, and append the `name` to that list. Because you iterate the input in order and `list.append` keeps order, input order is preserved automatically."
+    body: |
+      Same shape as the line you wrote in step 6, just three times. Each
+      line is `print(f"label: {variable}")`. The labels are `Old role`,
+      `What survived`, and `AI-era advantage`. The variable names are
+      already defined at the top of the starter.
   - level: 2
     body: |
-      The category names in the input (`eaten_by_ai`, `survived_ai`, `new_advantage`) are different from the keys in the output (`eaten`, `survived`, `advantage`). You need a small mapping between the two. Either a dict like `{"eaten_by_ai": "eaten", ...}` (clean) or three `if/elif` branches (also fine for six skills).
-
-      Skeleton:
+      Here are the three lines:
 
       ```python
-      def inventory(skills):
-          result = {"eaten": [], "survived": [], "advantage": []}
-          mapping = {
-              "eaten_by_ai": "eaten",
-              "survived_ai": "survived",
-              "new_advantage": "advantage",
-          }
-          for skill in skills:
-              result[mapping[skill["category"]]].append(skill["name"])
-          return result
+      print(f"Old role: {old_role}")
+      print(f"What survived: {survived}")
+      print(f"AI-era advantage: {advantage}")
       ```
-passThreshold: 0.66
+
+      No `def`, no loops, no lists. The skill this drill checks is the
+      same skill from step 6: drop a variable into a sentence using an
+      f-string. The skill this drill *teaches* is naming your own
+      transferable strength out loud, in code that runs.

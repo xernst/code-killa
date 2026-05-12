@@ -6,6 +6,8 @@ concept: case-study-home-services
 
 # Case 1: Home services (HVAC, plumbing, electrical, cleaning)
 
+*(Illustrative scenario, not an actual case study.)*
+
 A 30-person HVAC company in suburban Phoenix. $4M ARR. Two dozen
 techs in the field, four dispatchers, two estimators, two AR
 clerks, a service manager, a marketing person, the owner. Phones

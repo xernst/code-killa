@@ -6,6 +6,8 @@ concept: case-study-recruiting
 
 # Case 3: Recruiting firm (technical roles, $250K+)
 
+*(Illustrative scenario, not an actual case study.)*
+
 A 25-person tech recruiting firm. $8M revenue. Places senior
 engineers, engineering managers, and CTOs at venture-backed
 startups. Average placement fee: $40K. Average placement cycle:

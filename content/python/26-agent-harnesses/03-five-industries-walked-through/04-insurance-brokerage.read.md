@@ -6,6 +6,8 @@ concept: case-study-insurance-brokerage
 
 # Case 2: Insurance brokerage (commercial lines, small business)
 
+*(Illustrative scenario, not an actual case study.)*
+
 A 60-person commercial insurance brokerage. $12M revenue. Specializes
 in policies for small businesses (restaurants, contractors, retail
 stores). Renewal cycle every 12 months. The job is to gather the

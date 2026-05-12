@@ -11,5 +11,5 @@ order:
   - 05-statelessness-and-context-window.read.md
   - 06-same-model-different-personality.read.md
   - 07-spot-the-mental-model-error.mc.yaml
-  - 08-write-the-next-token-predictor.write.yaml
+  - 08-predict-the-next-token.predict.yaml
   - 09-checkpoint.checkpoint.yaml

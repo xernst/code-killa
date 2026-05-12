@@ -95,3 +95,47 @@ cost. Here's how I'd grade whether it works."
 
 That sentence is what the intersection sounds like out loud. We're
 going to get you there.
+
+## What these personas leave out
+
+The next step asks you to route four learner profiles — Maya, Devon,
+Priya, and Jules — through this course based on their background and
+weekly hours. The personas are deliberately simple. They have to be,
+because a multiple-choice question can't model a real life.
+
+Real displaced workers come with more variables than this exercise
+can model:
+
+- **Childcare and caregiving load.** A 38-year-old single parent
+  retraining at night, after the kids are down, has a different curve
+  than a 28-year-old with no dependents. The "10 hours a week" looks
+  the same on paper and is not the same in lived time.
+- **Visa status.** A displaced engineer on H1-B has 60 days to find
+  a sponsoring employer or leave the country. The calculus is not
+  "reskill at your own pace." It is "ship something employable in
+  eight weeks or leave the life you built." This course is too slow
+  to be the entire answer for that worker. It can be part of one.
+- **Non-remote schedules.** A paralegal who works 9-6 in person at
+  a firm and is retraining on the side can't take the "lunch hour"
+  study slot the personas implicitly assume. Their study time is
+  evenings, weekends, and the 20 minutes on the train.
+- **Financial runway.** The student who is one missed mortgage
+  payment from foreclosure cannot afford a four-month investment
+  without a credible bridge income. The course gives you a skill
+  in 3-6 months. It does not pay rent. If the runway is shorter
+  than the timeline, the right plan is parallel — take this on the
+  side of whatever pays rent today.
+- **Mental-health load.** Grief over a lost job is not resolved by
+  finishing lesson 02. Anger, shame, fear, and the slow erosion of
+  identity that comes with being laid off are real variables in how
+  much capacity you have on any given week. The plan that ignores
+  this is the plan that breaks in week three.
+
+If you don't match the personas exactly — and most readers won't —
+pick the persona closest to your hours-per-week, then adjust your
+own plan for the variables this course can't model for you. The
+course can give you a skill. It cannot give you a different life.
+The honest version of "you can do this" is "you can do this, on top
+of everything else you are already carrying, if you build the plan
+around what you are actually carrying instead of around the persona
+this exercise asks you to pick."

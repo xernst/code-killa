@@ -6,6 +6,17 @@ concept: case-study-method
 
 # Reading other people's businesses is the cheapest education in the AI era
 
+> **Important framing before you start.** The five industries we walk
+> through below are **illustrative scenarios**, not actual deployments.
+> The Klarna anchor case at the end of this lesson is real, with
+> documented receipts (Anthropic press release, OpenAI case study,
+> Sebastian Siemiatkowski's May 2025 walk-back). The HVAC, insurance,
+> recruiting, support-ops, and software-dev walkthroughs are "what if
+> you applied this framework" explorations. They're useful for pattern
+> recognition. They are **not** proof the framework has shipped at any
+> of those specific companies. Read them as thought experiments. Read
+> the Klarna section as a case study.
+
 This lesson is a theory lesson. There is barely any code. That is on
 purpose. The previous lesson gave you a framework
 (`is_ai_native_ready(spec)`); this lesson gives you five examples of

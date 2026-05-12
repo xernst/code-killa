@@ -1,0 +1,38 @@
+xp: 3
+estSeconds: 90
+concept: realistic-30-day-plan
+prompt: |
+  A former copywriter, no programming background, has 10 hours a week
+  to give to this course. She has heard from one bootcamp that she'll
+  "be shipping AI agents in 30 days." She has heard from this course's
+  ch00 lesson 04 that the realistic month-1 target is somewhere in
+  ch01-04 (variables, functions, lists/dicts, loops) — the language
+  fluency floor.
+
+  Which of the four 30-day plans below is honest for her?
+options:
+  - id: floor
+    label: "Start at ch01. Plan to land somewhere in ch03-ch04 by day 30. Treat month 1 as language fluency, not shipping."
+  - id: bootcamp_lie
+    label: "Start at ch01 and finish all 30 chapters in 30 days. 10 hours a week is plenty if you stay disciplined."
+    explain: "This is the bootcamp overpromise the lesson called out by name. Real competence is three to six months at 10-12 hours/week. Anyone selling a 30-day course-to-shipping pipeline for a non-coder is selling you something else."
+  - id: skip_to_agents
+    label: "Skip ch01-ch11 (the Python basics) and start at ch16 (agent loops). She's a writer; she already knows how to prompt."
+    explain: "Skipping to agent loops without the syntax floor means she can't read the code, can't fix it when it breaks, and can't tell when the model wrote something wrong. That's the no-code crowd from 2024 that stranded itself. Prompting fluency does not substitute for code fluency — the chapter map is explicit about this."
+  - id: engineer_path
+    label: "Use the engineer path: start at ch04 (skip the basic syntax) so she can sprint through to ch12 by day 30."
+    explain: "The engineer path is specifically for people who already code. Lesson 4 calls this out: 'If you came in already coding, strip a month or two off the front.' A copywriter with no programming background gets the no-code-background path, which starts at ch01."
+answerIds:
+  - floor
+hint:
+  - level: 1
+    body: |
+      Lesson 04 was explicit about month-1 math for a non-coder at 10-12
+      hours/week: ch01-04, the language fluency floor. Anyone promising
+      faster is selling you the bootcamp lie the lesson named out loud.
+  - level: 2
+    body: |
+      The honest plan: start at ch01, target ch03-04 by day 30, treat
+      month 1 as language fluency only. The "build something" moment
+      comes in month 3, not month 1. The course is calibrated to that
+      bar on purpose.

@@ -6,6 +6,8 @@ concept: process-debt-and-the-incumbent-trap
 
 # Case 4-5: Support ops + software dev — and the incumbent trap
 
+*(Illustrative scenarios, not actual case studies.)*
+
 We've walked through three rebuilds where a small AI-native team can
 outrun a larger incumbent. Two more, briefly, before we get to the
 real lesson of this chapter: **why the incumbents can't catch up**.
@@ -141,6 +143,39 @@ before they can even start.
 This is why theory matters in this course. You can drill on Python
 syntax forever and not see what to BUILD with it. The reading is
 how you find the wedge. The code is how you execute on it.
+
+## The one real anchor case
+
+The five industries above are illustrative. Before this lesson ends,
+here is the one case study in this chapter that has receipts.
+
+**Klarna's 2024-2025 customer service rebuild** is the most public,
+documented agent-native deployment to date. The Anthropic press
+release, the OpenAI case study, and Sebastian Siemiatkowski's May
+2025 walk-back are all part of the same story: an aggressive
+AI-first rebuild, real productivity gains (the AI assistant handled
+the equivalent workload of roughly 700 full-time agents in its
+first month), real quality regressions (customer-facing quality
+dropped enough that Siemiatkowski publicly admitted the company had
+cut human agents too aggressively), and a public correction (Klarna
+began re-hiring human agents for cases the AI couldn't handle well).
+
+The Klarna story has receipts. The five rebuilds above don't. They
+are scenarios in the shape of how an agent-native company could go,
+informed by patterns visible in real deployments like Klarna and
+Cresta. They are not documentation of companies that have shipped
+these systems.
+
+> Read the Klarna section twice for every illustrative scenario you
+> read once. The illustrative scenarios are useful for pattern
+> recognition. The Klarna story is what actually happens when you
+> ship one.
+
+You'll see the Klarna case discussed in more detail in ch00 (how
+the market is shifting) and ch24 (debugging output — the specific
+failure modes that caused the walk-back). Both treatments name the
+gains AND the regressions, because the honest version of this
+story is the one that holds both at once.
 
 The remaining steps of this lesson are interactive. They take the
 case-study framework and apply it to a structured "process debt
