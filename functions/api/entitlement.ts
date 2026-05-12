@@ -204,7 +204,43 @@ export const onRequestPost = async (ctx: Ctx): Promise<Response> => {
     return json({ ok: true, ignored: event.type });
   }
 
-  // 5. Derive tier + write entitlement
+  // 5. Resolve app_user_id -> bound session email via the bind record
+  // written by /api/auth/iap-bind. Without this, the webhook would trust
+  // whatever app_user_id arrived in the payload and could grant pro to
+  // an arbitrary email key (a paid attacker setting RC's appUserID to a
+  // victim's email). The bind ties app_user_id back to a session-verified
+  // email; we write the entitlement under THAT email, not under the raw
+  // app_user_id.
+  const bindRaw = await ctx.env.PROGRESS_KV.get(`iap-bind:${event.app_user_id}`);
+  let boundEmail: string | null = null;
+  if (bindRaw) {
+    try {
+      const bind = JSON.parse(bindRaw) as { email?: unknown };
+      if (typeof bind.email === "string" && bind.email.length > 0) {
+        boundEmail = bind.email;
+      }
+    } catch {
+      // Malformed bind record — treat as missing
+    }
+  }
+  if (!boundEmail) {
+    // No bind = either the mobile client never called /api/auth/iap-bind,
+    // or someone is replaying a webhook with an unbound app_user_id. Either
+    // way we refuse to write an entitlement. Return 200 so RC stops
+    // retrying (re-delivery won't fix the missing bind); log loudly so the
+    // missing bind shows up in CF Pages logs and Josh can investigate.
+    console.error(
+      "[entitlement] no iap-bind record for app_user_id",
+      event.id,
+      event.app_user_id,
+    );
+    await ctx.env.PROGRESS_KV.put(seenKey, "1", {
+      expirationTtl: DEDUPE_TTL_SECONDS,
+    });
+    return json({ ok: true, ignored: "unbound-app-user-id" });
+  }
+
+  // 6. Derive tier + write entitlement keyed by bound email
   const { tier, productId } = deriveTier(event);
 
   const record: EntitlementRecord = {
@@ -220,7 +256,7 @@ export const onRequestPost = async (ctx: Ctx): Promise<Response> => {
     record.expiresAt = new Date(event.expiration_at_ms).toISOString();
   }
 
-  const entitlementKey = `entitlement:${event.app_user_id}`;
+  const entitlementKey = `entitlement:${boundEmail}`;
 
   try {
     // Order matters: write the entitlement FIRST, then the dedupe marker.
@@ -236,6 +272,7 @@ export const onRequestPost = async (ctx: Ctx): Promise<Response> => {
       "[entitlement] KV write failed",
       event.id,
       event.app_user_id,
+      boundEmail,
       String(err),
     );
     // 500 so RC retries — we don't want to ack-and-drop a tier update.

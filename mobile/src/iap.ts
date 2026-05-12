@@ -77,6 +77,28 @@ export function tierFromCustomerInfo(info: CustomerInfo): Entitlement {
 // from the Capacitor host's build-time environment.
 type ImportMetaEnv = { VITE_REVENUECAT_PUBLIC_KEY?: string };
 
+// Server-mediated bind step. Must run BEFORE Purchases.configure so the
+// /api/entitlement webhook can resolve app_user_id -> session-verified
+// email when RC fires a purchase event. Without this, the webhook
+// refuses to write an entitlement and the user's purchase silently fails
+// to grant pro. See functions/api/auth/iap-bind.ts for the security
+// rationale (preventing app_user_id spoofing to grant pro to a victim).
+async function bindAppUserId(userId: string): Promise<void> {
+  const res = await fetch("/api/auth/iap-bind", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify({ app_user_id: userId }),
+  });
+  if (!res.ok) {
+    throw new Error(`iap-bind failed: HTTP ${res.status}`);
+  }
+  const data = (await res.json()) as { ok?: unknown };
+  if (data?.ok !== true) {
+    throw new Error("iap-bind returned ok:false");
+  }
+}
+
 export async function initIAP(userId: string): Promise<void> {
   if (configured) return;
   const env = (import.meta as unknown as { env?: ImportMetaEnv }).env;
@@ -84,6 +106,10 @@ export async function initIAP(userId: string): Promise<void> {
   if (!apiKey || typeof apiKey !== "string") {
     throw new Error("VITE_REVENUECAT_PUBLIC_KEY missing at build time");
   }
+  // Bind first — the webhook will refuse to grant entitlement without this
+  // record, and a 200 OK back means the server has verified the user is
+  // signed in.
+  await bindAppUserId(userId);
   await Purchases.configure({ apiKey, appUserID: userId });
   configured = true;
 }
