@@ -275,7 +275,7 @@ async function loadLesson(chapterDir, lessonFolder, chapterSlug) {
   const lessonDir = join(chapterDir, lessonFolder);
   const lessonYamlPath = join(lessonDir, "lesson.yaml");
   if (!existsSync(lessonYamlPath)) {
-    return null; // authoring-in-progress: lesson scaffolded but not yet declared
+    return { skipReason: `lesson "${chapterSlug}/${lessonFolder}" has no lesson.yaml yet` };
   }
   const lessonMeta = LessonYaml.parse(YAML.parse(await readFile(lessonYamlPath, "utf8")));
   const lessonId = `${chapterSlug}/${lessonMeta.slug}`;
@@ -284,7 +284,13 @@ async function loadLesson(chapterDir, lessonFolder, chapterSlug) {
   for (let i = 0; i < lessonMeta.order.length; i++) {
     const filename = lessonMeta.order[i];
     if (!existsSync(join(lessonDir, filename))) {
-      return null; // step listed in order[] but file not yet written
+      // A step listed in order[] but missing on disk is almost always a
+      // typo in lesson.yaml (renamed file, forgot to commit, wrong extension).
+      // Fail loud so the author sees it; previously this dropped the entire
+      // chapter silently with a misleading "no chapter.yaml yet" message.
+      throw new Error(
+        `${lessonId}: step file "${filename}" listed in lesson.yaml order[] but not on disk at ${lessonDir}`,
+      );
     }
     const step = await loadStep(lessonDir, filename, i, lessonId);
     steps.push(step);
@@ -320,7 +326,7 @@ async function loadChapter(chapterFolder) {
   if (!existsSync(chapterYamlPath)) {
     // Authors scaffold lesson folders before writing chapter.yaml. Skip until
     // they declare it; downstream code already handles "chapter not in TOC."
-    return null;
+    return { skipReason: `chapter "${chapterFolder}" has no chapter.yaml yet` };
   }
   const chapterMeta = ChapterYaml.parse(
     YAML.parse(await readFile(chapterYamlPath, "utf8")),
@@ -329,7 +335,9 @@ async function loadChapter(chapterFolder) {
   const lessons = [];
   for (const lessonFolder of chapterMeta.lessons) {
     const lesson = await loadLesson(chapterDir, lessonFolder, chapterMeta.slug);
-    if (!lesson) return null; // partial chapter — skip until all listed lessons land
+    if (!lesson || "skipReason" in lesson) {
+      return { skipReason: lesson?.skipReason ?? `lesson "${lessonFolder}" failed to load` };
+    }
     lessons.push(lesson);
   }
 
@@ -382,8 +390,8 @@ async function main() {
   for (const folder of folders) {
     process.stdout.write(`  ${folder}... `);
     const chapter = await loadChapter(folder);
-    if (!chapter) {
-      console.log("⏭  no chapter.yaml yet (authoring in progress)");
+    if (!chapter || "skipReason" in chapter) {
+      console.log(`⏭  ${chapter?.skipReason ?? "chapter failed to load"}`);
       continue;
     }
     chapters.push(chapter);

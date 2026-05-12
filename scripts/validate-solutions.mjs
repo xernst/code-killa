@@ -36,6 +36,16 @@ const PY_BIN =
 // blocked. Authors still get the gate locally via `pnpm check`.
 const SKIP = process.env.SKIP_VALIDATE_SOLUTIONS === "1";
 
+// In CI, a missing python silently bypasses the gate — which means every CF
+// Pages / Vercel deploy ships unvalidated solutions if we don't explicitly
+// opt in to skipping. Treat the absence of python in CI as a hard error
+// unless SKIP_VALIDATE_SOLUTIONS=1 was set.
+const IS_CI =
+  process.env.CI === "true" ||
+  process.env.CF_PAGES === "1" ||
+  !!process.env.VERCEL ||
+  !!process.env.GITHUB_ACTIONS;
+
 /** Pull every gradeable task out of a chapter manifest. */
 function tasksFromChapter(chapter) {
   const tasks = [];
@@ -180,6 +190,18 @@ async function main() {
     return;
   }
   if (!(await pythonAvailable())) {
+    if (IS_CI) {
+      console.error(
+        `validate-solutions: \x1b[31mfailed\x1b[0m — Python ('${PY_BIN}') not on PATH in CI environment.`,
+      );
+      console.error(
+        "  To bypass intentionally, set SKIP_VALIDATE_SOLUTIONS=1 in the build env.",
+      );
+      console.error(
+        "  Otherwise, install Python 3.11+ in the build runner. Shipping unvalidated solutions is a known footgun.",
+      );
+      process.exit(1);
+    }
     console.log(
       `validate-solutions: \x1b[33mskipped\x1b[0m (no '${PY_BIN}' on PATH). Run locally with pnpm check.`,
     );
