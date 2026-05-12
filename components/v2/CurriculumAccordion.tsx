@@ -61,7 +61,7 @@ export default function CurriculumAccordion({ chapters, className }: Props) {
           <details
             key={phase.number}
             className="group"
-            open={phase.number === 1}
+            open={phase.number === 0}
           >
             <summary className="flex cursor-pointer list-none items-baseline gap-4 py-6">
               <span className="font-mono text-2xl text-green-500 transition group-open:rotate-90">

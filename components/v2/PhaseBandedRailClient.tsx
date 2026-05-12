@@ -74,19 +74,25 @@ export default function PhaseBandedRailClient({
           0,
         );
         const tier =
-          phase.number === 1
-            ? "foundations"
-            : phase.number <= 3
-              ? "core"
-              : "advanced";
+          phase.number === 0
+            ? "start here"
+            : phase.number === 1
+              ? "foundations"
+              : phase.number <= 3
+                ? "core"
+                : "advanced";
         // UI Polish §8: foundations bright (start now), advanced dim
-        // (future). Inverts the prior bright-advanced gradient.
+        // (future). Phase 0 (the re-education on-ramp) gets the
+        // brightest tone since it's the welcoming entry for visitors
+        // who have never written code.
         const tierColor =
-          phase.number === 1
-            ? "text-green-500"
-            : phase.number <= 3
-              ? "text-green-700"
-              : "text-ink-500";
+          phase.number === 0
+            ? "text-green-400"
+            : phase.number === 1
+              ? "text-green-500"
+              : phase.number <= 3
+                ? "text-green-700"
+                : "text-ink-500";
         return (
           <section
             key={phase.number}
