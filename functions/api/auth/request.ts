@@ -9,9 +9,10 @@ import { sendEmail, type EmailEnv } from "../_lib/email";
 import { normalizeEmail } from "../_lib/validate";
 import { generateToken } from "../_lib/session";
 import { safeReturnPath } from "../_lib/return-path";
-import { ipFrom, isRateLimited, tooManyRequests } from "../_lib/rate-limit";
+import { ipFrom, isRateLimitedKV, tooManyRequests } from "../_lib/rate-limit";
 
 type AuthKV = {
+  get: (key: string) => Promise<string | null>;
   put: (
     key: string,
     value: string,
@@ -35,12 +36,7 @@ const json = (body: unknown, status = 200) =>
   });
 
 export const onRequestPost = async (ctx: Ctx): Promise<Response> => {
-  // 5 magic-link requests per IP per minute. Stops link-bombing a target
-  // inbox. Per audit-v6/code-review #4.
   const ip = ipFrom(ctx.request);
-  if (isRateLimited(ip, "auth-request", { max: 5, windowMs: 60_000 })) {
-    return tooManyRequests();
-  }
 
   let body: { email?: unknown; next?: unknown };
   try {
@@ -65,6 +61,28 @@ export const onRequestPost = async (ctx: Ctx): Promise<Response> => {
     console.error("[auth:request] AUTH_KV or SESSION_SECRET binding missing");
     return json({ ok: false, error: "auth not configured" }, 503);
   }
+
+  // KV-backed cross-isolate rate limit. Two layers:
+  //   - per-IP: stops one origin from flooding any inbox
+  //   - per-recipient: stops IP-rotated attackers from bombing a single inbox
+  // Per audit-v6/code-review #4. Cloudflare WAF still recommended as
+  // upstream defense.
+  const ipBlocked = await isRateLimitedKV(ctx.env.AUTH_KV, "auth-request:ip", ip, {
+    max: 5,
+    windowSeconds: 60,
+  });
+  if (ipBlocked) return tooManyRequests();
+
+  const emailBlocked = await isRateLimitedKV(
+    ctx.env.AUTH_KV,
+    "auth-request:email",
+    email,
+    { max: 3, windowSeconds: 600 },
+  );
+  // Important: silently swallow the per-email block to preserve the
+  // ok:true response shape (anti-enumeration). The block still prevents
+  // an additional email send below.
+  if (emailBlocked) return json({ ok: true });
 
   const token = generateToken();
   await ctx.env.AUTH_KV.put(

@@ -1,14 +1,17 @@
-// Cheap in-memory per-IP rate limit. Workers isolates are short-lived
-// and not guaranteed to share state, so this is belt-and-suspenders only;
-// Cloudflare's WAF is the real defense against sustained abuse.
-//
-// Use:
-//   const ip = ipFrom(ctx.request);
-//   if (isRateLimited(ip, "auth-request", { max: 5, windowMs: 60_000 })) {
-//     return tooManyRequests();
-//   }
+// Sliding-window rate limit, backed by KV so the counter outlives the
+// Worker isolate. CF Pages Functions run across many short-lived isolates;
+// any in-memory Map enforces a per-isolate limit, not a per-IP one, which
+// is functionally no limit at all under sustained abuse. This module is
+// the real defense; Cloudflare's WAF is the additional layer.
 
-const buckets = new Map<string, number[]>();
+type RateLimitKV = {
+  get: (key: string) => Promise<string | null>;
+  put: (
+    key: string,
+    value: string,
+    options?: { expirationTtl?: number },
+  ) => Promise<void>;
+};
 
 export function ipFrom(request: Request): string {
   return (
@@ -18,20 +21,40 @@ export function ipFrom(request: Request): string {
   );
 }
 
-export function isRateLimited(
-  ip: string,
+// Per-bucket sliding-window counter. Same shape as tutor.ts:bumpCounter
+// (deliberately mirrored — we want one rate-limit pattern in the codebase).
+// At worst, a rapid-fire concurrent caller hits the cap ±1; strict atomicity
+// is not worth the overhead for a magic-link-request limiter.
+export async function isRateLimitedKV(
+  kv: RateLimitKV,
   scope: string,
-  opts: { max: number; windowMs: number },
-): boolean {
-  const key = `${scope}:${ip}`;
+  identifier: string,
+  opts: { max: number; windowSeconds: number },
+): Promise<boolean> {
+  const key = `rl:${scope}:${identifier}`;
   const now = Date.now();
-  const arr = (buckets.get(key) ?? []).filter((t) => now - t < opts.windowMs);
-  if (arr.length >= opts.max) {
-    buckets.set(key, arr);
-    return true;
+  const windowMs = opts.windowSeconds * 1_000;
+
+  let arr: number[] = [];
+  const raw = await kv.get(key);
+  if (raw) {
+    try {
+      const parsed = JSON.parse(raw) as unknown;
+      if (Array.isArray(parsed)) {
+        arr = (parsed as unknown[])
+          .filter((t): t is number => typeof t === "number")
+          .filter((t) => now - t < windowMs);
+      }
+    } catch {
+      // ignore — bad blob, treat as empty
+    }
   }
+
+  if (arr.length >= opts.max) return true;
   arr.push(now);
-  buckets.set(key, arr);
+  await kv.put(key, JSON.stringify(arr), {
+    expirationTtl: opts.windowSeconds,
+  });
   return false;
 }
 
