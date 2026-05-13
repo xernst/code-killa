@@ -282,7 +282,12 @@ export const Lesson = z.object({
 export type Lesson = z.infer<typeof Lesson>;
 
 export const Chapter = z.object({
-  number: z.number().int().positive(),
+  // nonnegative() not positive() — ch00 ("before you build") ships with
+  // number: 0 and is referenced everywhere as the re-education on-ramp.
+  // Build mirror in scripts/build-content-v2.mjs uses nonnegative() too;
+  // keeping the canonical schema in sync prevents the drift from masking
+  // a future .parse() addition.
+  number: z.number().int().nonnegative(),
   slug: z.string(),
   title: z.string(),
   blurb: z.string().default(""),
@@ -313,7 +318,8 @@ export type Course = z.infer<typeof Course>;
 // ──────────────────────────────────────────────────────────────────────────
 
 export const ChapterTocEntry = z.object({
-  number: z.number().int().positive(),
+  // See Chapter.number — ch00 has number: 0.
+  number: z.number().int().nonnegative(),
   slug: z.string(),
   title: z.string(),
   blurb: z.string(),
