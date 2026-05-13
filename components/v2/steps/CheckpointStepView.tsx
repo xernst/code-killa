@@ -64,7 +64,11 @@ export default function CheckpointStepView({
           {prompt}
         </ReactMarkdown>
       </div>
-      <div className="flex items-center gap-3">
+      {/* Active-step submit/hint controls are desktop-only. Mobile shell shows
+          the upsell card below the prompt; exposing submit on phone would
+          grade the unedited starter against an invisible editor (B4
+          2026-05-12). */}
+      <div className="hidden items-center gap-3 md:flex">
         <button
           type="button"
           onClick={handleSubmit}
@@ -111,11 +115,13 @@ export default function CheckpointStepView({
         </pre>
       )}
       {!submitted?.passed && (
-        <HintReveal
-          hints={step.hint}
-          resetKey={step.id}
-          onReveal={(level) => setHintsUsed((c) => Math.max(c, level))}
-        />
+        <div className="hidden md:block">
+          <HintReveal
+            hints={step.hint}
+            resetKey={step.id}
+            onReveal={(level) => setHintsUsed((c) => Math.max(c, level))}
+          />
+        </div>
       )}
     </div>
   );
