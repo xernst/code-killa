@@ -2,55 +2,35 @@
 // Forwards email subscription to Beehiiv's Public API v2 server-side
 // so the BEEHIIV_API_KEY never ships to the client.
 //
-// Hardened per the 2026-05-07 senior-dev audit:
-//   - tightened email validation (length cap + regex)
-//   - 8-second AbortSignal timeout on the upstream Beehiiv call so a
-//     hung API doesn't waste the 30s function budget
-//   - non-2xx Beehiiv responses log status + body (visible in CF Pages
-//     Functions log stream)
-//   - returns HTTP 503 on missing config (was 200 with ok:false), so
-//     monitors can distinguish "user typo" from "production env vars
-//     vanished"
-//   - per-IP rate limiting via a 60-second in-memory counter (Workers
-//     isolates are short-lived; this is cheap belt-and-suspenders;
-//     Cloudflare's WAF + bot-fight is the real defense)
-//
 // Env vars (set via wrangler / Cloudflare Pages dashboard):
 //   BEEHIIV_API_KEY        — from beehiiv.com → Settings → API
 //   BEEHIIV_PUBLICATION_ID — from beehiiv.com → Settings → Publication
+//   AUTH_KV (binding)      — shared rate-limit store; if missing, the
+//                            limiter is skipped (subscribe still works,
+//                            relying on Cloudflare WAF + Beehiiv's own
+//                            upstream limits as the only defense)
+
+import { ipFrom, isRateLimitedKV, tooManyRequests } from "./_lib/rate-limit";
+
+type AuthKV = {
+  get: (key: string) => Promise<string | null>;
+  put: (
+    key: string,
+    value: string,
+    options?: { expirationTtl?: number },
+  ) => Promise<void>;
+};
 
 type Env = {
   BEEHIIV_API_KEY?: string;
   BEEHIIV_PUBLICATION_ID?: string;
+  AUTH_KV?: AuthKV;
 };
 type Ctx = { request: Request; env: Env };
 
 const VALID_EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const TIMEOUT_MS = 8_000;
 const MAX_EMAIL_LEN = 254; // RFC 5321 envelope local + domain
-const RATE_WINDOW_MS = 60_000;
-const RATE_MAX_PER_IP = 5;
-const recentByIp = new Map<string, number[]>();
-
-function ipFrom(request: Request): string {
-  return (
-    request.headers.get("cf-connecting-ip") ||
-    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
-    "unknown"
-  );
-}
-
-function isRateLimited(ip: string): boolean {
-  const now = Date.now();
-  const arr = (recentByIp.get(ip) ?? []).filter((t) => now - t < RATE_WINDOW_MS);
-  if (arr.length >= RATE_MAX_PER_IP) {
-    recentByIp.set(ip, arr);
-    return true;
-  }
-  arr.push(now);
-  recentByIp.set(ip, arr);
-  return false;
-}
 
 function json(body: unknown, status = 200): Response {
   return new Response(JSON.stringify(body), {
@@ -64,8 +44,21 @@ function json(body: unknown, status = 200): Response {
 
 export const onRequestPost = async (ctx: Ctx): Promise<Response> => {
   const ip = ipFrom(ctx.request);
-  if (isRateLimited(ip)) {
-    return json({ ok: false, error: "too many requests — try again in a minute" }, 429);
+
+  // KV-backed cross-isolate rate limit. The previous in-memory Map was
+  // per-isolate, not per-IP, on Workers — effectively no limit under
+  // sustained traffic. AUTH_KV is reused (cheap, no new binding needed;
+  // the `rl:subscribe:ip:` key prefix in rate-limit.ts isolates from
+  // auth keys). Soft-fail if AUTH_KV is missing so subscribe still works
+  // in a misconfigured deploy.
+  if (ctx.env.AUTH_KV) {
+    const blocked = await isRateLimitedKV(ctx.env.AUTH_KV, "subscribe:ip", ip, {
+      max: 5,
+      windowSeconds: 60,
+    });
+    if (blocked) return tooManyRequests();
+  } else {
+    console.warn("[subscribe] AUTH_KV not bound — rate limit skipped");
   }
 
   let body: unknown;
