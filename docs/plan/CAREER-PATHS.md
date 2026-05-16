@@ -1,8 +1,8 @@
-# Career Paths — Chapter Mapping (Task 6)
+# Career Paths: Chapter Mapping (Task 6)
 
 **Author:** Content & Curriculum agent team
 **Date:** 2026-05-15
-**Status:** DRAFT v1 — needs Josh's approval before Task 5 (path quizzes) is built on it.
+**Status:** DRAFT v1, needs Josh's approval before Task 5 (path quizzes) is built on it.
 
 ---
 
@@ -18,13 +18,13 @@ all depend on it, so it needs a sign-off pass.
 The 31 live chapters (`content/python/00-before-you-build` … `30-harness-engineering`) plus
 4 new chapters:
 
-- **`terminal`** — Intro to Terminal (Task 1)
-- **`claude-cli`** — Intro to Claude CLI (Task 1)
-- **`codex-cli`** — Intro to OpenAI Codex CLI (Task 1)
-- **`team-skills`** — Anthropic Team Skills (Task 2)
+- **`terminal`**: Intro to Terminal (Task 1)
+- **`claude-cli`**: Intro to Claude CLI (Task 1)
+- **`codex-cli`**: Intro to OpenAI Codex CLI (Task 1)
+- **`team-skills`**: Anthropic Team Skills (Task 2)
 
-New chapters get their own slugs. Final chapter *numbers* are the Platform team's call —
-renumbering existing chapters would break URLs and `concept` IDs. Path **order** below is
+New chapters get their own slugs. Final chapter *numbers* are the Platform team's call.
+Renumbering existing chapters would break URLs and `concept` IDs. Path **order** below is
 logical sequence, independent of chapter number.
 
 ## Design rules used
@@ -50,7 +50,7 @@ logical sequence, independent of chapter number.
 **Estimated time:** 20–24 hours
 **Exit outcome:** Reads, debugs, and directs any AI-generated Python. Ships and maintains
 production agent harnesses. Completes the capstone CLI agent.
-**Notes:** The full course. The 3 CLI chapters block this path — that is why Task 1 is first.
+**Notes:** The full course. The 3 CLI chapters block this path, that is why Task 1 is first.
 
 ### 2. Marketer
 **Chapters (13):** `00` → `01`–`05` → `06` → `12` → `13` → `14` → `19` → `21` → `27` → `28` → `29`
@@ -73,7 +73,7 @@ chapters except prompting.
 **Estimated time:** 12–14 hours
 **Exit outcome:** Builds and monitors support agents, catches bad AI responses before
 customers do, routes and structures tickets with code.
-**Notes:** `16-agent-loops` and `15-mcp` are the core — a support agent is an agent loop.
+**Notes:** `16-agent-loops` and `15-mcp` are the core, a support agent is an agent loop.
 `24-debugging-output` matters because a wrong support answer is a customer-facing failure.
 
 ### 5. Copywriter
@@ -89,7 +89,7 @@ retrieval problem.
 **Estimated time:** 13–15 hours
 **Exit outcome:** Builds data pipelines, AI-assisted analysis, structured extraction from
 messy sources.
-**Notes:** `10-files-and-io` and `14-structured-output` are the spine — getting clean data
+**Notes:** `10-files-and-io` and `14-structured-output` are the spine, getting clean data
 out of dirty inputs.
 
 ### 7. Project Manager
@@ -121,7 +121,7 @@ agent harnesses.
 **Estimated time:** 13–15 hours
 **Exit outcome:** Builds doc-review and research tools, verifies AI output rigorously,
 governs AI access for a practice.
-**Notes:** `22-context-and-retrieval` and `24-debugging-output` are critical — a
+**Notes:** `22-context-and-retrieval` and `24-debugging-output` are critical, a
 hallucinated citation in a legal context is a malpractice risk, not a bug. `team-skills`
 covers the firm-governance angle.
 
@@ -129,7 +129,7 @@ covers the firm-governance angle.
 
 ## Gaps flagged for Josh
 
-1. **Non-developer paths have no capstone.** `25-capstone` is a CLI agent — developer-shaped.
+1. **Non-developer paths have no capstone.** `25-capstone` is a CLI agent: developer-shaped.
    The other nine paths end on a regular chapter, not a "ship something real" moment. Each
    path would land better with a short role-specific capstone (Marketer ships a campaign
    asset pipeline; Lawyer ships a doc-review tool). **Recommend: add lightweight per-path
@@ -141,7 +141,7 @@ covers the firm-governance angle.
 
 3. **The 3 CLI chapters appear in only 3 paths** (Developer, PM, Operations). They are
    genuinely optional for Designer/Marketer/Copywriter, who work in hosted tools. Confirm
-   that is intended — if the thesis is "everyone should be comfortable in a terminal,"
+   that is intended, if the thesis is "everyone should be comfortable in a terminal,"
    `terminal` arguably belongs in all ten paths as a short on-ramp.
 
 4. **`17-git-and-github` is Developer-only.** Operations and Data Analyst arguably need
@@ -150,8 +150,8 @@ covers the firm-governance angle.
 
 ## What unblocks once this is approved
 
-- **Task 5** — ten path quizzes can be written, each testing the 3–5 most critical concepts
+- **Task 5**: ten path quizzes can be written, each testing the 3–5 most critical concepts
   in that path's chapter list.
-- **Task 3** — A/B routing knows which chapters each path includes, so the placement survey
+- **Task 3**: A/B routing knows which chapters each path includes, so the placement survey
   can skip-ahead correctly.
-- **Task 6** — this *is* Task 6; approval closes it.
+- **Task 6**: this *is* Task 6; approval closes it.
