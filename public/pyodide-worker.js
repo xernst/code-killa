@@ -111,13 +111,23 @@ async function ensurePyodide() {
     return loading;
   }
   loading = (async () => {
-    self.postMessage({ type: "status", payload: "loading" });
-    pyodide = await self.loadPyodide({
-      indexURL: "/pyodide/",
-    });
-    pyodide.runPython(PY_HELPERS);
-    self.postMessage({ type: "status", payload: "ready" });
-    return pyodide;
+    try {
+      self.postMessage({ type: "status", payload: "loading" });
+      pyodide = await self.loadPyodide({
+        indexURL: "/pyodide/",
+      });
+      pyodide.runPython(PY_HELPERS);
+      self.postMessage({ type: "status", payload: "ready" });
+      return pyodide;
+    } catch (err) {
+      // Reset on failure so the NEXT message retries the load. Without this,
+      // `loading` stays a rejected promise forever — a transient network
+      // hiccup during the initial WASM fetch would permanently brick the
+      // worker, with every later run silently erroring until a hard reload.
+      loading = null;
+      pyodide = null;
+      throw err;
+    }
   })();
   return loading;
 }
@@ -126,16 +136,21 @@ async function runCode(id, code) {
   const py = await ensurePyodide();
   const t0 = performance.now();
   const result = py.globals.get("__ck_run")(code);
-  const ok = result.get(0);
-  const stdout = result.get(1);
-  const stderr = result.get(2);
-  result.destroy();
-  const durationMs = Math.round(performance.now() - t0);
-  self.postMessage({
-    type: "result",
-    id,
-    payload: { ok, stdout, stderr, durationMs },
-  });
+  // try/finally so the PyProxy is released even if a .get() throws —
+  // otherwise the WASM-heap object leaks on every failed run.
+  try {
+    const ok = result.get(0);
+    const stdout = result.get(1);
+    const stderr = result.get(2);
+    const durationMs = Math.round(performance.now() - t0);
+    self.postMessage({
+      type: "result",
+      id,
+      payload: { ok, stdout, stderr, durationMs },
+    });
+  } finally {
+    result.destroy();
+  }
 }
 
 async function gradeAst(id, code, rules) {
@@ -159,20 +174,45 @@ async function gradeAst(id, code, rules) {
 
 self.addEventListener("message", async (e) => {
   const { id, type, code, rules } = e.data || {};
-  try {
-    if (type === "init") {
+  // Per-handler catch: a failure must reply with the message type the caller
+  // is waiting on. grade-ast callers wait on "ast-result" — replying "result"
+  // on error would never match their pending map and the call would hang
+  // until its 30s timeout.
+  if (type === "init") {
+    try {
       await ensurePyodide();
       self.postMessage({ type: "result", id, payload: { ok: true } });
-    } else if (type === "run") {
-      await runCode(id, code);
-    } else if (type === "grade-ast") {
-      await gradeAst(id, code, rules);
+    } catch (err) {
+      self.postMessage({
+        type: "result",
+        id,
+        payload: { ok: false, stdout: "", stderr: String(err) },
+      });
     }
-  } catch (err) {
-    self.postMessage({
-      type: "result",
-      id,
-      payload: { ok: false, stdout: "", stderr: String(err) },
-    });
+  } else if (type === "run") {
+    try {
+      await runCode(id, code);
+    } catch (err) {
+      self.postMessage({
+        type: "result",
+        id,
+        payload: { ok: false, stdout: "", stderr: String(err) },
+      });
+    }
+  } else if (type === "grade-ast") {
+    try {
+      await gradeAst(id, code, rules);
+    } catch (err) {
+      self.postMessage({
+        type: "ast-result",
+        id,
+        payload: {
+          parsed: false,
+          syntaxError: String(err),
+          must: [],
+          mustNot: [],
+        },
+      });
+    }
   }
 });

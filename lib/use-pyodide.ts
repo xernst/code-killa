@@ -37,6 +37,17 @@ function getWorker(): Worker {
   return workerSingleton;
 }
 
+// Kill the worker so the next getWorker() spawns a fresh one. Used to
+// recover from a runaway loop: user Python runs synchronously in WASM, so an
+// infinite loop wedges the worker's event loop and no message is ever
+// processed again — terminate is the only recovery.
+function terminateWorker(): void {
+  if (workerSingleton) {
+    workerSingleton.terminate();
+    workerSingleton = null;
+  }
+}
+
 /**
  * Kick off the Pyodide download on the singleton worker before the user
  * reaches a lesson. The PyodidePreloader calls this on intent signals
@@ -67,9 +78,12 @@ export function usePyodide() {
   // number — the code uses window.setTimeout, which returns a numeric id.
   const timersRef = useRef<Set<number>>(new Set());
   const idRef = useRef(0);
+  // Set by the effect; called by run()/gradeAst() timeouts to respawn a
+  // wedged worker. Null while unmounted.
+  const recycleRef = useRef<(() => void) | null>(null);
 
   useEffect(() => {
-    const w = getWorker();
+    let w = getWorker();
     // Capture ref contents now — these Maps/Sets are created once and never
     // reassigned, but the lint rule wants the cleanup closure to read a
     // local, not ref.current, since a ref *could* change before cleanup.
@@ -99,7 +113,31 @@ export function usePyodide() {
     };
     w.addEventListener("message", onMsg);
     w.postMessage({ type: "init", id: -1 });
+
+    // Recovery path for a wedged worker (see terminateWorker). Kills the dead
+    // worker, fails every in-flight call so no promise is orphaned, then
+    // spawns a fresh worker and rebinds onMsg so the next run recovers
+    // instead of also hanging to timeout.
+    recycleRef.current = () => {
+      terminateWorker();
+      for (const t of timers) window.clearTimeout(t);
+      timers.clear();
+      for (const cb of pending.values()) {
+        cb({ ok: false, stdout: "", stderr: "worker restarted — re-run", durationMs: 0 });
+      }
+      pending.clear();
+      for (const cb of pendingAst.values()) {
+        cb({ parsed: false, syntaxError: "worker restarted — re-run", must: [], mustNot: [] });
+      }
+      pendingAst.clear();
+      setStatus("loading");
+      w = getWorker();
+      w.addEventListener("message", onMsg);
+      w.postMessage({ type: "init", id: -1 });
+    };
+
     return () => {
+      recycleRef.current = null;
       w.removeEventListener("message", onMsg);
       for (const t of timers) window.clearTimeout(t);
       timers.clear();
@@ -121,6 +159,9 @@ export function usePyodide() {
           stderr: "code timed out — runs longer than 30s are killed",
           durationMs: PENDING_TIMEOUT_MS,
         });
+        // The worker is wedged on a synchronous loop — respawn it so the
+        // next run isn't dead on arrival.
+        recycleRef.current?.();
       }, PENDING_TIMEOUT_MS);
       timersRef.current.add(timer);
       pendingRef.current.set(id, (r) => {
@@ -147,6 +188,8 @@ export function usePyodide() {
             mustNot: [],
             durationMs: PENDING_TIMEOUT_MS,
           });
+          // Wedged worker — respawn so the next grade isn't dead on arrival.
+          recycleRef.current?.();
         }, PENDING_TIMEOUT_MS);
         timersRef.current.add(timer);
         pendingAstRef.current.set(id, (r) => {
