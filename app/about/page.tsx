@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import Wordmark from "@/components/Wordmark";
+import FooterSocials from "@/components/FooterSocials";
 import StatStrip from "@/components/StatStrip";
 import { PHASES } from "@/lib/curriculum/phases";
 import { formatDateShort, githubStats } from "@/lib/github-stats";
@@ -93,7 +94,7 @@ const faqs = [
   },
   {
     q: "how often is it updated?",
-    a: "commits land most weeks. content gets revised when models change shape — the agent-loop chapter looks different in 2026 than it did in 2025. follow the build at @TFisPython.",
+    a: "commits land most weeks. content gets revised when models change shape — the agent-loop chapter looks different in 2026 than it did in 2025. follow the build on x.",
   },
   {
     q: "what if i find a bug?",
@@ -248,14 +249,14 @@ export default async function AboutPage() {
             felt like a museum tour and i wanted the workshop floor.
           </p>
           <p className="mt-4">
-            i ship to this site weekly. follow the build at{" "}
+            i ship to this site weekly. follow the build{" "}
             <a
               href="https://x.com/TFisPython"
               target="_blank"
               rel="noopener noreferrer"
               className="text-green-400 underline underline-offset-2 hover:text-green-300"
             >
-              @TFisPython
+              on x
             </a>
             .
           </p>
@@ -350,7 +351,7 @@ export default async function AboutPage() {
             rel="noopener noreferrer"
             className="dojo-btn-secondary"
           >
-            @TFisPython on x →
+            follow on x →
           </a>
         </div>
       </section>
@@ -393,8 +394,8 @@ export default async function AboutPage() {
 
         <footer className="mt-16 flex flex-wrap items-baseline justify-between gap-4 border-t border-ink-800 pt-6 font-mono text-[11px] tracking-wider text-ink-500">
           <Wordmark />
-          <div className="flex flex-wrap items-baseline gap-3">
-            <span>github.com/xernst/promptdojo · x.com/TFisPython</span>
+          <div className="flex flex-wrap items-center gap-3">
+            <span>github.com/xernst/promptdojo</span>
             {(() => {
               const lc = formatDateShort(githubStats.lastCommitISO);
               return lc ? <span>· last commit {lc}</span> : null;
@@ -402,6 +403,7 @@ export default async function AboutPage() {
             <Link href="/changelog" className="hover:text-green-400">
               · changelog
             </Link>
+            <FooterSocials />
           </div>
         </footer>
       </section>
