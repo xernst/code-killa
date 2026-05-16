@@ -3,7 +3,6 @@ import Link from "next/link";
 import { getV2Toc, getV2Chapter } from "@/lib/content-v2";
 import HomeClient from "@/components/v2/HomeClient";
 import PhaseBandedRail from "@/components/v2/PhaseBandedRail";
-import PriceBand from "@/components/PriceBand";
 import EmailSignup from "@/components/EmailSignup";
 import StatStrip from "@/components/StatStrip";
 import StreakWidget from "@/components/StreakWidget";
@@ -26,21 +25,21 @@ export async function generateMetadata(): Promise<Metadata> {
   );
   return {
     metadataBase: new URL("https://promptdojo.dev"),
-    title: "promptdojo — free runnable python school for ai builders",
-    description: `free, open-source python school for pms, marketers, and ops folks who use cursor and claude code daily. ${chapters} chapters, ${steps} runnable steps. free preview in the browser, paid app coming after.`,
+    title: "promptdojo, the free python school for the ai era",
+    description: `ai is reshaping every job. promptdojo teaches you to build with it: read what ai writes, catch what it gets wrong, and ship real work. ${chapters} chapters, ${steps} runnable steps. free for individuals, forever.`,
     alternates: { canonical: "https://promptdojo.dev/" },
     openGraph: {
       type: "website",
-      title: "promptdojo — free runnable python school for ai builders",
-      description: `ai writes this. it's wrong. learn the python you need to read what ai wrote, catch what it got wrong, and direct it deliberately. ${chapters} chapters. free preview on the web, paid app coming after.`,
+      title: "promptdojo, the free python school for the ai era",
+      description: `your job just changed. learn to build with ai or fall behind. ${chapters} chapters, ${steps} runnable steps, runs in your browser. free for individuals, forever.`,
       url: "https://promptdojo.dev/",
       siteName: "promptdojo",
-      images: [{ url: "/og/launch/wedge", width: 1600, height: 900, alt: "ai writes this. it's wrong." }],
+      images: [{ url: "/og/launch/wedge", width: 1600, height: 900, alt: "promptdojo, the free python school for the ai era" }],
     },
     twitter: {
       card: "summary_large_image",
-      title: "promptdojo — ai writes this. it's wrong.",
-      description: "the python you need to direct ai agents, read what they wrote, and catch what they got wrong.",
+      title: "promptdojo, everyone's a builder now",
+      description: "your job just changed. learn to build with ai or fall behind. free for individuals, forever.",
       creator: "@TFisPython",
       images: ["/og/launch/wedge"],
     },
@@ -105,8 +104,8 @@ export default async function Home() {
   const courseSchema = {
     "@type": "Course",
     "@id": `${SITE_URL}/#course`,
-    name: "promptdojo — python school for ai builders",
-    description: `free, runnable python school for people who already use cursor and claude code daily. ${totalChapters} chapters, ${totalSteps} steps, runs in your browser via pyodide. free preview on the web, paid app coming after.`,
+    name: "promptdojo, python school for the ai era",
+    description: `free, runnable python school for anyone whose job is being reshaped by ai. ${totalChapters} chapters, ${totalSteps} steps, runs in your browser via pyodide. free for individuals, forever.`,
     url: SITE_URL,
     provider: { "@id": `${SITE_URL}/#org` },
     inLanguage: "en",
@@ -134,18 +133,9 @@ export default async function Home() {
         "@type": "Offer",
         price: "0",
         priceCurrency: "USD",
-        category: "free preview",
+        category: "free",
         availability: "https://schema.org/InStock",
         url: SITE_URL,
-      },
-      {
-        "@type": "Offer",
-        price: "9.99",
-        priceCurrency: "USD",
-        category: "subscription",
-        availability: "https://schema.org/PreOrder",
-        url: `${SITE_URL}/pro/`,
-        description: "full school in the app · $9.99/mo · $59/yr · $129 founders",
       },
     ],
   };
@@ -162,17 +152,16 @@ export default async function Home() {
         </div>
 
         <h1 className="t-hero">
-          ai writes this.<br />
-          <em className="italic text-green-500">it&apos;s wrong.</em>
+          everyone&apos;s a builder{" "}
+          <em className="italic text-green-500">now.</em>
         </h1>
 
         <p className="t-body mt-12 max-w-2xl">
-          a python school for builders whose code is mostly written by ai now.
-          {" "}{totalChapters} chapters · {totalSteps} runnable steps · runs
-          in your browser · free preview, paid in the app.
+          your job just changed. learn to build with ai or fall behind.
         </p>
         <p className="t-body-sm mt-3 max-w-2xl text-ink-400">
-          free preview · full python school in the app. $9.99/mo · $59/yr · $129 founders.
+          {totalChapters} chapters · {totalSteps} runnable steps · runs in
+          your browser · free for individuals, forever.
         </p>
 
         <div className="mt-10">
@@ -181,10 +170,10 @@ export default async function Home() {
 
         <div className="mt-8 flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:gap-6">
           <Link
-            href="/learn/v2/agent-loops/the-loop/0"
+            href="/learn/v2/before-you-build/the-situation-named-honestly/0"
             className="dojo-btn-primary"
           >
-            catch ai&apos;s first bug <span aria-hidden>→</span>
+            start learning free <span aria-hidden>→</span>
           </Link>
           <a
             href="https://x.com/intent/follow?screen_name=TFisPython"
@@ -192,16 +181,8 @@ export default async function Home() {
             rel="noopener noreferrer"
             className="dojo-btn-secondary"
           >
-            follow on x for daily bugs <span aria-hidden>↗</span>
+            follow along on x <span aria-hidden>↗</span>
           </a>
-        </div>
-        <div className="mt-3">
-          <Link
-            href="/pro"
-            className="t-mono-meta text-ink-300 underline decoration-ink-700 underline-offset-4 hover:text-green-400 hover:decoration-green-500"
-          >
-            see the app · join early access →
-          </Link>
         </div>
         <p className="mt-4 t-mono-meta">
           new to python?{" "}
@@ -256,8 +237,6 @@ export default async function Home() {
 
       <StatStrip className="mt-24 mb-12" />
 
-      <PriceBand />
-
       <EmailSignup />
 
       <section>
@@ -275,7 +254,7 @@ export default async function Home() {
             "spot in the lesson" yet, so the kbd promise is unearned.
             UI audit 2026-05-07. The hint stays on lesson pages where
             it's contextual. */}
-        <span className="text-ink-500">the python school for the ai era · $9.99/mo in the app</span>
+        <span className="text-ink-500">the free python school for the ai era</span>
         <div className="t-mono-meta flex flex-wrap items-baseline gap-x-3 sm:gap-x-2">
           {(() => {
             const lc = formatDateShort(githubStats.lastCommitISO);

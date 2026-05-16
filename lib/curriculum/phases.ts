@@ -6,7 +6,7 @@
 // or extra slug means the home rail won't sum to the chapter total.
 
 export type Phase = {
-  number: number;       // 0..6
+  number: number;       // 0..7
   name: string;         // lowercase
   blurb: string;        // lowercase, comma-separated topics
   range: string;        // e.g. "ch 01–07"
@@ -100,6 +100,19 @@ export const PHASES: Phase[] = [
       "ai-video-generation",
       "programmatic-design",
       "harness-engineering",
+    ],
+  },
+  {
+    number: 7,
+    name: "command line and team skills",
+    blurb:
+      "intro to terminal, the claude cli, the openai codex cli, anthropic team skills",
+    range: "ch 31–34",
+    chapterSlugs: [
+      "intro-to-terminal",
+      "intro-to-claude-cli",
+      "intro-to-codex-cli",
+      "team-skills",
     ],
   },
 ];
