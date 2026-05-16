@@ -298,24 +298,26 @@ async function loadLesson(chapterDir, lessonFolder, chapterSlug) {
 
   // Auto-assign phases by position, but never overwrite an explicit author choice.
   // Heuristic: first 25% warmup, last 15% check, rest build.
+  // Build a new array rather than mutating the Zod-parsed step objects in
+  // place — the codebase mandates immutable updates.
   const n = steps.length;
   const warmupCutoff = Math.max(1, Math.floor(n * 0.25));
   const checkCutoff = Math.max(n - Math.max(1, Math.floor(n * 0.15)), warmupCutoff + 1);
-  for (let i = 0; i < n; i++) {
-    if (steps[i].phase === "build") {
-      if (i < warmupCutoff) steps[i].phase = "warmup";
-      else if (i >= checkCutoff) steps[i].phase = "check";
-    }
-  }
+  const phasedSteps = steps.map((step, i) => {
+    if (step.phase !== "build") return step;
+    if (i < warmupCutoff) return { ...step, phase: "warmup" };
+    if (i >= checkCutoff) return { ...step, phase: "check" };
+    return step;
+  });
 
-  const xpTotal = steps.reduce((acc, s) => acc + s.xp, 0);
+  const xpTotal = phasedSteps.reduce((acc, s) => acc + s.xp, 0);
 
   return {
     slug: lessonMeta.slug,
     title: lessonMeta.title,
     estMinutes: lessonMeta.estMinutes,
     prerequisites: lessonMeta.prerequisites,
-    steps,
+    steps: phasedSteps,
     xpTotal,
   };
 }

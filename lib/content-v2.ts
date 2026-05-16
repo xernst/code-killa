@@ -10,12 +10,8 @@ import "server-only";
 import { readFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import { join } from "node:path";
-import type {
-  Chapter,
-  Lesson,
-  ManifestToc,
-  Step,
-} from "./content/schema";
+import { Chapter } from "./content/schema";
+import type { Lesson, ManifestToc, Step } from "./content/schema";
 
 import tocRaw from "./generated/v2/manifest.toc.json";
 
@@ -34,9 +30,20 @@ export async function getV2Chapter(slug: string): Promise<Chapter | undefined> {
   const file = join(CHAPTERS_DIR, `${slug}.json`);
   if (!existsSync(file)) return undefined;
   const raw = await readFile(file, "utf8");
-  const chapter = JSON.parse(raw) as Chapter;
-  chapterCache.set(slug, chapter);
-  return chapter;
+  // Validate against the canonical schema rather than a blind `as Chapter`
+  // cast. This runs at build time (static export), so a parse failure fails
+  // the build loudly — which is exactly what should happen if the generated
+  // JSON ever drifts from the schema, instead of caching malformed data and
+  // serving it for the life of the server process.
+  const parsed = Chapter.safeParse(JSON.parse(raw));
+  if (!parsed.success) {
+    throw new Error(
+      `content-v2: chapter "${slug}" failed schema validation — ${file}\n` +
+        JSON.stringify(parsed.error.issues, null, 2),
+    );
+  }
+  chapterCache.set(slug, parsed.data);
+  return parsed.data;
 }
 
 export async function getV2Lesson(

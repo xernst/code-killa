@@ -25,8 +25,16 @@ const FRESH: GlobalProgress = {
   brainDump: [],
 };
 
+// Local calendar day as YYYY-MM-DD. Deliberately NOT toISOString().slice(0,10):
+// that returns the UTC date, which rolls the streak's "today" over at UTC
+// midnight — 7pm for a UTC-5 user — so an evening study session lands on the
+// wrong day. Streaks track "did you show up today" in the user's own day.
 function todayISO(): string {
-  return new Date().toISOString().slice(0, 10);
+  const d = new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
 }
 
 export function loadProgress(): GlobalProgress {
