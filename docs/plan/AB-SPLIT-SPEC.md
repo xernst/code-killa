@@ -1,4 +1,4 @@
-# Task 3: A/B chapter split — methodology, structure, and batch plan
+# Task 3: A/B chapter split (methodology, structure, and batch plan)
 
 **Author:** Content & Curriculum agent team
 **Date:** 2026-05-16
@@ -34,7 +34,7 @@ mechanical and can run chapter by chapter.
 
 From the brief, restated as working definitions.
 
-**Version A — beginner AI literacy.**
+**Version A, beginner AI literacy.**
 - Assumes zero knowledge of AI tools (Claude, ChatGPT, Cursor).
 - Assumes zero coding background.
 - Slower pace, more explanation per step.
@@ -42,7 +42,7 @@ From the brief, restated as working definitions.
 - Hand-holds through error messages and traceback-panic moments.
 - Same chapter outcome as B, gentler path.
 
-**Version B — intermediate to advanced.**
+**Version B, intermediate to advanced.**
 - Assumes the learner uses Claude or ChatGPT regularly.
 - Assumes basic comfort with tools like Cursor.
 - Faster pace, less hand-holding.
