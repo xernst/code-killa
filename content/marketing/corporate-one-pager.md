@@ -1,60 +1,57 @@
-# Corporate one-pager (Task 8)
+# Corporate one-pager (rewrite)
 
-A single-page leave-behind for outreach to potential corporate clients. Lay this
-out as one PDF page. Section headers lowercase to match the brand. No em dashes.
+A single-page leave-behind for outreach to corporate buyers. Built to be read in
+60 seconds in an email forward. Lay out as one PDF page. Serious-buyer tone, same
+thesis as the rest of the site. No em dashes, no banned words. ~330 words.
 
 ---
 
 # promptdojo for teams
 
-**reskill your workforce for the AI era, with a course built for it.**
+**your team is already building with ai. teach them to do it on purpose.**
 
 ## the problem
 
-AI is reshaping every role in your company, not just engineering. Marketing,
-support, operations, legal, analysis: the work is changing faster than most
-teams can react. The exposed skill is the same one everywhere. Your people need
-to direct AI deliberately, read what it produces, and catch what it gets wrong.
+ai is reshaping every role, not just engineering. your marketers, ops people,
+analysts, and support team are already using claude and cursor to do their
+jobs. most of them can't read the code those tools write, can't tell when it's
+wrong, and can't fix it. that's a quiet, growing risk in every department at
+once.
 
-Most "AI training" is a one-hour webinar that changes nothing. Reskilling at the
-scale this requires needs a real course, real accountability, and real proof
-that people finished and can do the work.
+reskilling at that scale needs a real course, not a one-hour webinar. and it
+needs proof your people actually finished and can do the work.
 
 ## the solution
 
-promptdojo is a hands-on school that teaches people to build with AI. Learners
-read AI-written code, predict what it does, find the bug, and fix it, hundreds
-of times, in the browser. No installs, no setup, no IT overhead.
+promptdojo is a hands-on school that teaches people to build with ai. learners
+read ai-written code, predict what it does, find the bug, and fix it, hundreds
+of times, in the browser. no installs, no it overhead. ten career paths, one per
+role, so a marketer and a lawyer each get the route that fits their work.
 
-For teams, promptdojo adds the layer companies actually need:
+what makes the team version work:
 
-- **ten curated career paths.** Marketing, support, operations, legal, data,
-  product, HR, design, and more. Each role learns the route that fits its work,
-  not a generic syllabus.
-- **accountability.** Assign paths by role. See who started, who is progressing,
-  and who is stuck.
-- **completion tracking.** Real progress and completion data, not a list of
-  unused logins.
-- **two speeds.** Every chapter has a beginner and an advanced version, with
-  placement built in, so the course fits a mixed-experience workforce.
+- **team dashboards and completion certificates.** see who started, who's
+  moving, who's stuck, and who finished. real data, not a list of unused logins.
+- **custom quizzes per role.** placement and checks tuned to each path, so the
+  course meets a mixed-experience team where it is.
+- **live sessions.** scheduled working sessions to keep a cohort moving and
+  answer the questions a course can't.
 
 ## the proof
 
-- 31 chapters and 833 runnable steps of hands-on, build-first curriculum.
-- A free public platform with growing organic adoption.
-- Ten role-specific paths, each with a clear exit outcome: a concrete thing the
-  learner can do when they finish.
+31 chapters, 833 runnable steps, a free public platform with growing organic
+adoption. built by josh ernst, who wrote the entire course solo.
+`[INSERT QUOTE FROM PILOT CLIENT once a pilot closes]`
 
 ## the model
 
-The individual version of promptdojo is free, forever. Corporate training is
-what funds it. When you train your team on promptdojo, you are also keeping the
-platform free for everyone else. It is reskilling that does some good on the way.
+promptdojo is free for individuals, forever. corporate training is what funds
+it. when you train your team, you also keep the platform free for everyone
+else. per-seat pricing, scoped to your team size and rollout.
 
-## next step
+## the ask
 
-Per-seat pricing is scoped to your team size and rollout, so the next step is a
-short conversation, not a quote sheet.
+a 15-minute call to see if it fits your team.
 
-**Book a call:** [contact link]
-**Learn more:** promptdojo.dev
+**book a call:** `[Josh's email / scheduling link]`
+**see the course:** promptdojo.dev
