@@ -9,6 +9,7 @@ import StatStrip from "@/components/StatStrip";
 import StreakWidget from "@/components/StreakWidget";
 import PyodidePreloader from "@/components/PyodidePreloader";
 import Wordmark from "@/components/Wordmark";
+import FooterSocials from "@/components/FooterSocials";
 import HeroBugSnippet from "@/components/HeroBugSnippet";
 import JsonLd, { SITE_URL } from "@/components/JsonLd";
 import { formatDateShort, githubStats } from "@/lib/github-stats";
@@ -294,14 +295,7 @@ export default async function Home() {
             github
           </a>
           <span aria-hidden="true" className="text-ink-400">·</span>
-          <a
-            href="https://x.com/TFisPython"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-green-400"
-          >
-            @TFisPython
-          </a>
+          <FooterSocials />
         </div>
       </footer>
     </main>

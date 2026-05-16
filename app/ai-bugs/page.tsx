@@ -165,7 +165,7 @@ export default function AiBugsPage() {
         exists.
       </p>
       <p className="t-body-sm mt-4 max-w-2xl text-ink-400">
-        send a bug to <a className="text-green-400 underline" href="https://x.com/TFisPython" target="_blank" rel="noopener noreferrer">@TFisPython</a>. the best ones land here, anonymized.
+        send a bug <a className="text-green-400 underline" href="https://x.com/TFisPython" target="_blank" rel="noopener noreferrer">on x</a>. the best ones land here, anonymized.
       </p>
 
       <section className="mt-16 space-y-12">

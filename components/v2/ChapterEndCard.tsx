@@ -30,7 +30,7 @@ export default function ChapterEndCard({
       </h2>
       <p className="t-body-sm max-w-2xl text-ink-400">
         tomorrow&apos;s ai-shipped bug, the one that broke a real
-        codebase this week — pinned at the top of <span className="text-ink-200">@TFisPython</span>{" "}
+        codebase this week — pinned at the top of <span className="text-ink-200">our x feed</span>{" "}
         every weekday. follow once, get the daily version of this lesson.
       </p>
       <div className="mt-2 flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:gap-4">
@@ -40,7 +40,7 @@ export default function ChapterEndCard({
           rel="noopener noreferrer"
           className="dojo-btn-primary"
         >
-          follow @tfispython <span aria-hidden>→</span>
+          follow on x <span aria-hidden>→</span>
         </a>
         <Link href="/" className="dojo-btn-secondary">
           ← home

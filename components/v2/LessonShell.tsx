@@ -135,7 +135,7 @@ export default function LessonShell({
                     rel="noopener noreferrer"
                     className="dojo-btn-secondary inline-flex justify-center"
                   >
-                    follow @TFisPython for the app launch{" "}
+                    follow on x for the app launch{" "}
                     <span aria-hidden>↗</span>
                   </a>
                 </div>

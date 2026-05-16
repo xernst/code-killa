@@ -1,4 +1,4 @@
-// Site-wide ember pill linking to @TFisPython on X.
+// Site-wide ember pill linking to the project's X profile.
 //
 // Per HEADOFIT-plan §PR 4: tracks via href only (no analytics V1). Lives
 // in app/layout.tsx so it appears site-wide; if it competes with the IDE
@@ -17,7 +17,7 @@ export default function FollowOnXPill({ className }: { className?: string }) {
         className,
       )}
     >
-      [ follow @TFisPython on x ]
+      [ follow on x ]
     </a>
   );
 }
