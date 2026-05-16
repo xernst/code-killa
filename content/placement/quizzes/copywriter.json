@@ -1,0 +1,115 @@
+{
+  "id": "quiz-copywriter",
+  "kind": "path-quiz",
+  "version": "1.0.0",
+  "path": "copywriter",
+  "pathTitle": "Copywriter",
+  "title": "copywriter path placement",
+  "description": "A short quiz on the core ideas of the Copywriter path. Answer what you know. Each chapter you place out of is one you can skip ahead on, and you can revisit any chapter any time.",
+  "estMinutes": 4,
+  "scoring": {
+    "method": "sum-of-selected-option-points",
+    "selection": "single-select",
+    "maxScore": 16,
+    "overallSkipThreshold": { "points": 8, "percent": 0.5 },
+    "chapterSkipRule": "Each chapter is tested by 2 questions worth 2 points each. A learner places out of a chapter (skips its Version A) by answering both of its questions correctly. Overall, 50 percent or more of maxScore recommends Version B as the default for chapters not individually skipped."
+  },
+  "questions": [
+    {
+      "id": "q01", "testsChapter": "13-llm-apis", "type": "scenario", "concept": "why-an-api",
+      "prompt": "You want a tool that turns a product brief into five headline options, run on demand, without you opening a chat each time. What makes that possible?",
+      "options": [
+        { "id": "a", "label": "Calling an AI model through its API from code, so the tool runs the model itself", "points": 2 },
+        { "id": "b", "label": "Nothing, copy can only come from a chat window", "points": 0 },
+        { "id": "c", "label": "A bigger thesaurus", "points": 0 },
+        { "id": "d", "label": "Saving your favorite chat as a template", "points": 0 }
+      ],
+      "correctOptionId": "a"
+    },
+    {
+      "id": "q02", "testsChapter": "13-llm-apis", "type": "multiple-choice", "concept": "model-reliability",
+      "prompt": "An AI model drafts marketing copy that includes a specific statistic. What should you assume?",
+      "options": [
+        { "id": "a", "label": "The statistic might be made up, so you verify any factual claim before it ships", "points": 2 },
+        { "id": "b", "label": "If the model wrote it confidently, it is true", "points": 0 },
+        { "id": "c", "label": "Models never include numbers", "points": 0 },
+        { "id": "d", "label": "Statistics from AI are always correct", "points": 0 }
+      ],
+      "correctOptionId": "a"
+    },
+    {
+      "id": "q03", "testsChapter": "19-prompting", "type": "multiple-choice", "concept": "prompting-for-voice",
+      "prompt": "You want AI-drafted copy to sound like your brand. What is the most reliable approach?",
+      "options": [
+        { "id": "a", "label": "Describe the voice in the prompt and show the model examples of on-brand copy", "points": 2 },
+        { "id": "b", "label": "Just write \"make it on brand\" and trust the model knows your brand", "points": 0 },
+        { "id": "c", "label": "Accept whatever voice it uses", "points": 0 },
+        { "id": "d", "label": "Use more exclamation points", "points": 0 }
+      ],
+      "correctOptionId": "a"
+    },
+    {
+      "id": "q04", "testsChapter": "19-prompting", "type": "scenario", "concept": "improving-a-prompt",
+      "prompt": "The draft came back generic and bland. What is the best first fix?",
+      "options": [
+        { "id": "a", "label": "Sharpen the prompt: add the audience, the angle, the constraints, and a strong example", "points": 2 },
+        { "id": "b", "label": "Run the same prompt again unchanged", "points": 0 },
+        { "id": "c", "label": "Decide the model cannot write", "points": 0 },
+        { "id": "d", "label": "Make the prompt as short as possible", "points": 0 }
+      ],
+      "correctOptionId": "a"
+    },
+    {
+      "id": "q05", "testsChapter": "22-context-and-retrieval", "type": "scenario", "concept": "context-from-source",
+      "prompt": "Your brand has a detailed style guide. You want the model to write copy that follows it. What is the right move?",
+      "options": [
+        { "id": "a", "label": "Give the model the relevant parts of the style guide as context for the task", "points": 2 },
+        { "id": "b", "label": "Assume the model already memorized your private style guide", "points": 0 },
+        { "id": "c", "label": "Keep the style guide secret from the model", "points": 0 },
+        { "id": "d", "label": "Style guides cannot be used with AI", "points": 0 }
+      ],
+      "correctOptionId": "a"
+    },
+    {
+      "id": "q06", "testsChapter": "22-context-and-retrieval", "type": "multiple-choice", "concept": "why-context",
+      "prompt": "Why does giving the model your own documents as context produce better results than not?",
+      "options": [
+        { "id": "a", "label": "The model can only use what it is given or already trained on; your private docs are not in its training", "points": 2 },
+        { "id": "b", "label": "It does not help, the model knows everything already", "points": 0 },
+        { "id": "c", "label": "It only makes the model slower", "points": 0 },
+        { "id": "d", "label": "Context is just for images", "points": 0 }
+      ],
+      "correctOptionId": "a"
+    },
+    {
+      "id": "q07", "testsChapter": "24-debugging-output", "type": "scenario", "concept": "verifying-output",
+      "prompt": "AI-written copy reads beautifully and confidently states your product won an award you have never heard of. What do you do?",
+      "options": [
+        { "id": "a", "label": "Treat it as possibly invented and verify the claim before the copy goes anywhere", "points": 2 },
+        { "id": "b", "label": "Leave it in, it sounds impressive and confident", "points": 0 },
+        { "id": "c", "label": "Assume the model researched it for you", "points": 0 },
+        { "id": "d", "label": "Add more awards to match", "points": 0 }
+      ],
+      "correctOptionId": "a"
+    },
+    {
+      "id": "q08", "testsChapter": "24-debugging-output", "type": "multiple-choice", "concept": "spotting-hallucination",
+      "prompt": "Which part of AI-generated copy most deserves a careful fact-check?",
+      "options": [
+        { "id": "a", "label": "Any specific claim: names, numbers, dates, quotes, and features", "points": 2 },
+        { "id": "b", "label": "Only the spelling", "points": 0 },
+        { "id": "c", "label": "Nothing, confident copy is reliable copy", "points": 0 },
+        { "id": "d", "label": "Only the headline", "points": 0 }
+      ],
+      "correctOptionId": "a"
+    }
+  ],
+  "skipLogic": {
+    "byChapter": [
+      { "chapter": "13-llm-apis", "questions": ["q01", "q02"], "skipVersionAIf": "both correct", "outcome": "skip Version A of 13-llm-apis" },
+      { "chapter": "19-prompting", "questions": ["q03", "q04"], "skipVersionAIf": "both correct", "outcome": "skip Version A of 19-prompting" },
+      { "chapter": "22-context-and-retrieval", "questions": ["q05", "q06"], "skipVersionAIf": "both correct", "outcome": "skip Version A of 22-context-and-retrieval" },
+      { "chapter": "24-debugging-output", "questions": ["q07", "q08"], "skipVersionAIf": "both correct", "outcome": "skip Version A of 24-debugging-output" }
+    ]
+  }
+}

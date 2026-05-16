@@ -1,0 +1,12 @@
+slug: another-tool-same-idea
+title: "Another tool, same idea"
+estMinutes: 10
+prerequisites: []
+order:
+  - 01-why-a-second-tool.read.md
+  - 02-what-carries-over.read.md
+  - 03-what-carries-over-check.mc.yaml
+  - 04-what-is-different.read.md
+  - 05-spot-the-difference.mc.yaml
+  - 06-when-to-reach-for-which.read.md
+  - 07-checkpoint.checkpoint.yaml

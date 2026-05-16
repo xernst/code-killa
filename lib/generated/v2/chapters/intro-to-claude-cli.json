@@ -1,0 +1,571 @@
+{
+  "number": 32,
+  "slug": "intro-to-claude-cli",
+  "title": "intro to claude cli, the door to real building",
+  "blurb": "you've used claude in a chat window. the claude cli is the same model with its hands on your actual files. this chapter installs it, signs you in, and runs your first real command. by the end you've watched an ai read, plan, and change things on your machine, and you know when to reach for the cli instead of the chat box.",
+  "overview": "## You've talked to Claude. Now Claude gets to work.\n\nIf you've used Claude in a browser tab, you've used a chat. You type,\nit answers, you copy the answer somewhere useful. The model is smart,\nbut it's behind glass. It can't touch anything. Every change is a\ncopy-and-paste job you do by hand.\n\nThe Claude CLI is the same model with the glass removed. It runs in the\nterminal you just learned, it can see the files in the folder you start\nit from, and with your permission it can change them, create new ones,\nand run commands. You stop being the copy-paste middleman. You describe\nwhat you want, and you watch it happen.\n\nThat's why this chapter is called the door. Everything before it was\npreparation. This is the first time in the course you point an AI at\nreal work and it does real work.\n\n## Chat or CLI: it's not a loyalty test\n\nYou're not picking a side. Chat and CLI are two tools for two shapes of\nproblem, and by the end of this chapter you'll know which is which:\n\n- **Chat** is for thinking. Questions, explanations, \"what are my\n  options,\" a draft you'll place yourself.\n- **CLI** is for doing. \"Make these files,\" \"fix this folder of code,\"\n  \"run this and tell me what broke.\" Work that touches your machine.\n\nMost building days use both. You think in the chat, you build in the\nCLI.\n\n## What you'll be able to do at the end\n\nBy the end of these three lessons you will have:\n\n- Installed the Claude CLI on your own machine and confirmed it runs.\n- Signed in, and understood what the sign-in actually did (no API key,\n  no credit card, just your Claude account).\n- Started a session inside a folder and given Claude its first real\n  instruction.\n- Watched the agent loop happen: Claude reads, plans, acts, checks, and\n  comes back to you. You'll learn to approve its actions instead of\n  fearing them.\n- Made a clear call, with a rule you can repeat, about when to open a\n  chat and when to open the CLI.\n\nAbout thirty minutes. The next chapter does the same for a second tool,\nthe OpenAI Codex CLI, so you're not locked into one vendor. But this\none is the door. Walk through it.\n",
+  "lessons": [
+    {
+      "slug": "what-the-claude-cli-is",
+      "title": "What the Claude CLI is",
+      "estMinutes": 10,
+      "prerequisites": [],
+      "steps": [
+        {
+          "type": "read",
+          "id": "intro-to-claude-cli/what-the-claude-cli-is/s01-01-the-glass-is-gone",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "warmup",
+          "estSeconds": 150,
+          "concept": "cli-vs-chat-core",
+          "body": "# The chat is behind glass. The CLI isn't.\n\nPicture how you use Claude in a browser tab today. You ask a question.\nIt writes you something good. Then you do the actual work: you select\nthe answer, copy it, switch to another app, paste it, fix the spots\nthat didn't quite fit. The model did the thinking. You did the moving.\n\nThat copy-paste step is the glass. The chat can produce anything but it\ncan't place anything. It has no hands.\n\nThe Claude CLI is the same Claude model, running in your terminal,\nwith its hands on the folder you started it in. When you tell the CLI\n\"create a file called notes.txt with these three lines,\" it doesn't\nhand you the text to paste. It creates the file. When you say \"this\nfolder has five files, rename them to lowercase,\" it renames them.\n\nHere's the same task, both ways:\n\n| | Chat | CLI |\n| --- | --- | --- |\n| You ask | \"write me a budget template\" | \"create budget.txt with a budget template\" |\n| It returns | the text of a template | the file `budget.txt`, sitting in your folder |\n| You then | copy, open an app, paste, save | check that you like it |\n\nSame intelligence. The difference is whether you're left holding the\noutput or whether the output already landed where it belongs.\n\nThis matters most when the work is not one file but twenty, not one\nstep but a sequence. Copy-pasting twenty times is where the chat stops\nbeing worth it. The CLI doesn't get tired at twenty, or at two hundred.\n\nYou don't give anything up by learning the CLI. The chat is still\nthere, still useful, and the next lesson is about keeping both. But the\nglass is the thing this chapter removes.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "read",
+          "id": "intro-to-claude-cli/what-the-claude-cli-is/s02-02-chat-vs-cli",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 165,
+          "concept": "cli-vs-chat-core",
+          "body": "# Two tools, two shapes of work\n\nThe wrong question is \"which one is better.\" They're built for\ndifferent shapes of work, and a normal building day uses both. Here's\nthe line that splits them.\n\n## Chat is for thinking\n\nOpen a chat when the thing you need is understanding, not a change to\nyour files:\n\n- \"What are three ways to structure this project?\"\n- \"Explain what this error means.\"\n- \"Draft a message to my team about the deadline slip.\"\n- \"I'm stuck. Talk me through the options.\"\n\nThe output of thinking is a decision or a draft in your head. The chat\nis great at that, and it never touches your machine, so it's a calm\nplace to explore.\n\n## CLI is for doing\n\nOpen the CLI when the thing you need is a change to real files:\n\n- \"Create these four files with this starter content.\"\n- \"Go through this folder and fix every broken link.\"\n- \"Run this program and tell me why it crashed.\"\n- \"Rename these images to a consistent pattern.\"\n\nThe output of doing is your folder, changed. That's work the chat can\nonly describe and you'd have to perform by hand.\n\n## The honest workflow\n\nMost real tasks are think-then-do. You open a chat to figure out *what*\nthe project should be. Then you open the CLI in a folder and tell it to\n*build* what you decided. Thinking up front, doing in the terminal.\n\nA useful tell: if you find yourself about to copy something out of a\nchat and paste it into a file, that's the moment the task outgrew the\nchat. That copy-paste is the job the CLI was made to take off your\nhands.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "mc",
+          "id": "intro-to-claude-cli/what-the-claude-cli-is/s03-03-which-tool",
+          "xp": 2,
+          "hint": [
+            {
+              "level": 1,
+              "body": "Ask the splitting question from the last step: does the task need thinking, or does it need real files changed? Thirty files getting edited is doing, not thinking. Doing is the CLI.",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 70,
+          "concept": "cli-vs-chat-core",
+          "prompt": "You have a folder with 30 text files. Every file has a date written\nas `01/05/2026`, and you need all of them changed to `2026-05-01`.\n\nYou ask Claude for help. Which tool fits the job, and why?\n",
+          "options": [
+            {
+              "id": "cli",
+              "label": "The CLI, because the task is a change to 30 real files, and the CLI can make those changes directly"
+            },
+            {
+              "id": "chat",
+              "label": "The chat, because Claude is smartest in the chat",
+              "explain": "Claude is the same model in both places, so the chat isn't smarter. The chat could tell you HOW to change the dates, but you'd still open and edit all 30 files yourself. The CLI does the changing."
+            },
+            {
+              "id": "chat-paste",
+              "label": "The chat, because you can ask it for the 30 fixed files and paste them back",
+              "explain": "That's 30 rounds of copy-and-paste, which is exactly the work the CLI exists to remove. The moment you're pasting output into files, the task has outgrown the chat."
+            },
+            {
+              "id": "neither",
+              "label": "Neither, a job that size needs a human",
+              "explain": "A repetitive, well-defined change across many files is the easiest kind of CLI job, not a too-big one. The CLI doesn't get tired at 30 files, or 300."
+            }
+          ],
+          "answerIds": [
+            "cli"
+          ],
+          "shuffle": false,
+          "runnable": true
+        },
+        {
+          "type": "read",
+          "id": "intro-to-claude-cli/what-the-claude-cli-is/s04-04-the-agent-loop",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 180,
+          "concept": "agent-loop-basics",
+          "body": "# The agent loop: how the CLI actually works\n\nWhen you give the CLI an instruction, it doesn't answer in one shot the\nway a chat does. It runs a loop. Understanding this loop is most of\nunderstanding the tool, so here it is, plainly.\n\nThe loop has four moves, repeated until the job is done:\n\n1. **Look.** It reads the relevant files, runs a command to check\n   something, or asks you a question. It gathers what it needs to know.\n2. **Plan.** It decides the next concrete step. Not the whole job, just\n   the next move.\n3. **Act.** It does that step. Edits a file, creates one, runs a\n   command.\n4. **Check.** It looks at what happened. Did the file save? Did the\n   command succeed or print an error?\n\nThen it goes back to move one with what it just learned, and repeats.\nLook, plan, act, check. Look, plan, act, check. That repetition is the\n\"agent\" in \"agent loop\": it's not answering you once, it's working a\ntask until it's finished or until it needs you.\n\n## Why the loop matters to you\n\nA chat answers blind. It writes its best guess in one go and can't see\nwhether the guess worked. The CLI's loop means it sees the result of\neach move before making the next one. If step three printed an error,\nstep four catches it, and the next plan works around it. That's why the\nCLI can finish a real multi-step job: it course-corrects as it goes.\n\nIt also means the CLI is not a black box. You're not handed a finished\nresult with no idea how it got there. You watch the loop happen, move\nby move, in your terminal. You see each file it reads and each change\nit proposes. Chapter 16 of this course is entirely about agent loops,\nbecause this pattern is the engine under every AI building tool. For\nnow, you just need the shape: look, plan, act, check, repeat.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "mc",
+          "id": "intro-to-claude-cli/what-the-claude-cli-is/s05-05-read-the-loop",
+          "xp": 3,
+          "hint": [
+            {
+              "level": 1,
+              "body": "Look at the order: edit, run, SEE the error, edit again. The CLI checked the result before its next move. A one-shot answer never gets to see whether it worked.",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 80,
+          "concept": "agent-loop-basics",
+          "prompt": "You tell the CLI to fix a program. It reads the file, makes an edit,\nruns the program, and the program prints an error. The CLI then reads\nthe error, makes a second edit, runs the program again, and this time\nit works.\n\nWhat does this show about how the CLI works that a one-shot chat\nanswer does not?\n",
+          "options": [
+            {
+              "id": "course-correct",
+              "label": "It saw the result of its first edit, noticed the error, and corrected. It works in a loop instead of guessing once"
+            },
+            {
+              "id": "smarter",
+              "label": "It shows the CLI is a smarter model than the chat",
+              "explain": "Same model in both. The difference isn't intelligence, it's that the CLI runs the program and sees the error, so it can react. A chat writes one answer and never sees whether it ran."
+            },
+            {
+              "id": "lucky",
+              "label": "It got lucky on the second try",
+              "explain": "It wasn't luck. The CLI read the actual error message before making the second edit. The check step feeds real information into the next plan. That's the loop working as designed."
+            },
+            {
+              "id": "random",
+              "label": "It just keeps editing randomly until something works",
+              "explain": "Not random. Each edit is planned from what the previous step revealed. The error message told it what was wrong, and the next plan addressed that specific thing."
+            }
+          ],
+          "answerIds": [
+            "course-correct"
+          ],
+          "shuffle": false,
+          "runnable": true
+        },
+        {
+          "type": "read",
+          "id": "intro-to-claude-cli/what-the-claude-cli-is/s06-06-permission-and-limits",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 165,
+          "concept": "cli-permissions",
+          "body": "# It asks before it acts\n\nA tool that can change your files sounds like a tool that could wreck\nyour files. It's a fair worry, and the answer is built into how the CLI\nbehaves: it asks first.\n\nWhen the CLI wants to do something that changes your machine, it stops\nand shows you the exact action before it happens:\n\n```\nClaude wants to create the file: budget.txt\n[y] yes   [n] no   [a] yes, and don't ask again for this\n```\n\nNothing changes until you choose. Reading a file, it'll often just do.\nChanging or deleting a file, or running a command, it shows you and\nwaits. You are the approve button. The loop from the last step pauses\nat the act step for anything that matters, and resumes when you say go.\n\nThis is the same respect-the-line habit you learned with `rm` in the\nterminal chapter. Read what it's about to do. If it's what you wanted,\napprove it. If it isn't, decline, and tell it what you actually meant.\n\n## What it can't do\n\nA few honest limits, so you know the edges:\n\n- **It works in the folder you start it in.** Start the CLI in your\n  `practice` folder and that folder is its world. It isn't roaming your\n  whole computer.\n- **It can be wrong.** It's the same model as the chat, which means it\n  can misread a request or make a mistake. The loop catches many\n  mistakes, but not all. This entire course exists to teach you to\n  catch the rest.\n- **It doesn't remember between sessions.** Close the CLI and the next\n  session starts fresh. It reads your files again; it doesn't recall\n  yesterday's conversation.\n\nNone of these are flaws to fear. They're the shape of the tool. You\nstay in control because it asks, because it's scoped to one folder, and\nbecause you learned to read the line before pressing enter.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "checkpoint",
+          "id": "intro-to-claude-cli/what-the-claude-cli-is/s07-07-checkpoint",
+          "xp": 6,
+          "hint": [
+            {
+              "level": 1,
+              "body": "Each line is `print(f\"N. label: {variable}\")` where N is the move's number. The labels are look, plan, act, check, in that order. Variables are defined at the top.",
+              "cost": 0
+            },
+            {
+              "level": 2,
+              "body": "Here are the four lines:\n\n```python\nprint(f\"1. look: {look}\")\nprint(f\"2. plan: {plan}\")\nprint(f\"3. act: {act}\")\nprint(f\"4. check: {check}\")\n```\n",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "check",
+          "estSeconds": 150,
+          "concept": "agent-loop-basics",
+          "prompt": "Lesson one lock-in. Back to the Python sandbox for one step, same\nprint and f-string move as the terminal chapter.\n\nThe starter declares variables for the four moves of the agent loop.\nWrite four `print(f\"...\")` lines so the output is exactly:\n\n```\n1. look: read files, run a check, or ask a question\n2. plan: decide the next concrete step\n3. act: do that step, edit or create or run\n4. check: see what happened, then loop again\n```\n\nType the four lines and run it.\n",
+          "starter": "look = \"read files, run a check, or ask a question\"\nplan = \"decide the next concrete step\"\nact = \"do that step, edit or create or run\"\ncheck = \"see what happened, then loop again\"\n\n# write four print() lines below, one per variable, using f-strings.\n# the grader expects the four numbered lines shown above, exactly.\n",
+          "grader": {
+            "kind": "stdout-equality",
+            "expected": "1. look: read files, run a check, or ask a question\n2. plan: decide the next concrete step\n3. act: do that step, edit or create or run\n4. check: see what happened, then loop again\n",
+            "normalize": "collapse-trailing-newline"
+          },
+          "solution": "look = \"read files, run a check, or ask a question\"\nplan = \"decide the next concrete step\"\nact = \"do that step, edit or create or run\"\ncheck = \"see what happened, then loop again\"\n\nprint(f\"1. look: {look}\")\nprint(f\"2. plan: {plan}\")\nprint(f\"3. act: {act}\")\nprint(f\"4. check: {check}\")\n",
+          "passThreshold": 0.75
+        }
+      ],
+      "xpTotal": 15
+    },
+    {
+      "slug": "install-and-sign-in",
+      "title": "Install and sign in",
+      "estMinutes": 11,
+      "prerequisites": [
+        "what-the-claude-cli-is"
+      ],
+      "steps": [
+        {
+          "type": "read",
+          "id": "intro-to-claude-cli/install-and-sign-in/s01-01-two-ways-to-install",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "warmup",
+          "estSeconds": 150,
+          "concept": "installing-the-cli",
+          "body": "# Two ways in, pick the simple one\n\nInstalling the Claude CLI means downloading the program and putting it\nsomewhere your terminal can find it. There are two ways to do it. For\nmost people new to this, one is clearly easier.\n\n## The native installer (recommended)\n\nOne command. It downloads the CLI and sets it up, with nothing to\ninstall first:\n\n```\ncurl -fsSL https://claude.ai/install.sh | bash\n```\n\nThat line looks like a lot. Read it the way you read commands in the\nterminal chapter: `curl` is a command that downloads something, the\nweb address is what it downloads (the official Anthropic install\nscript), and `| bash` runs that script. It's the install button, typed.\n\nUse this one. It's the shortest path and it doesn't ask you to set\nanything up beforehand.\n\n## The npm way (if you already have Node)\n\nThe other way uses a tool called npm, which comes with Node.js, a\nseparate program. If you're already a Node user, this works:\n\n```\nnpm install -g @anthropic-ai/claude-code@latest\n```\n\nIf you don't know what Node is, you don't have it, and that's fine.\nDon't install Node just for this. The native installer above skips it\nentirely. The npm route only earns its place once Node is already part\nof your world, which it will be later in the course if you go the\ndeveloper direction.\n\n## Which to use\n\nIf you're following along on a Mac or Linux machine: use the native\ninstaller, the `curl` line. On Windows, the native installer works\ninside the terminal you set up last chapter as well. One command, no\nprerequisites. The next step runs it.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "read",
+          "id": "intro-to-claude-cli/install-and-sign-in/s02-02-run-the-installer",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "warmup",
+          "estSeconds": 165,
+          "concept": "installing-the-cli",
+          "body": "# Run it, then check it\n\nOpen the terminal from last chapter. Type the installer command and\npress enter:\n\n```\ncurl -fsSL https://claude.ai/install.sh | bash\n```\n\nThe terminal prints a few lines as it downloads and sets things up.\nThis takes under a minute. When it finishes, you get a fresh prompt.\n\n## Confirm it worked\n\nDon't trust \"it didn't error.\" Check directly. Type:\n\n```\nclaude --version\n```\n\nIf the install worked, this prints a version number, something like:\n\n```\n2.x.x (Claude Code)\n```\n\nA version number means the CLI is installed and your terminal can find\nit. That's the whole confirmation. `--version` is an option (you met\noptions in the terminal chapter, a dash and a word that adjusts a\ncommand). It tells `claude` to just report its version and quit, which\nmakes it a safe \"are you there\" check.\n\n## If it didn't work\n\nThe most common snag: you run `claude --version` and the terminal says\nsomething like `command not found: claude`. That almost always means\nthe CLI installed fine but the terminal hasn't noticed it yet.\n\nThe fix is usually the simplest possible one: close the terminal\nwindow completely and open a fresh one. A terminal checks for available\ncommands when it starts, so a brand-new window sees the freshly\ninstalled `claude`. Run `claude --version` again in the new window.\n\nIf a fresh window still says `command not found`, that's a real\ninstall issue, and Anthropic keeps a troubleshooting page for exactly\nthis. But nine times out of ten, the fresh window is the fix. Try that\nfirst before assuming anything is broken.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "mc",
+          "id": "intro-to-claude-cli/install-and-sign-in/s03-03-install-check",
+          "xp": 2,
+          "hint": [
+            {
+              "level": 1,
+              "body": "A terminal checks which commands exist at the moment it starts up. A window that was already open when you installed something won't know about the new command. The smallest fix is a brand-new window.",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 70,
+          "concept": "installing-the-cli",
+          "prompt": "You run the installer, it finishes without errors, and you type\n`claude --version`. The terminal says:\n\n```\ncommand not found: claude\n```\n\nWhat's the most likely situation, and the first thing to try?\n",
+          "options": [
+            {
+              "id": "fresh-window",
+              "label": "The install probably worked, but this terminal window started before it. Close the window, open a fresh one, and try again"
+            },
+            {
+              "id": "reinstall",
+              "label": "The install failed. Run the installer three or four more times until it sticks",
+              "explain": "Re-running an installer that reported no errors won't change anything. The likely issue isn't the install, it's that this terminal window hasn't picked up the new command yet. A fresh window fixes that."
+            },
+            {
+              "id": "broken",
+              "label": "The CLI is broken and you should give up on the native installer",
+              "explain": "Nothing here points to a broken CLI. A terminal only checks for available commands when it opens, so a window that was already open won't see a just-installed command. Open a new window first."
+            },
+            {
+              "id": "restart-computer",
+              "label": "Restart the whole computer",
+              "explain": "A full restart would work, but it's far more than needed. Only the terminal needs to be fresh, not the machine. Close and reopen just the terminal window."
+            }
+          ],
+          "answerIds": [
+            "fresh-window"
+          ],
+          "shuffle": false,
+          "runnable": true
+        },
+        {
+          "type": "read",
+          "id": "intro-to-claude-cli/install-and-sign-in/s04-04-sign-in",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 150,
+          "concept": "authenticating-the-cli",
+          "body": "# Sign in\n\nThe CLI is installed, but it doesn't know who you are yet. It needs to\nconnect to your Claude account before it can do anything. That's a\none-time sign-in. Type:\n\n```\nclaude auth login\n```\n\nTwo things happen:\n\n1. Your web browser opens to a Claude sign-in page. If you're already\n   signed in to Claude there, it may just show a confirmation screen.\n2. The page asks you to approve the CLI's access. You click approve.\n\nThat's it. The browser shows a \"you can close this tab\" message, you\ngo back to the terminal, and the CLI is now signed in as you.\n\nYou can also just type `claude` and start a session; if you've never\nsigned in, it walks you through the same flow on first run. Either way\ngets you to the same place.\n\n## You won't be asked for an API key or a card\n\nIf you've read anything about using AI tools \"through an API,\" you may\nbe bracing for an API key, a billing setup, a credit card. For signing\nin as an individual, none of that. You sign in with the same Claude\naccount you use in the browser. Your existing plan covers it.\n\nAPI keys are a real thing and they have real uses, mostly for running\nthis stuff on servers or inside other programs, and the next step\nexplains where they fit. But for you, on your own machine, today: a\nbrowser sign-in with your normal account, and you're in.\n\nRun `claude auth login` now and complete the browser step. The next\ntwo steps explain what that sign-in actually set up.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "read",
+          "id": "intro-to-claude-cli/install-and-sign-in/s05-05-what-sign-in-did",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 165,
+          "concept": "authenticating-the-cli",
+          "body": "# What that sign-in actually did\n\nYou clicked approve in a browser and the terminal said you're in. It's\nworth thirty seconds to understand what happened, because this same\npattern shows up everywhere once you start building.\n\nThe flow you just did has a name: an **OAuth** sign-in. Stripped down:\n\n1. The CLI couldn't prove who you were, so it sent you to a place that\n   could: Anthropic's own sign-in page, in your browser.\n2. You proved it there, on a page you trust, by being logged in and\n   clicking approve. The CLI never saw your password. It didn't need\n   to.\n3. Anthropic handed the CLI a **token**: a long generated string that\n   means \"this CLI is allowed to act as this person.\" The CLI saved\n   that token on your machine.\n\nFrom now on, the CLI shows that token instead of asking you to sign in\nagain. That's why it's a one-time step.\n\n## Why this is the safe way\n\nThe thing that makes OAuth good: the CLI never handled your password.\nA tool you just installed should not be trusted with your password,\nand with OAuth it never is. It only holds a token, and a token can be\nswitched off from your account settings without changing your\npassword. If you ever wanted to revoke the CLI's access, you'd do it\nthere, and your password would be untouched.\n\nYou'll see this exact pattern again. When you connect tools to each\nother later in the course, \"sign in with your account in a browser,\napprove, the tool gets a token\" is the normal, safe shape of it. You\njust did it once, by hand, so the pattern isn't a mystery later.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "mc",
+          "id": "intro-to-claude-cli/install-and-sign-in/s06-06-auth-check",
+          "xp": 3,
+          "hint": [
+            {
+              "level": 1,
+              "body": "The OAuth flow was built so the CLI never sees your password. It holds a token instead, and a token can be revoked on its own, leaving your password untouched.",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 80,
+          "concept": "authenticating-the-cli",
+          "prompt": "After the browser sign-in, the CLI saved a token on your machine and\nstopped asking you to sign in every time.\n\nWhich statement about that token is correct?\n",
+          "options": [
+            {
+              "id": "token-not-password",
+              "label": "The token lets the CLI act as you, but it isn't your password. You can switch it off in your account settings without changing your password"
+            },
+            {
+              "id": "is-password",
+              "label": "The token is basically your password saved in a file",
+              "explain": "It isn't. The whole point of the OAuth flow is that the CLI never received your password. The token is a separate credential that can be revoked on its own."
+            },
+            {
+              "id": "sign-in-always",
+              "label": "You'll need to redo the browser sign-in every time you start the CLI",
+              "explain": "No. The saved token is exactly what makes sign-in a one-time step. The CLI presents the token on later runs instead of sending you back to the browser."
+            },
+            {
+              "id": "api-key-needed",
+              "label": "You still need to add an API key and a credit card before the CLI will work",
+              "explain": "Not for an individual signing in on your own machine. The browser sign-in with your normal Claude account is the whole setup. API keys are for servers and automated jobs, covered next."
+            }
+          ],
+          "answerIds": [
+            "token-not-password"
+          ],
+          "shuffle": false,
+          "runnable": true
+        },
+        {
+          "type": "read",
+          "id": "intro-to-claude-cli/install-and-sign-in/s07-07-account-not-api-key",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 150,
+          "concept": "account-vs-api-key",
+          "body": "# Account sign-in vs API key: when each one is for\n\nYou signed in with your Claude account. You'll keep hearing about \"API\nkeys\" as a different way in. Here's the difference, settled in one\nstep, so the words stop being noise.\n\n## Account sign-in (what you did)\n\nYou, a human, at your own machine, working interactively. You sign in\nonce through the browser, your existing Claude plan covers the usage,\nand you're done. This is the right path for everything you do in this\ncourse. If you're a person typing at a terminal, this is your path.\n\n## API key\n\nAn **API key** is a single long secret string that stands in for the\nbrowser sign-in. No browser, no clicking approve. A program just\npresents the key and gets access.\n\nThat sounds simpler, so why isn't it your path? Because the API key is\nbuilt for situations where no human is present to click anything:\n\n- A program on a server that runs every night at 3am.\n- An automated job inside a pipeline, covered late in this course.\n- A tool that calls Claude on its own, with no person in the loop.\n\nAn API key also bills differently, by usage against a console account,\nwhich is the right model for automated jobs and the wrong model for a\nperson learning at a terminal.\n\n## The rule\n\nIf a human is sitting there, use the account sign-in. If a program\nruns unattended, that's when an API key earns its place. You're a human\nsitting there. You already did the right thing. When the course reaches\nautomated jobs, you'll meet API keys properly, and chapter 18 covers\nhow to handle secrets like them safely. Until then: you're set.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "checkpoint",
+          "id": "intro-to-claude-cli/install-and-sign-in/s08-08-checkpoint",
+          "xp": 6,
+          "hint": [
+            {
+              "level": 1,
+              "body": "Watch the third line: the text label is `sign in` with a space, but a variable name can't have a space, so the variable is `sign_in` with an underscore. The label you type and the variable you reference don't have to match.",
+              "cost": 0
+            },
+            {
+              "level": 2,
+              "body": "Here are the three lines:\n\n```python\nprint(f\"install: {install}\")\nprint(f\"verify: {verify}\")\nprint(f\"sign in: {sign_in}\")\n```\n\nThe label before the colon is plain text. `{sign_in}` in the curly\nbraces is the variable, and its name uses an underscore.\n",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "check",
+          "estSeconds": 150,
+          "concept": "authenticating-the-cli",
+          "prompt": "Lesson two lock-in. The starter declares three variables for the\nsetup steps you just did. Write three `print(f\"...\")` lines so the\noutput is exactly:\n\n```\ninstall: one command, the native installer script\nverify: claude --version prints a version number\nsign in: claude auth login, a browser approval, no password shared\n```\n\nType the three lines and run it.\n",
+          "starter": "install = \"one command, the native installer script\"\nverify = \"claude --version prints a version number\"\nsign_in = \"claude auth login, a browser approval, no password shared\"\n\n# write three print() lines below using f-strings.\n# note the label \"sign in\" has a space, but the variable is sign_in.\n# the grader expects the three lines shown above, exactly.\n",
+          "grader": {
+            "kind": "stdout-equality",
+            "expected": "install: one command, the native installer script\nverify: claude --version prints a version number\nsign in: claude auth login, a browser approval, no password shared\n",
+            "normalize": "collapse-trailing-newline"
+          },
+          "solution": "install = \"one command, the native installer script\"\nverify = \"claude --version prints a version number\"\nsign_in = \"claude auth login, a browser approval, no password shared\"\n\nprint(f\"install: {install}\")\nprint(f\"verify: {verify}\")\nprint(f\"sign in: {sign_in}\")\n",
+          "passThreshold": 0.66
+        }
+      ],
+      "xpTotal": 16
+    },
+    {
+      "slug": "your-first-session",
+      "title": "Your first session",
+      "estMinutes": 11,
+      "prerequisites": [
+        "install-and-sign-in"
+      ],
+      "steps": [
+        {
+          "type": "read",
+          "id": "intro-to-claude-cli/your-first-session/s01-01-start-in-a-folder",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "warmup",
+          "estSeconds": 150,
+          "concept": "starting-a-session",
+          "body": "# Start it where the work is\n\nThe CLI works in the folder you start it in. So the first move is to\nstand in the right folder, using exactly the terminal skills from the\nlast chapter.\n\nMake a fresh folder to practice in, step into it, then start the CLI:\n\n```\nmkdir claude-practice\ncd claude-practice\nclaude\n```\n\n`mkdir` and `cd` you know. The third line, `claude` on its own, starts\na session right here in `claude-practice`. That folder is now the CLI's\nworld for this session: empty, safe, and yours.\n\n## What you're looking at\n\nThe CLI starts and shows you a prompt of its own, waiting for an\ninstruction. It looks a little different from the terminal prompt, but\nthe idea is identical: it's ready, and nothing happens until you type\nsomething and press enter.\n\nYou're now in a session. The plain terminal and the CLI session are\ntwo modes of the same window. In plain terminal mode you type commands\nlike `ls`. In a CLI session you type instructions in normal English.\nWhen you want to leave the session and go back to the plain terminal,\nyou type `/exit` or press `Ctrl` and `C`.\n\n## Why the empty folder matters\n\nStarting in an empty practice folder is a deliberate choice for your\nfirst time. The CLI can only see and change things in the folder it\nstarted in. An empty folder means there's nothing to damage and nothing\nto get confused by. You get to watch the tool work with zero risk.\n\nLater you'll start the CLI inside real project folders, because that's\nthe point of it. But the first session should be somewhere that makes a\nmistake cost nothing. `claude-practice` is that somewhere.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "read",
+          "id": "intro-to-claude-cli/your-first-session/s02-02-your-first-instruction",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "warmup",
+          "estSeconds": 165,
+          "concept": "first-instruction",
+          "body": "# Give it something real to do\n\nYour first instruction should be small, real, and easy to check. Here's\na good one. In the CLI session, type this in plain English and press\nenter:\n\n```\nCreate a file called plan.txt with three lines: one goal I have\nfor learning to build, one worry, and one small first step.\n```\n\nNotice what that instruction is not. It's not code. It's not a special\ncommand with dashes and flags. It's a sentence, the way you'd brief a\ncapable coworker. That's the whole interface. You describe the\noutcome you want, in normal words, and the CLI works out the steps.\n\n## What makes it a good first instruction\n\n- **It produces one file.** Easy to look at afterward and judge.\n- **It's concrete.** \"Three lines, this is line one, this is line two.\"\n  A vague instruction gets a vague result. This one can't be misread.\n- **It's harmless.** Worst case, you don't like the file and you delete\n  it with `rm plan.txt`, a command you already know.\n\n## The briefing skill\n\nHere's something worth catching early. If you've ever written a clear\nbrief for a designer, a clear ticket for a developer, or a clear set of\ninstructions for a new hire, you already have the core skill for\ndriving the CLI. A good instruction to the CLI has the same shape as a\ngood brief to a person: say what you want, give the constraints, make\nsuccess checkable.\n\nChapter 19 of this course is entirely about this skill, called\nprompting. For now, just notice that your old job probably taught you\nmost of it. Press enter on your instruction and watch what the CLI\ndoes next. The following step walks through it.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "read",
+          "id": "intro-to-claude-cli/your-first-session/s03-03-watch-the-loop",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 165,
+          "concept": "approving-actions",
+          "body": "# Watch the loop, approve the action\n\nWhen you press enter on your instruction, the agent loop from lesson\none starts running, and now you get to see it for real.\n\nRoughly, this happens:\n\n1. The CLI **looks**. It checks the folder. It's empty, so there's not\n   much to read, but on a real project this is where it reads your\n   files.\n2. It **plans**. The next concrete step is \"create plan.txt with the\n   three lines.\"\n3. It gets to the **act** step, and because creating a file changes\n   your machine, it stops and asks:\n\n```\nClaude wants to create plan.txt\n[y] yes   [n] no\n```\n\n4. You read the proposed action. It's what you asked for. You press\n   `y`.\n5. The file is created. The CLI **checks** that it worked, sees it did,\n   and since the job is done, it stops and tells you so.\n\n## You are step four\n\nThat pause at the act step is the most important habit in this whole\nchapter. The CLI showed you exactly what it was about to do and waited.\nYour job is to actually read that line before pressing `y`.\n\nThis first time, the action is obviously fine, so `y` is easy. But the\nhabit you're building is the reading, not the yes. Later, on a real\nproject, the CLI will sometimes propose an action that isn't quite what\nyou meant. The only thing standing between \"not quite right\" and \"done\nanyway\" is you, reading the line. Same muscle as reading the line\nbefore `rm` in the terminal chapter. Build it now, while the stakes are\na practice file.\n\n## Check the result yourself\n\nWhen the CLI says it's done, don't just believe it. Leave the session\nfor a moment (`/exit`) and run, in the plain terminal:\n\n```\ncat plan.txt\n```\n\nThere's your file, with your three lines. You described an outcome in\none English sentence, and it exists. That's the door, and you just\nwalked through it.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "mc",
+          "id": "intro-to-claude-cli/your-first-session/s04-04-read-what-it-did",
+          "xp": 3,
+          "hint": [
+            {
+              "level": 1,
+              "body": "The CLI can be wrong, because it's the same model as the chat. The pause is a real checkpoint, not decoration. Its value is entirely in you reading the proposed action before you approve it.",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 80,
+          "concept": "approving-actions",
+          "prompt": "You ask the CLI to create `plan.txt`. It stops and shows you:\n\n```\nClaude wants to create plan.txt\n[y] yes   [n] no\n```\n\nYou're about to press `y`. What is the actual point of this pause?\n",
+          "options": [
+            {
+              "id": "read-first",
+              "label": "It's your chance to read the exact action before it happens, so you catch anything that isn't what you meant"
+            },
+            {
+              "id": "formality",
+              "label": "It's just a formality. Always press y, the CLI knows what it's doing",
+              "explain": "Pressing y without reading defeats the entire purpose of the pause. The CLI is the same model as the chat, which means it can misread you. The pause exists precisely so a wrong action gets caught."
+            },
+            {
+              "id": "loading",
+              "label": "The CLI is loading and needs a moment, so it shows a prompt to fill the time",
+              "explain": "It isn't a loading screen. The CLI has fully decided on the action and is genuinely waiting for your decision. Nothing happens until you choose."
+            },
+            {
+              "id": "legal",
+              "label": "It's a legal disclaimer you have to click through",
+              "explain": "It's not legal boilerplate. It's a real control: the action only happens if you approve it. Reading it is how you stay in charge of what touches your files."
+            }
+          ],
+          "answerIds": [
+            "read-first"
+          ],
+          "shuffle": false,
+          "runnable": true
+        },
+        {
+          "type": "read",
+          "id": "intro-to-claude-cli/your-first-session/s05-05-one-shot-or-interactive",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 150,
+          "concept": "interactive-vs-one-shot",
+          "body": "# Two ways to run it: stay, or fire once\n\nYou started the CLI by typing `claude` and got a session you can talk\nback and forth in. That's **interactive mode**, and it's the one you'll\nuse most. You give an instruction, watch it work, give the next one,\nall in one running conversation. Good for real work, where one thing\nleads to the next.\n\nThere's a second way, for when you want exactly one thing and then out.\nFrom the plain terminal, you give the instruction right on the command\nline with a `-p`:\n\n```\nclaude -p \"summarize what is in plan.txt\"\n```\n\nThis is **one-shot mode**. The CLI starts, does the single thing you\nasked, prints the result, and quits. No session, no back-and-forth.\nThe `-p` is an option (a dash and a letter, like the options from the\nterminal chapter); it means \"here is your prompt, just do it.\"\n\n## When to use which\n\n- **Interactive** (`claude`): real work, anything with more than one\n  step, anything where you'll want to react and steer. This is your\n  default.\n- **One-shot** (`claude -p \"...\"`): a single quick question or action\n  where you already know there's no follow-up. \"Summarize this file.\"\n  \"What does this command do.\"\n\nYou don't need to master one-shot mode now. It mostly matters later,\nwhen you want the CLI to run as one step inside a larger automated job,\nand a job can't sit in an interactive session. For today, know it\nexists, and know that `claude` on its own, interactive, is the mode for\nlearning and for real building.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "mc",
+          "id": "intro-to-claude-cli/your-first-session/s06-06-chat-or-cli-decision",
+          "xp": 3,
+          "hint": [
+            {
+              "level": 1,
+              "body": "The splitting question: does the situation need thinking, or does it need real files changed? Three of these change files (doing, so CLI). One is purely talking an idea through before any files exist (thinking, so chat).",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 90,
+          "concept": "cli-vs-chat-core",
+          "prompt": "Four real situations. In which one is the browser chat the better\ntool than the CLI?\n",
+          "options": [
+            {
+              "id": "thinking",
+              "label": "You're not sure how to organize a new project and want to talk through three possible structures before deciding anything"
+            },
+            {
+              "id": "many-files",
+              "label": "You need to add a copyright line to the top of 50 files in a folder",
+              "explain": "That's 50 real files getting changed. It's a doing job, and doing across many files is exactly what the CLI is for. The chat would leave you editing all 50 by hand."
+            },
+            {
+              "id": "fix-code",
+              "label": "A program in your folder crashes and you want it found and fixed",
+              "explain": "Fixing a crash means reading the file, changing it, and running it to confirm. That's the agent loop on real files, which is the CLI. The chat can't run your program or see the crash."
+            },
+            {
+              "id": "build-files",
+              "label": "You want a starter set of project files created with specific contents",
+              "explain": "Creating real files with specific contents is a doing job. The CLI creates them in place. The chat would only hand you the text to create each one yourself."
+            }
+          ],
+          "answerIds": [
+            "thinking"
+          ],
+          "shuffle": false,
+          "runnable": true
+        },
+        {
+          "type": "read",
+          "id": "intro-to-claude-cli/your-first-session/s07-07-where-this-goes",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 135,
+          "concept": "where-this-goes",
+          "body": "# What you just set up\n\nStep back and see what changed in the last half hour.\n\nYou started this chapter able to talk to an AI behind glass. You're\nending it with that AI installed on your machine, signed in to your\naccount, and able to do real work in a folder, with your approval at\nevery step that matters. You gave it an English instruction and a file\nappeared. That is the thing this whole course is building toward, and\nyou've now done it once.\n\nYou also have the judgment that goes with the tool. You know the CLI\nruns a look-plan-act-check loop. You know it asks before it changes\nthings, and that reading the line is your job. You know the difference\nbetween thinking work (chat) and doing work (CLI), and you have a rule\nfor picking.\n\n## Next: a second tool\n\nThe next chapter installs the OpenAI Codex CLI. It's a different\ncompany's take on the same idea: an AI that works in your terminal on\nyour files. You're learning it for a simple reason. A builder who only\nknows one tool is stuck with that tool's bad days and that company's\nchoices. Knowing two means you can pick the better fit for a given job,\nand you're never trapped.\n\nAlmost everything you learned here carries straight over. Install,\nsign in, start in a folder, give an instruction, watch a loop, approve\nactions. The Codex chapter is mostly about what's *different*, which is\nless than you'd think.\n\nYou don't have to be fast at the CLI yet. You've used it once. That's\nexactly enough to move on. Speed comes from the rest of the course,\nwhere the CLI stops being the lesson and starts being the tool you\nlearn everything else with.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "checkpoint",
+          "id": "intro-to-claude-cli/your-first-session/s08-08-checkpoint",
+          "xp": 6,
+          "hint": [
+            {
+              "level": 1,
+              "body": "Same pattern as every checkpoint so far: `print(f\"label: {variable}\")`, three times. Labels are start, instruct, approve. Variables are defined at the top.",
+              "cost": 0
+            },
+            {
+              "level": 2,
+              "body": "Here are the three lines:\n\n```python\nprint(f\"start: {start}\")\nprint(f\"instruct: {instruct}\")\nprint(f\"approve: {approve}\")\n```\n\nNext chapter: the OpenAI Codex CLI, the same skills for a second\ntool.\n",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "check",
+          "estSeconds": 165,
+          "concept": "starting-a-session",
+          "prompt": "Last step of the chapter. The starter declares three variables for\nwhat you can now do with the Claude CLI. Write three `print(f\"...\")`\nlines so the output is exactly:\n\n```\nstart: cd into a folder, then run claude to begin a session\ninstruct: describe the outcome you want in plain english\napprove: read the proposed action, then press y if it is right\n```\n\nType the three lines, run it, and the chapter is done.\n",
+          "starter": "start = \"cd into a folder, then run claude to begin a session\"\ninstruct = \"describe the outcome you want in plain english\"\napprove = \"read the proposed action, then press y if it is right\"\n\n# write three print() lines below using f-strings.\n# the grader expects the three lines shown above, exactly.\n",
+          "grader": {
+            "kind": "stdout-equality",
+            "expected": "start: cd into a folder, then run claude to begin a session\ninstruct: describe the outcome you want in plain english\napprove: read the proposed action, then press y if it is right\n",
+            "normalize": "collapse-trailing-newline"
+          },
+          "solution": "start = \"cd into a folder, then run claude to begin a session\"\ninstruct = \"describe the outcome you want in plain english\"\napprove = \"read the proposed action, then press y if it is right\"\n\nprint(f\"start: {start}\")\nprint(f\"instruct: {instruct}\")\nprint(f\"approve: {approve}\")\n",
+          "passThreshold": 0.66
+        }
+      ],
+      "xpTotal": 17
+    }
+  ],
+  "xpTotal": 48
+}

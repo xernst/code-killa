@@ -1,0 +1,13 @@
+slug: governance-and-trust
+title: "Governance and trust"
+estMinutes: 11
+prerequisites:
+  - role-playbooks
+order:
+  - 01-a-skill-can-do-real-things.read.md
+  - 02-treat-it-like-software.read.md
+  - 03-evaluate-before-you-deploy.read.md
+  - 04-access-control.read.md
+  - 05-governance-scenario.mc.yaml
+  - 06-a-rollout-checklist.read.md
+  - 07-checkpoint.checkpoint.yaml

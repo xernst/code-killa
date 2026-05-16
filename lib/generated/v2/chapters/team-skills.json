@@ -1,0 +1,694 @@
+{
+  "number": 34,
+  "slug": "team-skills",
+  "title": "claude skills for teams, your playbooks as ai your whole team shares",
+  "blurb": "a claude skill is a packaged set of instructions, your team's playbook, that claude loads when it is relevant so nobody has to re-explain it. this chapter is for people who manage teams. it covers what a skill is, how a team shares and provisions skills, real examples for hr, legal, and ops work, when a skill beats a one-off prompt, and the governance you need before any skill touches real work.",
+  "overview": "## Your team explains the same things to AI over and over\n\nThink about how your team uses Claude today, if it does. One person\nfigured out a good way to get it to redline a contract. Someone in HR\nworked out the right way to ask it to screen a stack of resumes. An ops\nmanager has a long, careful prompt for turning meeting notes into a\nproject update.\n\nAnd none of that is shared. Each of those is trapped in one person's\nhead, or one person's saved notes. Everyone else who needs the same job\ndone starts from scratch, re-explains the company's standards to Claude\nfrom memory, and gets a slightly different result. The work is\ninconsistent because the instructions are scattered.\n\nA Claude skill is the fix. A skill is a packaged set of instructions,\nyour playbook for one kind of task, that Claude loads automatically\nwhen that task comes up. Write the contract-redlining playbook once, as\na skill, and every person on the team gets the same careful redline,\nwithout anyone re-explaining anything.\n\n## This chapter is for people who manage work\n\nYou do not need to be technical for this chapter. It is written for the\nperson who owns a process and wants their team to run it consistently:\nan HR lead, a legal manager, an operations manager. You will not be\nwriting code. You will be learning what a skill is, how a team shares\nand controls them, and the judgment for using them well.\n\n## What you'll be able to do at the end\n\nBy the end of these four lessons you will:\n\n- Know what a skill is, and how it differs from a long prompt or a\n  one-off AI agent.\n- Understand how a team provisions skills: admin rollout, sharing with\n  colleagues, and the organization directory.\n- Have concrete skill examples for HR, legal, and operations work, and\n  a rule for when a skill is worth building.\n- Know the governance a skill needs before it touches real work:\n  evaluation, access control, and treating an untrusted skill as the\n  security risk it is.\n\nAbout forty minutes. Skills are one of the most useful things a team\ncan set up with AI, and also one of the easiest to deploy carelessly.\nThis chapter covers both halves.\n",
+  "lessons": [
+    {
+      "slug": "what-a-skill-is",
+      "title": "What a skill is",
+      "estMinutes": 10,
+      "prerequisites": [],
+      "steps": [
+        {
+          "type": "read",
+          "id": "team-skills/what-a-skill-is/s01-01-the-re-explaining-problem",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "warmup",
+          "estSeconds": 150,
+          "concept": "the-re-explaining-problem",
+          "body": "# The problem skills solve\n\nHere's a pattern you've probably lived. Someone on your team needs\nClaude to do a recurring job: review a vendor contract, screen a batch\nof applications, turn a messy call into a clean summary. To get a good\nresult, they don't just ask. They explain. They tell Claude the\ncompany's standards, the format you use, the things to watch for, the\ntone, the rules. A paragraph or two of context, every single time.\n\nThat context is the actual value, and it's being wasted three ways:\n\n- **It's retyped constantly.** The same instructions, typed again for\n  every contract, every batch, every summary. Slow, and nobody enjoys\n  it.\n- **It's inconsistent.** Each person explains the standards a little\n  differently, and remembers a slightly different subset. Two people\n  doing \"the same\" task get two different results, because they\n  briefed Claude differently.\n- **It's trapped.** The good version of the instructions lives in one\n  person's head or one person's private notes. When they're out, or\n  they leave, the knowledge goes with them.\n\nThis is not an AI problem. It's an old problem. It's the same reason\ncompanies write playbooks, standard operating procedures, and style\nguides at all: so the right way to do a job is written down once,\nshared, and not re-derived by each person from scratch.\n\nA skill is that idea, applied to AI. It's a way to write the playbook\nonce, in a form Claude can use, and have the whole team get the benefit\nof it without anyone re-explaining anything. The next step says exactly\nwhat a skill is.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "read",
+          "id": "team-skills/what-a-skill-is/s02-02-a-skill-defined",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 165,
+          "concept": "skill-defined",
+          "body": "# What a skill actually is\n\nA Claude skill is a packaged set of instructions for one kind of task,\nthat Claude loads on its own when that task comes up.\n\nBreak that into its three real parts.\n\n**It's instructions.** At its core, a skill is your playbook written\ndown: how to do this job, what the standards are, what to watch for,\nwhat good output looks like. The same things a person would explain to\nClaude, written once.\n\n**It's packaged.** A skill is a small folder. Inside is a main\ninstructions file and, if the job needs them, supporting files:\nexamples, a checklist, a reference document, a template. It's a tidy\nbundle, not a loose paragraph.\n\n**Claude loads it on its own.** This is the part that makes it more\nthan a saved prompt. A skill has a short description of what it's for.\nWhen someone asks Claude to do something that matches, Claude\nrecognizes it and pulls in that skill's instructions automatically.\nNobody has to remember to attach it. You ask for a contract review;\nthe contract-review skill engages itself.\n\n## The plain version\n\nA skill is your team's how-we-do-this, handed to Claude once, that\nClaude picks up automatically whenever it's the right job.\n\nA couple of practical facts to file away. Skills are available on the\nClaude Pro, Max, Team, and Enterprise plans. They also depend on a\nClaude setting called Code Execution being turned on, because skills\ncan include not just instructions but small helper steps Claude runs.\nYou don't have to act on either fact yet. The next step shows a real\nskill so the definition stops being abstract.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "read",
+          "id": "team-skills/what-a-skill-is/s03-03-a-real-skill",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 165,
+          "concept": "skill-example",
+          "body": "# A real skill, start to finish\n\nMake it concrete. A legal operations manager owns how her team reviews\nincoming vendor contracts. Today, every paralegal explains the firm's\nstandards to Claude their own way. She decides to build a skill.\n\n## What goes in it\n\nShe names it `vendor-contract-review`. Inside the skill folder she puts:\n\n- **The main instructions file.** It says what the skill is for\n  (\"review an incoming vendor contract against our standards\"), then\n  the playbook: check for these twelve clauses, flag anything missing,\n  compare payment terms against our defaults, never give legal advice,\n  always explain why a clause was flagged.\n- **A reference file**: the firm's standard contract terms, so Claude\n  compares against the real numbers instead of guessing.\n- **A checklist file**: the exact twelve-point review the firm uses.\n\nThat's the skill. A folder with a playbook and two supporting files.\n\n## What it changes\n\nBefore the skill, a contract review depended on which paralegal ran it\nand how well they remembered the standards that day. After the skill,\nanyone on the team uploads a contract, asks Claude to review it, and\nClaude recognizes the task, loads `vendor-contract-review`, and runs\nthe exact same twelve-point review against the exact same standards,\nevery time, explaining each flag.\n\nThe manager wrote the playbook once. The whole team now reviews\ncontracts her way. And when the firm's standards change, she updates\none file in one skill, and everyone's reviews update with it.\n\nThat is the entire value of a skill: consistency, captured once,\napplied by everyone, easy to change in one place. Hold that example.\nThe rest of the chapter builds on it.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "mc",
+          "id": "team-skills/what-a-skill-is/s04-04-what-a-skill-is-check",
+          "xp": 2,
+          "hint": [
+            {
+              "level": 1,
+              "body": "The thing that makes a skill more than a saved prompt: a person doesn't have to remember to use it. Claude recognizes the task and loads the skill itself, supporting files included.",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 70,
+          "concept": "skill-defined",
+          "prompt": "A colleague says: \"A skill is just a prompt I saved in a document so\nI can paste it in later.\"\n\nWhat's the key thing that description misses?\n",
+          "options": [
+            {
+              "id": "auto-load",
+              "label": "A saved prompt still has to be remembered and pasted in by a person. A skill is loaded by Claude automatically when the task matches, with its supporting files, so nobody has to attach it"
+            },
+            {
+              "id": "longer",
+              "label": "Nothing important. A skill is just a longer saved prompt",
+              "explain": "Length isn't the difference. A skill can be packaged with reference files and checklists, and crucially Claude pulls it in on its own when the task matches. A saved prompt sits in a document until a human remembers it."
+            },
+            {
+              "id": "no-instructions",
+              "label": "A skill doesn't contain instructions, it's something else entirely",
+              "explain": "Instructions are exactly the core of a skill, your playbook for the task. The difference from a saved prompt is the packaging and the automatic loading, not the absence of instructions."
+            },
+            {
+              "id": "one-person",
+              "label": "A skill only works for the one person who made it",
+              "explain": "It's the opposite. A saved prompt in someone's private doc is the thing stuck with one person. A skill is built to be shared across a team, which the next lesson covers."
+            }
+          ],
+          "answerIds": [
+            "auto-load"
+          ],
+          "shuffle": false,
+          "runnable": true
+        },
+        {
+          "type": "read",
+          "id": "team-skills/what-a-skill-is/s05-05-skill-vs-prompt-vs-agent",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 165,
+          "concept": "skill-vs-agent",
+          "body": "# Skill, prompt, agent: three words, three things\n\nThree words get used loosely around AI work. Getting them straight\nkeeps the rest of this chapter clear.\n\n## A prompt\n\nA prompt is a single instruction you give in the moment. \"Summarize\nthis document.\" It's a one-off. When the conversation ends, the prompt\nis gone. Prompts are perfect for things you do once or rarely.\n\n## A skill\n\nA skill is a reusable playbook for a recurring task, packaged so Claude\nloads it automatically when that task comes up. It's not a one-off.\nIt's the right way to do a job, captured once and used many times by\nmany people. A skill turns \"the way Maya prompts for contract reviews\"\ninto \"the way the team reviews contracts.\"\n\n## An agent\n\nAn agent is Claude actually working a task: running the look-plan-act-\ncheck loop, taking steps, using tools. When you give the Claude CLI an\ninstruction and watch it work, that's an agent at work.\n\n## How they fit together\n\nThese aren't competitors. They stack. An agent is Claude doing work. A\nskill is a playbook that agent can load to do a specific job your\nteam's way. A prompt is how you kick any of it off.\n\nThe useful mental picture: the agent is the worker, the skill is the\ntrained procedure that worker follows, and the prompt is you assigning\nthe task. A new hire (agent) is capable on day one, but they're far\nmore useful once they've been handed your team's documented procedures\n(skills). The next step is the practical version of this: when a job\ndeserves a skill, and when it's fine to just prompt.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "mc",
+          "id": "team-skills/what-a-skill-is/s06-06-skill-or-agent",
+          "xp": 3,
+          "hint": [
+            {
+              "level": 1,
+              "body": "A skill earns its place when a task is recurring, follows a fixed playbook, and needs to be consistent across people. A one-off question asked now and then is just a prompt.",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 80,
+          "concept": "skill-vs-agent",
+          "prompt": "Your team does first-pass resume screening against the same role\nrubric about twice a week, and you want everyone screening the same\nway. A teammate also occasionally asks Claude one-off questions like\n\"what's a good interview question for this role.\"\n\nWhich of these should become a skill?\n",
+          "options": [
+            {
+              "id": "screening",
+              "label": "The resume screening: it's recurring, it follows a fixed rubric, and you want everyone doing it consistently"
+            },
+            {
+              "id": "questions",
+              "label": "The one-off interview-question requests: they happen in a chat",
+              "explain": "A one-off question asked occasionally is a prompt, not a skill. There's no fixed playbook to capture and no consistency problem to solve. Building a skill for it would be overhead with no payoff."
+            },
+            {
+              "id": "both",
+              "label": "Both, since anything done with AI should become a skill",
+              "explain": "Not everything earns a skill. A skill pays off for recurring, standardized work. A genuinely one-off question doesn't have a repeatable playbook behind it, so a skill adds maintenance for no gain."
+            },
+            {
+              "id": "neither",
+              "label": "Neither, skills are only for technical tasks",
+              "explain": "Skills aren't limited to technical work. A resume-screening rubric is exactly the kind of non-technical playbook skills are good at. The screening task should become a skill."
+            }
+          ],
+          "answerIds": [
+            "screening"
+          ],
+          "shuffle": false,
+          "runnable": true
+        },
+        {
+          "type": "checkpoint",
+          "id": "team-skills/what-a-skill-is/s07-07-checkpoint",
+          "xp": 6,
+          "hint": [
+            {
+              "level": 1,
+              "body": "Each line is `print(f\"label: {variable}\")`. The third label is `auto-loaded` with a hyphen, but the variable is `auto_loaded` with an underscore, since variable names can't contain hyphens.",
+              "cost": 0
+            },
+            {
+              "level": 2,
+              "body": "Here are the three lines:\n\n```python\nprint(f\"instructions: {instructions}\")\nprint(f\"packaged: {packaged}\")\nprint(f\"auto-loaded: {auto_loaded}\")\n```\n",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "check",
+          "estSeconds": 150,
+          "concept": "skill-defined",
+          "prompt": "Lesson one lock-in. The code sandbox runs Python, the language the\nrest of this course teaches. Same print and f-string move used in\nevery chapter.\n\nThe starter declares three variables for the three parts of what a\nskill is. Write three `print(f\"...\")` lines so the output is exactly:\n\n```\ninstructions: your playbook for one kind of task, written down once\npackaged: a folder with a main file plus any supporting files\nauto-loaded: claude pulls it in itself when the task matches\n```\n\nType the three lines and run it.\n",
+          "starter": "instructions = \"your playbook for one kind of task, written down once\"\npackaged = \"a folder with a main file plus any supporting files\"\nauto_loaded = \"claude pulls it in itself when the task matches\"\n\n# write three print() lines below using f-strings.\n# the grader expects the three lines shown above, exactly.\n",
+          "grader": {
+            "kind": "stdout-equality",
+            "expected": "instructions: your playbook for one kind of task, written down once\npackaged: a folder with a main file plus any supporting files\nauto-loaded: claude pulls it in itself when the task matches\n",
+            "normalize": "collapse-trailing-newline"
+          },
+          "solution": "instructions = \"your playbook for one kind of task, written down once\"\npackaged = \"a folder with a main file plus any supporting files\"\nauto_loaded = \"claude pulls it in itself when the task matches\"\n\nprint(f\"instructions: {instructions}\")\nprint(f\"packaged: {packaged}\")\nprint(f\"auto-loaded: {auto_loaded}\")\n",
+          "passThreshold": 0.66
+        }
+      ],
+      "xpTotal": 15
+    },
+    {
+      "slug": "skills-as-a-team-thing",
+      "title": "Skills as a team thing",
+      "estMinutes": 10,
+      "prerequisites": [
+        "what-a-skill-is"
+      ],
+      "steps": [
+        {
+          "type": "read",
+          "id": "team-skills/skills-as-a-team-thing/s01-01-the-team-problem",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "warmup",
+          "estSeconds": 135,
+          "concept": "team-skill-problem",
+          "body": "# A skill one person has is half a skill\n\nThe contract-review skill from lesson one is genuinely useful to the\nmanager who built it. But if it lives only on her account, the team\nproblem from the start of this chapter is only half-solved.\n\nPicture it. She has a great `vendor-contract-review` skill. Her six\nparalegals don't. So contracts she reviews are consistent, and\ncontracts the other six review are still done six different ways. The\nplaybook exists, but it's not deployed. A skill that one person has is\na personal productivity tool. A skill the team has is a standard.\n\nThis lesson is about closing that gap: getting a skill from one\nperson's account into the hands of everyone who needs it. There are\nthree ways that happens, and they differ by who's in control.\n\n- **Admin provisioning.** An administrator pushes a skill to everyone\n  in the organization at once. Top-down, for skills the whole company\n  should have.\n- **Sharing with colleagues.** One person sends a skill directly to\n  specific coworkers. Person-to-person, for a small group.\n- **The organization directory.** Someone publishes a skill to an\n  internal directory where any coworker can find it and install it\n  themselves. Opt-in, for skills worth offering broadly.\n\nThe next two steps walk through these. The thing to notice across all\nthree: a skill becomes a team asset on purpose, through a deliberate\nstep. It doesn't spread on its own, and that is exactly what makes the\ngovernance later in this chapter possible.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "read",
+          "id": "team-skills/skills-as-a-team-thing/s02-02-org-wide-skills",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 165,
+          "concept": "admin-provisioning",
+          "body": "# Admin provisioning: top-down rollout\n\nThe first way a skill becomes a team asset is an administrator pushing\nit out. This is for skills the whole organization, or a whole\ndepartment, should run.\n\nOrganization-wide skill management is a feature of the Claude Team and\nEnterprise plans. On those plans, an administrator can upload a skill\nthrough the organization settings. Once they do, that skill becomes\navailable to everyone in the organization. People find it in their\nClaude settings, under Customize, then Skills. They don't have to hunt\nfor it or install anything; the admin's upload provisioned it to\neveryone.\n\nTwo control points matter here, and they're the reason this is the\nsafe default for important skills.\n\n**The admin gate.** On Team and Enterprise plans, an administrator\nenables Skills for the organization before anyone can use them at all.\nSkills are not just on by default. Someone with authority turns the\nfeature on, and that same someone controls what gets pushed out.\n\n**Central control.** Because provisioning runs through the admin, the\norganization has one place to manage skills: push them out, restrict\nthem, and audit what's deployed. The contract-review skill isn't six\nslightly different copies floating around. It's one official skill,\nmanaged centrally, the same for everyone.\n\nThis is the model that matches how a regulated team, a legal\ndepartment, an HR function, actually needs to work. The official\nplaybook is provisioned by someone accountable for it, not improvised\naccount by account. When you think about deploying a skill that\ncarries real standards, admin provisioning is the path you want.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "read",
+          "id": "team-skills/skills-as-a-team-thing/s03-03-sharing-and-the-directory",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 165,
+          "concept": "sharing-and-directory",
+          "body": "# Sharing with colleagues, and the directory\n\nAdmin provisioning is top-down. The other two ways are bottom-up, run\nby the person who made the skill rather than an administrator.\n\n## Sharing with specific colleagues\n\nA person who built a skill can share it directly with named coworkers.\nThe people they pick get the skill, and it shows up for them in a\n\"Shared with you\" area of their Claude settings. This is the\nperson-to-person path: good for a skill a small group needs, before or\ninstead of a full organization rollout.\n\n## Publishing to the organization directory\n\nThe wider bottom-up path is the organization directory. Someone can\npublish their skill to an internal directory, where any coworker can\nbrowse, find it, and install it themselves. It's an internal catalog\nof skills the team has built, opt-in on the finder's side.\n\n## Both are off by default, and that's the point\n\nHere's the detail worth remembering: both of these sharing options are\nturned off by default. A skill you build is private to you until you\ntake a deliberate action to share it or publish it. It does not leak to\ncolleagues, and it does not appear in the directory, on its own.\n\nThat default is a safety feature, not an inconvenience. It means no\nskill becomes a team asset by accident. Every skill that reaches other\npeople got there because a human chose to share it, publish it, or\nprovision it. When you reach the governance lesson and start asking\n\"who can put a skill in front of the team,\" this off-by-default\nbehavior is the floor the answer stands on.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "mc",
+          "id": "team-skills/skills-as-a-team-thing/s04-04-deployment-check",
+          "xp": 3,
+          "hint": [
+            {
+              "level": 1,
+              "body": "The requirement is 'everyone must use this exact one.' That calls for top-down, central, mandatory deployment. Sharing and the directory are both opt-in or manual. Admin provisioning is the controlled path.",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 80,
+          "concept": "admin-provisioning",
+          "prompt": "Your legal department has finalized one official contract-review\nskill. Every paralegal must use this exact skill, and no other\nversion, for vendor contract reviews.\n\nWhich way of deploying it fits that requirement best?\n",
+          "options": [
+            {
+              "id": "admin",
+              "label": "Admin provisioning: an administrator pushes the one official skill organization-wide, so everyone has the same managed copy"
+            },
+            {
+              "id": "share",
+              "label": "Have the manager share it one by one with each paralegal",
+              "explain": "Direct sharing works for a small group, but it's manual, easy to miss someone, and doesn't give you central control or auditing. For an official skill everyone must use, admin provisioning is the managed path."
+            },
+            {
+              "id": "directory",
+              "label": "Publish it to the directory and let paralegals install it if they want",
+              "explain": "The directory is opt-in: people choose whether to install. That's wrong when use is mandatory. Someone could simply not install it, or install an older copy. Admin provisioning makes the official skill the one everyone has."
+            },
+            {
+              "id": "email",
+              "label": "Email the skill folder to the team as an attachment",
+              "explain": "Emailing a folder around creates exactly the scattered, uncontrolled copies skills are meant to replace. Deployment should go through Claude's provisioning, not an inbox."
+            }
+          ],
+          "answerIds": [
+            "admin"
+          ],
+          "shuffle": false,
+          "runnable": true
+        },
+        {
+          "type": "read",
+          "id": "team-skills/skills-as-a-team-thing/s05-05-collaborating-through-skills",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 150,
+          "concept": "collaborating-through-skills",
+          "body": "# What collaboration looks like with skills\n\nStep back from the mechanics and look at what changes in how a team\nactually works once skills are in place.\n\nWithout skills, AI use is a private habit. Each person has their own\nprompts, their own tricks, their own way of explaining the standards.\nThe team isn't collaborating with AI so much as a set of individuals\neach separately using AI. The quality of any given piece of work\ndepends on who happened to do it.\n\nWith skills, the playbook becomes the shared thing. The team\ncollaborates by building and improving skills together:\n\n- **One person captures a process** into a skill, instead of keeping\n  it as a personal trick.\n- **The team reviews and improves it.** A skill is a concrete object.\n  People can look at the instructions, suggest the checklist is missing\n  a step, catch a standard that's out of date.\n- **Everyone runs the improved version.** When the skill is updated,\n  every future use reflects the update. Improvement compounds for the\n  whole team, not one person.\n- **New hires inherit it.** A new employee doesn't need to absorb\n  years of \"how we do things\" before they're effective. The skills\n  hand them the documented procedures on day one.\n\nThe shift is from \"my prompts\" to \"our skills.\" The unit of AI know-how\nstops being a person and becomes the team. That's what makes skills a\nmanagement tool and not just a personal one, and it's why a person who\nmanages a team, you, is exactly the right owner for them.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "mc",
+          "id": "team-skills/skills-as-a-team-thing/s06-06-sharing-scenario",
+          "xp": 2,
+          "hint": [
+            {
+              "level": 1,
+              "body": "Recall the default: a new skill is private to its creator. Sharing and directory publishing are both off until switched on. Nothing reaches the team without a deliberate human action.",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 75,
+          "concept": "sharing-and-directory",
+          "prompt": "A teammate built a useful skill for cleaning up meeting notes. They\nsay: \"I built it last week, so by now the whole company probably has\nit automatically.\"\n\nWhat's wrong with that assumption?\n",
+          "options": [
+            {
+              "id": "off-by-default",
+              "label": "Sharing and directory publishing are off by default. A skill stays private to its creator until they deliberately share it, publish it, or an admin provisions it"
+            },
+            {
+              "id": "too-soon",
+              "label": "Nothing is wrong, it just takes about two weeks to spread",
+              "explain": "Skills don't spread on a timer. There's no automatic spreading at all. A skill reaches other people only through a deliberate action: sharing, publishing, or admin provisioning."
+            },
+            {
+              "id": "needs-admin-only",
+              "label": "It's wrong because only an admin can ever share a skill",
+              "explain": "Admins aren't the only path. A regular person can share a skill with specific colleagues or publish it to the directory themselves. The actual error is assuming it spread with no action at all."
+            },
+            {
+              "id": "meeting-notes",
+              "label": "It's wrong because meeting-notes cleanup can't be a skill",
+              "explain": "Cleaning up meeting notes is a perfectly good skill. The error isn't the topic, it's the belief that a skill reaches the company without anyone choosing to share it."
+            }
+          ],
+          "answerIds": [
+            "off-by-default"
+          ],
+          "shuffle": false,
+          "runnable": true
+        },
+        {
+          "type": "checkpoint",
+          "id": "team-skills/skills-as-a-team-thing/s07-07-checkpoint",
+          "xp": 6,
+          "hint": [
+            {
+              "level": 1,
+              "body": "Each line is `print(f\"label: {variable}\")`. The labels have spaces (that's fine, they're plain text), but the variable names are the single words admin, share, and directory.",
+              "cost": 0
+            },
+            {
+              "level": 2,
+              "body": "Here are the three lines:\n\n```python\nprint(f\"admin provisioning: {admin}\")\nprint(f\"share with colleagues: {share}\")\nprint(f\"the directory: {directory}\")\n```\n",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "check",
+          "estSeconds": 150,
+          "concept": "admin-provisioning",
+          "prompt": "Lesson two lock-in. The starter declares three variables for the\nthree ways a skill becomes a team asset. Write three `print(f\"...\")`\nlines so the output is exactly:\n\n```\nadmin provisioning: an admin pushes a skill org-wide, central control\nshare with colleagues: send a skill directly to specific coworkers\nthe directory: publish a skill for coworkers to find and install\n```\n\nType the three lines and run it.\n",
+          "starter": "admin = \"an admin pushes a skill org-wide, central control\"\nshare = \"send a skill directly to specific coworkers\"\ndirectory = \"publish a skill for coworkers to find and install\"\n\n# write three print() lines below using f-strings.\n# the grader expects the three lines shown above, exactly.\n",
+          "grader": {
+            "kind": "stdout-equality",
+            "expected": "admin provisioning: an admin pushes a skill org-wide, central control\nshare with colleagues: send a skill directly to specific coworkers\nthe directory: publish a skill for coworkers to find and install\n",
+            "normalize": "collapse-trailing-newline"
+          },
+          "solution": "admin = \"an admin pushes a skill org-wide, central control\"\nshare = \"send a skill directly to specific coworkers\"\ndirectory = \"publish a skill for coworkers to find and install\"\n\nprint(f\"admin provisioning: {admin}\")\nprint(f\"share with colleagues: {share}\")\nprint(f\"the directory: {directory}\")\n",
+          "passThreshold": 0.66
+        }
+      ],
+      "xpTotal": 15
+    },
+    {
+      "slug": "role-playbooks",
+      "title": "Role playbooks",
+      "estMinutes": 10,
+      "prerequisites": [
+        "skills-as-a-team-thing"
+      ],
+      "steps": [
+        {
+          "type": "read",
+          "id": "team-skills/role-playbooks/s01-01-hr-skills",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "warmup",
+          "estSeconds": 150,
+          "concept": "hr-skills",
+          "body": "# Skills for HR work\n\nThe best way to see where a skill fits is by role. Start with HR, where\nthe work is full of recurring, standards-driven tasks, the exact shape\na skill is built for.\n\n## Resume screening\n\nA `resume-screen` skill holds the role's must-have requirements, the\nnice-to-haves, and the rule that the model summarizes evidence rather\nthan ruling people out on its own. Every recruiter who runs it screens\nthe same batch the same way, against the same bar. The skill makes\nthe rubric the standard instead of a memory test.\n\n## Onboarding\n\nAn `onboarding-plan` skill encodes your company's first-30-days\nstructure: the checklist, the standard intro meetings, the policies a\nnew hire must acknowledge. A manager asks Claude to draft an onboarding\nplan for a new role, and gets one shaped like every other one, instead\nof a blank-page improvisation.\n\n## Job descriptions\n\nA `job-description` skill carries your format, your tone, your required\nsections, and your inclusive-language standards. New postings come out\nconsistent with the last hundred, without each hiring manager\nreinventing the template.\n\n## The HR caution\n\nHR work touches people's livelihoods and sits under real employment\nlaw. A skill makes the process consistent; it does not make the\nprocess automatically legal or fair. An HR skill should be explicit\nthat Claude assists and summarizes, and that a person makes the\ndecisions. A skill that quietly screens people out on its own is a\nskill built wrong. Consistency is the goal. Removing the human from a\npeople decision is not, and the governance lesson comes back to this.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "read",
+          "id": "team-skills/role-playbooks/s02-02-legal-skills",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 150,
+          "concept": "legal-skills",
+          "body": "# Skills for legal work\n\nLegal teams run on documented standards, which makes them a natural\nhome for skills. You already saw one, `vendor-contract-review`, in\nlesson one. Here's the wider set.\n\n## Redlining against a playbook\n\nA `contract-redline` skill carries the firm's positions: preferred\nclauses, fallback positions, terms that are non-negotiable. Claude\nmarks up an incoming contract against those positions and explains each\nchange, instead of each associate redlining from personal preference.\n\n## Clause comparison\n\nA `clause-compare` skill takes the firm's standard clauses and compares\nan incoming document's clauses against them, flagging what's missing,\nweaker, or unusual. The reviewer gets a structured difference report\nrather than a from-scratch read.\n\n## First-pass document review\n\nA `doc-review` skill encodes what a first read should always extract\nfrom a long document: parties, dates, obligations, termination terms,\nanything unusual. It produces the same summary structure every time, so\nthe lawyer's read starts from a consistent base.\n\n## The legal caution\n\nThe hard rule for any legal skill: it produces a draft and a flag, not\na verdict. A skill makes review consistent and fast. It does not, and\nmust not, replace the lawyer's judgment, and it must never be allowed\nto look like legal advice to a client. The most dangerous mistake here\nis a confident, wrong output trusted because it looked thorough. The\ndebugging-AI-output and evals chapters of this course exist for exactly\nthis, and a legal skill should say plainly: every output gets verified\nby a person before it leaves the building.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "read",
+          "id": "team-skills/role-playbooks/s03-03-operations-skills",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 150,
+          "concept": "operations-skills",
+          "body": "# Skills for operations work\n\nOperations is the role most defined by repeatable process, so it may be\nthe role where skills pay off fastest. If your job involves a standard\noperating procedure, that procedure is a skill waiting to be written.\n\n## Turning an SOP into a skill\n\nAny SOP your team already has, vendor onboarding, incident response,\nthe monthly close, can become a skill. The skill carries the steps, the\nchecks, and the required outputs. Someone asks Claude to run the\nprocess for a specific case, and it follows the documented procedure\ninstead of someone's memory of it.\n\n## Status and reporting\n\nA `weekly-update` skill encodes how your team turns raw inputs, notes,\nmetrics, ticket counts, into the standard status report: same\nsections, same length, same tone. Reports stop depending on who wrote\nthem this week.\n\n## Routing and triage\n\nA `request-triage` skill holds the rules for sorting incoming requests:\nwhat's urgent, what goes to which team, what needs more information\nbefore it can move. Claude applies the same routing logic every time,\nso triage is consistent rather than mood-dependent.\n\n## The operations caution\n\nOperations skills often sit close to action: a triage skill decides\nwhere work goes, a process skill might draft a vendor email. The closer\na skill gets to doing things, rather than drafting and recommending,\nthe more it needs a person approving the steps that matter. That's the\nsame read-the-line habit from the CLI chapters. A skill can make the\nrecommendation consistent. A human should still approve the\nconsequential move. The governance lesson, next, makes that concrete.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "mc",
+          "id": "team-skills/role-playbooks/s04-04-match-the-skill",
+          "xp": 3,
+          "hint": [
+            {
+              "level": 1,
+              "body": "Recurring task, fixed expected format, current pain is inconsistency across people. That's the precise profile of a job that should become a skill.",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 85,
+          "concept": "role-skills",
+          "prompt": "An operations manager says: \"Every month my team turns the same raw\ninputs, ticket counts, project notes, and metrics, into a status\nreport. Every report comes out a little different depending on who\nwrites it, and leadership has complained about that.\"\n\nWhat's the right move?\n",
+          "options": [
+            {
+              "id": "build-skill",
+              "label": "Build a weekly-update skill that encodes the report's sections, length, and tone, so every report comes out consistent regardless of author"
+            },
+            {
+              "id": "one-off",
+              "label": "Nothing to build. Each person should just prompt Claude fresh each month",
+              "explain": "Fresh prompting each month is exactly what's producing the inconsistency leadership complained about. A recurring task with a fixed expected format is the textbook case for a skill."
+            },
+            {
+              "id": "agent-only",
+              "label": "Have an AI agent write the reports with no skill and no human",
+              "explain": "An agent with no skill has no shared playbook, so it still won't match a defined standard reliably. And removing the human from a leadership-facing report is a step too far. The fix is a skill that captures the format, with a person still reviewing."
+            },
+            {
+              "id": "hire",
+              "label": "Assign one person to write every report so it's always the same",
+              "explain": "That works until that person is out, and it wastes the consistency a skill would give you for free. Capturing the format as a skill makes any team member produce the standard report."
+            }
+          ],
+          "answerIds": [
+            "build-skill"
+          ],
+          "shuffle": false,
+          "runnable": true
+        },
+        {
+          "type": "read",
+          "id": "team-skills/role-playbooks/s05-05-skill-or-one-off",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 165,
+          "concept": "skill-vs-one-off",
+          "body": "# When a skill is worth it, and when it isn't\n\nA skill is not free. Someone writes it, someone reviews it, someone\nkeeps it current. That cost is small, but it's real, and it means not\nevery task should become a skill. Here's how to judge.\n\n## Build a skill when the task is\n\n- **Recurring.** It happens regularly, weekly, or many times a week.\n  A skill amortizes its setup cost over many uses. A task done once\n  never earns it back.\n- **Standardized.** There's a right way to do it, and you want that\n  way followed. If the task is genuinely different every time, there's\n  no fixed playbook to capture.\n- **Done by more than one person.** The payoff of a skill is\n  consistency across people. A task only you ever do has less to gain,\n  though a skill can still be a useful personal checklist.\n- **Costly to get wrong.** The more a sloppy or inconsistent result\n  hurts, the more a skill's reliability is worth.\n\nA task that hits most of those should be a skill.\n\n## Just prompt when the task is\n\n- A genuine one-off, or something you do rarely.\n- Exploratory: you're thinking, not following a procedure.\n- Still changing: you haven't settled on the right way yet, so\n  freezing it into a skill would freeze the wrong thing.\n\n## The honest failure mode\n\nThe mistake teams make is skill sprawl: building a skill for everything,\nending up with fifty skills, half of them stale, and nobody sure which\nis current. A skill you don't maintain is worse than no skill, because\npeople trust it. Build skills for your real, recurring, standardized\nwork. Leave the rest as prompts. A small set of well-kept skills beats\na big pile of neglected ones.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "mc",
+          "id": "team-skills/role-playbooks/s06-06-skill-or-one-off-check",
+          "xp": 3,
+          "hint": [
+            {
+              "level": 1,
+              "body": "Run the build-a-skill test: recurring, standardized, done by multiple people, costly to get wrong. Only one option hits all four. The others are one-offs, exploration, or a process not yet settled.",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 85,
+          "concept": "skill-vs-one-off",
+          "prompt": "Four tasks. Three of them are weak candidates for a skill. Which ONE\nis the strong candidate that should become a skill?\n",
+          "options": [
+            {
+              "id": "invoice-check",
+              "label": "Checking incoming invoices against your approval rules, done daily by four people on the finance team, where errors cost money"
+            },
+            {
+              "id": "rename-event",
+              "label": "Renaming the company offsite, a one-time decision the leadership team is making this quarter",
+              "explain": "A one-time decision is the opposite of a skill candidate. There's nothing recurring to capture and no setup cost to amortize. This is a conversation, not a skill."
+            },
+            {
+              "id": "explore-strategy",
+              "label": "Exploring whether the company should enter a new market, an open-ended strategy question",
+              "explain": "This is exploratory thinking, not a standardized procedure. There's no fixed right way to follow. That's prompt territory, not skill territory."
+            },
+            {
+              "id": "new-process",
+              "label": "A brand-new process the team invented last week and is still actively changing",
+              "explain": "A process still in flux shouldn't be frozen into a skill yet. You'd be capturing a version you're about to change. Wait until the right way settles, then build the skill."
+            }
+          ],
+          "answerIds": [
+            "invoice-check"
+          ],
+          "shuffle": false,
+          "runnable": true
+        },
+        {
+          "type": "checkpoint",
+          "id": "team-skills/role-playbooks/s07-07-checkpoint",
+          "xp": 6,
+          "hint": [
+            {
+              "level": 1,
+              "body": "Each line is `print(f\"label: {variable}\")`. The last label is `costly to get wrong` (three words, plain text), but its variable is just `costly`.",
+              "cost": 0
+            },
+            {
+              "level": 2,
+              "body": "Here are the four lines:\n\n```python\nprint(f\"recurring: {recurring}\")\nprint(f\"standardized: {standardized}\")\nprint(f\"shared: {shared}\")\nprint(f\"costly to get wrong: {costly}\")\n```\n",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "check",
+          "estSeconds": 150,
+          "concept": "skill-vs-one-off",
+          "prompt": "Lesson three lock-in. The starter declares four variables for the\ntest of whether a task should become a skill. Write four\n`print(f\"...\")` lines so the output is exactly:\n\n```\nrecurring: it happens regularly, so setup cost pays back\nstandardized: there is a right way you want followed\nshared: more than one person does it, so consistency matters\ncostly to get wrong: a sloppy result actually hurts\n```\n\nType the four lines and run it.\n",
+          "starter": "recurring = \"it happens regularly, so setup cost pays back\"\nstandardized = \"there is a right way you want followed\"\nshared = \"more than one person does it, so consistency matters\"\ncostly = \"a sloppy result actually hurts\"\n\n# write four print() lines below using f-strings.\n# the grader expects the four lines shown above, exactly.\n",
+          "grader": {
+            "kind": "stdout-equality",
+            "expected": "recurring: it happens regularly, so setup cost pays back\nstandardized: there is a right way you want followed\nshared: more than one person does it, so consistency matters\ncostly to get wrong: a sloppy result actually hurts\n",
+            "normalize": "collapse-trailing-newline"
+          },
+          "solution": "recurring = \"it happens regularly, so setup cost pays back\"\nstandardized = \"there is a right way you want followed\"\nshared = \"more than one person does it, so consistency matters\"\ncostly = \"a sloppy result actually hurts\"\n\nprint(f\"recurring: {recurring}\")\nprint(f\"standardized: {standardized}\")\nprint(f\"shared: {shared}\")\nprint(f\"costly to get wrong: {costly}\")\n",
+          "passThreshold": 0.75
+        }
+      ],
+      "xpTotal": 16
+    },
+    {
+      "slug": "governance-and-trust",
+      "title": "Governance and trust",
+      "estMinutes": 11,
+      "prerequisites": [
+        "role-playbooks"
+      ],
+      "steps": [
+        {
+          "type": "read",
+          "id": "team-skills/governance-and-trust/s01-01-a-skill-can-do-real-things",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "warmup",
+          "estSeconds": 150,
+          "concept": "skill-risk",
+          "body": "# A skill is more powerful than it looks\n\nSo far skills have sounded benign: a playbook, a folder of instructions.\nMostly they are. But before you deploy one to a team, you need a clear\nview of what a skill can actually do, because it's more than \"give\nClaude some advice.\"\n\nA skill can include instructions for Claude to run small steps, not\njust read guidance. That's a real capability and it's why skills depend\non the Code Execution setting. It's also why a skill deserves more\ncaution than a saved prompt.\n\nPut plainly: a skill you install is telling Claude how to behave for a\nwhole category of tasks. A badly written skill makes your team's work\nquietly wrong. A *maliciously* written skill is worse. A skill from an\nuntrusted source could direct Claude to run code you didn't intend,\nreach for files it shouldn't, or send information out of your\norganization. The skill looks like a helpful playbook the whole time.\n\nThis is not a reason to avoid skills. It's a reason to treat deploying\none as a real decision. The instinct to guard against is this: a skill\nfeels like a document, and people trust documents. A document just sits\nthere. A skill actively shapes what your AI does across many tasks and\nmany people. That's a different risk class, and it earns a real\nprocess.\n\nThe rest of this lesson is that process. Three ideas: treat a skill\nlike software you're installing, evaluate it before it goes live, and\ncontrol who can deploy one. None of it is heavy. All of it is the\ndifference between skills being an asset and skills being a quiet\nliability.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "read",
+          "id": "team-skills/governance-and-trust/s02-02-treat-it-like-software",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 150,
+          "concept": "skill-trust",
+          "body": "# Treat a skill like software you're installing\n\nHere's the single most useful rule for skill governance:\n\n> Installing a skill deserves the same caution as installing software\n> on an important computer.\n\nYou already have instincts about installing software. You don't install\na random program a stranger emailed you onto the company's systems. You\ncheck where it came from. You ask whether the source is trusted. For\nanything sensitive, someone reviews it first. Apply those exact\ninstincts to skills.\n\n## Where did this skill come from\n\nEvery skill falls into one of three trust levels:\n\n- **Built in-house, by someone accountable.** Your own legal manager\n  wrote the contract-review skill. Highest trust, though it still gets\n  evaluated (next step).\n- **From a known, reputable source.** A skill from Anthropic's own\n  catalog or a vendor you have a real relationship with. Reasonable\n  trust, still review it.\n- **From an untrusted or unknown source.** A skill from the open\n  internet, a stranger, a source you can't vouch for. Treat this the\n  way you'd treat a stranger's executable file. Do not deploy it to a\n  team without a full audit by someone who can actually read what it\n  does, and when in doubt, don't deploy it at all.\n\n## Why this matters more than it seems\n\nThe open standard behind skills means skills are portable and easy to\nshare, which is genuinely good. It also means skills travel, and a\nskill that shows up from somewhere convenient is not automatically a\nskill that's safe. Convenience of sharing and trustworthiness of source\nare two separate things. The team that keeps them separate, and checks\nthe source every time, is the team skills make stronger instead of more\nexposed.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "read",
+          "id": "team-skills/governance-and-trust/s03-03-evaluate-before-you-deploy",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 165,
+          "concept": "skill-evaluation",
+          "body": "# Evaluate before you deploy\n\nChecking a skill's source tells you it isn't malicious. It does not\ntell you the skill is any good. For that, you evaluate it: you test the\nskill on real examples before it goes live for the team.\n\n## The basic practice\n\nA workable standard, and one many teams adopt: before a skill is\ndeployed, its author submits a small evaluation set, roughly three to\nfive representative example tasks, with the result you'd expect for\neach. You run the skill against those examples and check that what\ncomes back matches.\n\nIt's the same idea as not shipping a process to your team without\ntrying it on a few real cases first. Three to five well-chosen examples\ncatch a surprising share of problems: the skill that misses a clause,\nthe screening rubric that's too harsh, the report format that drops a\nsection.\n\n## What you're checking for\n\n- **Correctness.** Does the skill produce the right result on the\n  example tasks?\n- **The standard.** Does it actually follow your playbook, or a\n  drifted version of it?\n- **The guardrails.** Does it respect the limits, draft-not-verdict,\n  assist-don't-decide, human-approves-the-real-moves? An HR skill that\n  rejects a candidate on its own fails evaluation no matter how good\n  its summaries read.\n\n## Evaluation is not one-and-done\n\nA skill that passed evaluation six months ago is not still validated\ntoday. Your standards change, the underlying model changes, the work\nchanges. Re-evaluate a skill when you update it, and on a regular\nschedule even when you haven't. A whole later chapter of this course,\non evals, goes deep on this. For now: nothing reaches the team without\npassing a few real examples first, and \"it passed once\" is not the same\nas \"it still passes.\"",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "read",
+          "id": "team-skills/governance-and-trust/s04-04-access-control",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 150,
+          "concept": "skill-access-control",
+          "body": "# Who gets to deploy a skill\n\nSource-checking and evaluation are about whether a skill is safe and\ngood. Access control is about who in your organization is allowed to\nmake those calls. It's the part that's genuinely a management\ndecision, so it's yours.\n\n## The controls you have\n\nYou met most of these in lesson two; here they are as governance levers:\n\n- **The org-wide on switch.** On Team and Enterprise plans, an\n  administrator enables Skills for the organization before anyone uses\n  them. Skills being usable at all is a deliberate, controlled choice.\n- **Who can provision.** Pushing a skill organization-wide runs through\n  an administrator. That is the choke point for any skill that becomes\n  a company standard, and it should stay a small, accountable set of\n  people.\n- **The off-by-default sharing.** Because sharing with colleagues and\n  publishing to the directory are off until switched on, no skill\n  reaches others by accident. Every deployment is traceable to a\n  person's decision.\n- **Central audit.** Administrators can see and review what skills are\n  deployed across the organization. You can answer \"what skills is the\n  team running, and who put them there.\"\n\n## The policy worth writing down\n\nDecide, before skills spread, a few simple rules: who may publish a\nskill to the company directory, what review a skill goes through before\nan admin provisions it org-wide, and who owns each official skill once\nit's live. It does not need to be a long document. It needs to exist,\nso that \"we have a skill for that\" is always followed by a clear answer\nto \"and who is accountable for it.\" A skill with no owner is the one\nthat quietly goes stale and wrong.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "mc",
+          "id": "team-skills/governance-and-trust/s05-05-governance-scenario",
+          "xp": 3,
+          "hint": [
+            {
+              "level": 1,
+              "body": "Two red flags: an untrusted source, and a skill that touches money. Treat installing it like installing a stranger's software on the finance systems. Audit first, evaluate on safe test cases, and only then consider deploying.",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 90,
+          "concept": "skill-governance",
+          "prompt": "A teammate is excited: \"I found a skill online that automates our\nwhole vendor-payment process. It's from someone's public page. Let's\npush it to the whole finance team today.\"\n\nWhat's the right response?\n",
+          "options": [
+            {
+              "id": "stop-audit",
+              "label": "Slow down. It's from an untrusted source and it touches payments. It needs a real audit of what it does, then evaluation on test cases, before it goes anywhere near the team"
+            },
+            {
+              "id": "ship-it",
+              "label": "Push it today. If it's published online, it's been vetted by someone",
+              "explain": "Being published online means nothing about safety. An untrusted skill can direct Claude to run code, reach files, or send data out. A skill touching payments is exactly the case that needs a full audit first, not a same-day rollout."
+            },
+            {
+              "id": "one-person",
+              "label": "Have just one person try it quietly on real payments to see if it works",
+              "explain": "Testing an unaudited skill on real payments is testing in production with money. Audit it first, then evaluate it on safe test cases, not live payments."
+            },
+            {
+              "id": "directory",
+              "label": "Publish it straight to the company directory so people can opt in",
+              "explain": "The directory still puts an unaudited, untrusted skill in front of coworkers. Opt-in doesn't fix an unsafe skill. The source check and audit have to happen before it's offered to anyone."
+            }
+          ],
+          "answerIds": [
+            "stop-audit"
+          ],
+          "shuffle": false,
+          "runnable": true
+        },
+        {
+          "type": "read",
+          "id": "team-skills/governance-and-trust/s06-06-a-rollout-checklist",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 150,
+          "concept": "skill-rollout",
+          "body": "# A rollout checklist you can actually use\n\nHere's the whole chapter, turned into a checklist for the moment you\nactually deploy a skill to a team. Run it top to bottom each time.\n\n**1. Is this worth a skill?** Recurring, standardized, done by several\npeople, costly to get wrong. If it doesn't fit, leave it as a prompt.\n\n**2. Where did the skill come from?** Built in-house, from a reputable\nsource, or untrusted. If untrusted, it gets a full audit by someone who\ncan read what it does, or it doesn't get deployed.\n\n**3. Does it respect its guardrails?** Drafts not verdicts, assists not\ndecides, a human approves the consequential moves. An HR or legal or\npayments skill that crosses this line fails here.\n\n**4. Has it been evaluated?** Three to five representative test cases,\nexpected results checked. It passes on real examples before it goes\nlive, not after.\n\n**5. Who owns it?** One named person is accountable for this skill:\nkeeping it current, re-evaluating it, retiring it when it's stale.\n\n**6. How is it deployed?** Admin provisioning for a company standard,\ndirect sharing for a small group, the directory for opt-in. Match the\ndeployment to how the skill should spread.\n\n**7. When is it reviewed again?** A date. Skills drift. Put the next\nreview on the calendar now.\n\nSeven questions. None of them slow you down much, and together they're\nthe difference between skills that quietly make your team better and\nskills that quietly make your team wrong. Print this. Use it every time\na skill is about to reach more than one person.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "checkpoint",
+          "id": "team-skills/governance-and-trust/s07-07-checkpoint",
+          "xp": 6,
+          "hint": [
+            {
+              "level": 1,
+              "body": "Each line is `print(f\"label: {variable}\")`. The labels have spaces (plain text, fine), and the variable names are the single words trust, evaluate, and control.",
+              "cost": 0
+            },
+            {
+              "level": 2,
+              "body": "Here are the three lines:\n\n```python\nprint(f\"trust the source: {trust}\")\nprint(f\"evaluate first: {evaluate}\")\nprint(f\"control deployment: {control}\")\n```\n\nThat completes the team skills chapter. You can spot a skill\nworth building, deploy it three ways, and govern it safely.\n",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "check",
+          "estSeconds": 165,
+          "concept": "skill-governance",
+          "prompt": "Last step of the chapter. The starter declares three variables for\nthe core of skill governance. Write three `print(f\"...\")` lines so\nthe output is exactly:\n\n```\ntrust the source: treat installing a skill like installing software\nevaluate first: test on three to five real examples before going live\ncontrol deployment: a named owner, and admin control over org-wide rollout\n```\n\nType the three lines, run it, and the chapter is done.\n",
+          "starter": "trust = \"treat installing a skill like installing software\"\nevaluate = \"test on three to five real examples before going live\"\ncontrol = \"a named owner, and admin control over org-wide rollout\"\n\n# write three print() lines below using f-strings.\n# the grader expects the three lines shown above, exactly.\n",
+          "grader": {
+            "kind": "stdout-equality",
+            "expected": "trust the source: treat installing a skill like installing software\nevaluate first: test on three to five real examples before going live\ncontrol deployment: a named owner, and admin control over org-wide rollout\n",
+            "normalize": "collapse-trailing-newline"
+          },
+          "solution": "trust = \"treat installing a skill like installing software\"\nevaluate = \"test on three to five real examples before going live\"\ncontrol = \"a named owner, and admin control over org-wide rollout\"\n\nprint(f\"trust the source: {trust}\")\nprint(f\"evaluate first: {evaluate}\")\nprint(f\"control deployment: {control}\")\n",
+          "passThreshold": 0.66
+        }
+      ],
+      "xpTotal": 14
+    }
+  ],
+  "xpTotal": 60
+}

@@ -1,0 +1,115 @@
+{
+  "id": "quiz-marketer",
+  "kind": "path-quiz",
+  "version": "1.0.0",
+  "path": "marketer",
+  "pathTitle": "Marketer",
+  "title": "marketer path placement",
+  "description": "A short quiz on the core ideas of the Marketer path. Answer what you know. Each chapter you place out of is one you can skip ahead on, and you can revisit any chapter any time.",
+  "estMinutes": 4,
+  "scoring": {
+    "method": "sum-of-selected-option-points",
+    "selection": "single-select",
+    "maxScore": 16,
+    "overallSkipThreshold": { "points": 8, "percent": 0.5 },
+    "chapterSkipRule": "Each chapter is tested by 2 questions worth 2 points each. A learner places out of a chapter (skips its Version A) by answering both of its questions correctly. Overall, 50 percent or more of maxScore recommends Version B as the default for chapters not individually skipped."
+  },
+  "questions": [
+    {
+      "id": "q01", "testsChapter": "13-llm-apis", "type": "scenario", "concept": "why-an-api",
+      "prompt": "You want your own tool to write 500 product descriptions overnight, with no person pasting anything by hand. What do you reach for?",
+      "options": [
+        { "id": "a", "label": "Calling an LLM through its API from code, so the model runs 500 times on its own", "points": 2 },
+        { "id": "b", "label": "Opening a chat window and pasting in products one at a time", "points": 0 },
+        { "id": "c", "label": "Writing all 500 yourself, since AI cannot do bulk work", "points": 0 },
+        { "id": "d", "label": "A spreadsheet formula", "points": 0 }
+      ],
+      "correctOptionId": "a"
+    },
+    {
+      "id": "q02", "testsChapter": "13-llm-apis", "type": "multiple-choice", "concept": "api-cost-awareness",
+      "prompt": "Each call to an LLM API costs a small amount and takes a moment to run. You are about to call it 10,000 times. What is true?",
+      "options": [
+        { "id": "a", "label": "The cost and time add up, so you plan, batch, and watch the total", "points": 2 },
+        { "id": "b", "label": "It is free and instant no matter how many calls you make", "points": 0 },
+        { "id": "c", "label": "The API blocks you after 10 calls", "points": 0 },
+        { "id": "d", "label": "Each call gets slower than the last one", "points": 0 }
+      ],
+      "correctOptionId": "a"
+    },
+    {
+      "id": "q03", "testsChapter": "14-structured-output", "type": "scenario", "concept": "structured-output",
+      "prompt": "You need the model's output to drop straight into a spreadsheet, with the same fields every time: product name, price, category. What do you ask the model for?",
+      "options": [
+        { "id": "a", "label": "Structured output, like JSON, with those exact fields defined", "points": 2 },
+        { "id": "b", "label": "A friendly paragraph and you will copy the parts out by hand", "points": 0 },
+        { "id": "c", "label": "Whatever it gives you, models cannot control their format", "points": 0 },
+        { "id": "d", "label": "An image of a spreadsheet", "points": 0 }
+      ],
+      "correctOptionId": "a"
+    },
+    {
+      "id": "q04", "testsChapter": "14-structured-output", "type": "scenario", "concept": "structured-output-failure",
+      "prompt": "You needed clean data fields back, but the model returned a chatty paragraph you now have to pick apart by hand. What most likely went wrong?",
+      "options": [
+        { "id": "a", "label": "You did not ask for structured output, so the model returned free text", "points": 2 },
+        { "id": "b", "label": "The model is broken and should be replaced", "points": 0 },
+        { "id": "c", "label": "Structured output is not possible with AI", "points": 0 },
+        { "id": "d", "label": "Nothing, a paragraph is the same as data fields", "points": 0 }
+      ],
+      "correctOptionId": "a"
+    },
+    {
+      "id": "q05", "testsChapter": "19-prompting", "type": "multiple-choice", "concept": "specific-prompts",
+      "prompt": "Which prompt is more likely to get a result you can actually use?",
+      "options": [
+        { "id": "a", "label": "One that names the audience, the format, the length, and what to avoid", "points": 2 },
+        { "id": "b", "label": "\"write something good about our product\"", "points": 0 },
+        { "id": "c", "label": "The shortest possible prompt, every time", "points": 0 },
+        { "id": "d", "label": "It makes no difference, the model guesses well either way", "points": 0 }
+      ],
+      "correctOptionId": "a"
+    },
+    {
+      "id": "q06", "testsChapter": "19-prompting", "type": "scenario", "concept": "improving-a-prompt",
+      "prompt": "The model gave you a weak result. What is the best first fix?",
+      "options": [
+        { "id": "a", "label": "Make the prompt more specific: add context, the format you want, and an example", "points": 2 },
+        { "id": "b", "label": "Send the exact same prompt again and hope for better luck", "points": 0 },
+        { "id": "c", "label": "Give up, the model cannot do this task", "points": 0 },
+        { "id": "d", "label": "Type the prompt in all capital letters", "points": 0 }
+      ],
+      "correctOptionId": "a"
+    },
+    {
+      "id": "q07", "testsChapter": "27-ai-image-generation", "type": "scenario", "concept": "image-generation-workflow",
+      "prompt": "You want to generate 100 product images for a campaign. Which approach do you reach for first?",
+      "options": [
+        { "id": "a", "label": "An AI image generation tool, run as a batch from a prompt and your inputs", "points": 2 },
+        { "id": "b", "label": "Ask a text chatbot to describe 100 images in words", "points": 0 },
+        { "id": "c", "label": "Photograph 100 products by hand this afternoon", "points": 0 },
+        { "id": "d", "label": "Draw them yourself in a design app, one by one", "points": 0 }
+      ],
+      "correctOptionId": "a"
+    },
+    {
+      "id": "q08", "testsChapter": "27-ai-image-generation", "type": "scenario", "concept": "review-generated-output",
+      "prompt": "You generate 100 images and about 20 come out off-brand or wrong. What is the realistic workflow?",
+      "options": [
+        { "id": "a", "label": "Generate, then review and filter the batch, expecting some misses you cut or redo", "points": 2 },
+        { "id": "b", "label": "Ship all 100, the model would not produce anything off-brand", "points": 0 },
+        { "id": "c", "label": "Conclude AI image generation does not work and stop", "points": 0 },
+        { "id": "d", "label": "Generate 100 more and hope none are wrong this time", "points": 0 }
+      ],
+      "correctOptionId": "a"
+    }
+  ],
+  "skipLogic": {
+    "byChapter": [
+      { "chapter": "13-llm-apis", "questions": ["q01", "q02"], "skipVersionAIf": "both correct", "outcome": "skip Version A of 13-llm-apis" },
+      { "chapter": "14-structured-output", "questions": ["q03", "q04"], "skipVersionAIf": "both correct", "outcome": "skip Version A of 14-structured-output" },
+      { "chapter": "19-prompting", "questions": ["q05", "q06"], "skipVersionAIf": "both correct", "outcome": "skip Version A of 19-prompting" },
+      { "chapter": "27-ai-image-generation", "questions": ["q07", "q08"], "skipVersionAIf": "both correct", "outcome": "skip Version A of 27-ai-image-generation" }
+    ]
+  }
+}

@@ -1,0 +1,50 @@
+xp: 6
+estSeconds: 150
+concept: admin-provisioning
+prompt: |
+  Lesson two lock-in. The starter declares three variables for the
+  three ways a skill becomes a team asset. Write three `print(f"...")`
+  lines so the output is exactly:
+
+  ```
+  admin provisioning: an admin pushes a skill org-wide, central control
+  share with colleagues: send a skill directly to specific coworkers
+  the directory: publish a skill for coworkers to find and install
+  ```
+
+  Type the three lines and run it.
+starter: |
+  admin = "an admin pushes a skill org-wide, central control"
+  share = "send a skill directly to specific coworkers"
+  directory = "publish a skill for coworkers to find and install"
+
+  # write three print() lines below using f-strings.
+  # the grader expects the three lines shown above, exactly.
+grader:
+  kind: stdout-equality
+  expected: |
+    admin provisioning: an admin pushes a skill org-wide, central control
+    share with colleagues: send a skill directly to specific coworkers
+    the directory: publish a skill for coworkers to find and install
+  normalize: collapse-trailing-newline
+solution: |
+  admin = "an admin pushes a skill org-wide, central control"
+  share = "send a skill directly to specific coworkers"
+  directory = "publish a skill for coworkers to find and install"
+
+  print(f"admin provisioning: {admin}")
+  print(f"share with colleagues: {share}")
+  print(f"the directory: {directory}")
+passThreshold: 0.66
+hint:
+  - level: 1
+    body: "Each line is `print(f\"label: {variable}\")`. The labels have spaces (that's fine, they're plain text), but the variable names are the single words admin, share, and directory."
+  - level: 2
+    body: |
+      Here are the three lines:
+
+      ```python
+      print(f"admin provisioning: {admin}")
+      print(f"share with colleagues: {share}")
+      print(f"the directory: {directory}")
+      ```

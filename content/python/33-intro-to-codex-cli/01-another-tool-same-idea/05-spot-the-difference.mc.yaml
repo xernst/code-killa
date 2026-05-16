@@ -1,0 +1,23 @@
+xp: 2
+estSeconds: 70
+concept: codex-differences
+prompt: |
+  Which of these is a genuine difference between the Codex CLI and the
+  Claude CLI, rather than something the two tools share?
+options:
+  - id: account
+    label: "The account you sign in with: Codex uses a ChatGPT account, the Claude CLI uses a Claude account"
+  - id: loop
+    label: "Codex runs the agent loop and the Claude CLI doesn't"
+    explain: "Both run the same look-plan-act-check loop. The agent loop is shared, not a difference."
+  - id: terminal
+    label: "Codex runs in the terminal and the Claude CLI runs in a browser"
+    explain: "Both are terminal tools. Neither runs in a browser, that's the chat. This is a shared trait, not a difference."
+  - id: permission
+    label: "Codex changes files without asking, the Claude CLI asks first"
+    explain: "Both ask permission before changing files or running commands. The permission prompt is shared. Reading the line before approving is the right habit in either tool."
+answerIds:
+  - account
+hint:
+  - level: 1
+    body: "Three of these describe things the two tools share (the agent loop, being terminal tools, asking permission). Only one names a real difference, and it's about which account signs you in."

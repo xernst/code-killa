@@ -1,0 +1,53 @@
+xp: 6
+estSeconds: 150
+concept: skill-defined
+prompt: |
+  Lesson one lock-in. The code sandbox runs Python, the language the
+  rest of this course teaches. Same print and f-string move used in
+  every chapter.
+
+  The starter declares three variables for the three parts of what a
+  skill is. Write three `print(f"...")` lines so the output is exactly:
+
+  ```
+  instructions: your playbook for one kind of task, written down once
+  packaged: a folder with a main file plus any supporting files
+  auto-loaded: claude pulls it in itself when the task matches
+  ```
+
+  Type the three lines and run it.
+starter: |
+  instructions = "your playbook for one kind of task, written down once"
+  packaged = "a folder with a main file plus any supporting files"
+  auto_loaded = "claude pulls it in itself when the task matches"
+
+  # write three print() lines below using f-strings.
+  # the grader expects the three lines shown above, exactly.
+grader:
+  kind: stdout-equality
+  expected: |
+    instructions: your playbook for one kind of task, written down once
+    packaged: a folder with a main file plus any supporting files
+    auto-loaded: claude pulls it in itself when the task matches
+  normalize: collapse-trailing-newline
+solution: |
+  instructions = "your playbook for one kind of task, written down once"
+  packaged = "a folder with a main file plus any supporting files"
+  auto_loaded = "claude pulls it in itself when the task matches"
+
+  print(f"instructions: {instructions}")
+  print(f"packaged: {packaged}")
+  print(f"auto-loaded: {auto_loaded}")
+passThreshold: 0.66
+hint:
+  - level: 1
+    body: "Each line is `print(f\"label: {variable}\")`. The third label is `auto-loaded` with a hyphen, but the variable is `auto_loaded` with an underscore, since variable names can't contain hyphens."
+  - level: 2
+    body: |
+      Here are the three lines:
+
+      ```python
+      print(f"instructions: {instructions}")
+      print(f"packaged: {packaged}")
+      print(f"auto-loaded: {auto_loaded}")
+      ```

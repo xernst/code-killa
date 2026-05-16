@@ -1,0 +1,661 @@
+{
+  "number": 31,
+  "slug": "intro-to-terminal",
+  "title": "intro to terminal, the text way to drive your computer",
+  "blurb": "you've never opened a terminal. by the end of this chapter you have, and you can move around your files, make folders, and read files without touching the mouse. it's a keyboard shortcut, not a cockpit. every tool in the rest of this course assumes you can do this, so we do it first.",
+  "overview": "## The terminal is a text box. That's the whole secret.\n\nMost people who have never opened a terminal think it's a hacker thing.\nGreen text, scrolling fast, someone in a hoodie. That image is doing you\na real disservice, because the truth is boring in the best way.\n\nThe terminal is a text box. You type the name of a thing you want done.\nYou press enter. The computer does it and tells you what happened. That\nis the entire idea. There is nothing else hiding behind it.\n\nYou already drive your computer every day. You click a folder, it opens.\nYou drag a file, it moves. The terminal is the same set of actions with\nthe mouse swapped out for words. \"Open that folder\" becomes `cd`. \"Show\nme what's in here\" becomes `ls`. Same computer, same files, different\nsteering wheel.\n\n## Why bother, if the mouse already works\n\nFair question. Here's the honest answer.\n\n- **Every tool in the rest of this course assumes it.** Installing the\n  Claude CLI, running Python, using git. All of it happens in the\n  terminal. This chapter is the door the other chapters walk through.\n- **It's faster once it's yours.** Making twelve folders by hand takes\n  twelve clicks and twelve typed names. In the terminal it's one line.\n- **It's repeatable.** A click happens once and is gone. A typed\n  command can be saved, shared, and run again. That's the whole reason\n  developers and AI tools live here.\n- **The AI tools you're here to learn are terminal tools.** The Claude\n  CLI and the Codex CLI, the next two chapters, are programs you run by\n  typing. You can't skip the room they live in.\n\n## What this chapter is not\n\nIt is not a deep dive. There are people who spend years getting good at\nthe shell, and this chapter does not try to make you one of them. You\nwill learn maybe eight commands. Eight is enough to get through this\nwhole course and most of a real building job.\n\nIt is also not scary, and we're going to keep proving that. If a step\never feels like flying a plane, that's a content bug, not you. The bar\nfor this chapter is the bar for learning a new keyboard shortcut.\n\n## What you'll be able to do at the end\n\nBy the end of these three lessons you will have:\n\n- Opened a terminal on your own machine, on purpose, without flinching.\n- Found out where you are in your files (`pwd`) and what's around you (`ls`).\n- Moved into and out of folders (`cd`) using both the long way and the shortcuts.\n- Made a folder (`mkdir`), made a file (`touch`), and read a file (`cat`).\n- Understood what a \"shell\" is and why deleting things in the terminal\n  has no undo, so you treat that one command with respect.\n\nThat's it. Three short lessons, about twenty-five minutes. After this,\nthe Claude CLI chapter has somewhere to stand.\n",
+  "lessons": [
+    {
+      "slug": "what-the-terminal-is",
+      "title": "What the terminal is",
+      "estMinutes": 8,
+      "prerequisites": [],
+      "steps": [
+        {
+          "type": "read",
+          "id": "intro-to-terminal/what-the-terminal-is/s01-01-not-a-cockpit",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "warmup",
+          "estSeconds": 120,
+          "concept": "terminal-is-not-scary",
+          "body": "# It's a text box, not a cockpit\n\nBefore we open anything, let's deal with the feeling.\n\nIf the word \"terminal\" makes you picture a dark screen full of fast\ngreen text and someone breaking into a bank, that picture came from\nmovies, and it's wrong. It's not wrong because the terminal can't do\npowerful things. It's wrong because it makes the terminal look hard,\nand it isn't.\n\nHere is the terminal, described honestly:\n\n> It's a box where you type the name of something you want done, press\n> enter, and the computer does it.\n\nThat's the whole tool. You type a word. You press enter. Something\nhappens. If you've ever used a search bar, you've used something\nshaped exactly like this.\n\nThe reason it feels intimidating is that nobody walked you through it.\nYou learned to use a mouse because someone sat you in front of a\ncomputer at some point and you figured out clicking. Nobody did that\nfor the terminal. So it stayed a mystery, and mysteries feel scary.\n\nWe're going to do the walkthrough now. By the end of this lesson you\nwill have opened a terminal and typed a real command into it. Not a\ndangerous one. A command that just prints your own username back at\nyou. The point isn't the command. The point is that the first time\nyou use the terminal is calm, on purpose, and not a movie.\n\nLearning this is closer to learning a new keyboard shortcut than to\nlearning to fly. Hold onto that. If any step in this chapter starts\nfeeling like a cockpit, that's our fault, and you can trust that the\nnext step will bring it back down.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "read",
+          "id": "intro-to-terminal/what-the-terminal-is/s02-02-what-it-actually-is",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 150,
+          "concept": "terminal-vs-shell",
+          "body": "# Terminal, shell, command line: same room, different words\n\nYou'll hear three words used for this thing, sometimes in the same\nsentence. Here's what each one means, so the words stop tripping you up.\n\n- **Terminal.** The window. The actual app with the text box in it. On\n  a Mac it's an app literally called Terminal. Think of it as the\n  screen and keyboard.\n- **Shell.** The program running inside that window. It's the part\n  that reads what you typed, figures out what you meant, runs it, and\n  prints the result. Common shells are called `bash` and `zsh`. You do\n  not need to care which one you have. They all work the same for\n  everything in this course.\n- **Command line.** The thing you type. One line of text, which is a\n  command. \"Command line\" is just a description of the typing surface.\n\nIf that's a lot of words for one box, here's the shortcut: people use\nall three to mean \"the place where you type commands.\" When this course\nsays terminal, shell, or command line, it means the same room. You will\nnot be quizzed on the difference. It's here so the words don't make you\nfeel behind.\n\n## How it compares to clicking\n\nEverything you do with a mouse has a typed version.\n\n| With the mouse | In the terminal |\n| --- | --- |\n| Open a folder by double-clicking it | `cd` (change directory) |\n| Look at what's inside a folder | `ls` (list) |\n| Make a new folder | `mkdir` (make directory) |\n| Make a new empty file | `touch` |\n\nSame files. Same computer. The terminal isn't a separate secret\nmachine. It's a different door into the one you already own. When you\nmake a folder by typing `mkdir`, you can switch to your normal file\nwindow and watch the folder sitting right there. It's all one place.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "read",
+          "id": "intro-to-terminal/what-the-terminal-is/s03-03-open-it",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 180,
+          "concept": "opening-the-terminal",
+          "body": "# Open one right now\n\nThis is a do-it step. Find your operating system below, follow the\nthree lines, and leave the window open. We'll use it for the rest of\nthe chapter.\n\n## On a Mac\n\n1. Press `Command` and the spacebar at the same time. A search box\n   opens in the middle of the screen.\n2. Type the word `terminal`.\n3. Press `Enter`. A small window opens with some text in it. That's it.\n\n## On Windows\n\n1. Click the Start menu (the Windows icon, bottom-left).\n2. Type `terminal`.\n3. Click \"Terminal\" or \"Windows Terminal\" in the results. A window\n   opens. If your machine is older and there's no \"Terminal\", click\n   \"PowerShell\" instead. Either one is fine for this course.\n\n## On Linux\n\n1. You almost certainly know where yours is, but if not: look for an\n   app called \"Terminal\" in your applications menu.\n2. On many Linux desktops, `Ctrl` + `Alt` + `T` opens one directly.\n3. Open it and leave it open.\n\n## You should be looking at something like this\n\n```\nyourname@yourcomputer ~ %\n```\n\nThe exact text is different on every machine. It might be longer, it\nmight have a `$` instead of a `%`, it might be a different color. None\nof that matters. What matters is there's a line of text and, at the\nend of it, a cursor waiting for you.\n\nThat waiting cursor is the terminal saying \"ready.\" You haven't broken\nanything. You haven't started anything dangerous. You've opened a text\nbox. Nothing happens until you type a command and press enter, and\nwe'll do that together in two steps.\n\nIf a window is open and a cursor is blinking, you're done with this\nstep. Keep it open.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "mc",
+          "id": "intro-to-terminal/what-the-terminal-is/s04-04-which-app",
+          "xp": 2,
+          "hint": [
+            {
+              "level": 1,
+              "body": "Remember the core idea from two steps ago: the terminal is a different door into the one computer you already own, not a separate machine. A folder is a folder no matter which door you used to make it.",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 60,
+          "concept": "terminal-and-finder-same-files",
+          "prompt": "You type `mkdir reports` in the terminal, which makes a new folder\ncalled `reports`. Then you open your normal file window (Finder on a\nMac, File Explorer on Windows) and look at the same location.\n\nWhat do you see?\n",
+          "options": [
+            {
+              "id": "there",
+              "label": "The reports folder is sitting right there, same as if you'd made it by clicking"
+            },
+            {
+              "id": "nothing",
+              "label": "Nothing changed. The terminal made a folder, but only the terminal can see it",
+              "explain": "The terminal isn't a separate computer or a separate set of files. It's a different door into the exact files you already have. A folder made by typing is identical to a folder made by clicking."
+            },
+            {
+              "id": "separate",
+              "label": "A folder, but in a special hidden terminal-only area",
+              "explain": "There's no terminal-only area. `mkdir reports` makes a folder in whatever location you're currently in, and your file window shows that same location."
+            },
+            {
+              "id": "restart",
+              "label": "Nothing yet. You'd need to restart the computer for the file window to catch up",
+              "explain": "No restart needed. The change is instant and real. The file window and the terminal are both just views of the same live filesystem."
+            }
+          ],
+          "answerIds": [
+            "there"
+          ],
+          "shuffle": false,
+          "runnable": true
+        },
+        {
+          "type": "read",
+          "id": "intro-to-terminal/what-the-terminal-is/s05-05-the-prompt",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 150,
+          "concept": "reading-the-prompt",
+          "body": "# Reading the line before you type\n\nLook at your open terminal. There's a line of text ending in a blinking\ncursor. That line is called the **prompt**. Not the kind of prompt you\nwrite for an AI. This is the older meaning: the computer is prompting\nyou, as in waiting for you, to type something.\n\nA typical Mac prompt looks like this:\n\n```\nmaya@macbook ~ %\n```\n\nReading it left to right:\n\n- `maya` is the username. Yours will be your account name.\n- `macbook` is the computer's name.\n- `~` is where you currently are in your files. The `~` symbol is\n  shorthand for your home folder. More on that next lesson.\n- `%` is just the punctuation that marks the end of the prompt. On\n  Windows you'll often see `>`, on some setups `$`. It's a finish line,\n  nothing more.\n\nAfter the `%` (or `>` or `$`) is where your typing goes.\n\n## Type your first command\n\nIn the terminal, type this exactly, then press enter:\n\n```\nwhoami\n```\n\nThe terminal prints your username back at you and then shows a fresh\nprompt, ready for the next thing.\n\n```\nmaya@macbook ~ % whoami\nmaya\nmaya@macbook ~ %\n```\n\nThat's the full loop you'll repeat all day: there's a prompt, you type\na command, you press enter, the computer answers, a fresh prompt\nappears. `whoami` is the gentlest possible command. It changes nothing.\nIt just asks the computer \"who am I logged in as\" and the computer\nanswers. You've now run a real terminal command. The first one is\nbehind you.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "read",
+          "id": "intro-to-terminal/what-the-terminal-is/s06-06-what-a-command-is",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 150,
+          "concept": "command-anatomy",
+          "body": "# A command has parts, like a sentence\n\n`whoami` is one word, so it hides something. Most commands have parts.\nKnowing the parts means you can read any command someone hands you,\nincluding the ones an AI tool will hand you later.\n\nA command is built like a short instruction:\n\n```\ncommand   argument\n```\n\n- The **command** is the verb. The thing to do. `ls`, `cd`, `mkdir`.\n- The **argument** is what to do it to. A folder name, a file name,\n  some text.\n\nTry one with an argument. Type this and press enter:\n\n```\necho hello\n```\n\n`echo` is a command that means \"print this back to me.\" `hello` is the\nargument, the thing to print. The terminal prints:\n\n```\nhello\n```\n\nChange the argument, get a different result. `echo your name here`\nprints your name. The command stayed the same; the argument changed\nwhat it acted on.\n\n## Some commands take options too\n\nYou'll also see short flags, usually a dash and a letter, like `ls -l`.\nThose are **options**. They tweak how the command behaves. You don't\nneed them yet. Just know that if you see `ls -l` later, `ls` is still\nthe command, and `-l` is a setting that says \"give me the long,\ndetailed version.\"\n\nSo the full shape, when everything's present:\n\n```\ncommand   -option   argument\n```\n\nVerb, setting, target. Read any command in that order and it stops\nlooking like code and starts looking like a sentence: \"list, the long\nway, this folder.\"",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "checkpoint",
+          "id": "intro-to-terminal/what-the-terminal-is/s07-07-checkpoint",
+          "xp": 6,
+          "hint": [
+            {
+              "level": 1,
+              "body": "Each line is the same shape: `print(f\"label: {variable}\")`. The\nlabels are `command`, `argument`, and `shell`. The variable names\nare already defined for you at the top of the starter.\n",
+              "cost": 0
+            },
+            {
+              "level": 2,
+              "body": "Here are the three lines:\n\n```python\nprint(f\"command: {command}\")\nprint(f\"argument: {argument}\")\nprint(f\"shell: {shell}\")\n```\n\nThe `f` before the quote lets `{variable}` get swapped for its\nvalue. The text before the colon is plain text you type yourself.\n",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "check",
+          "estSeconds": 150,
+          "concept": "command-anatomy",
+          "prompt": "Quick lock-in before lesson two. The code sandbox on this page runs\nPython, the language you'll start learning in chapter one. We'll use\nit once at the end of each lesson to pin down what you just learned.\nSame `print()` and f-string move you used in chapter zero.\n\nThe starter declares three variables that name the parts of lesson\none. Write three `print(f\"...\")` lines below them so the output is\nexactly:\n\n```\ncommand: the verb, the thing to do\nargument: what the command acts on\nshell: the program that reads commands and runs them\n```\n\nThe grader runs against these values. You don't need the terminal\nopen for this step. Just type the three lines and run.\n",
+          "starter": "command = \"the verb, the thing to do\"\nargument = \"what the command acts on\"\nshell = \"the program that reads commands and runs them\"\n\n# write three print() lines below, one per variable, using f-strings.\n# the grader expects the three sentences shown above, exactly.\n",
+          "grader": {
+            "kind": "stdout-equality",
+            "expected": "command: the verb, the thing to do\nargument: what the command acts on\nshell: the program that reads commands and runs them\n",
+            "normalize": "collapse-trailing-newline"
+          },
+          "solution": "command = \"the verb, the thing to do\"\nargument = \"what the command acts on\"\nshell = \"the program that reads commands and runs them\"\n\nprint(f\"command: {command}\")\nprint(f\"argument: {argument}\")\nprint(f\"shell: {shell}\")\n",
+          "passThreshold": 0.66
+        }
+      ],
+      "xpTotal": 13
+    },
+    {
+      "slug": "moving-around",
+      "title": "Moving around",
+      "estMinutes": 9,
+      "prerequisites": [
+        "what-the-terminal-is"
+      ],
+      "steps": [
+        {
+          "type": "read",
+          "id": "intro-to-terminal/moving-around/s01-01-the-filesystem-is-a-tree",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "warmup",
+          "estSeconds": 150,
+          "concept": "filesystem-tree",
+          "body": "# Your files are a tree, and you're standing in it\n\nTo move around in the terminal, you need a picture of what you're\nmoving around in. Here it is.\n\nYour files are arranged as a tree. A folder holds files and other\nfolders, and those folders hold more files and folders, all the way\ndown. You've seen this a thousand times in your file window. The\nterminal uses the exact same tree.\n\n```\nhome\n├── Desktop\n├── Documents\n│   ├── taxes\n│   └── resume.pdf\n└── Downloads\n```\n\nThe one new idea: in the terminal, you are always **standing in one\nfolder**. Not looking at all of them. Standing in exactly one. That\nfolder is called your **current directory** (\"directory\" is just the\nold word for folder, and the terminal uses it constantly).\n\nEvery command you run happens from where you're standing. `ls` shows\nwhat's in the folder you're in. `mkdir` makes a folder inside the one\nyou're in. Moving around means changing which folder you're standing\nin.\n\n## Two shortcuts worth knowing now\n\nThese two symbols show up everywhere:\n\n- `~` means your **home folder**. The top of your personal tree, where\n  Desktop, Documents, and Downloads live. When a terminal opens, it\n  usually starts you at `~`.\n- `..` means **the folder one level up**. The parent of where you're\n  standing. If you're in `Documents/taxes` and you go `..`, you land\n  in `Documents`.\n\nThat's the model. You're standing somewhere in a tree. Commands act on\nwhere you stand. `~` is home, `..` is up. The next three steps are just\nthe commands for looking around and stepping between folders.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "read",
+          "id": "intro-to-terminal/moving-around/s02-02-pwd-and-ls",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "warmup",
+          "estSeconds": 150,
+          "concept": "pwd-and-ls",
+          "body": "# pwd: where am I. ls: what's here.\n\nTwo commands. They're the ones you'll run most, because they answer\nthe two questions you'll ask most: where am I, and what's around me.\n\n## pwd\n\n`pwd` stands for \"print working directory.\" Working directory is the\nsame thing we called your current directory: the folder you're\nstanding in. Type it and press enter:\n\n```\npwd\n```\n\nIt prints the full path from the top of the tree down to where you\nare:\n\n```\n/Users/maya/Documents\n```\n\nRead that right to left: you're in `Documents`, which is inside\n`maya`, which is inside `Users`. The leading `/` is the very top of\nthe whole tree. `pwd` never changes anything. It just answers \"where\nam I.\" Run it any time you feel lost. You will feel lost sometimes,\nand `pwd` is the cure.\n\n## ls\n\n`ls` stands for \"list.\" It shows what's inside the folder you're\nstanding in. Type it and press enter:\n\n```\nls\n```\n\n```\nDesktop    Documents    Downloads    notes.txt\n```\n\nThat's the contents of where you are: three folders and one file, in\nthis example. `ls` doesn't move you and doesn't change anything. It\njust shows you the room you're in.\n\nRun both right now in your open terminal. `pwd` tells you the address.\n`ls` tells you the furniture. Between them you always know where you\nstand, and that's most of what \"being good at the terminal\" actually\nis.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "mc",
+          "id": "intro-to-terminal/moving-around/s03-03-where-am-i",
+          "xp": 2,
+          "hint": [
+            {
+              "level": 1,
+              "body": "A pwd path is a trail of folders separated by slashes, top of the tree first. The folder you're actually standing in is the very end of the trail, the last name on the line.",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 60,
+          "concept": "pwd-and-ls",
+          "prompt": "You run `pwd` and the terminal prints:\n\n```\n/Users/maya/Documents/taxes\n```\n\nWhich folder are you standing in right now?\n",
+          "options": [
+            {
+              "id": "taxes",
+              "label": "taxes"
+            },
+            {
+              "id": "users",
+              "label": "Users",
+              "explain": "Users is near the top of the path, not the end. A pwd path reads top-to-bottom from left to right. The folder you're standing in is the last one on the line."
+            },
+            {
+              "id": "maya",
+              "label": "maya",
+              "explain": "maya is your home folder, in the middle of this path. You're standing further down the tree. The current folder is always the rightmost name in a pwd path."
+            },
+            {
+              "id": "slash",
+              "label": "The whole path is the folder name",
+              "explain": "The whole path is the address, the trail of folders from the top of the tree down to you. Each name between the slashes is a separate folder. You're standing in the last one."
+            }
+          ],
+          "answerIds": [
+            "taxes"
+          ],
+          "shuffle": false,
+          "runnable": true
+        },
+        {
+          "type": "mc",
+          "id": "intro-to-terminal/moving-around/s04-04-read-this-listing",
+          "xp": 2,
+          "hint": [
+            {
+              "level": 1,
+              "body": "cd means 'change directory', which is 'step into a folder and stand there'. A file isn't a folder, so it isn't a place you can stand. cd only works on the folder names in the listing.",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 75,
+          "concept": "pwd-and-ls",
+          "prompt": "You run `ls` in a folder and get this back:\n\n```\nbudget.xlsx    invoices    notes.txt    vendors\n```\n\nYou know `invoices` and `vendors` are folders, and `budget.xlsx` and\n`notes.txt` are files. Based on that, which statement is true?\n",
+          "options": [
+            {
+              "id": "cd-folders",
+              "label": "You can cd into invoices or vendors, but not into budget.xlsx or notes.txt"
+            },
+            {
+              "id": "cd-all",
+              "label": "You can cd into any of the four, since ls listed all of them",
+              "explain": "ls lists everything in the folder, files and folders together. But cd means 'step into a folder'. There's nothing to step into for a file, so cd only works on the folder names here."
+            },
+            {
+              "id": "cd-none",
+              "label": "You can't cd into anything until you run pwd first",
+              "explain": "pwd and cd are independent. pwd tells you where you are; you don't need it before cd. You can cd into invoices right now."
+            },
+            {
+              "id": "cd-files",
+              "label": "You can cd into the files, and the folders are just for looking at",
+              "explain": "It's the other way around. cd steps into a folder. A file isn't a place you can stand, so you cd into invoices and vendors, not into the two files."
+            }
+          ],
+          "answerIds": [
+            "cd-folders"
+          ],
+          "shuffle": false,
+          "runnable": true
+        },
+        {
+          "type": "read",
+          "id": "intro-to-terminal/moving-around/s05-05-cd",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 180,
+          "concept": "cd-navigation",
+          "body": "# cd: change which folder you're standing in\n\n`cd` stands for \"change directory.\" It's how you move. You give it a\ndestination, it walks you there, and the next `pwd` proves it.\n\n## Going down into a folder\n\nTo step into a folder that `ls` showed you, type `cd` and the folder\nname:\n\n```\ncd Documents\n```\n\nNow you're standing in `Documents`. Run `pwd` to confirm, run `ls` to\nsee what's in here. This is the loop: `cd` to move, `pwd` and `ls` to\nget your bearings in the new spot.\n\n## Going back up\n\nTo go up one level, to the parent of where you are, use the `..`\nshortcut from the tree lesson:\n\n```\ncd ..\n```\n\nIf you were in `Documents`, you're now back in your home folder. `..`\nalways means \"up one.\" You can even chain it: `cd ../..` goes up two\nlevels in one move.\n\n## The two get-home shortcuts\n\nWhen you're deep in the tree and want to bail out to the top of your\npersonal files, you have two options that do the same thing:\n\n```\ncd ~\n```\n\nor just `cd` with nothing after it:\n\n```\ncd\n```\n\nBoth drop you back at your home folder. `cd` on its own is the panic\nbutton. Lost, confused, no idea where you are? Type `cd`, press enter,\nand you're home. Then `ls` and start again.\n\n## Long way and short way\n\nYou can also give `cd` a full path to jump straight somewhere:\n\n```\ncd ~/Documents/taxes\n```\n\nThat goes from wherever you are directly to the `taxes` folder in one\nline, instead of three separate `cd` steps. Same destination, fewer\nmoves. Both ways are correct. Use whichever you can hold in your head.\n\nTry it now: `cd` into a folder, run `pwd`, run `ls`, then `cd ..` back\nout. Do that two or three times. That's moving around. That's the\nlesson.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "mc",
+          "id": "intro-to-terminal/moving-around/s06-06-follow-the-moves",
+          "xp": 3,
+          "hint": [
+            {
+              "level": 1,
+              "body": "Walk it one line at a time. cd Documents goes down, cd taxes goes down, cd .. goes up one. Then cd ../Downloads is two moves in one: up with `..`, then into Downloads.",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 90,
+          "concept": "cd-navigation",
+          "prompt": "You start in your home folder, `/Users/maya`. You run these four\ncommands, in order:\n\n```\ncd Documents\ncd taxes\ncd ..\ncd ../Downloads\n```\n\nAfter the last command, what does `pwd` print?\n",
+          "options": [
+            {
+              "id": "downloads",
+              "label": "/Users/maya/Downloads"
+            },
+            {
+              "id": "documents",
+              "label": "/Users/maya/Documents",
+              "explain": "Close, but the last command keeps going. `cd ../Downloads` first goes up to /Users/maya, then steps into Downloads. You stop in Downloads, not Documents."
+            },
+            {
+              "id": "taxes",
+              "label": "/Users/maya/Documents/taxes",
+              "explain": "That's where you were after the first two commands. The last two commands both move you, so taxes isn't your final spot."
+            },
+            {
+              "id": "home",
+              "label": "/Users/maya",
+              "explain": "That's the midpoint of the last command, not the end. `cd ../Downloads` goes up to /Users/maya AND THEN into Downloads, in one move. Downloads is the destination."
+            }
+          ],
+          "answerIds": [
+            "downloads"
+          ],
+          "shuffle": false,
+          "runnable": true
+        },
+        {
+          "type": "mc",
+          "id": "intro-to-terminal/moving-around/s07-07-pick-the-command",
+          "xp": 2,
+          "hint": [
+            {
+              "level": 1,
+              "body": "Two commands move you: cd. The other two (pwd, ls) only show you things. And cd with nothing after it is the panic button that drops you straight home.",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 60,
+          "concept": "cd-navigation",
+          "prompt": "You're deep in some folder, you've lost track of where you are, and\nyou want to get back to your home folder in one move and start over.\n\nWhich command does that?\n",
+          "options": [
+            {
+              "id": "cd",
+              "label": "cd"
+            },
+            {
+              "id": "pwd",
+              "label": "pwd",
+              "explain": "pwd tells you where you are, which is useful when you're lost, but it doesn't move you. You'd still be standing in the same spot."
+            },
+            {
+              "id": "ls",
+              "label": "ls",
+              "explain": "ls shows you what's in the current folder. It doesn't move you anywhere. You'd see the furniture but still be stuck in the same room."
+            },
+            {
+              "id": "cd-dotdot",
+              "label": "cd ..",
+              "explain": "cd .. moves you up exactly one level. If you're deep in the tree, one level up isn't home yet. You'd have to run it many times. `cd` on its own jumps all the way home in one move."
+            }
+          ],
+          "answerIds": [
+            "cd"
+          ],
+          "shuffle": false,
+          "runnable": true
+        },
+        {
+          "type": "checkpoint",
+          "id": "intro-to-terminal/moving-around/s08-08-checkpoint",
+          "xp": 6,
+          "hint": [
+            {
+              "level": 1,
+              "body": "Same shape as the lesson-one checkpoint: `print(f\"label: {variable}\")`, three times. The labels are pwd, ls, and cd. The variables are already defined at the top.",
+              "cost": 0
+            },
+            {
+              "level": 2,
+              "body": "Here are the three lines:\n\n```python\nprint(f\"pwd: {pwd}\")\nprint(f\"ls: {ls}\")\nprint(f\"cd: {cd}\")\n```\n",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "check",
+          "estSeconds": 150,
+          "concept": "cd-navigation",
+          "prompt": "Lesson two lock-in. Back to the Python sandbox for one step.\n\nThe starter declares three variables, one per command you learned\nfor moving around. Write three `print(f\"...\")` lines so the output\nis exactly:\n\n```\npwd: prints the folder you are standing in\nls: lists what is inside the current folder\ncd: changes which folder you are standing in\n```\n\nThe grader runs against these values. Type the three lines, run it,\nand that's lesson two done.\n",
+          "starter": "pwd = \"prints the folder you are standing in\"\nls = \"lists what is inside the current folder\"\ncd = \"changes which folder you are standing in\"\n\n# write three print() lines below, one per variable, using f-strings.\n# the grader expects the three sentences shown above, exactly.\n",
+          "grader": {
+            "kind": "stdout-equality",
+            "expected": "pwd: prints the folder you are standing in\nls: lists what is inside the current folder\ncd: changes which folder you are standing in\n",
+            "normalize": "collapse-trailing-newline"
+          },
+          "solution": "pwd = \"prints the folder you are standing in\"\nls = \"lists what is inside the current folder\"\ncd = \"changes which folder you are standing in\"\n\nprint(f\"pwd: {pwd}\")\nprint(f\"ls: {ls}\")\nprint(f\"cd: {cd}\")\n",
+          "passThreshold": 0.66
+        }
+      ],
+      "xpTotal": 18
+    },
+    {
+      "slug": "making-things",
+      "title": "Making things",
+      "estMinutes": 9,
+      "prerequisites": [
+        "moving-around"
+      ],
+      "steps": [
+        {
+          "type": "read",
+          "id": "intro-to-terminal/making-things/s01-01-mkdir-and-touch",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "warmup",
+          "estSeconds": 150,
+          "concept": "mkdir-and-touch",
+          "body": "# mkdir makes a folder. touch makes a file.\n\nMoving around is half of it. The other half is making things. Two\ncommands cover most of it.\n\n## mkdir\n\n`mkdir` stands for \"make directory.\" Give it a name, it makes a folder\nwith that name, inside wherever you're standing:\n\n```\nmkdir projects\n```\n\nRun `ls` afterward and `projects` is in the listing. You just made a\nfolder by typing eight characters. No right-click, no \"New Folder\", no\nrenaming an \"untitled folder.\" It's the kind of small thing that adds\nup once it's a habit.\n\nYou can make several at once by listing names with spaces:\n\n```\nmkdir drafts final archive\n```\n\nThree folders, one line. This is the repeatability thing from the\noverview, in its smallest form.\n\n## touch\n\n`touch` makes a new, empty file:\n\n```\ntouch notes.txt\n```\n\nRun `ls` and `notes.txt` is there: a real file, empty, ready for you\nto open in any editor. The `.txt` part is the file extension, the same\n`.txt`, `.pdf`, `.xlsx` you already know. You pick the name and the\nextension; `touch` just creates it.\n\n(`touch` has a second job, updating a file's timestamp, which is where\nthe odd name comes from. You can ignore that. For you, `touch` means\n\"make an empty file.\")\n\n## Try both\n\nIn your terminal: `mkdir practice`, then `cd practice` to step inside,\nthen `touch hello.txt`, then `ls` to see your new file sitting in your\nnew folder. You just built a small piece of a filesystem by hand. That\nis the entire job.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "mc",
+          "id": "intro-to-terminal/making-things/s02-02-folder-or-file",
+          "xp": 2,
+          "hint": [
+            {
+              "level": 1,
+              "body": "mkdir makes folders, touch makes files. And to put something INSIDE a folder, you have to cd into that folder first, because commands act on wherever you're standing.",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "warmup",
+          "estSeconds": 60,
+          "concept": "mkdir-and-touch",
+          "prompt": "You want to end up with a folder named `campaign` that has an empty\nfile named `brief.txt` inside it.\n\nWhich sequence of commands gets you there?\n",
+          "options": [
+            {
+              "id": "correct",
+              "label": "mkdir campaign  →  cd campaign  →  touch brief.txt"
+            },
+            {
+              "id": "touch-first",
+              "label": "touch campaign  →  cd campaign  →  touch brief.txt",
+              "explain": "touch campaign makes a FILE named campaign, not a folder. You can't cd into a file, so the next command fails. Use mkdir to make the folder."
+            },
+            {
+              "id": "no-cd",
+              "label": "mkdir campaign  →  touch brief.txt",
+              "explain": "This makes the folder, but without the cd step you never step inside it. touch brief.txt then makes the file next to the campaign folder, not inside it."
+            },
+            {
+              "id": "mkdir-both",
+              "label": "mkdir campaign  →  cd campaign  →  mkdir brief.txt",
+              "explain": "mkdir brief.txt makes a FOLDER named brief.txt (the .txt in the name doesn't make it a file). To make an actual empty file, use touch."
+            }
+          ],
+          "answerIds": [
+            "correct"
+          ],
+          "shuffle": false,
+          "runnable": true
+        },
+        {
+          "type": "read",
+          "id": "intro-to-terminal/making-things/s03-03-cat-and-echo",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 165,
+          "concept": "cat-and-echo",
+          "body": "# cat reads a file. echo plus an arrow writes one.\n\nYou can make empty files. Now: putting something in them, and seeing\nwhat's already there, without opening an editor.\n\n## cat\n\n`cat` prints the contents of a file straight into the terminal:\n\n```\ncat notes.txt\n```\n\nIf `notes.txt` says \"buy milk\", the terminal prints `buy milk` and\nhands you a fresh prompt. `cat` doesn't open the file in anything and\ndoesn't change it. It just dumps what's inside onto the screen so you\ncan read it fast. (The name is short for \"concatenate\", which is a\nsecond thing it does that you can ignore for now.)\n\n`cat` is most useful for a quick look. Later in the course you'll `cat`\na file to check that a command actually wrote what you expected.\n\n## echo with an arrow\n\nYou met `echo` in lesson one: it prints its argument back to you.\n`echo buy milk` just prints `buy milk` to the screen.\n\nAdd a `>` and a filename, and instead of printing to the screen, it\nwrites into the file:\n\n```\necho buy milk > notes.txt\n```\n\nNothing prints. The text went into `notes.txt`. Run `cat notes.txt`\nand you'll see `buy milk` come back. The `>` is the redirect: it takes\noutput that would have gone to the screen and sends it into a file\ninstead.\n\nOne sharp edge worth knowing now: a single `>` **replaces** the file's\nwhole contents. If `notes.txt` already had ten lines, `echo something >\nnotes.txt` throws all ten away and leaves one. There's a two-arrow\nversion, `>>`, that adds to the end instead of replacing. You don't\nneed `>>` yet. Just know that one arrow overwrites, so you don't lose\nwork by surprise.\n\nTry it: `echo first note > log.txt`, then `cat log.txt` to read it\nback.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "mc",
+          "id": "intro-to-terminal/making-things/s04-04-reading-a-file",
+          "xp": 3,
+          "hint": [
+            {
+              "level": 1,
+              "body": "A single `>` replaces the entire contents of the file. The three original lines are thrown away and the one new line is all that's left. The two-arrow `>>` is the one that adds to the end.",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 90,
+          "concept": "cat-and-echo",
+          "prompt": "A file called `tasks.txt` already has three lines in it. You run:\n\n```\necho call the vendor > tasks.txt\ncat tasks.txt\n```\n\nWhat does `cat tasks.txt` print?\n",
+          "options": [
+            {
+              "id": "one-line",
+              "label": "Just one line: call the vendor"
+            },
+            {
+              "id": "four-lines",
+              "label": "Four lines: the original three, plus call the vendor at the end",
+              "explain": "That's what the two-arrow version `>>` would do. A single `>` replaces the whole file. The original three lines are gone."
+            },
+            {
+              "id": "original",
+              "label": "The original three lines. echo doesn't change files",
+              "explain": "echo on its own just prints to the screen, but echo with a `>` writes into the file. The redirect did change tasks.txt."
+            },
+            {
+              "id": "error",
+              "label": "An error, because the file already had content",
+              "explain": "No error. A single `>` happily overwrites a file that already has content. That's exactly the sharp edge to watch for: it replaces without warning."
+            }
+          ],
+          "answerIds": [
+            "one-line"
+          ],
+          "shuffle": false,
+          "runnable": true
+        },
+        {
+          "type": "read",
+          "id": "intro-to-terminal/making-things/s05-05-rm-carefully",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 165,
+          "concept": "rm-and-no-undo",
+          "body": "# rm deletes. There is no trash can.\n\nOne more command, and it's the one command in this chapter that needs\nreal care. Not because it's hard. Because it's blunt.\n\n## rm\n\n`rm` stands for \"remove.\" It deletes a file:\n\n```\nrm notes.txt\n```\n\n`notes.txt` is gone. Here's the part that matters: it is gone *gone*.\nWhen you delete a file in your normal file window, it goes to the\nTrash or Recycle Bin, and you can fish it back out. `rm` does not do\nthat. There is no trash can in the terminal. `rm` deletes the file for\nreal, immediately, with no confirmation and no undo.\n\nThis is not a reason to be afraid of `rm`. It's a reason to read the\nline before you press enter. That's the whole safety rule:\n\n> Before you run `rm`, read what comes after it out loud. If you're not\n> sure you want that exact thing gone forever, don't press enter.\n\n## Why it works this way\n\nIt's fair to ask why a tool would skip the safety net. The answer is\nthe same theme as the whole chapter: the terminal is built for\nrepeatable, scriptable work. A command that stopped to ask \"are you\nsure?\" every time couldn't be used to clean up a thousand files in one\ngo. The terminal trusts you to mean what you typed. That trust is\npowerful and it's also why you read the line first.\n\n## What to actually do\n\nFor now, in this course, you'll rarely need `rm`. When you do:\n\n- Delete one named file at a time: `rm oldfile.txt`. Specific, calm,\n  easy to check.\n- Be extra careful with `*`, a wildcard that means \"everything\n  matching.\" `rm *.txt` deletes every `.txt` file in the folder. That's\n  a real tool, but it's not a lesson-three tool. Avoid `*` with `rm`\n  until you're comfortable.\n- If you ever feel unsure, run `ls` first to see exactly what's in the\n  folder, then delete the one named thing you meant.\n\nRespect `rm`, don't fear it. Read the line, then press enter.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "mc",
+          "id": "intro-to-terminal/making-things/s06-06-the-no-undo-rule",
+          "xp": 2,
+          "hint": [
+            {
+              "level": 1,
+              "body": "rm has no trash can and no undo. It deletes for real, the instant you press enter. The only safety net is the one you provide: read the line before running it.",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 60,
+          "concept": "rm-and-no-undo",
+          "prompt": "You meant to delete a file called `draft-old.txt`, but you typed\n`rm draft.txt` by mistake and pressed enter. `draft.txt` was a file\nyou actually needed.\n\nWhat's the situation?\n",
+          "options": [
+            {
+              "id": "gone",
+              "label": "draft.txt is deleted for good. There's no trash can to recover it from"
+            },
+            {
+              "id": "trash",
+              "label": "It's fine, it went to the Trash. Open the Trash and drag it back",
+              "explain": "That's how your normal file window works, not rm. rm has no trash can. The file is deleted immediately and for real."
+            },
+            {
+              "id": "undo",
+              "label": "Press Ctrl+Z in the terminal to undo it",
+              "explain": "There's no undo for rm. The terminal ran exactly what you typed the instant you pressed enter. This is why the safety rule is to read the line before pressing enter, not after."
+            },
+            {
+              "id": "confirm",
+              "label": "Nothing happened yet, rm will ask you to confirm first",
+              "explain": "Plain rm does not ask for confirmation. It deletes the moment you press enter. The confirmation step has to come from you, reading the line before you run it."
+            }
+          ],
+          "answerIds": [
+            "gone"
+          ],
+          "shuffle": false,
+          "runnable": true
+        },
+        {
+          "type": "mc",
+          "id": "intro-to-terminal/making-things/s07-07-string-it-together",
+          "xp": 3,
+          "hint": [
+            {
+              "level": 1,
+              "body": "Three jobs: make the folder (mkdir), step into it (cd), write the file (echo with >). They have to happen in that order, because cd needs the folder to exist, and echo needs you standing inside it. Note that echo with > creates the file too, so no touch is needed.",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 90,
+          "concept": "combining-commands",
+          "prompt": "Real task. You want to end up with a folder named `q3-report`, and\ninside it a file named `summary.txt` that contains the text\n`draft one`.\n\nYou're standing in your home folder. Which sequence does it?\n",
+          "options": [
+            {
+              "id": "correct",
+              "label": "mkdir q3-report  →  cd q3-report  →  echo draft one > summary.txt"
+            },
+            {
+              "id": "no-cd",
+              "label": "mkdir q3-report  →  echo draft one > summary.txt",
+              "explain": "This makes the folder but never steps into it. echo writes summary.txt into your home folder, next to q3-report instead of inside it. The cd is what puts you in the right place first."
+            },
+            {
+              "id": "cd-first",
+              "label": "cd q3-report  →  mkdir q3-report  →  echo draft one > summary.txt",
+              "explain": "The very first command fails: you can't cd into q3-report because it doesn't exist yet. You have to mkdir the folder before you can cd into it."
+            },
+            {
+              "id": "cat",
+              "label": "mkdir q3-report  →  cd q3-report  →  cat draft one > summary.txt",
+              "explain": "cat reads files, it doesn't write text you typed. cat draft one would look for files named draft and one. To put the text draft one into a file, use echo with the > redirect."
+            }
+          ],
+          "answerIds": [
+            "correct"
+          ],
+          "shuffle": false,
+          "runnable": true
+        },
+        {
+          "type": "checkpoint",
+          "id": "intro-to-terminal/making-things/s08-08-checkpoint",
+          "xp": 6,
+          "hint": [
+            {
+              "level": 1,
+              "body": "Same shape you've used three times now: `print(f\"label: {variable}\")`. Labels are mkdir, touch, rm. The variables are defined at the top of the starter.",
+              "cost": 0
+            },
+            {
+              "level": 2,
+              "body": "Here are the three lines:\n\n```python\nprint(f\"mkdir: {mkdir}\")\nprint(f\"touch: {touch}\")\nprint(f\"rm: {rm}\")\n```\n\nThat's the chapter done. Next up: the Claude CLI, run from the\nterminal you just learned.\n",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "check",
+          "estSeconds": 165,
+          "concept": "mkdir-and-touch",
+          "prompt": "Last step of the chapter. One more checkpoint, then you're done.\n\nYou've now opened a terminal, moved around it, and made things in it.\nThat's eight commands total: whoami, echo, pwd, ls, cd, mkdir, touch,\ncat, rm. Eight commands is enough to get through the rest of this\ncourse. The next chapter, the Claude CLI, is a program you'll run by\ntyping in exactly this terminal. You're ready for it now.\n\nThe starter declares three variables for the making-things commands.\nWrite three `print(f\"...\")` lines so the output is exactly:\n\n```\nmkdir: makes a new folder\ntouch: makes a new empty file\nrm: deletes a file for good, with no undo\n```\n\nType the three lines, run it, and the chapter is yours.\n",
+          "starter": "mkdir = \"makes a new folder\"\ntouch = \"makes a new empty file\"\nrm = \"deletes a file for good, with no undo\"\n\n# write three print() lines below, one per variable, using f-strings.\n# the grader expects the three sentences shown above, exactly.\n",
+          "grader": {
+            "kind": "stdout-equality",
+            "expected": "mkdir: makes a new folder\ntouch: makes a new empty file\nrm: deletes a file for good, with no undo\n",
+            "normalize": "collapse-trailing-newline"
+          },
+          "solution": "mkdir = \"makes a new folder\"\ntouch = \"makes a new empty file\"\nrm = \"deletes a file for good, with no undo\"\n\nprint(f\"mkdir: {mkdir}\")\nprint(f\"touch: {touch}\")\nprint(f\"rm: {rm}\")\n",
+          "passThreshold": 0.66
+        }
+      ],
+      "xpTotal": 19
+    }
+  ],
+  "xpTotal": 50
+}

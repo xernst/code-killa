@@ -1,0 +1,13 @@
+slug: skills-as-a-team-thing
+title: "Skills as a team thing"
+estMinutes: 10
+prerequisites:
+  - what-a-skill-is
+order:
+  - 01-the-team-problem.read.md
+  - 02-org-wide-skills.read.md
+  - 03-sharing-and-the-directory.read.md
+  - 04-deployment-check.mc.yaml
+  - 05-collaborating-through-skills.read.md
+  - 06-sharing-scenario.mc.yaml
+  - 07-checkpoint.checkpoint.yaml

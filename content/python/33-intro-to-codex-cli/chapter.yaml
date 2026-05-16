@@ -1,0 +1,8 @@
+number: 33
+slug: intro-to-codex-cli
+title: "intro to openai codex cli, a second tool in the kit"
+blurb: "you know the claude cli. the openai codex cli does the same job, an ai working in your terminal on your real files, with a different company behind it. this chapter installs it, signs you in, and runs your first command. most of what you already know carries straight over, so this chapter is mostly about what is different and when to reach for which."
+lessons:
+  - 01-another-tool-same-idea
+  - 02-install-and-sign-in
+  - 03-your-first-session

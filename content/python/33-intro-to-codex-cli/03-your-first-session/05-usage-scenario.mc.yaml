@@ -1,0 +1,25 @@
+xp: 3
+estSeconds: 85
+concept: codex-usage-patterns
+prompt: |
+  You sit down with Codex and a folder of 12 files that each need
+  several different fixes. You're new to this.
+
+  Which approach matches the working habits from the last step?
+options:
+  - id: one-at-a-time
+    label: "Ask Codex for its plan first, then give it the fixes as specific, named steps you can check one at a time"
+  - id: fix-everything
+    label: "Type 'fix everything wrong with all 12 files' and approve whatever it proposes"
+    explain: "A sprawling instruction gives a sprawling result you can't check. And approving whatever comes back without reading it skips the one control that keeps you safe. This is the opposite of the habits."
+  - id: walk-away
+    label: "Start it on the whole folder and step away to get coffee while it runs"
+    explain: "The approval prompts only protect you if you're there to read them. Walking away turns approving into mashing a button. Stay with the session."
+  - id: no-plan
+    label: "Skip asking for a plan, just let it start editing immediately to save time"
+    explain: "Skipping the plan is a false saving. If it's heading the wrong way, you find out after files are changed instead of before. Reading the plan first is what makes the rest go fast."
+answerIds:
+  - one-at-a-time
+hint:
+  - level: 1
+    body: "The three habits: ask for the plan before any changes, give one specific job at a time, and stay and watch the loop. Only one option does all three."

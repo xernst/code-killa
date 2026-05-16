@@ -1,6 +1,6 @@
 {
   "version": "0.1.0",
-  "generatedAt": "2026-05-13T01:27:44.029Z",
+  "generatedAt": "2026-05-16T05:34:37.876Z",
   "chapters": [
     {
       "number": 0,
@@ -8,9 +8,9 @@
       "title": "before you build — what an llm is and where you fit",
       "blurb": "if you're here because ai took your job, this chapter is the one. names the situation honestly, installs the mental model the rest of the course assumes, and gets you typing your first line of code without pretending the last six months didn't happen.",
       "lessonCount": 4,
-      "stepCount": 33,
-      "estMinutes": 74,
-      "xpTotal": 72
+      "stepCount": 34,
+      "estMinutes": 77,
+      "xpTotal": 73
     },
     {
       "number": 1,
@@ -306,11 +306,51 @@
       "number": 30,
       "slug": "harness-engineering",
       "title": "harness engineering — the discipline behind the model",
-      "blurb": "every coding agent is a model plus a harness. the model is bought; the harness is engineered. learn the discipline: how to ratchet rules from failures, fight context rot, design long-horizon loops, wire hooks as enforcement, and read the haas shift that's reshaping what you build vs buy.",
+      "blurb": "every coding agent is a model plus a harness. the model is bought; the harness is engineered. learn the craft: how to ratchet rules from failures, fight context rot, design long-horizon loops, wire hooks as enforcement, and read the haas shift that's reshaping what you build vs buy.",
       "lessonCount": 5,
       "stepCount": 45,
       "estMinutes": 112,
       "xpTotal": 117
+    },
+    {
+      "number": 31,
+      "slug": "intro-to-terminal",
+      "title": "intro to terminal, the text way to drive your computer",
+      "blurb": "you've never opened a terminal. by the end of this chapter you have, and you can move around your files, make folders, and read files without touching the mouse. it's a keyboard shortcut, not a cockpit. every tool in the rest of this course assumes you can do this, so we do it first.",
+      "lessonCount": 3,
+      "stepCount": 23,
+      "estMinutes": 26,
+      "xpTotal": 50
+    },
+    {
+      "number": 32,
+      "slug": "intro-to-claude-cli",
+      "title": "intro to claude cli, the door to real building",
+      "blurb": "you've used claude in a chat window. the claude cli is the same model with its hands on your actual files. this chapter installs it, signs you in, and runs your first real command. by the end you've watched an ai read, plan, and change things on your machine, and you know when to reach for the cli instead of the chat box.",
+      "lessonCount": 3,
+      "stepCount": 23,
+      "estMinutes": 32,
+      "xpTotal": 48
+    },
+    {
+      "number": 33,
+      "slug": "intro-to-codex-cli",
+      "title": "intro to openai codex cli, a second tool in the kit",
+      "blurb": "you know the claude cli. the openai codex cli does the same job, an ai working in your terminal on your real files, with a different company behind it. this chapter installs it, signs you in, and runs your first command. most of what you already know carries straight over, so this chapter is mostly about what is different and when to reach for which.",
+      "lessonCount": 3,
+      "stepCount": 23,
+      "estMinutes": 32,
+      "xpTotal": 45
+    },
+    {
+      "number": 34,
+      "slug": "team-skills",
+      "title": "claude skills for teams, your playbooks as ai your whole team shares",
+      "blurb": "a claude skill is a packaged set of instructions, your team's playbook, that claude loads when it is relevant so nobody has to re-explain it. this chapter is for people who manage teams. it covers what a skill is, how a team shares and provisions skills, real examples for hr, legal, and ops work, when a skill beats a one-off prompt, and the governance you need before any skill touches real work.",
+      "lessonCount": 4,
+      "stepCount": 28,
+      "estMinutes": 41,
+      "xpTotal": 60
     }
   ]
 }

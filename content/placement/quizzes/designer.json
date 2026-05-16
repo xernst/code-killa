@@ -1,0 +1,115 @@
+{
+  "id": "quiz-designer",
+  "kind": "path-quiz",
+  "version": "1.0.0",
+  "path": "designer",
+  "pathTitle": "Designer",
+  "title": "designer path placement",
+  "description": "A short quiz on the core ideas of the Designer path. Answer what you know. Each chapter you place out of is one you can skip ahead on, and you can revisit any chapter any time.",
+  "estMinutes": 4,
+  "scoring": {
+    "method": "sum-of-selected-option-points",
+    "selection": "single-select",
+    "maxScore": 16,
+    "overallSkipThreshold": { "points": 8, "percent": 0.5 },
+    "chapterSkipRule": "Each chapter is tested by 2 questions worth 2 points each. A learner places out of a chapter (skips its Version A) by answering both of its questions correctly. Overall, 50 percent or more of maxScore recommends Version B as the default for chapters not individually skipped."
+  },
+  "questions": [
+    {
+      "id": "q01", "testsChapter": "13-llm-apis", "type": "scenario", "concept": "why-an-api",
+      "prompt": "You want a small tool that takes a product name and returns a styled caption, every time, without you opening a chat. What makes that possible?",
+      "options": [
+        { "id": "a", "label": "Calling an AI model through its API from code, so the tool runs the model itself", "points": 2 },
+        { "id": "b", "label": "Nothing, AI only works inside a chat window", "points": 0 },
+        { "id": "c", "label": "Saving a chat conversation as a file", "points": 0 },
+        { "id": "d", "label": "Screenshotting the chat each time", "points": 0 }
+      ],
+      "correctOptionId": "a"
+    },
+    {
+      "id": "q02", "testsChapter": "13-llm-apis", "type": "multiple-choice", "concept": "api-cost-awareness",
+      "prompt": "Calling an AI model through its API many times has a cost. What is the right mindset?",
+      "options": [
+        { "id": "a", "label": "Each call costs a small amount, so at scale you plan and watch the total", "points": 2 },
+        { "id": "b", "label": "API calls are always free", "points": 0 },
+        { "id": "c", "label": "The cost is the same whether you call it once or a million times", "points": 0 },
+        { "id": "d", "label": "Cost only applies to image tools, not text", "points": 0 }
+      ],
+      "correctOptionId": "a"
+    },
+    {
+      "id": "q03", "testsChapter": "19-prompting", "type": "multiple-choice", "concept": "specific-prompts",
+      "prompt": "Which image prompt is more likely to give you something usable?",
+      "options": [
+        { "id": "a", "label": "One naming the subject, style, mood, colors, and what to leave out", "points": 2 },
+        { "id": "b", "label": "\"make a nice image\"", "points": 0 },
+        { "id": "c", "label": "The shortest prompt possible", "points": 0 },
+        { "id": "d", "label": "It does not matter, the tool decides anyway", "points": 0 }
+      ],
+      "correctOptionId": "a"
+    },
+    {
+      "id": "q04", "testsChapter": "19-prompting", "type": "scenario", "concept": "iterating-prompts",
+      "prompt": "The image came out close but the lighting is wrong. What is the best next move?",
+      "options": [
+        { "id": "a", "label": "Adjust the prompt to describe the lighting you want, and generate again", "points": 2 },
+        { "id": "b", "label": "Run the exact same prompt and hope it changes", "points": 0 },
+        { "id": "c", "label": "Accept it, you only get one try per prompt", "points": 0 },
+        { "id": "d", "label": "Switch to a completely different subject", "points": 0 }
+      ],
+      "correctOptionId": "a"
+    },
+    {
+      "id": "q05", "testsChapter": "27-ai-image-generation", "type": "scenario", "concept": "image-generation-workflow",
+      "prompt": "You need ten variations of a hero image to test. Which approach fits AI image generation best?",
+      "options": [
+        { "id": "a", "label": "Generate a batch from one prompt, varying it slightly per run, then pick the best", "points": 2 },
+        { "id": "b", "label": "Generate one image and manually edit it ten times", "points": 1 },
+        { "id": "c", "label": "Ask a text chatbot to write ten descriptions", "points": 0 },
+        { "id": "d", "label": "It cannot be done, image tools make one image ever", "points": 0 }
+      ],
+      "correctOptionId": "a"
+    },
+    {
+      "id": "q06", "testsChapter": "27-ai-image-generation", "type": "scenario", "concept": "review-generated-output",
+      "prompt": "Out of a generated batch, some images are off-brand. What is the realistic workflow?",
+      "options": [
+        { "id": "a", "label": "Generate, then review and filter, expecting to cut or redo the misses", "points": 2 },
+        { "id": "b", "label": "Use every image, the tool never makes off-brand work", "points": 0 },
+        { "id": "c", "label": "Decide AI image tools are useless", "points": 0 },
+        { "id": "d", "label": "Never look at the output, just ship it", "points": 0 }
+      ],
+      "correctOptionId": "a"
+    },
+    {
+      "id": "q07", "testsChapter": "29-programmatic-design", "type": "scenario", "concept": "programmatic-design",
+      "prompt": "You have one approved layout and need it produced in 50 different sizes and language versions. What is the efficient approach?",
+      "options": [
+        { "id": "a", "label": "Programmatic design: code generates all 50 variants from the one layout and a list of inputs", "points": 2 },
+        { "id": "b", "label": "Resize and retype all 50 by hand in a design app", "points": 0 },
+        { "id": "c", "label": "Pick five and hope nobody needs the rest", "points": 0 },
+        { "id": "d", "label": "Ask a chatbot to describe each of the 50", "points": 0 }
+      ],
+      "correctOptionId": "a"
+    },
+    {
+      "id": "q08", "testsChapter": "29-programmatic-design", "type": "multiple-choice", "concept": "programmatic-design-fit",
+      "prompt": "Programmatic design is the strongest fit for which kind of work?",
+      "options": [
+        { "id": "a", "label": "Repetitive, rule-based variations of a design across many inputs", "points": 2 },
+        { "id": "b", "label": "A single one-off illustration that needs an artist's hand", "points": 0 },
+        { "id": "c", "label": "Deciding the brand's overall creative direction", "points": 0 },
+        { "id": "d", "label": "Nothing, design can never be done with code", "points": 0 }
+      ],
+      "correctOptionId": "a"
+    }
+  ],
+  "skipLogic": {
+    "byChapter": [
+      { "chapter": "13-llm-apis", "questions": ["q01", "q02"], "skipVersionAIf": "both correct", "outcome": "skip Version A of 13-llm-apis" },
+      { "chapter": "19-prompting", "questions": ["q03", "q04"], "skipVersionAIf": "both correct", "outcome": "skip Version A of 19-prompting" },
+      { "chapter": "27-ai-image-generation", "questions": ["q05", "q06"], "skipVersionAIf": "both correct", "outcome": "skip Version A of 27-ai-image-generation" },
+      { "chapter": "29-programmatic-design", "questions": ["q07", "q08"], "skipVersionAIf": "both correct", "outcome": "skip Version A of 29-programmatic-design" }
+    ]
+  }
+}

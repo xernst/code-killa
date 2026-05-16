@@ -1,0 +1,14 @@
+slug: install-and-sign-in
+title: "Install and sign in"
+estMinutes: 11
+prerequisites:
+  - another-tool-same-idea
+order:
+  - 01-the-install-paths.read.md
+  - 02-installing-it.read.md
+  - 03-verify-it.read.md
+  - 04-install-check.mc.yaml
+  - 05-sign-in.read.md
+  - 06-account-vs-api-key.read.md
+  - 07-auth-check.mc.yaml
+  - 08-checkpoint.checkpoint.yaml

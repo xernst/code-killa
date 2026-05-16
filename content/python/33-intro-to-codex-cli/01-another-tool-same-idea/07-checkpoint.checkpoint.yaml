@@ -1,0 +1,52 @@
+xp: 6
+estSeconds: 150
+concept: choosing-a-cli
+prompt: |
+  Lesson one lock-in. Same Python print and f-string move.
+
+  The starter declares three variables for real reasons to switch from
+  one CLI to the other. Write three `print(f"...")` lines so the output
+  is exactly:
+
+  ```
+  reason 1: the tool you are using is stuck and you want a fresh take
+  reason 2: you want a second opinion before trusting a big change
+  reason 3: one tool is down or slow, so use the one that works
+  ```
+
+  Type the three lines and run it.
+starter: |
+  stuck = "the tool you are using is stuck and you want a fresh take"
+  second_opinion = "you want a second opinion before trusting a big change"
+  outage = "one tool is down or slow, so use the one that works"
+
+  # write three print() lines below using f-strings.
+  # the grader expects the three numbered lines shown above, exactly.
+grader:
+  kind: stdout-equality
+  expected: |
+    reason 1: the tool you are using is stuck and you want a fresh take
+    reason 2: you want a second opinion before trusting a big change
+    reason 3: one tool is down or slow, so use the one that works
+  normalize: collapse-trailing-newline
+solution: |
+  stuck = "the tool you are using is stuck and you want a fresh take"
+  second_opinion = "you want a second opinion before trusting a big change"
+  outage = "one tool is down or slow, so use the one that works"
+
+  print(f"reason 1: {stuck}")
+  print(f"reason 2: {second_opinion}")
+  print(f"reason 3: {outage}")
+passThreshold: 0.66
+hint:
+  - level: 1
+    body: "Each line is `print(f\"reason N: {variable}\")`. The variable names are stuck, second_opinion, and outage. The labels in the output are reason 1, reason 2, reason 3."
+  - level: 2
+    body: |
+      Here are the three lines:
+
+      ```python
+      print(f"reason 1: {stuck}")
+      print(f"reason 2: {second_opinion}")
+      print(f"reason 3: {outage}")
+      ```

@@ -1,0 +1,27 @@
+xp: 3
+estSeconds: 80
+concept: skill-vs-agent
+prompt: |
+  Your team does first-pass resume screening against the same role
+  rubric about twice a week, and you want everyone screening the same
+  way. A teammate also occasionally asks Claude one-off questions like
+  "what's a good interview question for this role."
+
+  Which of these should become a skill?
+options:
+  - id: screening
+    label: "The resume screening: it's recurring, it follows a fixed rubric, and you want everyone doing it consistently"
+  - id: questions
+    label: "The one-off interview-question requests: they happen in a chat"
+    explain: "A one-off question asked occasionally is a prompt, not a skill. There's no fixed playbook to capture and no consistency problem to solve. Building a skill for it would be overhead with no payoff."
+  - id: both
+    label: "Both, since anything done with AI should become a skill"
+    explain: "Not everything earns a skill. A skill pays off for recurring, standardized work. A genuinely one-off question doesn't have a repeatable playbook behind it, so a skill adds maintenance for no gain."
+  - id: neither
+    label: "Neither, skills are only for technical tasks"
+    explain: "Skills aren't limited to technical work. A resume-screening rubric is exactly the kind of non-technical playbook skills are good at. The screening task should become a skill."
+answerIds:
+  - screening
+hint:
+  - level: 1
+    body: "A skill earns its place when a task is recurring, follows a fixed playbook, and needs to be consistent across people. A one-off question asked now and then is just a prompt."

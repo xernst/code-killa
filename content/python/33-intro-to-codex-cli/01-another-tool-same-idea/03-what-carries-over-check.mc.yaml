@@ -1,0 +1,26 @@
+xp: 2
+estSeconds: 70
+concept: codex-similarities
+prompt: |
+  A coworker who has never used either tool says: "I heard the Codex
+  CLI is totally different from the Claude CLI, so learning it is like
+  starting over."
+
+  Based on what carries over, what's the accurate correction?
+options:
+  - id: mostly-same
+    label: "It's mostly the same shape: terminal tool, works in a folder, plain-English instructions, the agent loop, asks before it acts. The differences are real but small"
+  - id: totally-different
+    label: "They're right, it's a completely different tool with nothing in common"
+    explain: "This is the misconception. The two CLIs converged on the same design. Terminal-based, folder-scoped, English instructions, the agent loop, permission prompts, account sign-in: all shared. Learning the second is mostly recognition, not relearning."
+  - id: codex-no-loop
+    label: "Codex is different because it doesn't use the agent loop"
+    explain: "Codex runs the same look-plan-act-check loop. The agent loop isn't a Claude feature, it's the shared design both tools are built on."
+  - id: harder
+    label: "Codex is the same idea but much harder to use, so it does take a long time"
+    explain: "It's not meaningfully harder. The hard part, understanding what a terminal AI tool is and does, you already did in the Claude chapter. Codex reuses that understanding."
+answerIds:
+  - mostly-same
+hint:
+  - level: 1
+    body: "Run down the carries-over list: terminal tool, folder-scoped, plain English, agent loop, asks before acting, account sign-in. That's the core of the tool, and it's all shared. The differences are smaller than the similarities."

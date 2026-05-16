@@ -1,0 +1,571 @@
+{
+  "number": 33,
+  "slug": "intro-to-codex-cli",
+  "title": "intro to openai codex cli, a second tool in the kit",
+  "blurb": "you know the claude cli. the openai codex cli does the same job, an ai working in your terminal on your real files, with a different company behind it. this chapter installs it, signs you in, and runs your first command. most of what you already know carries straight over, so this chapter is mostly about what is different and when to reach for which.",
+  "overview": "## A second tool, on purpose\n\nYou just learned the Claude CLI. Now you're going to learn a second one,\nthe OpenAI Codex CLI, and it's worth being clear up front about why.\n\nThis is not a contest. The Codex CLI does the same job as the Claude\nCLI: an AI that works in your terminal, sees your files, and changes\nthem with your permission. Two companies, OpenAI and Anthropic, each\nbuilt their own version of this idea. They're more alike than\ndifferent.\n\nYou're learning both for one plain reason. A builder who only knows one\ntool is stuck with that tool's bad days, that company's pricing, that\ncompany's outages, and that company's blind spots. A builder who knows\ntwo can pick the better fit for the job in front of them, get a second\nopinion when one tool is stuck, and never be trapped. Knowing two tools\nis not twice the work. The second one is mostly the first one again.\n\n## Most of this you already know\n\nBecause you did the Claude CLI chapter, this one moves faster. The\nshape is identical:\n\n- It installs into the terminal you already set up.\n- You sign in with an account, through a browser, no API key needed.\n- You start it inside a folder, and that folder is its world.\n- It runs the same look-plan-act-check agent loop.\n- It asks permission before it changes things, and reading the line is\n  still your job.\n\nSo this chapter spends its time on what's actually different: the\ninstall path, the sign-in account, the model behind it, and the real\nquestion of when to reach for Codex instead of Claude.\n\n## What you'll be able to do at the end\n\nBy the end of these three lessons you will have:\n\n- Installed the OpenAI Codex CLI and confirmed it runs.\n- Signed in with your ChatGPT account and understood the parallel to\n  the Claude sign-in.\n- Run a first instruction and watched the same agent loop you already\n  know.\n- A practical, honest answer to \"Claude CLI or Codex CLI for this\n  job,\" including how to use both together.\n\nAbout thirty minutes. After this, your basic toolkit is complete, and\nthe rest of the course is about building real things with it.\n",
+  "lessons": [
+    {
+      "slug": "another-tool-same-idea",
+      "title": "Another tool, same idea",
+      "estMinutes": 10,
+      "prerequisites": [],
+      "steps": [
+        {
+          "type": "read",
+          "id": "intro-to-codex-cli/another-tool-same-idea/s01-01-why-a-second-tool",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "warmup",
+          "estSeconds": 150,
+          "concept": "why-two-tools",
+          "body": "# Why bother with a second one\n\nYou have a working CLI already. Learning a second one needs a real\nreason, so here are the real reasons.\n\n**You stop being trapped.** If you only know one tool, then when that\ncompany raises prices, has an outage, changes something you relied on,\nor ships a bad update, you have no move. You wait. A builder who knows\ntwo tools always has a move: switch to the other one and keep working.\n\n**You get a second opinion.** Tools have different strengths and\ndifferent blind spots. When one CLI gets stuck on a problem, or gives\nyou an answer that smells wrong, handing the same problem to the other\none is one of the most useful debugging tricks you'll learn. Two tools\ndisagreeing tells you something. Two tools agreeing is reassuring.\n\n**You can pick the better fit.** They are not identical. For some\nkinds of work one will feel sharper than the other. You can't know\nwhich unless you've actually used both on real tasks.\n\n## This is not a loyalty thing\n\nIt's easy to treat tool choice like sports teams. Don't. There is no\nprize for being a Claude person or an OpenAI person, and the companies\ntrade the lead back and forth constantly. The builder who treats these\nas interchangeable equipment, picks whichever fits today, and switches\nwithout drama, is in a stronger spot than the one with a favorite.\n\nThe cost of the second tool is low, which is the other half of the\nargument. Because Codex does the same job in the same shape as the\nClaude CLI, learning it is not starting over. It's mostly recognizing\nwhat you already know in slightly different clothes. The next step\nlists exactly how much carries over, and it's most of it.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "read",
+          "id": "intro-to-codex-cli/another-tool-same-idea/s02-02-what-carries-over",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 150,
+          "concept": "codex-similarities",
+          "body": "# What carries straight over\n\nHere's the good news, itemized. Almost everything you learned in the\nClaude CLI chapter is true of the Codex CLI too. You are not starting\nfrom zero. You're starting from \"most of the way there.\"\n\n- **It's a terminal tool.** You run it from the same terminal you set\n  up two chapters ago. Same window, same prompt, same `cd` to get into\n  the right folder first.\n- **It works in the folder you start it in.** Start Codex inside a\n  folder and that folder is its world for the session. It isn't roaming\n  your whole machine.\n- **You instruct it in plain English.** No special code, no flag\n  soup. You describe the outcome you want, the way you'd brief a\n  capable coworker. The briefing skill from the Claude chapter is the\n  same skill here.\n- **It runs the agent loop.** Look, plan, act, check, repeat. Codex\n  reads, plans the next step, does it, checks the result, and goes\n  again until the job is done or it needs you. Same engine.\n- **It asks before it acts.** When Codex wants to change a file or run\n  a command, it stops and shows you the action first. Reading that line\n  before you approve is the same habit, and it's still the most\n  important one.\n- **You sign in with an account, in a browser.** No API key, no credit\n  card for normal interactive use. Same OAuth shape as the Claude\n  sign-in.\n\nIf you understood the Claude CLI chapter, you already understand how\nthe Codex CLI behaves. That's not a simplification. The two tools\ngenuinely converged on the same design because it's the design that\nworks.\n\nWhat's left is the differences, and they're smaller than this list.\nThe next step covers them.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "mc",
+          "id": "intro-to-codex-cli/another-tool-same-idea/s03-03-what-carries-over-check",
+          "xp": 2,
+          "hint": [
+            {
+              "level": 1,
+              "body": "Run down the carries-over list: terminal tool, folder-scoped, plain English, agent loop, asks before acting, account sign-in. That's the core of the tool, and it's all shared. The differences are smaller than the similarities.",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 70,
+          "concept": "codex-similarities",
+          "prompt": "A coworker who has never used either tool says: \"I heard the Codex\nCLI is totally different from the Claude CLI, so learning it is like\nstarting over.\"\n\nBased on what carries over, what's the accurate correction?\n",
+          "options": [
+            {
+              "id": "mostly-same",
+              "label": "It's mostly the same shape: terminal tool, works in a folder, plain-English instructions, the agent loop, asks before it acts. The differences are real but small"
+            },
+            {
+              "id": "totally-different",
+              "label": "They're right, it's a completely different tool with nothing in common",
+              "explain": "This is the misconception. The two CLIs converged on the same design. Terminal-based, folder-scoped, English instructions, the agent loop, permission prompts, account sign-in: all shared. Learning the second is mostly recognition, not relearning."
+            },
+            {
+              "id": "codex-no-loop",
+              "label": "Codex is different because it doesn't use the agent loop",
+              "explain": "Codex runs the same look-plan-act-check loop. The agent loop isn't a Claude feature, it's the shared design both tools are built on."
+            },
+            {
+              "id": "harder",
+              "label": "Codex is the same idea but much harder to use, so it does take a long time",
+              "explain": "It's not meaningfully harder. The hard part, understanding what a terminal AI tool is and does, you already did in the Claude chapter. Codex reuses that understanding."
+            }
+          ],
+          "answerIds": [
+            "mostly-same"
+          ],
+          "shuffle": false,
+          "runnable": true
+        },
+        {
+          "type": "read",
+          "id": "intro-to-codex-cli/another-tool-same-idea/s04-04-what-is-different",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 165,
+          "concept": "codex-differences",
+          "body": "# What's actually different\n\nThe differences are short. Here they are, honestly.\n\n**Different company, different model.** The Claude CLI runs Anthropic's\nClaude models. The Codex CLI runs OpenAI's GPT models, the same family\nbehind ChatGPT. Both are strong at coding work. Neither is permanently\nahead; the lead changes with each release. You don't need to track\nwhich is winning this month. You need both installed so you can use\nwhichever fits.\n\n**Different sign-in account.** The Claude CLI signs in with a Claude\naccount. The Codex CLI signs in with a ChatGPT account. If you already\nuse ChatGPT, that's the account. If you don't have one, you'll make a\nfree one during sign-in. Different door, same kind of door.\n\n**A slightly heavier install.** The Claude CLI had a one-line installer\nthat needed nothing set up first. The Codex CLI installs through a tool\ncalled npm, which comes with a program called Node.js. If you don't\nalready have Node, that's one extra one-time setup step. It's small,\nthe next lesson walks through it, and on a Mac there's an even simpler\noption. Just know now that the install has one more part than Claude's\ndid.\n\n**Some defaults and wording differ.** The two tools name a few things\ndifferently and start with slightly different default settings for how\nfreely they act before asking. None of it changes what the tool *is*.\nWhen you sit down in front of Codex, you'll see familiar ideas with a\nfew unfamiliar labels, and you'll adjust in a minute.\n\nThat's the whole list. A different model, a different sign-in account,\none extra install step, and some cosmetic differences. Everything that\nmakes the tool *the tool* is shared. The next step is the one that\nactually matters in practice: deciding when to use which.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "mc",
+          "id": "intro-to-codex-cli/another-tool-same-idea/s05-05-spot-the-difference",
+          "xp": 2,
+          "hint": [
+            {
+              "level": 1,
+              "body": "Three of these describe things the two tools share (the agent loop, being terminal tools, asking permission). Only one names a real difference, and it's about which account signs you in.",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 70,
+          "concept": "codex-differences",
+          "prompt": "Which of these is a genuine difference between the Codex CLI and the\nClaude CLI, rather than something the two tools share?\n",
+          "options": [
+            {
+              "id": "account",
+              "label": "The account you sign in with: Codex uses a ChatGPT account, the Claude CLI uses a Claude account"
+            },
+            {
+              "id": "loop",
+              "label": "Codex runs the agent loop and the Claude CLI doesn't",
+              "explain": "Both run the same look-plan-act-check loop. The agent loop is shared, not a difference."
+            },
+            {
+              "id": "terminal",
+              "label": "Codex runs in the terminal and the Claude CLI runs in a browser",
+              "explain": "Both are terminal tools. Neither runs in a browser, that's the chat. This is a shared trait, not a difference."
+            },
+            {
+              "id": "permission",
+              "label": "Codex changes files without asking, the Claude CLI asks first",
+              "explain": "Both ask permission before changing files or running commands. The permission prompt is shared. Reading the line before approving is the right habit in either tool."
+            }
+          ],
+          "answerIds": [
+            "account"
+          ],
+          "shuffle": false,
+          "runnable": true
+        },
+        {
+          "type": "read",
+          "id": "intro-to-codex-cli/another-tool-same-idea/s06-06-when-to-reach-for-which",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 165,
+          "concept": "choosing-a-cli",
+          "body": "# When to reach for which\n\nThe honest answer first: there is no rule that says \"always use this\none.\" Anyone who tells you one CLI is simply better than the other is\nselling something. Here's how to actually decide.\n\n## Default to the one you have open\n\nFor most work, either tool does the job fine. If you're already in a\nsession and it's going well, keep going. Switching tools mid-task for\nno reason just costs you momentum. The best CLI for a task is often\njust the one already running.\n\n## Switch when you have a reason\n\nReal reasons to reach for the other tool:\n\n- **One is stuck.** A tool has tried the same fix three times and it's\n  not working. Hand the exact problem to the other CLI. A fresh model\n  with different training often sees what the first one missed. This\n  is the single most useful reason to know both.\n- **You want a second opinion.** Before you trust an important change,\n  ask the other tool to review it. Agreement is reassurance.\n  Disagreement is a flag worth checking.\n- **One is down or slow.** Outages happen. Whichever tool is working\n  right now is the better tool right now.\n- **Cost or access.** Your plan on one service might give you more\n  room than the other. Use what your accounts make cheap.\n\n## How to actually get good at choosing\n\nYou can't decide between two tools you've only used once. The way you\nbuild real judgment is boring and reliable: use both, on real work,\nover a few weeks. Pay attention to which one you reach for and why.\nAfter a month you'll have an opinion that's yours, built from your own\ntasks, not from a blog post. That opinion is worth more than any rule\nthis lesson could hand you.\n\nFor now, the move is simple: get Codex installed, run it once, and have\nboth tools ready. The choosing gets easy once both are real to you.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "checkpoint",
+          "id": "intro-to-codex-cli/another-tool-same-idea/s07-07-checkpoint",
+          "xp": 6,
+          "hint": [
+            {
+              "level": 1,
+              "body": "Each line is `print(f\"reason N: {variable}\")`. The variable names are stuck, second_opinion, and outage. The labels in the output are reason 1, reason 2, reason 3.",
+              "cost": 0
+            },
+            {
+              "level": 2,
+              "body": "Here are the three lines:\n\n```python\nprint(f\"reason 1: {stuck}\")\nprint(f\"reason 2: {second_opinion}\")\nprint(f\"reason 3: {outage}\")\n```\n",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "check",
+          "estSeconds": 150,
+          "concept": "choosing-a-cli",
+          "prompt": "Lesson one lock-in. Same Python print and f-string move.\n\nThe starter declares three variables for real reasons to switch from\none CLI to the other. Write three `print(f\"...\")` lines so the output\nis exactly:\n\n```\nreason 1: the tool you are using is stuck and you want a fresh take\nreason 2: you want a second opinion before trusting a big change\nreason 3: one tool is down or slow, so use the one that works\n```\n\nType the three lines and run it.\n",
+          "starter": "stuck = \"the tool you are using is stuck and you want a fresh take\"\nsecond_opinion = \"you want a second opinion before trusting a big change\"\noutage = \"one tool is down or slow, so use the one that works\"\n\n# write three print() lines below using f-strings.\n# the grader expects the three numbered lines shown above, exactly.\n",
+          "grader": {
+            "kind": "stdout-equality",
+            "expected": "reason 1: the tool you are using is stuck and you want a fresh take\nreason 2: you want a second opinion before trusting a big change\nreason 3: one tool is down or slow, so use the one that works\n",
+            "normalize": "collapse-trailing-newline"
+          },
+          "solution": "stuck = \"the tool you are using is stuck and you want a fresh take\"\nsecond_opinion = \"you want a second opinion before trusting a big change\"\noutage = \"one tool is down or slow, so use the one that works\"\n\nprint(f\"reason 1: {stuck}\")\nprint(f\"reason 2: {second_opinion}\")\nprint(f\"reason 3: {outage}\")\n",
+          "passThreshold": 0.66
+        }
+      ],
+      "xpTotal": 14
+    },
+    {
+      "slug": "install-and-sign-in",
+      "title": "Install and sign in",
+      "estMinutes": 11,
+      "prerequisites": [
+        "another-tool-same-idea"
+      ],
+      "steps": [
+        {
+          "type": "read",
+          "id": "intro-to-codex-cli/install-and-sign-in/s01-01-the-install-paths",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "warmup",
+          "estSeconds": 165,
+          "concept": "installing-codex",
+          "body": "# Two install paths, pick yours\n\nInstalling the Codex CLI means getting the program onto your machine\nwhere the terminal can find it. There are two routes. Which one is\neasier depends on your computer.\n\n## On a Mac: Homebrew (easiest if you have it)\n\nHomebrew is a popular tool for installing software on a Mac from the\nterminal. If you already have it, this one line installs Codex:\n\n```\nbrew install --cask codex\n```\n\nIf `brew` gives you a \"command not found\", you don't have Homebrew, and\nyou can either install it (one command, from brew.sh) or use the npm\nroute below instead. Don't agonize over it. The npm route works on\nevery machine.\n\n## Any machine: npm\n\nThe other route uses **npm**, which is a tool that comes bundled with\n**Node.js**. Node is a separate program. Once Node is installed, this\nline installs Codex:\n\n```\nnpm i -g @openai/codex\n```\n\nThe `-g` means \"install it for the whole machine\" so you can run\n`codex` from any folder.\n\n## The Node question\n\nHere's the one honest wrinkle compared to the Claude CLI. The Claude\nCLI had a one-line installer that needed nothing first. The npm route\nfor Codex needs Node.js to already be on your machine.\n\nSo before the npm command works, you may have a one-time setup step:\ninstall Node. It's genuinely small, the next step covers it, and if\nyou're on a Mac with Homebrew you can skip the whole thing. Just go in\nknowing the Codex install has one possible extra part. That's the\n\"slightly heavier install\" the last lesson warned you about. It's the\nbiggest practical difference between the two tools, and it's still\nminor.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "read",
+          "id": "intro-to-codex-cli/install-and-sign-in/s02-02-installing-it",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "warmup",
+          "estSeconds": 180,
+          "concept": "installing-codex",
+          "body": "# Do the install\n\nFollow the path that matches your machine. Either one ends with Codex\ninstalled.\n\n## Path A: Homebrew (Mac, if you have brew)\n\nOne command, in your terminal:\n\n```\nbrew install --cask codex\n```\n\nIt downloads and sets up Codex. When it finishes, skip ahead to the\nnext step to verify it.\n\n## Path B: npm (any machine)\n\nFirst, check whether you already have Node. Type:\n\n```\nnode --version\n```\n\nIf that prints a version number that's 18 or higher, you have Node.\nSkip straight to the install command at the bottom of this step.\n\nIf it says `command not found`, you need Node first. Get it the simple\nway:\n\n- Go to **nodejs.org** in your browser.\n- Download the version it offers you (the page detects your operating\n  system). Take the one labeled \"LTS\", which means the stable one.\n- Run the downloaded installer the way you'd install any app: open it,\n  click through, accept the defaults.\n- Close your terminal, open a fresh one, and run `node --version`\n  again. You should see a version number now.\n\nInstalling Node is a normal app install with an installer window. It\nis not a terminal puzzle. Once `node --version` prints a number,\ninstall Codex:\n\n```\nnpm i -g @openai/codex\n```\n\nIt prints some lines as it works and finishes in well under a minute.\n\nWhichever path you took, Codex is now installed. The next step confirms\nit, the same way you confirmed the Claude CLI: by asking it for its\nversion.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "read",
+          "id": "intro-to-codex-cli/install-and-sign-in/s03-03-verify-it",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 135,
+          "concept": "installing-codex",
+          "body": "# Confirm it's really there\n\nSame move you used for the Claude CLI. Don't trust \"no error message.\"\nCheck directly. In your terminal, type:\n\n```\ncodex --version\n```\n\nIf the install worked, this prints a version number and quits. A\nversion number is the whole confirmation: Codex is installed and your\nterminal can find it.\n\n## If it says command not found\n\nIf `codex --version` prints `command not found: codex`, run the same\nplaybook you learned for the Claude CLI:\n\n1. **Close the terminal window completely and open a fresh one.** A\n   terminal only learns about new commands when it starts. A window\n   that was open during the install hasn't noticed `codex` yet. This\n   fixes it most of the time. Run `codex --version` again in the new\n   window.\n2. **If a fresh window still fails,** the install didn't fully land.\n   Re-run the install command for your path (the `brew` line or the\n   `npm i -g @openai/codex` line). Watch its output this time for any\n   line that actually says \"error.\"\n3. **If you took the npm path and it still fails,** double-check Node:\n   run `node --version`. If that's missing too, Node didn't install,\n   and that's the thing to fix first.\n\nNotice the pattern: the troubleshooting is the same as the Claude CLI's,\nbecause the underlying issue is the same one (a terminal not yet aware\nof a new command). Skills you build in one tool keep paying off in the\nnext. That's the whole reason the second tool is cheap to learn.\n\nOnce `codex --version` prints a number, you're installed. Next: signing\nin.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "mc",
+          "id": "intro-to-codex-cli/install-and-sign-in/s04-04-install-check",
+          "xp": 2,
+          "hint": [
+            {
+              "level": 1,
+              "body": "npm doesn't exist on its own. It's bundled with Node.js. If the terminal can't find npm, the real gap is Node. Install Node, and npm arrives with it.",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 70,
+          "concept": "installing-codex",
+          "prompt": "You're on the npm install path. You type `npm i -g @openai/codex`\nand the terminal says `command not found: npm`.\n\nWhat does this tell you, and what do you fix first?\n",
+          "options": [
+            {
+              "id": "node-missing",
+              "label": "npm comes with Node.js, so a missing npm means Node isn't installed. Install Node first, then run the codex install"
+            },
+            {
+              "id": "codex-broken",
+              "label": "The Codex CLI is broken. Try a different version of Codex",
+              "explain": "The error isn't about Codex at all. It's saying npm itself is missing. Codex never got a chance to install. The missing piece is Node, which is what provides npm."
+            },
+            {
+              "id": "fresh-window",
+              "label": "Just open a fresh terminal window and the npm command will work",
+              "explain": "A fresh window helps when something IS installed but the window predates it. Here npm was never installed, because Node was never installed. A new window won't conjure it. Install Node first."
+            },
+            {
+              "id": "use-brew",
+              "label": "This means you must use Homebrew, npm can never work on your machine",
+              "explain": "npm works fine on any machine once Node is installed. The error just means Node isn't there yet. Install Node and npm comes with it. Homebrew is an alternative, not a forced one."
+            }
+          ],
+          "answerIds": [
+            "node-missing"
+          ],
+          "shuffle": false,
+          "runnable": true
+        },
+        {
+          "type": "read",
+          "id": "intro-to-codex-cli/install-and-sign-in/s05-05-sign-in",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 150,
+          "concept": "signing-in-codex",
+          "body": "# Sign in with your ChatGPT account\n\nCodex is installed but doesn't know who you are yet. Same as the Claude\nCLI, it needs you to sign in once. Type:\n\n```\ncodex login\n```\n\nYour browser opens to an OpenAI sign-in page. You sign in with your\n**ChatGPT account**, the same login you'd use at chatgpt.com. If you\ndon't have one, the page lets you create one; a free account is enough\nto sign in. You approve the CLI's access, the page tells you it's done,\nand you go back to the terminal signed in.\n\nYou can also just run `codex` to start, and on a first run with no\nsign-in it walks you into the same flow. Either way lands in the same\nplace.\n\n## If the browser step won't work\n\nSometimes the browser sign-in can't run, most often when you're working\non a machine with no browser, like a remote server. For that case Codex\nhas a fallback:\n\n```\ncodex login --device-auth\n```\n\nThis prints a short code and a web address. You open that address on\nany device that does have a browser, type in the code, and the CLI\ngets signed in that way. You probably won't need this on your own\nlaptop, but it's good to know the escape hatch exists.\n\n## Same shape as before\n\nNotice this is the Claude CLI sign-in again with the labels swapped. A\nbrowser opens, you prove who you are on a page you trust, you approve,\nthe CLI gets a token and saves it, and it stops asking. You learned why\nthat token-not-password design is the safe one back in the Claude\nchapter, and it's true here too. Run `codex login` now and finish the\nbrowser step.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "read",
+          "id": "intro-to-codex-cli/install-and-sign-in/s06-06-account-vs-api-key",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 135,
+          "concept": "account-vs-api-key",
+          "body": "# Account or API key, again\n\nCodex, like the Claude CLI, gives you two ways to sign in, and the\nchoice is the same one you already learned.\n\n## ChatGPT account (what you just did)\n\nYou, a human, at your own machine. You sign in through the browser with\nyour ChatGPT account, and your existing plan covers normal interactive\nuse. This is your path for everything in this course. If a person is\nsitting at the terminal, this is the answer.\n\n## API key\n\nCodex also accepts an **API key**, a single long secret string that\nstands in for the browser sign-in. With Codex, you'd typically set it\nas a value called `OPENAI_API_KEY`.\n\nIt's the same story as the Claude CLI's API key. The key is for\nsituations with no human present to click anything: a program on a\nserver, an automated job in a pipeline, a tool calling Codex on its\nown. It also bills differently, by usage against a developer account,\nwhich suits unattended jobs and not a person learning at a terminal.\n\n## The rule, unchanged\n\nHuman at the keyboard, use the account sign-in. Program running\nunattended, that's when an API key earns its place. You're a human at\nthe keyboard. The account sign-in you just did is correct.\n\nThis is the second time you've seen this exact choice, once per tool.\nThat's the point of seeing it twice: \"account for humans, API key for\nunattended programs\" is not a Claude rule or an OpenAI rule. It's how\nthese tools work in general. Chapter 18 covers handling keys like\n`OPENAI_API_KEY` safely once you reach automated jobs.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "mc",
+          "id": "intro-to-codex-cli/install-and-sign-in/s07-07-auth-check",
+          "xp": 2,
+          "hint": [
+            {
+              "level": 1,
+              "body": "The rule is the same for both CLIs: human at the keyboard means account sign-in; a program running unattended means an API key. You're a human at the keyboard.",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 70,
+          "concept": "account-vs-api-key",
+          "prompt": "You're setting up Codex on your laptop to use it yourself, by hand,\nwhile you learn. Which sign-in fits, and why?\n",
+          "options": [
+            {
+              "id": "account",
+              "label": "The ChatGPT account sign-in, because a human is sitting at the keyboard doing the work interactively"
+            },
+            {
+              "id": "api-key",
+              "label": "An API key, because API keys are the more professional choice",
+              "explain": "An API key isn't more professional, it's for a different situation: a program running with no human present. You're a human at the keyboard, so the account sign-in is the right fit, not a lesser one."
+            },
+            {
+              "id": "both",
+              "label": "Set up both at once so you're covered",
+              "explain": "No need. The account sign-in fully covers interactive use on your own machine. An API key is something you add later, only when you reach automated jobs that run without you."
+            },
+            {
+              "id": "depends-tool",
+              "label": "It depends on the tool: Codex needs an API key, the Claude CLI doesn't",
+              "explain": "Both tools work the same way here. Account sign-in for a human at the keyboard, API key for unattended programs. The rule doesn't change between Codex and Claude."
+            }
+          ],
+          "answerIds": [
+            "account"
+          ],
+          "shuffle": false,
+          "runnable": true
+        },
+        {
+          "type": "checkpoint",
+          "id": "intro-to-codex-cli/install-and-sign-in/s08-08-checkpoint",
+          "xp": 6,
+          "hint": [
+            {
+              "level": 1,
+              "body": "Same pattern as every checkpoint: `print(f\"label: {variable}\")`. The third label is `sign in` with a space, but the variable is `sign_in` with an underscore, since variable names can't have spaces.",
+              "cost": 0
+            },
+            {
+              "level": 2,
+              "body": "Here are the three lines:\n\n```python\nprint(f\"install: {install}\")\nprint(f\"verify: {verify}\")\nprint(f\"sign in: {sign_in}\")\n```\n",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "check",
+          "estSeconds": 150,
+          "concept": "installing-codex",
+          "prompt": "Lesson two lock-in. The starter declares three variables for the\nCodex setup steps. Write three `print(f\"...\")` lines so the output is\nexactly:\n\n```\ninstall: brew on a mac, or npm which needs node first\nverify: codex --version prints a version number\nsign in: codex login, a browser approval with your chatgpt account\n```\n\nType the three lines and run it.\n",
+          "starter": "install = \"brew on a mac, or npm which needs node first\"\nverify = \"codex --version prints a version number\"\nsign_in = \"codex login, a browser approval with your chatgpt account\"\n\n# write three print() lines below using f-strings.\n# the grader expects the three lines shown above, exactly.\n",
+          "grader": {
+            "kind": "stdout-equality",
+            "expected": "install: brew on a mac, or npm which needs node first\nverify: codex --version prints a version number\nsign in: codex login, a browser approval with your chatgpt account\n",
+            "normalize": "collapse-trailing-newline"
+          },
+          "solution": "install = \"brew on a mac, or npm which needs node first\"\nverify = \"codex --version prints a version number\"\nsign_in = \"codex login, a browser approval with your chatgpt account\"\n\nprint(f\"install: {install}\")\nprint(f\"verify: {verify}\")\nprint(f\"sign in: {sign_in}\")\n",
+          "passThreshold": 0.66
+        }
+      ],
+      "xpTotal": 15
+    },
+    {
+      "slug": "your-first-session",
+      "title": "Your first session",
+      "estMinutes": 11,
+      "prerequisites": [
+        "install-and-sign-in"
+      ],
+      "steps": [
+        {
+          "type": "read",
+          "id": "intro-to-codex-cli/your-first-session/s01-01-start-and-instruct",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "warmup",
+          "estSeconds": 150,
+          "concept": "first-codex-session",
+          "body": "# Start it, instruct it\n\nYou did this once with the Claude CLI. Same moves for Codex.\n\nMake a fresh practice folder, step into it, and start Codex:\n\n```\nmkdir codex-practice\ncd codex-practice\ncodex\n```\n\n`mkdir` and `cd` are your terminal skills. `codex` on its own starts a\nsession right here in `codex-practice`. That folder is now Codex's\nworld for the session: empty, safe, yours.\n\nCodex shows you its own prompt, waiting for an instruction. It looks a\nlittle different from the Claude CLI's, but the idea is identical: it's\nready, and nothing happens until you type something and press enter.\nTo leave the session later, you type `/exit` or press `Ctrl` and `C`,\nthe same exits you already know.\n\n## Give it a real first instruction\n\nIn the Codex session, type a plain-English instruction and press\nenter. Use one that's small, concrete, and easy to check:\n\n```\nCreate a file called toolkit.txt with two lines: one line naming a\ntask I'd use the Claude CLI for, and one naming a task I'd use Codex\nfor.\n```\n\nThat's it. No code, no flags. A sentence describing the outcome,\nexactly like briefing a coworker, exactly like the Claude CLI. The\nbriefing skill you've been building does not reset between tools.\n\nWorst case, you don't like the file and you delete it with\n`rm toolkit.txt`. Press enter on your instruction and watch what Codex\ndoes. The next step walks through it, and it should feel familiar.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "read",
+          "id": "intro-to-codex-cli/your-first-session/s02-02-the-loop-again",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "warmup",
+          "estSeconds": 150,
+          "concept": "approving-codex-actions",
+          "body": "# The same loop, the same habit\n\nWhen you press enter, Codex runs the agent loop. You know this loop.\nLook, plan, act, check, repeat. Here it is, in your practice folder:\n\n1. Codex **looks**. It checks the folder. It's empty, so there's little\n   to read this time, but on a real project this is where it reads\n   your files.\n2. It **plans** the next concrete step: create `toolkit.txt` with the\n   two lines.\n3. At the **act** step, because creating a file changes your machine,\n   it stops and shows you the action before doing it, then waits for\n   you to approve.\n4. You read the proposed action. It's what you asked for. You approve.\n5. The file gets created. Codex **checks** that it worked, sees it did,\n   and stops, since the job is done.\n\n## Read the line. Still your job.\n\nThe wording of Codex's approval prompt is a little different from the\nClaude CLI's. The job it does is identical: it shows you what's about\nto happen and waits for your yes.\n\nSo the habit is identical too. Read the proposed action before you\napprove it. Not because this first action is risky, it isn't, but\nbecause you're keeping the muscle in shape for when an action *is*\nrisky, on a real project, where reading the line is the only thing\nbetween \"not what I meant\" and \"done anyway.\" Same muscle as `rm` in\nthe terminal chapter, same muscle as the Claude CLI. One habit, every\ntool.\n\n## Check it yourself\n\nWhen Codex says it's done, verify it. Leave the session with `/exit`,\nthen in the plain terminal:\n\n```\ncat toolkit.txt\n```\n\nThere are your two lines. You instructed a second AI tool, in plain\nEnglish, and it did the work. Your toolkit now has two tools in it,\nand they work the same way.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "mc",
+          "id": "intro-to-codex-cli/your-first-session/s03-03-read-what-it-did",
+          "xp": 2,
+          "hint": [
+            {
+              "level": 1,
+              "body": "The habit is 'read the action before approving it.' It's about what the prompt does, not how it's worded. Codex's prompt does the same job as the Claude CLI's, so do the same thing.",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 70,
+          "concept": "approving-codex-actions",
+          "prompt": "In your Codex session, Codex stops and shows you an approval prompt\nbefore creating `toolkit.txt`. The wording looks a little different\nfrom the Claude CLI's approval prompt.\n\nWhat should you do, and does the different wording change anything?\n",
+          "options": [
+            {
+              "id": "read-approve",
+              "label": "Read the proposed action just like in the Claude CLI, then approve if it's what you asked for. Different wording, same job"
+            },
+            {
+              "id": "skip",
+              "label": "Skip reading it, since Codex's prompt is worded differently and the Claude habit doesn't apply here",
+              "explain": "The reading habit isn't tied to specific wording. It applies to any tool that shows you an action before doing it. Codex's prompt does exactly that, so the habit applies fully."
+            },
+            {
+              "id": "cancel",
+              "label": "Cancel, because a differently-worded prompt means something is wrong",
+              "explain": "Different wording is normal. Two companies built two tools; they don't phrase things identically. A different-looking approval prompt is not a warning sign, it's just a different label on the same control."
+            },
+            {
+              "id": "restart",
+              "label": "Exit and restart Codex until the prompt matches the Claude CLI's wording",
+              "explain": "The wording will never match the Claude CLI's, because it's a different tool. That's fine. What matters is what the prompt does, which is the same: show you the action and wait for your yes."
+            }
+          ],
+          "answerIds": [
+            "read-approve"
+          ],
+          "shuffle": false,
+          "runnable": true
+        },
+        {
+          "type": "read",
+          "id": "intro-to-codex-cli/your-first-session/s04-04-usage-patterns",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 165,
+          "concept": "codex-usage-patterns",
+          "body": "# Three habits worth carrying into every session\n\nYou can drive Codex now. Here are three working habits that make any\nterminal AI tool, Codex or Claude, go better. None of them are\nfeatures to memorize. They're ways of working.\n\n## Ask it to explain before it changes anything\n\nOn a real task, before you let the tool start editing, you can say:\n\"Don't change anything yet. First tell me your plan.\" You read the\nplan, and if it's heading the wrong way, you correct it before a\nsingle file moves. Catching a wrong direction at the plan stage costs\nnothing. Catching it after ten files changed costs you a cleanup.\n\n## Give it one job at a time\n\nA vague, sprawling instruction (\"fix everything wrong with this\nfolder\") produces sprawling, hard-to-check results. A specific one\n(\"rename these three files to lowercase\") produces a result you can\nlook at and judge in seconds. When a task is big, break it into named\nsteps and hand them over one at a time. You stay in control, and you\ncan stop early if something looks off.\n\n## Watch the loop, don't walk away\n\nThe tool runs its loop and pauses for your approvals. That pause only\nprotects you if you're there to read it. Letting a session run while\nyou're not watching turns the approval prompt into a button you mash.\nStay with the session while it works. These are short bursts, not\nhour-long jobs you leave running.\n\n## These are not Codex tricks\n\nEverything above is just as true of the Claude CLI. That's deliberate.\nThe point of learning a second tool is partly to see that the *skill*\nof directing an AI tool sits above any one product. Explain-before-\nacting, one-job-at-a-time, watch-the-loop: that's the craft, and it\ntravels with you to every tool you'll ever use.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "mc",
+          "id": "intro-to-codex-cli/your-first-session/s05-05-usage-scenario",
+          "xp": 3,
+          "hint": [
+            {
+              "level": 1,
+              "body": "The three habits: ask for the plan before any changes, give one specific job at a time, and stay and watch the loop. Only one option does all three.",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 85,
+          "concept": "codex-usage-patterns",
+          "prompt": "You sit down with Codex and a folder of 12 files that each need\nseveral different fixes. You're new to this.\n\nWhich approach matches the working habits from the last step?\n",
+          "options": [
+            {
+              "id": "one-at-a-time",
+              "label": "Ask Codex for its plan first, then give it the fixes as specific, named steps you can check one at a time"
+            },
+            {
+              "id": "fix-everything",
+              "label": "Type 'fix everything wrong with all 12 files' and approve whatever it proposes",
+              "explain": "A sprawling instruction gives a sprawling result you can't check. And approving whatever comes back without reading it skips the one control that keeps you safe. This is the opposite of the habits."
+            },
+            {
+              "id": "walk-away",
+              "label": "Start it on the whole folder and step away to get coffee while it runs",
+              "explain": "The approval prompts only protect you if you're there to read them. Walking away turns approving into mashing a button. Stay with the session."
+            },
+            {
+              "id": "no-plan",
+              "label": "Skip asking for a plan, just let it start editing immediately to save time",
+              "explain": "Skipping the plan is a false saving. If it's heading the wrong way, you find out after files are changed instead of before. Reading the plan first is what makes the rest go fast."
+            }
+          ],
+          "answerIds": [
+            "one-at-a-time"
+          ],
+          "shuffle": false,
+          "runnable": true
+        },
+        {
+          "type": "read",
+          "id": "intro-to-codex-cli/your-first-session/s06-06-running-both",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 150,
+          "concept": "using-both-tools",
+          "body": "# Running both, in practice\n\nYou have two tools installed now. Here's what using both actually looks\nlike on a normal day, so it's concrete and not just an idea.\n\n## You don't run them at once\n\nYou don't have both going side by side, racing. You have one open at a\ntime, and you switch when there's a reason. Most of a working session\nis just one tool, the one you opened, doing its job.\n\n## The switch moves\n\nThree switches are worth having in your hands:\n\n- **The stuck switch.** One CLI has tried to fix something three times\n  and it's still broken. Exit it. Open the other one in the same\n  folder. Give it the same problem, and add what you learned: \"the\n  error is X, a previous attempt tried Y and it didn't work.\" A\n  different model often breaks the loop.\n- **The review switch.** One CLI just made a change you're not sure\n  about. Open the other one and ask it, plainly: \"look at this file\n  and tell me if anything looks wrong.\" A second tool reviewing the\n  first is one of the best safety checks you have, and it costs two\n  minutes.\n- **The outage switch.** A tool is down or crawling. The other one is\n  the better tool for the next hour. No loyalty, just whatever works.\n\n## Both see the same folder\n\nThis is the part that makes switching painless. Both CLIs work on real\nfiles in a real folder. They don't have private copies. So when you\nexit Claude and open Codex in the same folder, Codex sees exactly the\ncurrent state of the files, including whatever Claude just changed.\nThe folder is the shared ground. The tools are interchangeable\nvisitors to it.\n\nThat's the whole workflow. One tool at a time, switch when you have a\nreason, and let the folder be the thing that's constant.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "read",
+          "id": "intro-to-codex-cli/your-first-session/s07-07-where-this-goes",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 135,
+          "concept": "where-this-goes",
+          "body": "# Your toolkit is set\n\nThree chapters ago you'd never opened a terminal. Now you have a\nterminal you can move around in, and two AI building tools installed\ninside it, signed in, and run at least once each. That's a real\nstarting toolkit, and it's complete enough for everything the rest of\nthis course asks of you.\n\nJust as important, you have the judgment that goes around the tools:\n\n- You know a terminal AI tool runs a look-plan-act-check loop.\n- You know it asks before it changes things, and that reading the line\n  is your job, in every tool, every time.\n- You know the working habits: ask for the plan first, one job at a\n  time, stay and watch.\n- You know there's no single best tool, and you have concrete reasons\n  to switch between the two you've got.\n\n## What comes next\n\nFrom here, the course stops teaching the tools and starts teaching you\nto build with them. You'll learn to read the Python that these tools\nwrite, because a tool that writes code you can't read is a tool you\ncan't direct or correct. You'll learn what these models get wrong, and\nhow to catch it. You'll learn to give them better instructions, to\ncheck their work, and eventually to build your own small tools on top\nof them.\n\nThe two CLIs will be there the whole way. They stop being the lesson\nand become the workshop. Every chapter after this one, you'll have a\nterminal open and a CLI ready, and the thing you're learning will be\nsomething you build with them, not something about them.\n\nYou walked through the door. Now the course is the building.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "checkpoint",
+          "id": "intro-to-codex-cli/your-first-session/s08-08-checkpoint",
+          "xp": 6,
+          "hint": [
+            {
+              "level": 1,
+              "body": "Each line is `print(f\"... switch: {variable}\")`. The variables are stuck, review, and outage. The labels are stuck switch, review switch, outage switch.",
+              "cost": 0
+            },
+            {
+              "level": 2,
+              "body": "Here are the three lines:\n\n```python\nprint(f\"stuck switch: {stuck}\")\nprint(f\"review switch: {review}\")\nprint(f\"outage switch: {outage}\")\n```\n\nThat completes the three-chapter CLI on-ramp. Terminal, Claude\nCLI, Codex CLI. The course builds from here.\n",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "check",
+          "estSeconds": 165,
+          "concept": "using-both-tools",
+          "prompt": "Last step of the chapter, and of the three-chapter CLI on-ramp.\n\nThe starter declares three variables for the switch moves: real\nreasons to swap from one CLI to the other mid-task. Write three\n`print(f\"...\")` lines so the output is exactly:\n\n```\nstuck switch: one tool keeps failing, hand the problem to the other\nreview switch: ask the other tool to check a change you are unsure of\noutage switch: one tool is down, use whichever one works right now\n```\n\nType the three lines, run it, and your CLI on-ramp is complete.\n",
+          "starter": "stuck = \"one tool keeps failing, hand the problem to the other\"\nreview = \"ask the other tool to check a change you are unsure of\"\noutage = \"one tool is down, use whichever one works right now\"\n\n# write three print() lines below using f-strings.\n# the grader expects the three lines shown above, exactly.\n",
+          "grader": {
+            "kind": "stdout-equality",
+            "expected": "stuck switch: one tool keeps failing, hand the problem to the other\nreview switch: ask the other tool to check a change you are unsure of\noutage switch: one tool is down, use whichever one works right now\n",
+            "normalize": "collapse-trailing-newline"
+          },
+          "solution": "stuck = \"one tool keeps failing, hand the problem to the other\"\nreview = \"ask the other tool to check a change you are unsure of\"\noutage = \"one tool is down, use whichever one works right now\"\n\nprint(f\"stuck switch: {stuck}\")\nprint(f\"review switch: {review}\")\nprint(f\"outage switch: {outage}\")\n",
+          "passThreshold": 0.66
+        }
+      ],
+      "xpTotal": 16
+    }
+  ],
+  "xpTotal": 45
+}

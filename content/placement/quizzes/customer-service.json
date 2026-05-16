@@ -1,0 +1,115 @@
+{
+  "id": "quiz-customer-service",
+  "kind": "path-quiz",
+  "version": "1.0.0",
+  "path": "customer-service",
+  "pathTitle": "Customer Service",
+  "title": "customer service path placement",
+  "description": "A short quiz on the core ideas of the Customer Service path. Answer what you know. Each chapter you place out of is one you can skip ahead on, and you can revisit any chapter any time.",
+  "estMinutes": 4,
+  "scoring": {
+    "method": "sum-of-selected-option-points",
+    "selection": "single-select",
+    "maxScore": 16,
+    "overallSkipThreshold": { "points": 8, "percent": 0.5 },
+    "chapterSkipRule": "Each chapter is tested by 2 questions worth 2 points each. A learner places out of a chapter (skips its Version A) by answering both of its questions correctly. Overall, 50 percent or more of maxScore recommends Version B as the default for chapters not individually skipped."
+  },
+  "questions": [
+    {
+      "id": "q01", "testsChapter": "13-llm-apis", "type": "scenario", "concept": "why-an-api",
+      "prompt": "You want a tool that drafts a first-pass reply to every incoming support ticket automatically. What makes that possible?",
+      "options": [
+        { "id": "a", "label": "Calling an AI model through its API from code, so each ticket triggers the model", "points": 2 },
+        { "id": "b", "label": "Keeping a chat window open and pasting in tickets all day", "points": 0 },
+        { "id": "c", "label": "Nothing, drafting replies cannot be automated", "points": 0 },
+        { "id": "d", "label": "A longer email signature", "points": 0 }
+      ],
+      "correctOptionId": "a"
+    },
+    {
+      "id": "q02", "testsChapter": "13-llm-apis", "type": "multiple-choice", "concept": "model-reliability",
+      "prompt": "An AI model drafts a support reply. What should you assume about that draft?",
+      "options": [
+        { "id": "a", "label": "It can be wrong or off-policy, so a person reviews it before it reaches a customer", "points": 2 },
+        { "id": "b", "label": "It is always correct and can be sent untouched", "points": 0 },
+        { "id": "c", "label": "It is always wrong and never worth using", "points": 0 },
+        { "id": "d", "label": "It cannot be checked, so just send it", "points": 0 }
+      ],
+      "correctOptionId": "a"
+    },
+    {
+      "id": "q03", "testsChapter": "14-structured-output", "type": "scenario", "concept": "structured-output",
+      "prompt": "You want the model to read each ticket and return its category and priority so your ticketing system can route it. What do you ask for?",
+      "options": [
+        { "id": "a", "label": "Structured output with defined fields like category and priority", "points": 2 },
+        { "id": "b", "label": "A friendly paragraph summarizing the ticket", "points": 0 },
+        { "id": "c", "label": "Just the word 'done'", "points": 0 },
+        { "id": "d", "label": "An audio recording", "points": 0 }
+      ],
+      "correctOptionId": "a"
+    },
+    {
+      "id": "q04", "testsChapter": "14-structured-output", "type": "multiple-choice", "concept": "why-structured-output",
+      "prompt": "Why does structured output matter when AI feeds into a ticketing system?",
+      "options": [
+        { "id": "a", "label": "The system needs the same predictable fields every time to route tickets automatically", "points": 2 },
+        { "id": "b", "label": "It does not matter, systems can read any free text perfectly", "points": 0 },
+        { "id": "c", "label": "Structured output makes the model faster", "points": 0 },
+        { "id": "d", "label": "It is only for legal teams", "points": 0 }
+      ],
+      "correctOptionId": "a"
+    },
+    {
+      "id": "q05", "testsChapter": "16-agent-loops", "type": "scenario", "concept": "agent-loop",
+      "prompt": "A support agent built with AI gets a ticket, looks up the order, checks its shipping status, and then writes a reply that uses what it found. What is this pattern called?",
+      "options": [
+        { "id": "a", "label": "An agent loop: the AI takes steps, uses what it learns, and continues until the task is done", "points": 2 },
+        { "id": "b", "label": "A single guess, made with no information", "points": 0 },
+        { "id": "c", "label": "A spreadsheet macro", "points": 0 },
+        { "id": "d", "label": "A search engine result", "points": 0 }
+      ],
+      "correctOptionId": "a"
+    },
+    {
+      "id": "q06", "testsChapter": "16-agent-loops", "type": "multiple-choice", "concept": "agent-vs-single-answer",
+      "prompt": "What can an agent loop do that a single one-shot AI answer cannot?",
+      "options": [
+        { "id": "a", "label": "Take a step, see the result, and adjust the next step based on what it found", "points": 2 },
+        { "id": "b", "label": "Nothing, they are exactly the same", "points": 0 },
+        { "id": "c", "label": "Answer faster by skipping all the steps", "points": 0 },
+        { "id": "d", "label": "Work without any model at all", "points": 0 }
+      ],
+      "correctOptionId": "a"
+    },
+    {
+      "id": "q07", "testsChapter": "19-prompting", "type": "multiple-choice", "concept": "prompting-with-policy",
+      "prompt": "You want an AI support draft to match your company's tone and follow your refund policy. What is the right move?",
+      "options": [
+        { "id": "a", "label": "Give the model that tone and policy as clear instructions in the prompt", "points": 2 },
+        { "id": "b", "label": "Hope the model already knows your specific company policy", "points": 0 },
+        { "id": "c", "label": "Say nothing and correct every reply by hand forever", "points": 0 },
+        { "id": "d", "label": "Use shorter words", "points": 0 }
+      ],
+      "correctOptionId": "a"
+    },
+    {
+      "id": "q08", "testsChapter": "19-prompting", "type": "scenario", "concept": "fixing-a-prompt",
+      "prompt": "Your support bot keeps stating a refund window that is wrong for your company. What is the best fix?",
+      "options": [
+        { "id": "a", "label": "Update the instructions you give it to state your real refund policy clearly", "points": 2 },
+        { "id": "b", "label": "Send the same prompt again and hope it self-corrects", "points": 0 },
+        { "id": "c", "label": "Turn the bot off and never use AI for support", "points": 0 },
+        { "id": "d", "label": "Tell customers the bot is just wrong sometimes", "points": 0 }
+      ],
+      "correctOptionId": "a"
+    }
+  ],
+  "skipLogic": {
+    "byChapter": [
+      { "chapter": "13-llm-apis", "questions": ["q01", "q02"], "skipVersionAIf": "both correct", "outcome": "skip Version A of 13-llm-apis" },
+      { "chapter": "14-structured-output", "questions": ["q03", "q04"], "skipVersionAIf": "both correct", "outcome": "skip Version A of 14-structured-output" },
+      { "chapter": "16-agent-loops", "questions": ["q05", "q06"], "skipVersionAIf": "both correct", "outcome": "skip Version A of 16-agent-loops" },
+      { "chapter": "19-prompting", "questions": ["q07", "q08"], "skipVersionAIf": "both correct", "outcome": "skip Version A of 19-prompting" }
+    ]
+  }
+}

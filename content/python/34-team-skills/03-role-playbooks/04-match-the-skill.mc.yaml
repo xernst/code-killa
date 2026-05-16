@@ -1,0 +1,27 @@
+xp: 3
+estSeconds: 85
+concept: role-skills
+prompt: |
+  An operations manager says: "Every month my team turns the same raw
+  inputs, ticket counts, project notes, and metrics, into a status
+  report. Every report comes out a little different depending on who
+  writes it, and leadership has complained about that."
+
+  What's the right move?
+options:
+  - id: build-skill
+    label: "Build a weekly-update skill that encodes the report's sections, length, and tone, so every report comes out consistent regardless of author"
+  - id: one-off
+    label: "Nothing to build. Each person should just prompt Claude fresh each month"
+    explain: "Fresh prompting each month is exactly what's producing the inconsistency leadership complained about. A recurring task with a fixed expected format is the textbook case for a skill."
+  - id: agent-only
+    label: "Have an AI agent write the reports with no skill and no human"
+    explain: "An agent with no skill has no shared playbook, so it still won't match a defined standard reliably. And removing the human from a leadership-facing report is a step too far. The fix is a skill that captures the format, with a person still reviewing."
+  - id: hire
+    label: "Assign one person to write every report so it's always the same"
+    explain: "That works until that person is out, and it wastes the consistency a skill would give you for free. Capturing the format as a skill makes any team member produce the standard report."
+answerIds:
+  - build-skill
+hint:
+  - level: 1
+    body: "Recurring task, fixed expected format, current pain is inconsistency across people. That's the precise profile of a job that should become a skill."

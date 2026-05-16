@@ -1,0 +1,154 @@
+{
+  "id": "quiz-developer",
+  "kind": "path-quiz",
+  "version": "1.0.0",
+  "path": "developer",
+  "pathTitle": "Developer",
+  "title": "developer path placement",
+  "description": "A short quiz on the foundations of the Developer path. Answer what you know. Every chapter you place out of is one you can skip ahead on, but you can revisit any chapter any time.",
+  "estMinutes": 5,
+  "scoring": {
+    "method": "sum-of-selected-option-points",
+    "selection": "single-select",
+    "maxScore": 20,
+    "overallSkipThreshold": { "points": 10, "percent": 0.5 },
+    "chapterSkipRule": "A chapter is tested by 2 questions worth 2 points each. A learner places out of that chapter (skips its Version A) by answering both of its questions correctly. Overall, 50 percent or more of maxScore recommends Version B as the default for chapters not individually skipped."
+  },
+  "questions": [
+    {
+      "id": "q01", "testsChapter": "01-variables", "type": "scenario", "concept": "variable-reassignment",
+      "prompt": "A variable is set, then changed:",
+      "code": "x = 5\nx = x + 3",
+      "codeQuestion": "After both lines run, what is the value of x?",
+      "options": [
+        { "id": "a", "label": "8", "points": 2 },
+        { "id": "b", "label": "5", "points": 0 },
+        { "id": "c", "label": "3", "points": 0 },
+        { "id": "d", "label": "An error, you cannot use x to set x", "points": 0 }
+      ],
+      "correctOptionId": "a"
+    },
+    {
+      "id": "q02", "testsChapter": "01-variables", "type": "multiple-choice", "concept": "valid-names",
+      "prompt": "Which of these is a valid Python variable name?",
+      "options": [
+        { "id": "a", "label": "second_place", "points": 2 },
+        { "id": "b", "label": "2nd_place", "points": 0 },
+        { "id": "c", "label": "second place", "points": 0 },
+        { "id": "d", "label": "second-place", "points": 0 }
+      ],
+      "correctOptionId": "a"
+    },
+    {
+      "id": "q03", "testsChapter": "02-functions", "type": "scenario", "concept": "return-values",
+      "prompt": "A function is defined and called:",
+      "code": "def add(a, b):\n    return a + b\n\nresult = add(2, 4)",
+      "codeQuestion": "What is the value of result?",
+      "options": [
+        { "id": "a", "label": "6", "points": 2 },
+        { "id": "b", "label": "24", "points": 0 },
+        { "id": "c", "label": "Nothing, the function only prints", "points": 0 },
+        { "id": "d", "label": "a + b", "points": 0 }
+      ],
+      "correctOptionId": "a"
+    },
+    {
+      "id": "q04", "testsChapter": "02-functions", "type": "scenario", "concept": "no-return",
+      "prompt": "A function does some work but has no return statement:",
+      "code": "def greet(name):\n    print(\"hi \" + name)\n\nvalue = greet(\"Sam\")",
+      "codeQuestion": "What is the value of value?",
+      "options": [
+        { "id": "a", "label": "None", "points": 2 },
+        { "id": "b", "label": "\"hi Sam\"", "points": 1 },
+        { "id": "c", "label": "\"Sam\"", "points": 0 },
+        { "id": "d", "label": "An error", "points": 0 }
+      ],
+      "correctOptionId": "a"
+    },
+    {
+      "id": "q05", "testsChapter": "03-lists-and-dicts", "type": "scenario", "concept": "dict-access",
+      "prompt": "Given this dictionary:",
+      "code": "person = {\"name\": \"Sam\", \"age\": 30}",
+      "codeQuestion": "What does person[\"age\"] give you?",
+      "options": [
+        { "id": "a", "label": "30", "points": 2 },
+        { "id": "b", "label": "\"age\"", "points": 0 },
+        { "id": "c", "label": "1, the position of age", "points": 0 },
+        { "id": "d", "label": "An error", "points": 0 }
+      ],
+      "correctOptionId": "a"
+    },
+    {
+      "id": "q06", "testsChapter": "03-lists-and-dicts", "type": "scenario", "concept": "list-index",
+      "prompt": "Given this list:",
+      "code": "nums = [10, 20, 30]",
+      "codeQuestion": "What does nums[1] give you?",
+      "options": [
+        { "id": "a", "label": "20", "points": 2 },
+        { "id": "b", "label": "10", "points": 0 },
+        { "id": "c", "label": "[10]", "points": 0 },
+        { "id": "d", "label": "1", "points": 0 }
+      ],
+      "correctOptionId": "a"
+    },
+    {
+      "id": "q07", "testsChapter": "04-loops", "type": "scenario", "concept": "range-loop",
+      "prompt": "Predict the output:",
+      "code": "for i in range(3):\n    print(i)",
+      "codeQuestion": "What does this print?",
+      "options": [
+        { "id": "a", "label": "0, then 1, then 2, each on its own line", "points": 2 },
+        { "id": "b", "label": "1, then 2, then 3", "points": 0 },
+        { "id": "c", "label": "3", "points": 0 },
+        { "id": "d", "label": "0, then 1, then 2, then 3", "points": 0 }
+      ],
+      "correctOptionId": "a"
+    },
+    {
+      "id": "q08", "testsChapter": "04-loops", "type": "scenario", "concept": "accumulator",
+      "prompt": "Predict the final printed value:",
+      "code": "total = 0\nfor n in [1, 2, 3]:\n    total += n\nprint(total)",
+      "codeQuestion": "What does this print?",
+      "options": [
+        { "id": "a", "label": "6", "points": 2 },
+        { "id": "b", "label": "3", "points": 0 },
+        { "id": "c", "label": "1, then 2, then 3", "points": 0 },
+        { "id": "d", "label": "0", "points": 0 }
+      ],
+      "correctOptionId": "a"
+    },
+    {
+      "id": "q09", "testsChapter": "06-tracebacks", "type": "scenario", "concept": "reading-keyerror",
+      "prompt": "Your program stops and prints a traceback ending with this line:",
+      "code": "KeyError: 'email'",
+      "codeQuestion": "What does that tell you?",
+      "options": [
+        { "id": "a", "label": "The code tried to read a dictionary key called 'email' that does not exist", "points": 2 },
+        { "id": "b", "label": "The word 'email' is misspelled somewhere", "points": 0 },
+        { "id": "c", "label": "An email failed to send", "points": 0 },
+        { "id": "d", "label": "The 'email' key is locked and cannot be changed", "points": 0 }
+      ],
+      "correctOptionId": "a"
+    },
+    {
+      "id": "q10", "testsChapter": "06-tracebacks", "type": "multiple-choice", "concept": "reading-tracebacks",
+      "prompt": "When you get a long traceback, where is the most useful place to look first?",
+      "options": [
+        { "id": "a", "label": "The last line, which names the error type and message", "points": 2 },
+        { "id": "b", "label": "The first line, and ignore the rest", "points": 0 },
+        { "id": "c", "label": "It does not matter, tracebacks are random", "points": 0 },
+        { "id": "d", "label": "The longest line", "points": 0 }
+      ],
+      "correctOptionId": "a"
+    }
+  ],
+  "skipLogic": {
+    "byChapter": [
+      { "chapter": "01-variables", "questions": ["q01", "q02"], "skipVersionAIf": "both correct", "outcome": "skip Version A of 01-variables" },
+      { "chapter": "02-functions", "questions": ["q03", "q04"], "skipVersionAIf": "both correct", "outcome": "skip Version A of 02-functions" },
+      { "chapter": "03-lists-and-dicts", "questions": ["q05", "q06"], "skipVersionAIf": "both correct", "outcome": "skip Version A of 03-lists-and-dicts" },
+      { "chapter": "04-loops", "questions": ["q07", "q08"], "skipVersionAIf": "both correct", "outcome": "skip Version A of 04-loops" },
+      { "chapter": "06-tracebacks", "questions": ["q09", "q10"], "skipVersionAIf": "both correct", "outcome": "skip Version A of 06-tracebacks" }
+    ]
+  }
+}

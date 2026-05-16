@@ -1,0 +1,56 @@
+xp: 6
+estSeconds: 150
+concept: skill-vs-one-off
+prompt: |
+  Lesson three lock-in. The starter declares four variables for the
+  test of whether a task should become a skill. Write four
+  `print(f"...")` lines so the output is exactly:
+
+  ```
+  recurring: it happens regularly, so setup cost pays back
+  standardized: there is a right way you want followed
+  shared: more than one person does it, so consistency matters
+  costly to get wrong: a sloppy result actually hurts
+  ```
+
+  Type the four lines and run it.
+starter: |
+  recurring = "it happens regularly, so setup cost pays back"
+  standardized = "there is a right way you want followed"
+  shared = "more than one person does it, so consistency matters"
+  costly = "a sloppy result actually hurts"
+
+  # write four print() lines below using f-strings.
+  # the grader expects the four lines shown above, exactly.
+grader:
+  kind: stdout-equality
+  expected: |
+    recurring: it happens regularly, so setup cost pays back
+    standardized: there is a right way you want followed
+    shared: more than one person does it, so consistency matters
+    costly to get wrong: a sloppy result actually hurts
+  normalize: collapse-trailing-newline
+solution: |
+  recurring = "it happens regularly, so setup cost pays back"
+  standardized = "there is a right way you want followed"
+  shared = "more than one person does it, so consistency matters"
+  costly = "a sloppy result actually hurts"
+
+  print(f"recurring: {recurring}")
+  print(f"standardized: {standardized}")
+  print(f"shared: {shared}")
+  print(f"costly to get wrong: {costly}")
+passThreshold: 0.75
+hint:
+  - level: 1
+    body: "Each line is `print(f\"label: {variable}\")`. The last label is `costly to get wrong` (three words, plain text), but its variable is just `costly`."
+  - level: 2
+    body: |
+      Here are the four lines:
+
+      ```python
+      print(f"recurring: {recurring}")
+      print(f"standardized: {standardized}")
+      print(f"shared: {shared}")
+      print(f"costly to get wrong: {costly}")
+      ```
