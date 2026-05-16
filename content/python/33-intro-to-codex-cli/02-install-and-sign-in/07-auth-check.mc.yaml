@@ -1,0 +1,23 @@
+xp: 2
+estSeconds: 70
+concept: account-vs-api-key
+prompt: |
+  You're setting up Codex on your laptop to use it yourself, by hand,
+  while you learn. Which sign-in fits, and why?
+options:
+  - id: account
+    label: "The ChatGPT account sign-in, because a human is sitting at the keyboard doing the work interactively"
+  - id: api-key
+    label: "An API key, because API keys are the more professional choice"
+    explain: "An API key isn't more professional, it's for a different situation: a program running with no human present. You're a human at the keyboard, so the account sign-in is the right fit, not a lesser one."
+  - id: both
+    label: "Set up both at once so you're covered"
+    explain: "No need. The account sign-in fully covers interactive use on your own machine. An API key is something you add later, only when you reach automated jobs that run without you."
+  - id: depends-tool
+    label: "It depends on the tool: Codex needs an API key, the Claude CLI doesn't"
+    explain: "Both tools work the same way here. Account sign-in for a human at the keyboard, API key for unattended programs. The rule doesn't change between Codex and Claude."
+answerIds:
+  - account
+hint:
+  - level: 1
+    body: "The rule is the same for both CLIs: human at the keyboard means account sign-in; a program running unattended means an API key. You're a human at the keyboard."

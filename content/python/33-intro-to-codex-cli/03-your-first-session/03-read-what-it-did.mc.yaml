@@ -1,0 +1,26 @@
+xp: 2
+estSeconds: 70
+concept: approving-codex-actions
+prompt: |
+  In your Codex session, Codex stops and shows you an approval prompt
+  before creating `toolkit.txt`. The wording looks a little different
+  from the Claude CLI's approval prompt.
+
+  What should you do, and does the different wording change anything?
+options:
+  - id: read-approve
+    label: "Read the proposed action just like in the Claude CLI, then approve if it's what you asked for. Different wording, same job"
+  - id: skip
+    label: "Skip reading it, since Codex's prompt is worded differently and the Claude habit doesn't apply here"
+    explain: "The reading habit isn't tied to specific wording. It applies to any tool that shows you an action before doing it. Codex's prompt does exactly that, so the habit applies fully."
+  - id: cancel
+    label: "Cancel, because a differently-worded prompt means something is wrong"
+    explain: "Different wording is normal. Two companies built two tools; they don't phrase things identically. A different-looking approval prompt is not a warning sign, it's just a different label on the same control."
+  - id: restart
+    label: "Exit and restart Codex until the prompt matches the Claude CLI's wording"
+    explain: "The wording will never match the Claude CLI's, because it's a different tool. That's fine. What matters is what the prompt does, which is the same: show you the action and wait for your yes."
+answerIds:
+  - read-approve
+hint:
+  - level: 1
+    body: "The habit is 'read the action before approving it.' It's about what the prompt does, not how it's worded. Codex's prompt does the same job as the Claude CLI's, so do the same thing."

@@ -1,0 +1,55 @@
+xp: 6
+estSeconds: 165
+concept: using-both-tools
+prompt: |
+  Last step of the chapter, and of the three-chapter CLI on-ramp.
+
+  The starter declares three variables for the switch moves: real
+  reasons to swap from one CLI to the other mid-task. Write three
+  `print(f"...")` lines so the output is exactly:
+
+  ```
+  stuck switch: one tool keeps failing, hand the problem to the other
+  review switch: ask the other tool to check a change you are unsure of
+  outage switch: one tool is down, use whichever one works right now
+  ```
+
+  Type the three lines, run it, and your CLI on-ramp is complete.
+starter: |
+  stuck = "one tool keeps failing, hand the problem to the other"
+  review = "ask the other tool to check a change you are unsure of"
+  outage = "one tool is down, use whichever one works right now"
+
+  # write three print() lines below using f-strings.
+  # the grader expects the three lines shown above, exactly.
+grader:
+  kind: stdout-equality
+  expected: |
+    stuck switch: one tool keeps failing, hand the problem to the other
+    review switch: ask the other tool to check a change you are unsure of
+    outage switch: one tool is down, use whichever one works right now
+  normalize: collapse-trailing-newline
+solution: |
+  stuck = "one tool keeps failing, hand the problem to the other"
+  review = "ask the other tool to check a change you are unsure of"
+  outage = "one tool is down, use whichever one works right now"
+
+  print(f"stuck switch: {stuck}")
+  print(f"review switch: {review}")
+  print(f"outage switch: {outage}")
+passThreshold: 0.66
+hint:
+  - level: 1
+    body: "Each line is `print(f\"... switch: {variable}\")`. The variables are stuck, review, and outage. The labels are stuck switch, review switch, outage switch."
+  - level: 2
+    body: |
+      Here are the three lines:
+
+      ```python
+      print(f"stuck switch: {stuck}")
+      print(f"review switch: {review}")
+      print(f"outage switch: {outage}")
+      ```
+
+      That completes the three-chapter CLI on-ramp. Terminal, Claude
+      CLI, Codex CLI. The course builds from here.

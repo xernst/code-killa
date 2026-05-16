@@ -1,0 +1,25 @@
+xp: 2
+estSeconds: 70
+concept: installing-codex
+prompt: |
+  You're on the npm install path. You type `npm i -g @openai/codex`
+  and the terminal says `command not found: npm`.
+
+  What does this tell you, and what do you fix first?
+options:
+  - id: node-missing
+    label: "npm comes with Node.js, so a missing npm means Node isn't installed. Install Node first, then run the codex install"
+  - id: codex-broken
+    label: "The Codex CLI is broken. Try a different version of Codex"
+    explain: "The error isn't about Codex at all. It's saying npm itself is missing. Codex never got a chance to install. The missing piece is Node, which is what provides npm."
+  - id: fresh-window
+    label: "Just open a fresh terminal window and the npm command will work"
+    explain: "A fresh window helps when something IS installed but the window predates it. Here npm was never installed, because Node was never installed. A new window won't conjure it. Install Node first."
+  - id: use-brew
+    label: "This means you must use Homebrew, npm can never work on your machine"
+    explain: "npm works fine on any machine once Node is installed. The error just means Node isn't there yet. Install Node and npm comes with it. Homebrew is an alternative, not a forced one."
+answerIds:
+  - node-missing
+hint:
+  - level: 1
+    body: "npm doesn't exist on its own. It's bundled with Node.js. If the terminal can't find npm, the real gap is Node. Install Node, and npm arrives with it."
