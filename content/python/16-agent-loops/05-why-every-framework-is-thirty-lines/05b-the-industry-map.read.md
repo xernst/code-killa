@@ -39,3 +39,35 @@ Chamath cites a McKinsey 2025 *State of AI* stat: fewer than 10% of organization
 When you read an agent post-mortem, ask which layer failed. Almost always it's Governance or Orchestration — the two layers PMs and founders skip first because they don't look like product. When you're scoping your own agent project in the chapter 25 capstone, spend at least as much time on what the agent *cannot* do as on what it can.
 
 The loop is thirty lines. The stack is five layers. You've shipped the first layer in this chapter. The other four are the difference between a demo and a deploy.
+
+## The layer count is contested — the shape isn't
+
+Chamath's five layers are one cut. Write this primer in May 2026 and you'll find others: a widely-shared aimultiple analysis maps **seven** layers; vendor architecture posts land anywhere from four to nine. Don't memorize a number — different authors slice the same territory differently. What every version agrees on is the *shape*:
+
+- The **bottom** — raw model intelligence, protocols, generic plumbing — **commoditizes**. It standardizes fast and gives almost no lasting defensibility. The smart move is to treat low-level orchestration as a temporary edge, not a permanent asset.
+- The **middle and top** — governance, the tool/API ecosystem, the economic model — is where durable advantage collects, because those take long development cycles and earn enterprise trust.
+
+That consensus is the takeaway. As a builder or PM, the strategic question is never "which layer is the model" — it's "which layer am I actually defensible at, given the model underneath me is a commodity."
+
+## Read wider
+
+This step compresses a fast-moving conversation. Every source below was published within days of this writing (mid-May 2026); together they triangulate what no single piece — Chamath's included — gets fully right.
+
+**The economy thesis**
+- Chamath Palihapitiya — *Deep Dive: The Agentic AI Economy*. The five-layer source. Paywalled; the open preview carries the framework table.
+- SemiAnalysis — *Claude Code is the Inflection Point*. The same "coding agents are the structural shift" argument, with deeper compute and supply-chain analysis.
+- Nathan Benaich — *State of AI: May 2026* (Air Street Capital). The broadest single field-wide snapshot, published on a recurring cadence.
+
+**Competing maps**
+- aimultiple — *The 7 Layers of the Agentic AI Stack in 2026*. The seven-layer cut. Read it directly against Chamath's five — the disagreement is instructive.
+- InformationWeek — *2026 enterprise AI predictions: fragmentation, commodification, and the agent push*. The commoditization argument written for CIOs.
+
+**Where the money moved**
+- Anthropic — *2026 Agentic Coding Trends Report*. Primary-source data behind the Claude Code adoption numbers Chamath cites.
+- Circle — *Introducing Circle Agent Stack*. The Economics layer productized: wallets and nanopayments for agents acting as autonomous economic actors.
+- World Economic Forum — *How agentic AI could reshape what it means to be a founder*.
+
+**How agents break**
+- Atlan — *Why AI Agents Fail in Production: 5 Root Causes*, and TechAhead — *The Multi-Agent Reality Check: 7 Failure Modes*. Independent enterprise-side enumerations of the failure modes. They corroborate the AWS-China and Cursor incidents above: the gap is rarely model quality, almost always the governance and context layers around the loop.
+
+One honest caveat about all of it, this step included: the agentic-AI economy is being narrated in real time by people with positions in it — investors, vendors, the labs themselves. Read every layer diagram, including the one above, as an argument, not a fact. The loop you wrote in this chapter is the fact.

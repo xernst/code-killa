@@ -1,6 +1,6 @@
 slug: why-every-framework-is-thirty-lines
 title: "Why every framework is the same thirty lines — and what that means for buy-vs-build"
-estMinutes: 21
+estMinutes: 23
 prerequisites:
   - evaluator-optimizer
 order:
