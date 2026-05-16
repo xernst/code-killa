@@ -7,6 +7,15 @@
 
 ---
 
+> [!note] Build + code-review status — updated 2026-05-16
+> The product shipped well past this plan: 31 chapters live at `promptdojo.dev`
+> on Cloudflare Pages. A full-codebase **code review on 2026-05-16** covered
+> every surface (API functions, lesson runtime, `lib/`, app pages, the Pyodide
+> worker, config, scripts), fixed **15 verified bugs**, and deferred 4
+> documented items. Record: `CODE_REVIEW_2026-05-16.md` (repo root). Fixes are
+> on branch `worktree-code-review-fixes` — 18 commits, `next build` green,
+> pending merge to `main`.
+
 ## 0. What this document is
 
 A merge of four parallel planning slices into one execution-ready document. Where the four slices agreed, the merge is mechanical. Where they disagreed, the resolution is called out in **§1**. Where Josh has to decide, those questions are listed in **§9** — sprint 1 cannot start without answers.
