@@ -9,16 +9,15 @@
 // Per design-kit/audit-v2/HEADOFIT-plan.md PR 6.
 
 import { writeFile, mkdir } from "node:fs/promises";
-import { join, resolve } from "node:path";
+import { join } from "node:path";
+import { fileURLToPath } from "node:url";
 
 const REPO_API = "https://api.github.com/repos/xernst/promptdojo";
 const COMMITS_API = `${REPO_API}/commits?per_page=1`;
-const OUT_PATH = resolve(
-  process.cwd(),
-  "lib",
-  "generated",
-  "github.json",
-);
+// Anchor to the repo root via this file's location, not process.cwd() — so
+// the output lands in <repo>/lib/generated regardless of the caller's cwd.
+const GENERATED_DIR = fileURLToPath(new URL("../lib/generated/", import.meta.url));
+const OUT_PATH = join(GENERATED_DIR, "github.json");
 
 async function fetchJson(url) {
   const res = await fetch(url, {
@@ -57,9 +56,7 @@ async function main() {
     );
   }
 
-  await mkdir(join(resolve(process.cwd(), "lib"), "generated"), {
-    recursive: true,
-  });
+  await mkdir(GENERATED_DIR, { recursive: true });
   await writeFile(
     OUT_PATH,
     JSON.stringify({ stars, lastCommitISO, fetchedAt }, null, 2),
@@ -74,9 +71,7 @@ main().catch(async (err) => {
     `[fetch-github-stats] hard-fail: ${err instanceof Error ? err.message : String(err)}`,
   );
   try {
-    await mkdir(join(resolve(process.cwd(), "lib"), "generated"), {
-      recursive: true,
-    });
+    await mkdir(GENERATED_DIR, { recursive: true });
     await writeFile(
       OUT_PATH,
       JSON.stringify(

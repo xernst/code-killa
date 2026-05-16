@@ -9,7 +9,9 @@
 //
 // Exit code 0 if all checks pass, 1 otherwise.
 
-const BASE = process.env.SMOKE_BASE || "https://promptdojo.dev";
+// Strip a trailing slash so `${BASE}${path}` (path always starts with /)
+// can't produce a double-slash URL when SMOKE_BASE is set with one.
+const BASE = (process.env.SMOKE_BASE || "https://promptdojo.dev").replace(/\/$/, "");
 const TIMEOUT_MS = 10_000;
 const failures = [];
 

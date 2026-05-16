@@ -190,6 +190,10 @@ async function main() {
 }
 
 main().catch((err) => {
+  // A crash (bad YAML lib, missing content dir, readdir failure) is NOT the
+  // same as "found debt" — exit 1 so it's distinguishable in build logs from
+  // a clean run. The exit-0-always policy applies to lint findings, set in
+  // main(), not to the tool itself breaking.
   console.error("curriculum-lint crashed:", err);
-  process.exit(0);
+  process.exit(1);
 });
