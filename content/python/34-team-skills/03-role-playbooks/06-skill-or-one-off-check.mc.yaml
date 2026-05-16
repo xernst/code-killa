@@ -1,0 +1,23 @@
+xp: 3
+estSeconds: 85
+concept: skill-vs-one-off
+prompt: |
+  Four tasks. Three of them are weak candidates for a skill. Which ONE
+  is the strong candidate that should become a skill?
+options:
+  - id: invoice-check
+    label: "Checking incoming invoices against your approval rules, done daily by four people on the finance team, where errors cost money"
+  - id: rename-event
+    label: "Renaming the company offsite, a one-time decision the leadership team is making this quarter"
+    explain: "A one-time decision is the opposite of a skill candidate. There's nothing recurring to capture and no setup cost to amortize. This is a conversation, not a skill."
+  - id: explore-strategy
+    label: "Exploring whether the company should enter a new market, an open-ended strategy question"
+    explain: "This is exploratory thinking, not a standardized procedure. There's no fixed right way to follow. That's prompt territory, not skill territory."
+  - id: new-process
+    label: "A brand-new process the team invented last week and is still actively changing"
+    explain: "A process still in flux shouldn't be frozen into a skill yet. You'd be capturing a version you're about to change. Wait until the right way settles, then build the skill."
+answerIds:
+  - invoice-check
+hint:
+  - level: 1
+    body: "Run the build-a-skill test: recurring, standardized, done by multiple people, costly to get wrong. Only one option hits all four. The others are one-offs, exploration, or a process not yet settled."

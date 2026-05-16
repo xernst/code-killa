@@ -1,0 +1,26 @@
+xp: 3
+estSeconds: 80
+concept: admin-provisioning
+prompt: |
+  Your legal department has finalized one official contract-review
+  skill. Every paralegal must use this exact skill, and no other
+  version, for vendor contract reviews.
+
+  Which way of deploying it fits that requirement best?
+options:
+  - id: admin
+    label: "Admin provisioning: an administrator pushes the one official skill organization-wide, so everyone has the same managed copy"
+  - id: share
+    label: "Have the manager share it one by one with each paralegal"
+    explain: "Direct sharing works for a small group, but it's manual, easy to miss someone, and doesn't give you central control or auditing. For an official skill everyone must use, admin provisioning is the managed path."
+  - id: directory
+    label: "Publish it to the directory and let paralegals install it if they want"
+    explain: "The directory is opt-in: people choose whether to install. That's wrong when use is mandatory. Someone could simply not install it, or install an older copy. Admin provisioning makes the official skill the one everyone has."
+  - id: email
+    label: "Email the skill folder to the team as an attachment"
+    explain: "Emailing a folder around creates exactly the scattered, uncontrolled copies skills are meant to replace. Deployment should go through Claude's provisioning, not an inbox."
+answerIds:
+  - admin
+hint:
+  - level: 1
+    body: "The requirement is 'everyone must use this exact one.' That calls for top-down, central, mandatory deployment. Sharing and the directory are both opt-in or manual. Admin provisioning is the controlled path."

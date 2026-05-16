@@ -1,0 +1,25 @@
+xp: 2
+estSeconds: 70
+concept: skill-defined
+prompt: |
+  A colleague says: "A skill is just a prompt I saved in a document so
+  I can paste it in later."
+
+  What's the key thing that description misses?
+options:
+  - id: auto-load
+    label: "A saved prompt still has to be remembered and pasted in by a person. A skill is loaded by Claude automatically when the task matches, with its supporting files, so nobody has to attach it"
+  - id: longer
+    label: "Nothing important. A skill is just a longer saved prompt"
+    explain: "Length isn't the difference. A skill can be packaged with reference files and checklists, and crucially Claude pulls it in on its own when the task matches. A saved prompt sits in a document until a human remembers it."
+  - id: no-instructions
+    label: "A skill doesn't contain instructions, it's something else entirely"
+    explain: "Instructions are exactly the core of a skill, your playbook for the task. The difference from a saved prompt is the packaging and the automatic loading, not the absence of instructions."
+  - id: one-person
+    label: "A skill only works for the one person who made it"
+    explain: "It's the opposite. A saved prompt in someone's private doc is the thing stuck with one person. A skill is built to be shared across a team, which the next lesson covers."
+answerIds:
+  - auto-load
+hint:
+  - level: 1
+    body: "The thing that makes a skill more than a saved prompt: a person doesn't have to remember to use it. Claude recognizes the task and loads the skill itself, supporting files included."

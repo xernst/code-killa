@@ -1,0 +1,26 @@
+xp: 2
+estSeconds: 75
+concept: sharing-and-directory
+prompt: |
+  A teammate built a useful skill for cleaning up meeting notes. They
+  say: "I built it last week, so by now the whole company probably has
+  it automatically."
+
+  What's wrong with that assumption?
+options:
+  - id: off-by-default
+    label: "Sharing and directory publishing are off by default. A skill stays private to its creator until they deliberately share it, publish it, or an admin provisions it"
+  - id: too-soon
+    label: "Nothing is wrong, it just takes about two weeks to spread"
+    explain: "Skills don't spread on a timer. There's no automatic spreading at all. A skill reaches other people only through a deliberate action: sharing, publishing, or admin provisioning."
+  - id: needs-admin-only
+    label: "It's wrong because only an admin can ever share a skill"
+    explain: "Admins aren't the only path. A regular person can share a skill with specific colleagues or publish it to the directory themselves. The actual error is assuming it spread with no action at all."
+  - id: meeting-notes
+    label: "It's wrong because meeting-notes cleanup can't be a skill"
+    explain: "Cleaning up meeting notes is a perfectly good skill. The error isn't the topic, it's the belief that a skill reaches the company without anyone choosing to share it."
+answerIds:
+  - off-by-default
+hint:
+  - level: 1
+    body: "Recall the default: a new skill is private to its creator. Sharing and directory publishing are both off until switched on. Nothing reaches the team without a deliberate human action."

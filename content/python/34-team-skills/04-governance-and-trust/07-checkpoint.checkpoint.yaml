@@ -1,0 +1,53 @@
+xp: 6
+estSeconds: 165
+concept: skill-governance
+prompt: |
+  Last step of the chapter. The starter declares three variables for
+  the core of skill governance. Write three `print(f"...")` lines so
+  the output is exactly:
+
+  ```
+  trust the source: treat installing a skill like installing software
+  evaluate first: test on three to five real examples before going live
+  control deployment: a named owner, and admin control over org-wide rollout
+  ```
+
+  Type the three lines, run it, and the chapter is done.
+starter: |
+  trust = "treat installing a skill like installing software"
+  evaluate = "test on three to five real examples before going live"
+  control = "a named owner, and admin control over org-wide rollout"
+
+  # write three print() lines below using f-strings.
+  # the grader expects the three lines shown above, exactly.
+grader:
+  kind: stdout-equality
+  expected: |
+    trust the source: treat installing a skill like installing software
+    evaluate first: test on three to five real examples before going live
+    control deployment: a named owner, and admin control over org-wide rollout
+  normalize: collapse-trailing-newline
+solution: |
+  trust = "treat installing a skill like installing software"
+  evaluate = "test on three to five real examples before going live"
+  control = "a named owner, and admin control over org-wide rollout"
+
+  print(f"trust the source: {trust}")
+  print(f"evaluate first: {evaluate}")
+  print(f"control deployment: {control}")
+passThreshold: 0.66
+hint:
+  - level: 1
+    body: "Each line is `print(f\"label: {variable}\")`. The labels have spaces (plain text, fine), and the variable names are the single words trust, evaluate, and control."
+  - level: 2
+    body: |
+      Here are the three lines:
+
+      ```python
+      print(f"trust the source: {trust}")
+      print(f"evaluate first: {evaluate}")
+      print(f"control deployment: {control}")
+      ```
+
+      That completes the team skills chapter. You can spot a skill
+      worth building, deploy it three ways, and govern it safely.

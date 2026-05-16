@@ -1,0 +1,13 @@
+slug: role-playbooks
+title: "Role playbooks"
+estMinutes: 10
+prerequisites:
+  - skills-as-a-team-thing
+order:
+  - 01-hr-skills.read.md
+  - 02-legal-skills.read.md
+  - 03-operations-skills.read.md
+  - 04-match-the-skill.mc.yaml
+  - 05-skill-or-one-off.read.md
+  - 06-skill-or-one-off-check.mc.yaml
+  - 07-checkpoint.checkpoint.yaml

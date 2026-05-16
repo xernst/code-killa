@@ -1,0 +1,12 @@
+slug: what-a-skill-is
+title: "What a skill is"
+estMinutes: 10
+prerequisites: []
+order:
+  - 01-the-re-explaining-problem.read.md
+  - 02-a-skill-defined.read.md
+  - 03-a-real-skill.read.md
+  - 04-what-a-skill-is-check.mc.yaml
+  - 05-skill-vs-prompt-vs-agent.read.md
+  - 06-skill-or-agent.mc.yaml
+  - 07-checkpoint.checkpoint.yaml

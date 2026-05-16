@@ -1,0 +1,26 @@
+xp: 3
+estSeconds: 90
+concept: skill-governance
+prompt: |
+  A teammate is excited: "I found a skill online that automates our
+  whole vendor-payment process. It's from someone's public page. Let's
+  push it to the whole finance team today."
+
+  What's the right response?
+options:
+  - id: stop-audit
+    label: "Slow down. It's from an untrusted source and it touches payments. It needs a real audit of what it does, then evaluation on test cases, before it goes anywhere near the team"
+  - id: ship-it
+    label: "Push it today. If it's published online, it's been vetted by someone"
+    explain: "Being published online means nothing about safety. An untrusted skill can direct Claude to run code, reach files, or send data out. A skill touching payments is exactly the case that needs a full audit first, not a same-day rollout."
+  - id: one-person
+    label: "Have just one person try it quietly on real payments to see if it works"
+    explain: "Testing an unaudited skill on real payments is testing in production with money. Audit it first, then evaluate it on safe test cases, not live payments."
+  - id: directory
+    label: "Publish it straight to the company directory so people can opt in"
+    explain: "The directory still puts an unaudited, untrusted skill in front of coworkers. Opt-in doesn't fix an unsafe skill. The source check and audit have to happen before it's offered to anyone."
+answerIds:
+  - stop-audit
+hint:
+  - level: 1
+    body: "Two red flags: an untrusted source, and a skill that touches money. Treat installing it like installing a stranger's software on the finance systems. Audit first, evaluate on safe test cases, and only then consider deploying."
