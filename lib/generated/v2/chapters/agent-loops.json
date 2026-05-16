@@ -1033,7 +1033,7 @@
     {
       "slug": "why-every-framework-is-thirty-lines",
       "title": "Why every framework is the same thirty lines — and what that means for buy-vs-build",
-      "estMinutes": 23,
+      "estMinutes": 18,
       "prerequisites": [
         "evaluator-optimizer"
       ],
@@ -1135,20 +1135,8 @@
           "runnable": true
         },
         {
-          "type": "read",
-          "id": "agent-loops/why-every-framework-is-thirty-lines/s06-05b-the-industry-map",
-          "xp": 2,
-          "hint": [],
-          "personalize": false,
-          "phase": "build",
-          "estSeconds": 60,
-          "body": "## The loop is one layer of five\n\nThis chapter has been at the loop level — the thirty lines, the stop reasons, the message-history hygiene. That's one layer of a much bigger stack. If you only know the loop, you can build an agent that runs. You cannot yet predict how it will fail in production, who's going to win the industry it's built into, or where the money is actually flowing.\n\nIn May 2026, Chamath Palihapitiya published an 84-page primer titled *Deep Dive: The Agentic AI Economy*. The piece is paywalled, but the open preview lays out a five-layer map that's worth borrowing — not because Chamath invented these labels (he didn't), but because seeing them laid out side by side is the fastest way to know which conversations you're qualified to be in.\n\n## The five layers\n\n| Layer | Function | Key technologies |\n|---|---|---|\n| **Intelligence** | Reasoning and planning | Mixture-of-experts (MoE), multi-head latent attention (MLA), retrieval-augmented generation (RAG) |\n| **Action** | Execution and tool use | ReAct, MCP, A2A |\n| **Governance** | Policy enforcement | Deterministic rules, runtime guards |\n| **Orchestration** | Control plane and routing | Multi-agent frameworks, local orchestrators |\n| **Economics** | Cost-structure sustainability | Per-task business models |\n\nSource: Chamath Palihapitiya, *Deep Dive: The Agentic AI Economy*, May 12, 2026.\n\nThe **Action** layer is the one this chapter walks through end to end. Lesson 1 of this chapter is the simplest possible expression of ReAct — *Reason → Act → Observe → Reason*. MCP is what you'll meet in chapter 15. The other four layers are everything around the loop that decides whether the loop survives contact with production.\n\n## Two production failures, one per missing layer\n\nChamath's primer opens with two incidents that landed in the news while this curriculum was being written:\n\n**December 2025 — AWS China, 13 hours offline.** An Amazon coding agent autonomously deleted and recreated a live production environment. The outage lasted thirteen hours. This is an **Orchestration** failure: the agent had the action capability (deletion was a tool it could call) but no control plane upstream blocking destructive operations on prod resources.\n\n**April 2026 — Cursor + Claude, 9 seconds to wipe a company database.** A Cursor agent powered by Claude deleted an entire company database in nine seconds. This is a **Governance** failure: no deterministic rule said \"production database mutations require a human in the loop\" *before* the model's tool call dispatched.\n\nNeither failure was an Intelligence problem. The model in both cases reasoned correctly about how to do the thing it was asked. The thing it was asked was catastrophic, and nothing between the reasoning and the keystroke caught it. If you skip Governance and Orchestration on the way to shipping, this is what shipping looks like.\n\n## Why this matters before you write your first production agent\n\nYou will be tempted, after reading this chapter, to build something that runs autonomously against real systems. Most of the early excitement about agents is excitement about the Action layer working — \"look, it called the tool!\" — without the layers above. The teams that have actually shipped agents at scale describe the same arc: the Action layer worked from week one; the next six months were spent building Governance and Orchestration around it before it was allowed near customers.\n\nChamath cites a McKinsey 2025 *State of AI* stat: fewer than 10% of organizations have agents deployed at meaningful scale. The gap isn't capability. The gap is the four layers around the loop.\n\n## What to take from this\n\nWhen you read an agent post-mortem, ask which layer failed. Almost always it's Governance or Orchestration — the two layers PMs and founders skip first because they don't look like product. When you're scoping your own agent project in the chapter 25 capstone, spend at least as much time on what the agent *cannot* do as on what it can.\n\nThe loop is thirty lines. The stack is five layers. You've shipped the first layer in this chapter. The other four are the difference between a demo and a deploy.\n\n## The layer count is contested — the shape isn't\n\nChamath's five layers are one cut. Write this primer in May 2026 and you'll find others: a widely-shared aimultiple analysis maps **seven** layers; vendor architecture posts land anywhere from four to nine. Don't memorize a number — different authors slice the same territory differently. What every version agrees on is the *shape*:\n\n- The **bottom** — raw model intelligence, protocols, generic plumbing — **commoditizes**. It standardizes fast and gives almost no lasting defensibility. The smart move is to treat low-level orchestration as a temporary edge, not a permanent asset.\n- The **middle and top** — governance, the tool/API ecosystem, the economic model — is where durable advantage collects, because those take long development cycles and earn enterprise trust.\n\nThat consensus is the takeaway. As a builder or PM, the strategic question is never \"which layer is the model\" — it's \"which layer am I actually defensible at, given the model underneath me is a commodity.\"\n\n## Read wider\n\nThis step compresses a fast-moving conversation. Every source below was published within days of this writing (mid-May 2026); together they triangulate what no single piece — Chamath's included — gets fully right.\n\n**The economy thesis**\n- Chamath Palihapitiya — *Deep Dive: The Agentic AI Economy*. The five-layer source. Paywalled; the open preview carries the framework table.\n- SemiAnalysis — *Claude Code is the Inflection Point*. The same \"coding agents are the structural shift\" argument, with deeper compute and supply-chain analysis.\n- Nathan Benaich — *State of AI: May 2026* (Air Street Capital). The broadest single field-wide snapshot, published on a recurring cadence.\n\n**Competing maps**\n- aimultiple — *The 7 Layers of the Agentic AI Stack in 2026*. The seven-layer cut. Read it directly against Chamath's five — the disagreement is instructive.\n- InformationWeek — *2026 enterprise AI predictions: fragmentation, commodification, and the agent push*. The commoditization argument written for CIOs.\n\n**Where the money moved**\n- Anthropic — *2026 Agentic Coding Trends Report*. Primary-source data behind the Claude Code adoption numbers Chamath cites.\n- Circle — *Introducing Circle Agent Stack*. The Economics layer productized: wallets and nanopayments for agents acting as autonomous economic actors.\n- World Economic Forum — *How agentic AI could reshape what it means to be a founder*.\n\n**How agents break**\n- Atlan — *Why AI Agents Fail in Production: 5 Root Causes*, and TechAhead — *The Multi-Agent Reality Check: 7 Failure Modes*. Independent enterprise-side enumerations of the failure modes. They corroborate the AWS-China and Cursor incidents above: the gap is rarely model quality, almost always the governance and context layers around the loop.\n\nOne honest caveat about all of it, this step included: the agentic-AI economy is being narrated in real time by people with positions in it — investors, vendors, the labs themselves. Read every layer diagram, including the one above, as an argument, not a fact. The loop you wrote in this chapter is the fact.",
-          "cta": "Got it",
-          "runnable": true
-        },
-        {
           "type": "mc",
-          "id": "agent-loops/why-every-framework-is-thirty-lines/s07-06-when-to-stay-framework-free",
+          "id": "agent-loops/why-every-framework-is-thirty-lines/s06-06-when-to-stay-framework-free",
           "xp": 2,
           "hint": [
             {
@@ -1192,7 +1180,7 @@
         },
         {
           "type": "write",
-          "id": "agent-loops/why-every-framework-is-thirty-lines/s08-07-write-the-tradeoff-memo",
+          "id": "agent-loops/why-every-framework-is-thirty-lines/s07-07-write-the-tradeoff-memo",
           "xp": 5,
           "hint": [
             {
@@ -1222,7 +1210,7 @@
         },
         {
           "type": "checkpoint",
-          "id": "agent-loops/why-every-framework-is-thirty-lines/s09-08-checkpoint",
+          "id": "agent-loops/why-every-framework-is-thirty-lines/s08-08-checkpoint",
           "xp": 8,
           "hint": [],
           "personalize": false,
@@ -1240,8 +1228,89 @@
           "passThreshold": 0.66
         }
       ],
-      "xpTotal": 23
+      "xpTotal": 21
+    },
+    {
+      "slug": "the-industry-map",
+      "title": "The industry map — where your agent loop sits in the five-layer stack",
+      "estMinutes": 8,
+      "prerequisites": [
+        "why-every-framework-is-thirty-lines"
+      ],
+      "steps": [
+        {
+          "type": "read",
+          "id": "agent-loops/the-industry-map/s01-01-the-five-layers",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "warmup",
+          "estSeconds": 210,
+          "concept": "agentic-stack-layers",
+          "body": "# The loop is one layer of five\n\nYou've spent this chapter at the loop level — the thirty lines, the stop reasons, the message-history hygiene. That loop is *one layer* of a much bigger stack. Knowing the loop lets you build an agent that runs. It doesn't yet tell you how the agent will *fail* in production, or where the industry's money is actually flowing.\n\nIn May 2026, investor Chamath Palihapitiya published a primer, *Deep Dive: The Agentic AI Economy*, that lays out a five-layer map of an agent. He didn't invent the labels — but seeing them side by side is the fastest way to know which layer you're actually working on.\n\n## The five layers\n\n| Layer | What it does |\n|---|---|\n| **Intelligence** | Reasoning and planning — the model itself |\n| **Action** | Execution and tool use — *the loop you wrote in this chapter* |\n| **Governance** | Policy enforcement — the rules for what the agent may *not* do |\n| **Orchestration** | Control plane — routing, scheduling, and what runs where |\n| **Economics** | Cost structure — whether the per-task price actually sustains a business |\n\nSource: Chamath Palihapitiya, *Deep Dive: The Agentic AI Economy*, May 2026.\n\nThe **Action** layer is the one this whole chapter walked through. Your loop calls a tool, reads the result, calls again — that's Action. The model underneath it is **Intelligence**. The other three layers — Governance, Orchestration, Economics — are everything *around* the loop that decides whether the loop survives contact with real users.\n\n## Two ways the loop went wrong in public\n\nChamath's primer opens with two incidents that made the news while this course was being written. Both were loops that ran exactly as written — and still caused a disaster.\n\n**AWS China, December 2025 — 13 hours offline.** An Amazon coding agent deleted and recreated a live production environment on its own. The agent *had* the deletion tool. Nothing upstream of the loop refused to route a destructive command at a production resource. That is a missing **Orchestration** layer.\n\n**Cursor + Claude, April 2026 — a company database gone in 9 seconds.** An agent deleted an entire company database before anyone could intervene. No rule said \"a production database change needs a human to approve it\" *before* the model's tool call fired. That is a missing **Governance** layer.\n\nNotice what both failures are *not*: neither was an Intelligence failure. The model reasoned correctly about how to do the task it was given. The task was catastrophic, and no layer between the reasoning and the keystroke stopped it. A perfect loop on the Action layer, with nothing above it, is how you get a thirteen-hour outage.\n\nThe next question checks whether you can spot the missing layer yourself. Then one short read on where this is all heading.",
+          "cta": "Got it",
+          "runnable": true
+        },
+        {
+          "type": "mc",
+          "id": "agent-loops/the-industry-map/s02-02-which-layer-failed",
+          "xp": 2,
+          "hint": [
+            {
+              "level": 1,
+              "body": "The model behaved correctly and the tool ran correctly. The missing piece is a fixed, deterministic rule — 'bookings over $1,000 need a human' — that fires no matter how the model reasons. Which layer holds the rules?",
+              "cost": 0
+            }
+          ],
+          "personalize": false,
+          "phase": "build",
+          "estSeconds": 80,
+          "concept": "diagnosing-the-failed-layer",
+          "prompt": "The agent loop ran exactly as written. The model reasoned correctly\nabout the data it was given. Using the five-layer map, which layer\nwas missing — the layer that would have caught this *before* the\ncharge went through?\n",
+          "options": [
+            {
+              "id": "intelligence",
+              "label": "Intelligence — the model should have known $4,200 isn't 'cheap'",
+              "explain": "A smarter model might have flagged it — but you can't rely on that, and the airline API itself was wrong. The fix that works every time is a deterministic rule, not a better guess. That rule lives in a different layer."
+            },
+            {
+              "id": "action",
+              "label": "Action — the book_flight() tool call was the failure",
+              "explain": "The Action layer did its job: the tool call executed correctly. That is exactly the problem — a perfect Action layer with no policy above it still ships the disaster."
+            },
+            {
+              "id": "governance",
+              "label": "Governance — no policy rule required sign-off for a high-value booking"
+            },
+            {
+              "id": "orchestration",
+              "label": "Orchestration — the request was routed to the wrong tool",
+              "explain": "Routing was fine: book_flight() is the correct tool for a booking request. Orchestration failures look like the wrong thing running, or running in the wrong place. Here the right thing ran — nothing was allowed to stop it."
+            }
+          ],
+          "answerIds": [
+            "governance"
+          ],
+          "shuffle": false,
+          "code": "# A new incident — not one from the reading. Diagnose it.\nincident = {\n    \"agent\":   \"travel-booking assistant\",\n    \"request\": \"book me the cheapest flight to Denver\",\n    \"what_happened\": [\n        \"model searched flights and correctly ranked them by price\",\n        \"cheapest result was a $4,200 fare the airline API had mislabeled 'economy'\",\n        \"agent called book_flight() on it — the tool call succeeded\",\n        \"no rule required human sign-off for bookings over $1,000\",\n    ],\n    \"result\": \"a $4,200 surprise charge; the loop never malfunctioned\",\n}\nprint(incident[\"agent\"], \"—\", incident[\"request\"])\nfor line in incident[\"what_happened\"]:\n    print(\"  -\", line)\nprint(\"RESULT:\", incident[\"result\"])\n",
+          "runnable": true
+        },
+        {
+          "type": "read",
+          "id": "agent-loops/the-industry-map/s03-03-the-shape-of-the-stack",
+          "xp": 1,
+          "hint": [],
+          "personalize": false,
+          "phase": "check",
+          "estSeconds": 200,
+          "concept": "where-value-accrues",
+          "body": "# The shape of the stack — and who wins\n\nThe five-layer map has one more thing to teach you, and it's the part that matters if you ever build a company instead of a feature.\n\n## The layer count is contested. The shape isn't.\n\nChamath's five layers are one cut. Other writers slice the same territory into seven, or four, or nine. Don't memorize a number — the count is just an argument. What every version agrees on is the **shape**:\n\n- The **bottom** — raw model intelligence, protocols, generic plumbing — **commoditizes**. It standardizes fast, and last year's hand-built version is next year's free library. A moat here is hard to dig.\n- The **top and middle** — governance, the ecosystem of tools an agent can call, the economics of a task — is where durable advantage collects, because those take long to build and earn slow, real trust.\n\nFor a builder or PM the strategic question is never \"which layer is the model.\" It is: *given the model under me is a commodity, which layer am I actually defensible at?*\n\n## Why most agents never ship\n\nIndustry surveys through 2025 and 2026 keep finding the same thing: only a small fraction of organizations have agents running at real scale. The gap is rarely the model — Intelligence is the layer that already works. The gap is the four layers around the loop. Most teams build a strong Action layer, demo it, and then spend the next two quarters building Governance and Orchestration before it is allowed near a customer.\n\nWhen you scope your own agent in the chapter 25 capstone, spend as much time on what the agent *must not* do as on what it can.\n\n## Read wider\n\nThis lesson compressed a fast-moving conversation. If you want the primary sources, grouped by what they argue:\n\n- **The economy thesis** — Chamath Palihapitiya, *Deep Dive: The Agentic AI Economy*; SemiAnalysis, *Claude Code is the Inflection Point*; Nathan Benaich, *State of AI: May 2026*.\n- **Competing maps** — aimultiple, *The 7 Layers of the Agentic AI Stack*; InformationWeek's 2026 enterprise-AI commoditization coverage.\n- **How agents break** — production-failure breakdowns from Atlan and TechAhead enumerate the same patterns from the enterprise side.\n\nOne honest caveat about all of it, this lesson included: the agentic-AI economy is being narrated in real time by people with money in it — investors, vendors, the labs themselves. Read every layer diagram, the one in this lesson included, as an *argument*, not a fact. The loop you wrote in this chapter is the fact. The map is just someone's opinion about where the loop is standing.",
+          "cta": "Got it",
+          "runnable": true
+        }
+      ],
+      "xpTotal": 4
     }
   ],
-  "xpTotal": 151
+  "xpTotal": 153
 }

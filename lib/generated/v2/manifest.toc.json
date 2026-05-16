@@ -1,6 +1,6 @@
 {
   "version": "0.1.0",
-  "generatedAt": "2026-05-16T04:35:31.284Z",
+  "generatedAt": "2026-05-16T05:29:05.970Z",
   "chapters": [
     {
       "number": 0,
@@ -167,10 +167,10 @@
       "slug": "agent-loops",
       "title": "agent loops — tool_use and the request/tool/respond cycle",
       "blurb": "an agent isn't a magic. it's a while loop. learn the actual cycle claude code, cursor, and every other agent uses: model returns tool_use, you run the tool, you send the result back, repeat until end_turn.",
-      "lessonCount": 5,
-      "stepCount": 45,
-      "estMinutes": 66,
-      "xpTotal": 151
+      "lessonCount": 6,
+      "stepCount": 47,
+      "estMinutes": 69,
+      "xpTotal": 153
     },
     {
       "number": 17,

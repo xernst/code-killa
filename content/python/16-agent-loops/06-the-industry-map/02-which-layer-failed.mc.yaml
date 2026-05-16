@@ -1,0 +1,42 @@
+xp: 2
+estSeconds: 80
+concept: diagnosing-the-failed-layer
+code: |
+  # A new incident — not one from the reading. Diagnose it.
+  incident = {
+      "agent":   "travel-booking assistant",
+      "request": "book me the cheapest flight to Denver",
+      "what_happened": [
+          "model searched flights and correctly ranked them by price",
+          "cheapest result was a $4,200 fare the airline API had mislabeled 'economy'",
+          "agent called book_flight() on it — the tool call succeeded",
+          "no rule required human sign-off for bookings over $1,000",
+      ],
+      "result": "a $4,200 surprise charge; the loop never malfunctioned",
+  }
+  print(incident["agent"], "—", incident["request"])
+  for line in incident["what_happened"]:
+      print("  -", line)
+  print("RESULT:", incident["result"])
+prompt: |
+  The agent loop ran exactly as written. The model reasoned correctly
+  about the data it was given. Using the five-layer map, which layer
+  was missing — the layer that would have caught this *before* the
+  charge went through?
+options:
+  - id: intelligence
+    label: "Intelligence — the model should have known $4,200 isn't 'cheap'"
+    explain: "A smarter model might have flagged it — but you can't rely on that, and the airline API itself was wrong. The fix that works every time is a deterministic rule, not a better guess. That rule lives in a different layer."
+  - id: action
+    label: "Action — the book_flight() tool call was the failure"
+    explain: "The Action layer did its job: the tool call executed correctly. That is exactly the problem — a perfect Action layer with no policy above it still ships the disaster."
+  - id: governance
+    label: "Governance — no policy rule required sign-off for a high-value booking"
+  - id: orchestration
+    label: "Orchestration — the request was routed to the wrong tool"
+    explain: "Routing was fine: book_flight() is the correct tool for a booking request. Orchestration failures look like the wrong thing running, or running in the wrong place. Here the right thing ran — nothing was allowed to stop it."
+answerIds:
+  - governance
+hint:
+  - level: 1
+    body: "The model behaved correctly and the tool ran correctly. The missing piece is a fixed, deterministic rule — 'bookings over $1,000 need a human' — that fires no matter how the model reasons. Which layer holds the rules?"

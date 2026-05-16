@@ -1,0 +1,9 @@
+slug: the-industry-map
+title: "The industry map — where your agent loop sits in the five-layer stack"
+estMinutes: 8
+prerequisites:
+  - why-every-framework-is-thirty-lines
+order:
+  - 01-the-five-layers.read.md
+  - 02-which-layer-failed.mc.yaml
+  - 03-the-shape-of-the-stack.read.md
