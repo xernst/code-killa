@@ -6,7 +6,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo } from "react";
+import { useSyncExternalStore } from "react";
 
 const KNOWN_PATHS = [
   "/",
@@ -40,17 +40,33 @@ function levenshtein(a: string, b: string): number {
   return dp[m][n];
 }
 
+// No-op subscribe: the suggestion is computed once from the URL the user
+// landed on and never changes for the life of this mount.
+const NO_SUBSCRIBE = () => () => {};
+
+function computeSuggestion(): string | null {
+  const path = window.location.pathname;
+  let best: { path: string; dist: number } | null = null;
+  for (const cand of KNOWN_PATHS) {
+    const dist = levenshtein(path, cand);
+    if (best === null || dist < best.dist) best = { path: cand, dist };
+  }
+  return best && best.dist > 0 && best.dist <= 4 ? best.path : null;
+}
+
 export default function DidYouMean() {
-  const suggestion = useMemo(() => {
-    if (typeof window === "undefined") return null;
-    const path = window.location.pathname;
-    let best: { path: string; dist: number } | null = null;
-    for (const cand of KNOWN_PATHS) {
-      const dist = levenshtein(path, cand);
-      if (best === null || dist < best.dist) best = { path: cand, dist };
-    }
-    return best && best.dist > 0 && best.dist <= 4 ? best.path : null;
-  }, []);
+  // The suggestion depends on window.location.pathname, which does not exist
+  // during SSR/prerender. not-found.tsx is a STATIC page — prerendered once
+  // with an empty slot here, then served for every unknown URL. Computing it
+  // in render would diverge from the prerendered HTML and throw a hydration
+  // mismatch. useSyncExternalStore returns the server snapshot (null) for SSR
+  // and the first hydration pass, then swaps in the client value — the
+  // React-sanctioned way to render a client-only value mismatch-free.
+  const suggestion = useSyncExternalStore(
+    NO_SUBSCRIBE,
+    computeSuggestion,
+    () => null,
+  );
 
   if (!suggestion) return null;
 

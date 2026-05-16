@@ -66,8 +66,11 @@ const RULES: Rule[] = [
     severity: "high",
     fix: "show one input → output pair. 'like this: \\\"foo\\\" → \\\"FOO\\\"'.",
     check: (_raw, lower) => {
+      // `input:` / `output:` are the canonical way prompts label a worked
+      // example ("Input: '...' Output: '...'") — count them as examples so a
+      // genuinely well-formed prompt isn't docked for a flaw it doesn't have.
       const hasExample =
-        /\b(for example|e\.g\.|such as|like this|here's an example|example:)/.test(
+        /\b(for example|e\.g\.|such as|like this|here's an example|example:|input:|output:)/.test(
           lower,
         ) || /->|=>|→/.test(lower);
       return hasExample ? null : "no input/output pair anywhere";
@@ -234,10 +237,14 @@ const POSSIBLE_WINS = [
       /\b(json|yaml|markdown|table|bullets|csv|xml|html|one line|paragraph|tweet|tsv)\b/.test(lower),
   },
   {
+    // Kept in lockstep with the `no-examples` rule above — if one recognizes
+    // a marker as an example, so must the other, or a prompt could earn the
+    // win and the penalty at the same time.
     label: "shows an example",
     check: (lower: string) =>
-      /\b(for example|e\.g\.|such as|like this|example:)/.test(lower) ||
-      /->|=>|→/.test(lower),
+      /\b(for example|e\.g\.|such as|like this|example:|input:|output:)/.test(
+        lower,
+      ) || /->|=>|→/.test(lower),
   },
   {
     label: "names the audience",
